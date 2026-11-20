@@ -6,7 +6,6 @@ const ThemeHelpers := preload("res://scenes/ui/theme_helpers.gd")
 @onready var controls_screen: Control = $UI/ControlsScreen
 @onready var menu: PanelContainer = $UI/TitleScreen/Menu
 @onready var new_game_button: Button = $UI/TitleScreen/Menu/Content/NewGame
-@onready var save_button: Button = $UI/TitleScreen/Menu/Content/Save
 @onready var load_button: Button = $UI/TitleScreen/Menu/Content/Load
 @onready var controls_button: Button = $UI/TitleScreen/Menu/Content/Controls
 @onready var hint: Label = $UI/TitleScreen/Menu/Content/Hint
@@ -20,7 +19,7 @@ func _ready() -> void:
 	panel_style.set_border_width_all(1)
 	panel_style.set_content_margin_all(6)
 	menu.add_theme_stylebox_override("panel", panel_style)
-	for button in [new_game_button, save_button, load_button, controls_button]:
+	for button in [new_game_button, load_button, controls_button]:
 		ThemeHelpers.style_button(button, 8)
 		button.custom_minimum_size = Vector2(96, 16)
 	controls_screen.back_pressed.connect(_on_controls_back)
@@ -31,10 +30,6 @@ func _on_new_game_pressed() -> void:
 	LevelRun.begin_run()
 	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/levels/level_1.tscn")
-
-
-func _on_save_pressed() -> void:
-	hint.text = "Save comes later"
 
 
 func _on_load_pressed() -> void:
