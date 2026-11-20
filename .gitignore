@@ -1,0 +1,14 @@
+# Godot-generated cache and editor state.
+.godot/
+
+# Exported builds and local export credentials.
+/builds/
+/exports/
+export_credentials.cfg
+
+# Local overrides and operating-system files.
+override.cfg
+.DS_Store
+Thumbs.db
+
+# Keep .gd.uid files and export_presets.cfg in version control when created.
