@@ -1,0 +1,17 @@
+{
+	"tool": "Built-in imagegen",
+	"asset": "assets/art/characters/theseus.png",
+	"updated_frames": [
+		1,
+		2,
+		3,
+		4
+	],
+	"frame_size": [
+		72,
+		56
+	],
+	"foot_row": 54,
+	"frames_per_second": 8,
+	"prompt": "Use case: identity-preserve / animation sprite correction.\nAsset type: four-frame pixel-art WALK cycle for the hero Theseus in a Godot side-scroller.\nImage 1 is an IDENTITY reference ONLY. Use ONLY its FIRST idle pose for the hero's head, red-crested bronze helmet, white/ivory Greek tunic with bronze trim and leather belt, warm skin, small dark red cape, sandals/greaves, and short sword carried low in one hand. Ignore ALL other poses in Image 1: their raised-knee gait must NOT be copied.\nImage 2 (Raider) and Image 3 (Peltast) are MOTION and anatomy references: match the first four WALK poses' modest stride and natural low foot clearance. Do not copy their colors, weapons, capes, or identity onto Theseus.\nCreate EXACTLY FOUR right-facing full-body Theseus sprites in ONE HORIZONTAL ROW. Every pose must be newly drawn as one coherent human body, with EXACTLY TWO LEGS and EXACTLY TWO FEET attached anatomically to his pelvis. Absolutely no leftover idle legs, ghost limbs, duplicated sandals, extra knees or extra arms.\nMotion sequence: frame0 left leg forward and right leg behind in relaxed heel-to-toe contact; frame1 left leg bears weight while the right foot passes LOW beneath the hips; frame2 right leg forward and left behind, the opposite contact; frame3 right leg bears weight while left foot passes LOW beneath the hips. The passing foot clears the ground by only2-4 native pixels; knees remain BELOW the tunic hem and never lift toward the waist. Slight natural knee flexion, small opposing arm swing, cape follows gently, head and torso stay stable with at most1px of bob. WALK, not high-knee marching, running, hopping, or skipping.\nMatch the fine, slender SNES pixel art and 46px standing height of the references. Preserve Theseus's recognizable identity; don't redesign his helmet, white tunic or red cape. The sword stays held low and angled down, away from his feet.\nTechnical contract: target canvas288x56, FOUR72x56 cells; root/body pivot x36; at least one sole touches foot row54 in every pose. Clear transparent space between figures and around all weapons. Full body and carried sword must fit each72x56 cell. True transparent alpha. No ground, drop shadows, motion trails, labels, grid lines, scenery, antialiasing, blur or smooth vector shapes. Crisp anatomy and shaded materials that read at native size."
+}

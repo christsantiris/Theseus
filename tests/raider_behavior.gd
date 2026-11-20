@@ -71,6 +71,7 @@ func _run() -> void:
 	raider.patrol_left = 48.0
 	raider.patrol_right = 400.0
 	root.add_child(raider)
+	var original_children := root.get_child_count()
 	await _frames(200)
 	_expect(raider._state == "patrol", "No timer-driven attacks against a distant player")
 	player.position = raider.position + Vector2(32, -72)
@@ -116,7 +117,7 @@ func _run() -> void:
 	_expect(await _until(raider, "lunge"), "Second attack reaches its active phase")
 	_expect(await _until(raider, "recover"), "Second attack completes")
 	_expect(player.hits == 1 and player.health == 4, "A sword lunge deals exactly one damage, without repeated contact hits")
-	_expect(root.get_child_count() == 6, "Attacks spawn no extra hazard nodes")
+	_expect(root.get_child_count() == original_children, "Attacks spawn no extra hazard nodes")
 	var awarded := {"points": 0}
 	raider.defeated.connect(func(points: int) -> void: awarded.points += points)
 	raider.sword_hit()

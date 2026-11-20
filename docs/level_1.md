@@ -12,8 +12,8 @@ leading from a cypress-lined road to the guarded temple entrance.
 | --- | --- | --- | --- |
 | The King's Road | 0–959 | Establish run, full-height jump, and attack timing using the original raider, two raised platforms, peltast, and hoplite sequence. Short prompts introduce the enemy openings. | 1 Raider, 1 Peltast, 1 Hoplite |
 | Broken Colonnade | 960–1919 | Climb a staircase of 16-pixel rises, then handle separate close-combat encounters after the drop. The first shrine follows the encounter stretch. | 1 Peltast, 1 Raider, 1 Hoplite |
-| Olive Terraces | 1920–2879 | Apply the learned timings around an elevated thrower. A health flask on the upper terrace rewards climbing; the ground catches missed jumps. | 2 Raiders, 1 Peltast |
-| Ruined Aqueduct | 2880–3839 | Cross ascending and descending stone terraces, with two separated thrower encounters and a final spear guard. The second shrine follows. | 2 Peltasts, 1 Hoplite |
+| Olive Terraces | 1920–2879 | Apply the learned timings around an elevated javelin fighter. A health flask on the upper terrace rewards climbing; the ground catches missed jumps. | 2 Raiders, 1 Peltast |
+| Ruined Aqueduct | 2880–3839 | Cross ascending and descending stone terraces, with two separated javelin fighters and a final spear guard. The second shrine follows. | 2 Peltasts, 1 Hoplite |
 | Temple Approach | 3840–4799 | Remix the three soldier types in sequence. Defeat the named temple guard to raise the gate, then enter to complete Level 1. | 1 Raider, 1 Peltast, 2 Hoplites |
 
 [Open the route map](level_1_map.svg) for exact enemy, pickup, shrine, and terrace positions.
@@ -35,8 +35,11 @@ jump recoverable. There are no blind lethal pits.
 The first two raised platforms retain the test course's positions and heights.
 Later terrain repeats and extends that pattern. Raiders occupy open ground;
 Peltasts occupy readable raised positions; Hoplites guard ground approaches.
-Enemies wake when Theseus comes within 192 horizontal pixels, so distant
-encounters do not spend the level attacking offscreen.
+Raiders start their sword windup only against visible targets within 64 horizontal
+and 24 vertical pixels, and their lunges respect terrain and patrol bounds.
+Peltasts wait outside 192 horizontal pixels and engage only within 38 horizontal
+and 12 vertical pixels. They use a held javelin for a stationary, telegraphed jab,
+followed by a safe recovery window. There are no ranged enemy attacks.
 
 Duck remains available, but the route does not require crouch-walking. First-clear
 pacing is intended to be roughly **2–4 minutes** with combat and exploration;
