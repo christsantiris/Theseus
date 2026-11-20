@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scenes/levels/level_1.gd" id="1_level"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/enemies/raider.tscn" id="4_raider"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/peltast.tscn" id="5_peltast"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/hoplite.tscn" id="6_hoplite"]
+[ext_resource type="PackedScene" path="res://scenes/pickups/health_flask.tscn" id="7_flask"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(960, 28)
@@ -137,6 +138,9 @@ position = Vector2(800, 152)
 direction = -1
 patrol_left = 560.0
 patrol_right = 900.0
+
+[node name="HealthFlask" parent="." instance=ExtResource("7_flask")]
+position = Vector2(140, 152)
 
 [node name="HUD" parent="." instance=ExtResource("3_hud")]
 

@@ -118,6 +118,14 @@ func _physics_process(delta: float) -> void:
 	_update_animation()
 
 
+func heal(amount: int) -> bool:
+	if health <= 0 or health >= MAX_HEALTH:
+		return false
+	health = mini(health + amount, MAX_HEALTH)
+	health_changed.emit(health, MAX_HEALTH)
+	return true
+
+
 func hurt(amount: int) -> void:
 	if health <= 0 or _hurt_lock > 0.0:
 		return
