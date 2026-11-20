@@ -13,16 +13,18 @@ const GRAVITY := 900.0
 @export var walk_speed := 32.0
 @export var body_height := 30.0
 @export var body_half_width := 8.0
-@export var activation_distance := 192.0
+@export var max_hp := 2
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var contact: Area2D = $Contact
 
 var alive := true
+var hp := 2
 var _body_shape := RectangleShape2D.new()
 
 
 func _ready() -> void:
+	hp = max_hp
 	add_to_group("enemies")
 	_body_shape.size = Vector2(body_half_width * 2.0, body_height)
 	$CollisionShape2D.shape = _body_shape
@@ -32,14 +34,11 @@ func _ready() -> void:
 	_build_frames()
 	sprite.offset = Vector2(0, -(FOOT_ROW - FRAME_SIZE.y * 0.5))
 	sprite.play(_initial_animation())
+	queue_redraw()
 
 
 func _physics_process(delta: float) -> void:
 	if not alive:
-		velocity = Vector2.ZERO
-		return
-	var player := _player()
-	if player != null and absf(player.global_position.x - global_position.x) > activation_distance:
 		velocity = Vector2.ZERO
 		return
 	if not is_on_floor() and _uses_gravity():
@@ -72,7 +71,27 @@ func _build_frames() -> void:
 
 
 func sword_hit() -> void:
-	pass
+	take_damage(1)
+
+
+func take_damage(amount: int) -> void:
+	if not alive:
+		return
+	hp = maxi(hp - amount, 0)
+	queue_redraw()
+	if hp <= 0:
+		die()
+
+
+func _draw() -> void:
+	if not alive or max_hp <= 0:
+		return
+	var width := 16.0
+	var y := sprite.offset.y - float(FRAME_SIZE.y) * 0.5 - 4.0
+	draw_rect(Rect2(-width * 0.5, y, width, 3), Color(0.12, 0.08, 0.08))
+	var filled := width * float(hp) / float(max_hp)
+	if filled > 0.0:
+		draw_rect(Rect2(-width * 0.5, y, filled, 3), Color(0.78, 0.2, 0.16))
 
 
 func can_be_stomped() -> bool:

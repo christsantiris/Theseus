@@ -4,7 +4,6 @@ const TEXTURE := preload("res://assets/art/characters/hoplite.png")
 
 var _state := "crouch"
 var _state_time := 0.0
-var _hp := 2
 var _stun := 0.0
 var _thrust_lock := 0.4
 var _strike: Area2D
@@ -12,6 +11,7 @@ var _strike: Area2D
 
 func _ready() -> void:
 	points = 150
+	max_hp = 2
 	body_height = 36.0
 	body_half_width = 8.0
 	walk_speed = 20.0
@@ -103,12 +103,12 @@ func _tick(delta: float) -> void:
 func sword_hit() -> void:
 	if not alive or _state == "crouch" or _state == "rise":
 		return
-	_hp -= 1
+	take_damage(1)
+	if not alive:
+		return
 	_stun = 1.0
 	_state = "stun"
 	_state_time = 0.0
-	if _hp <= 0:
-		die()
 
 
 func _show_rise(frame: int) -> void:

@@ -11,6 +11,7 @@ var _thrown := false
 
 func _ready() -> void:
 	points = 100
+	max_hp = 2
 	body_height = 36.0
 	body_half_width = 8.0
 	walk_speed = 26.0
@@ -67,10 +68,7 @@ func stomp() -> bool:
 
 
 func sword_hit() -> void:
-	if not alive:
-		return
-	if _state == "throw":
-		die()
+	take_damage(1)
 
 
 func _enter(next: String) -> void:
