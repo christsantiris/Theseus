@@ -1,5 +1,7 @@
 extends Area2D
 
+signal collected
+
 const HEAL := 2
 
 var _time := 0.0
@@ -12,5 +14,6 @@ func _physics_process(delta: float) -> void:
 	sprite.position.y = -8.0 + sin(_time * 3.0)
 	for body in get_overlapping_bodies():
 		if body.has_method("heal") and body.heal(HEAL):
+			collected.emit()
 			queue_free()
 			return

@@ -1,146 +1,19 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scenes/levels/level_1.gd" id="1_level"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
-[ext_resource type="PackedScene" path="res://scenes/enemies/raider.tscn" id="4_raider"]
-[ext_resource type="PackedScene" path="res://scenes/enemies/peltast.tscn" id="5_peltast"]
-[ext_resource type="PackedScene" path="res://scenes/enemies/hoplite.tscn" id="6_hoplite"]
-[ext_resource type="PackedScene" path="res://scenes/pickups/health_flask.tscn" id="7_flask"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
-size = Vector2(960, 28)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
-size = Vector2(8, 180)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_platform_a"]
-size = Vector2(112, 16)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_platform_b"]
-size = Vector2(96, 16)
+[ext_resource type="Script" path="res://scenes/levels/level_geometry.gd" id="4_geometry"]
 
 [node name="Level1" type="Node2D"]
 script = ExtResource("1_level")
 
-[node name="Sky" type="Polygon2D" parent="."]
-color = Color(0.42, 0.66, 0.85, 1)
-polygon = PackedVector2Array(0, 0, 960, 0, 960, 180, 0, 180)
-
-[node name="Mountains" type="Polygon2D" parent="."]
-color = Color(0.62, 0.66, 0.72, 1)
-polygon = PackedVector2Array(0, 108, 140, 72, 260, 112, 420, 64, 600, 104, 760, 58, 960, 96, 960, 140, 0, 140)
-
-[node name="Terraces" type="Polygon2D" parent="."]
-color = Color(0.55, 0.52, 0.32, 1)
-polygon = PackedVector2Array(0, 128, 960, 116, 960, 152, 0, 152)
-
-[node name="CypressLeft" type="Polygon2D" parent="."]
-position = Vector2(150, 96)
-color = Color(0.1, 0.28, 0.16, 1)
-polygon = PackedVector2Array(-7, 56, 0, 0, 7, 56)
-
-[node name="CypressMid" type="Polygon2D" parent="."]
-position = Vector2(760, 92)
-color = Color(0.08, 0.24, 0.14, 1)
-polygon = PackedVector2Array(-8, 60, 0, 0, 8, 60)
-
-[node name="CypressRight" type="Polygon2D" parent="."]
-position = Vector2(880, 100)
-color = Color(0.1, 0.28, 0.16, 1)
-polygon = PackedVector2Array(-6, 52, 0, 0, 6, 52)
-
-[node name="Ground" type="StaticBody2D" parent="."]
-position = Vector2(0, 152)
-collision_layer = 1
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
-position = Vector2(480, 14)
-shape = SubResource("RectangleShape2D_ground")
-
-[node name="Visual" type="Polygon2D" parent="Ground"]
-color = Color(0.78, 0.75, 0.68, 1)
-polygon = PackedVector2Array(0, 0, 960, 0, 960, 28, 0, 28)
-
-[node name="Cap" type="Polygon2D" parent="Ground"]
-color = Color(0.9, 0.87, 0.8, 1)
-polygon = PackedVector2Array(0, 0, 960, 0, 960, 4, 0, 4)
-
-[node name="LeftWall" type="StaticBody2D" parent="."]
-collision_layer = 1
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftWall"]
-position = Vector2(4, 90)
-shape = SubResource("RectangleShape2D_wall")
-
-[node name="RightWall" type="StaticBody2D" parent="."]
-position = Vector2(952, 0)
-collision_layer = 1
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RightWall"]
-position = Vector2(4, 90)
-shape = SubResource("RectangleShape2D_wall")
-
-[node name="PlatformA" type="StaticBody2D" parent="."]
-position = Vector2(248, 120)
-collision_layer = 1
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformA"]
-position = Vector2(56, 8)
-shape = SubResource("RectangleShape2D_platform_a")
-
-[node name="Visual" type="Polygon2D" parent="PlatformA"]
-color = Color(0.82, 0.79, 0.7, 1)
-polygon = PackedVector2Array(0, 0, 112, 0, 112, 16, 0, 16)
-
-[node name="Cap" type="Polygon2D" parent="PlatformA"]
-color = Color(0.93, 0.9, 0.82, 1)
-polygon = PackedVector2Array(0, 0, 112, 0, 112, 3, 0, 3)
-
-[node name="PlatformB" type="StaticBody2D" parent="."]
-position = Vector2(376, 104)
-collision_layer = 1
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformB"]
-position = Vector2(48, 8)
-shape = SubResource("RectangleShape2D_platform_b")
-
-[node name="Visual" type="Polygon2D" parent="PlatformB"]
-color = Color(0.82, 0.79, 0.7, 1)
-polygon = PackedVector2Array(0, 0, 96, 0, 96, 16, 0, 16)
-
-[node name="Cap" type="Polygon2D" parent="PlatformB"]
-color = Color(0.93, 0.9, 0.82, 1)
-polygon = PackedVector2Array(0, 0, 96, 0, 96, 3, 0, 3)
+[node name="World" type="Node2D" parent="."]
+z_index = -10
+script = ExtResource("4_geometry")
 
 [node name="Player" parent="." instance=ExtResource("2_player")]
 position = Vector2(48, 152)
-
-[node name="Raider" parent="." instance=ExtResource("4_raider")]
-position = Vector2(168, 152)
-direction = -1
-patrol_left = 96.0
-patrol_right = 208.0
-
-[node name="Peltast" parent="." instance=ExtResource("5_peltast")]
-position = Vector2(304, 120)
-direction = -1
-patrol_left = 268.0
-patrol_right = 340.0
-
-[node name="Hoplite" parent="." instance=ExtResource("6_hoplite")]
-position = Vector2(800, 152)
-direction = -1
-patrol_left = 560.0
-patrol_right = 900.0
-
-[node name="HealthFlask" parent="." instance=ExtResource("7_flask")]
-position = Vector2(140, 152)
 
 [node name="HUD" parent="." instance=ExtResource("3_hud")]
 
@@ -188,6 +61,11 @@ theme_override_font_sizes/font_size = 14
 text = "Paused"
 horizontal_alignment = 1
 
+[node name="Details" type="Label" parent="PauseLayer/PauseScreen/Center/Panel/Stack"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+horizontal_alignment = 1
+
 [node name="Buttons" type="VBoxContainer" parent="PauseLayer/PauseScreen/Center/Panel/Stack"]
 layout_mode = 2
 theme_override_constants/separation = 4
@@ -197,10 +75,16 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Resume"
 
+[node name="Replay" type="Button" parent="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Replay Level"
+
 [node name="Title" type="Button" parent="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Title"
 
 [connection signal="pressed" from="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Replay" to="." method="_on_replay_pressed"]
 [connection signal="pressed" from="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Title" to="." method="_on_title_pressed"]

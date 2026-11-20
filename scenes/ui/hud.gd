@@ -7,6 +7,11 @@ const EMPTY := Color(0.16, 0.1, 0.12)
 var _pips: Array[ColorRect] = []
 var _root: Control
 var _score: Label
+var _area: Label
+var _message: Label
+var _message_backdrop: ColorRect
+var _message_time := 0.0
+var _message_priority := 0
 
 
 func _ready() -> void:
@@ -35,6 +40,52 @@ func _ready() -> void:
 	_score.add_theme_color_override("font_color", GOLD)
 	_score.text = "Score 0"
 	root.add_child(_score)
+	_area = Label.new()
+	_area.position = Vector2(104, 4)
+	_area.size = Vector2(128, 12)
+	_area.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_area.add_theme_font_size_override("font_size", 8)
+	_area.add_theme_color_override("font_color", Color("f1e2c2"))
+	root.add_child(_area)
+	_message_backdrop = ColorRect.new()
+	_message_backdrop.position = Vector2(6, 162)
+	_message_backdrop.size = Vector2(308, 15)
+	_message_backdrop.color = Color(0.05, 0.08, 0.12, 0.88)
+	_message_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(_message_backdrop)
+	_message = Label.new()
+	_message.position = Vector2(10, 163)
+	_message.size = Vector2(300, 13)
+	_message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_message.add_theme_font_size_override("font_size", 9)
+	_message.add_theme_color_override("font_color", GOLD)
+	root.add_child(_message)
+	_message.hide()
+	_message_backdrop.hide()
+
+
+func _process(delta: float) -> void:
+	if _message_time <= 0.0:
+		return
+	_message_time = maxf(0.0, _message_time - delta)
+	if _message_time <= 0.0:
+		_message.hide()
+		_message_backdrop.hide()
+
+
+func set_area(title: String) -> void:
+	_area.text = title
+
+
+func show_message(text: String, seconds: float = 3.0, priority: int = 1) -> bool:
+	if _message_time > 0.0 and priority < _message_priority:
+		return false
+	_message.text = text
+	_message_time = seconds
+	_message_priority = priority
+	_message.show()
+	_message_backdrop.show()
+	return true
 
 
 func set_health(current: int, maximum: int) -> void:

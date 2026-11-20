@@ -10,7 +10,9 @@ expressive movement, and pixel art of early SNES platformers.
 2. In Godot's Project Manager, choose **Import** and select `project.godot`.
 3. Open the project and press **F6** with `scenes/main/main.tscn` open, or **F5** to run the project.
 
-New Game starts Level 1. Theseus can run, jump, and thrust. Controls can be
+New Game starts the complete Level 1, The Temple Road: five connected areas,
+sixteen Greek soldiers, two checkpoint shrines, and a guarded temple exit.
+See the [level guide and map](docs/level_1.md). Theseus can run, jump, duck, and thrust. Controls can be
 rebound from the title screen, and those bindings are saved for the next launch.
 
 If Godot is available as `godot` on your PATH:
@@ -70,6 +72,7 @@ for rendering, naming, and scene ownership decisions.
 | `move_left` | A / Left arrow | Move left |
 | `move_right` | D / Right arrow | Move right |
 | `jump` | Up arrow / W | Jump. Release early for a shorter hop |
+| `duck` | Down arrow / S | Duck in place |
 | `attack` | Space | Sword thrust |
 | `pause` | Escape | Pause, then resume or return to the title |
 
@@ -81,11 +84,12 @@ on those keys for a US keyboard layout.
 
 1. **Project structure:** folders, settings, input actions, audio buses, startup
    scene, and development notes.
-2. **Player prototype (current):** Theseus can run, jump, and thrust in Level 1.
+2. **Player prototype:** Theseus can run, jump, duck, and thrust in Level 1.
    The title screen has New Game and remappable controls. The Greek folk track
    starts on the title screen and keeps looping through Level 1. The backdrop is a flat
    Greek color study, not a finished tileset.
-3. **Adventure loop:** level progression, hazards, collectibles, enemies, and HUD.
+3. **Level 1 (current):** a 4,800-pixel route with five areas, sixteen enemies,
+   health pickups, checkpoint recovery, score, and a temple-gate ending.
 4. **Presentation:** finished level art, animation polish, music, and sound.
 
 Stop after each milestone for review and a manual commit. No commits or GitHub

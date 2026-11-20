@@ -13,6 +13,7 @@ const GRAVITY := 900.0
 @export var walk_speed := 32.0
 @export var body_height := 30.0
 @export var body_half_width := 8.0
+@export var activation_distance := 192.0
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var contact: Area2D = $Contact
@@ -35,6 +36,10 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if not alive:
+		velocity = Vector2.ZERO
+		return
+	var player := _player()
+	if player != null and absf(player.global_position.x - global_position.x) > activation_distance:
 		velocity = Vector2.ZERO
 		return
 	if not is_on_floor() and _uses_gravity():
