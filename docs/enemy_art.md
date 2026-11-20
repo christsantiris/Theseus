@@ -9,13 +9,20 @@ and nearest-neighbor rendering as the player. Enemy feet share pixel row 53.
 | --- | --- | --- | --- |
 | Hoplite | Bronze cuirass, round shield, red-crested helmet, spear | Crouches on guard, stands when approached, marches and thrusts; takes two sword hits | `hoplite.png`, 9 frames |
 | Peltast | Teal tunic and crest, bronze helmet, leather flask satchel | Patrols and throws poison flasks; vulnerable while throwing | `peltast.png`, 7 frames |
-| Raider | Crimson tunic and cape, bronze helmet, curved iron sword | Telegraphs a low lunge, leaves fire hazards, then exposes a recovery window | `raider.png`, 7 frames |
+| Raider | Crimson tunic and cape, bronze helmet, curved iron sword | Engages nearby visible targets, telegraphs a short sword lunge, then recovers without contact damage | `raider.png`, 7 frames |
 
 Artwork lives in `assets/art/characters/`; corresponding scripts and scenes live
-in `scenes/enemies/`. Level instances use the same names. Existing attack timing,
-patrol placement, damage, and scoring are retained. Collision heights, the
+in `scenes/enemies/`. Level instances use the same names. Patrol placement,
+damage, and scoring are retained. Collision heights, the
 hoplite's spear strike, and the peltast's projectile origin fit the new artwork.
 The hoplite's crouch/rise collision box follows its stance.
+
+The Raider has a 0.45-second windup, a 0.22-second lunge at 120 pixels/second,
+and a 0.85-second recovery. He commits to his windup direction and hits each
+target at most once per lunge, using a sword hitbox rather than body contact.
+He attacks only within 64 horizontal pixels and 24 vertical pixels, with a clear
+line of sight and safe space to lunge. Sword hits still deal damage in every
+state. His fire effect has been removed. Hoplite and Peltast behavior is unchanged.
 
 ## Review
 

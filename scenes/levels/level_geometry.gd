@@ -48,12 +48,8 @@ func _draw() -> void:
 		_olive(x)
 	for x in range(2912, 3712, 128):
 		_aqueduct(x)
-	for x in range(3952, 4680, 128):
+	for x in range(3952, 4600, 128):
 		_column(x, 76, true)
-	# The temple is visible above its final gate before the player reaches it.
-	draw_rect(Rect2(4656, 57, 144, 8), Color("c4b996"))
-	draw_colored_polygon(PackedVector2Array([Vector2(4648, 57), Vector2(4728, 28), Vector2(4808, 57)]), CAP)
-	draw_line(Vector2(4664, 54), Vector2(4792, 54), SEAM, 2)
 	_stone(Rect2(0, Layout.FLOOR_Y, Layout.WIDTH, 40))
 	for platform: Rect2 in Layout.PLATFORMS:
 		_stone(platform)
