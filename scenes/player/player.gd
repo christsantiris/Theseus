@@ -7,12 +7,17 @@ const JUMP_VELOCITY := -260.0
 const GRAVITY := 900.0
 const SWING := preload("res://assets/audio/sfx/daviddumaisaudio-sword-slash-and-swing-185432.mp3")
 const SWING_AUDIBLE_SECONDS := 0.92
+const LAND := preload("res://assets/audio/sfx/u_qqkrn9bn55-jumplanding-398256.mp3")
+const LAND_IMPACT_SECONDS := 0.25
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 var _attacking := false
 var _swing: AudioStreamPlayer
 var _swing_token := 0
+var _land: AudioStreamPlayer
+var _jumped := false
+var _was_airborne := false
 
 
 func _ready() -> void:
@@ -25,14 +30,22 @@ func _ready() -> void:
 	_swing.bus = "SFX"
 	_swing.stream = SWING
 	add_child(_swing)
+	_land = AudioStreamPlayer.new()
+	_land.name = "Land"
+	_land.bus = "SFX"
+	_land.stream = LAND
+	add_child(_land)
 
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += GRAVITY * delta
 
+	var jumped_this_frame := false
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
+		_jumped = true
+		jumped_this_frame = true
 	if Input.is_action_just_released("jump") and velocity.y < 0.0:
 		velocity.y *= 0.45
 
@@ -51,6 +64,7 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0.0, SPEED * 8.0 * delta)
 
 	move_and_slide()
+	_update_landing(jumped_this_frame)
 	_update_animation()
 
 
@@ -63,6 +77,23 @@ func _update_animation() -> void:
 		_play("walk")
 	else:
 		_play("idle")
+
+
+func _update_landing(jumped_this_frame: bool) -> void:
+	if not is_on_floor():
+		_was_airborne = true
+		return
+	if _was_airborne and _jumped:
+		_play_land()
+	elif not jumped_this_frame:
+		_jumped = false
+	_was_airborne = false
+
+
+func _play_land() -> void:
+	_jumped = false
+	_land.stop()
+	_land.play(LAND_IMPACT_SECONDS)
 
 
 func _play(animation_name: String) -> void:
