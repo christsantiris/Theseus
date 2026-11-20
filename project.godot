@@ -22,6 +22,7 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 [autoload]
 
 InputBindings="*res://scenes/ui/input_bindings.gd"
+GameMusic="*res://scenes/ui/game_music.gd"
 
 [display]
 

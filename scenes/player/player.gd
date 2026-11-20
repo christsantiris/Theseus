@@ -5,10 +5,14 @@ const FOOT_ROW := 54
 const SPEED := 90.0
 const JUMP_VELOCITY := -260.0
 const GRAVITY := 900.0
+const SWING := preload("res://assets/audio/sfx/daviddumaisaudio-sword-slash-and-swing-185432.mp3")
+const SWING_AUDIBLE_SECONDS := 0.92
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 var _attacking := false
+var _swing: AudioStreamPlayer
+var _swing_token := 0
 
 
 func _ready() -> void:
@@ -16,6 +20,11 @@ func _ready() -> void:
 	sprite.offset = Vector2(0, -(FOOT_ROW - FRAME_SIZE.y * 0.5))
 	sprite.animation_finished.connect(_on_animation_finished)
 	sprite.play("idle")
+	_swing = AudioStreamPlayer.new()
+	_swing.name = "Swing"
+	_swing.bus = "SFX"
+	_swing.stream = SWING
+	add_child(_swing)
 
 
 func _physics_process(delta: float) -> void:
@@ -27,9 +36,12 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_released("jump") and velocity.y < 0.0:
 		velocity.y *= 0.45
 
-	if Input.is_action_just_pressed("attack") and not _attacking:
+	if Input.is_action_just_pressed("attack"):
 		_attacking = true
+		if sprite.animation == "attack":
+			sprite.stop()
 		sprite.play("attack")
+		_play_swing()
 
 	var direction := Input.get_axis("move_left", "move_right")
 	if direction != 0.0:
@@ -61,6 +73,17 @@ func _play(animation_name: String) -> void:
 func _on_animation_finished() -> void:
 	if sprite.animation == "attack":
 		_attacking = false
+
+
+func _play_swing() -> void:
+	_swing_token += 1
+	var token := _swing_token
+	_swing.stop()
+	_swing.play()
+	get_tree().create_timer(SWING_AUDIBLE_SECONDS).timeout.connect(func() -> void:
+		if token == _swing_token and is_instance_valid(_swing):
+			_swing.stop()
+	)
 
 
 func _build_frames() -> void:

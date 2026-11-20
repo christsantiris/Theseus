@@ -82,13 +82,20 @@ on those keys for a US keyboard layout.
 1. **Project structure:** folders, settings, input actions, audio buses, startup
    scene, and development notes.
 2. **Player prototype (current):** Theseus can run, jump, and thrust in Level 1.
-   The title screen has New Game and remappable controls. The backdrop is a flat
+   The title screen has New Game and remappable controls. The Greek folk track
+   starts on the title screen and keeps looping through Level 1. The backdrop is a flat
    Greek color study, not a finished tileset.
 3. **Adventure loop:** level progression, hazards, collectibles, enemies, and HUD.
 4. **Presentation:** finished level art, animation polish, music, and sound.
 
 Stop after each milestone for review and a manual commit. No commits or GitHub
 publishing are performed automatically.
+
+## Credits
+
+Music by <a href="https://pixabay.com/users/moonpub-15209240/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Johnny Hoeve</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Pixabay</a>
+
+Sound Effect by <a href="https://pixabay.com/users/daviddumaisaudio-41768500/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=185432">David Dumais</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=185432">Pixabay</a>
 
 ## Play test the game
 
