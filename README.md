@@ -89,3 +89,7 @@ on those keys for a US keyboard layout.
 
 Stop after each milestone for review and a manual commit. No commits or GitHub
 publishing are performed automatically.
+
+## Play test the game
+
+1. **Run the command** ` godot --path .`
