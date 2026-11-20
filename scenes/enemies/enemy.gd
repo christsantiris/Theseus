@@ -1,0 +1,186 @@
+extends CharacterBody2D
+
+signal defeated(points: int)
+
+const FRAME_SIZE := Vector2i(72, 56)
+const FOOT_ROW := 53
+const GRAVITY := 900.0
+
+@export var points := 100
+@export var direction := 1
+@export var patrol_left := 0.0
+@export var patrol_right := 960.0
+@export var walk_speed := 32.0
+@export var body_height := 30.0
+@export var body_half_width := 8.0
+
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var contact: Area2D = $Contact
+
+var alive := true
+var _body_shape := RectangleShape2D.new()
+
+
+func _ready() -> void:
+	add_to_group("enemies")
+	_body_shape.size = Vector2(body_half_width * 2.0, body_height)
+	$CollisionShape2D.shape = _body_shape
+	$CollisionShape2D.position = Vector2(0, -body_height * 0.5)
+	$Contact/CollisionShape2D.shape = _body_shape
+	$Contact/CollisionShape2D.position = $CollisionShape2D.position
+	_build_frames()
+	sprite.offset = Vector2(0, -(FOOT_ROW - FRAME_SIZE.y * 0.5))
+	sprite.play(_initial_animation())
+
+
+func _physics_process(delta: float) -> void:
+	if not alive:
+		velocity = Vector2.ZERO
+		return
+	if not is_on_floor() and _uses_gravity():
+		velocity.y += GRAVITY * delta
+	_tick(delta)
+	_face()
+	move_and_slide()
+	if alive:
+		_hurt_overlaps()
+
+
+func _tick(_delta: float) -> void:
+	pass
+
+
+func _initial_animation() -> String:
+	return "walk"
+
+
+func _uses_gravity() -> bool:
+	return true
+
+
+func _deals_contact() -> bool:
+	return true
+
+
+func _build_frames() -> void:
+	pass
+
+
+func sword_hit() -> void:
+	pass
+
+
+func can_be_stomped() -> bool:
+	return false
+
+
+func stomp() -> bool:
+	return false
+
+
+func die() -> void:
+	if not alive:
+		return
+	alive = false
+	velocity = Vector2.ZERO
+	$CollisionShape2D.set_deferred("disabled", true)
+	contact.set_deferred("monitoring", false)
+	defeated.emit(points)
+	var tween := create_tween()
+	tween.tween_property(sprite, "modulate:a", 0.0, 0.16)
+	tween.finished.connect(queue_free)
+
+
+func _face() -> void:
+	sprite.flip_h = direction < 0
+
+
+func _play(animation_name: String) -> void:
+	if sprite.animation != animation_name or not sprite.is_playing():
+		sprite.play(animation_name)
+
+
+func _patrol(speed: float) -> void:
+	if global_position.x <= patrol_left:
+		direction = 1
+	elif global_position.x >= patrol_right:
+		direction = -1
+	elif is_on_floor() and (is_on_wall() or not _floor_ahead()):
+		direction *= -1
+	velocity.x = direction * speed
+
+
+func _floor_ahead() -> bool:
+	var space := get_world_2d().direct_space_state
+	var origin := global_position + Vector2(direction * 12.0, -4.0)
+	var query := PhysicsRayQueryParameters2D.create(origin, origin + Vector2(0, 20), 1)
+	query.exclude = [get_rid()]
+	return not space.intersect_ray(query).is_empty()
+
+
+func _inside_patrol(margin: float) -> bool:
+	return global_position.x > patrol_left + margin and global_position.x < patrol_right - margin
+
+
+func _player() -> Node2D:
+	var node := get_tree().get_first_node_in_group("player")
+	return node as Node2D
+
+
+func _player_close(reach: float, vertical: float = 48.0) -> bool:
+	var player := _player()
+	if player == null:
+		return false
+	return (
+		absf(player.global_position.x - global_position.x) <= reach
+		and absf(player.global_position.y - global_position.y) <= vertical
+	)
+
+
+func _face_player(vertical: float) -> void:
+	var player := _player()
+	if player == null:
+		return
+	if absf(player.global_position.y - global_position.y) > vertical:
+		return
+	var dx := player.global_position.x - global_position.x
+	if absf(dx) > 6.0:
+		direction = 1 if dx > 0.0 else -1
+
+
+func _hurt_overlaps() -> void:
+	if not _deals_contact():
+		return
+	for body in contact.get_overlapping_bodies():
+		if body.has_method("hurt"):
+			body.hurt(1)
+
+
+func _set_body(width: float, height: float, center: Vector2) -> void:
+	_body_shape.size = Vector2(width, height)
+	$CollisionShape2D.position = center
+	$Contact/CollisionShape2D.position = center
+
+
+func _add_animation(
+	frames: SpriteFrames,
+	texture: Texture2D,
+	animation_name: String,
+	indices: Array,
+	speed: float,
+	looped: bool
+) -> void:
+	frames.add_animation(animation_name)
+	frames.set_animation_speed(animation_name, speed)
+	frames.set_animation_loop(animation_name, looped)
+	for index in indices:
+		var atlas := AtlasTexture.new()
+		atlas.atlas = texture
+		atlas.region = Rect2(int(index) * FRAME_SIZE.x, 0, FRAME_SIZE.x, FRAME_SIZE.y)
+		frames.add_frame(animation_name, atlas)
+
+
+func _bind_frames(frames: SpriteFrames) -> void:
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	sprite.sprite_frames = frames

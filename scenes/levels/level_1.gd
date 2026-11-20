@@ -7,6 +7,10 @@ const LEVEL_HEIGHT := 180
 @onready var pause_panel: PanelContainer = $PauseLayer/PauseScreen/Center/Panel
 @onready var resume_button: Button = $PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Resume
 @onready var title_button: Button = $PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Title
+@onready var player = $Player
+@onready var hud = $HUD
+
+var _score := 0
 
 
 func _ready() -> void:
@@ -18,10 +22,13 @@ func _ready() -> void:
 		child.process_mode = Node.PROCESS_MODE_PAUSABLE
 
 	var camera := $Player/Camera2D as Camera2D
+	camera.limit_enabled = true
 	camera.limit_left = 0
 	camera.limit_top = 0
 	camera.limit_right = LEVEL_WIDTH
 	camera.limit_bottom = LEVEL_HEIGHT
+	camera.reset_smoothing()
+	camera.force_update_scroll()
 
 	var theme := preload("res://scenes/ui/theme_helpers.gd")
 	var panel_style := StyleBoxFlat.new()
@@ -35,6 +42,12 @@ func _ready() -> void:
 	resume_button.custom_minimum_size = Vector2(72, 16)
 	title_button.custom_minimum_size = Vector2(72, 16)
 	pause_screen.hide()
+	player.health_changed.connect(_on_health_changed)
+	_on_health_changed(player.health, player.MAX_HEALTH)
+	hud.set_score(_score)
+	for node in get_tree().get_nodes_in_group("enemies"):
+		if node.has_signal("defeated"):
+			node.defeated.connect(_on_enemy_defeated)
 
 
 func _input(event: InputEvent) -> void:
@@ -57,3 +70,12 @@ func _on_resume_pressed() -> void:
 func _on_title_pressed() -> void:
 	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/main/main.tscn")
+
+
+func _on_health_changed(current: int, maximum: int) -> void:
+	hud.set_health(current, maximum)
+
+
+func _on_enemy_defeated(points: int) -> void:
+	_score += points
+	hud.set_score(_score)

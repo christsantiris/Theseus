@@ -1,7 +1,11 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scenes/levels/level_1.gd" id="1_level"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/raider.tscn" id="4_raider"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/peltast.tscn" id="5_peltast"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/hoplite.tscn" id="6_hoplite"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(960, 28)
@@ -115,6 +119,26 @@ polygon = PackedVector2Array(0, 0, 96, 0, 96, 3, 0, 3)
 
 [node name="Player" parent="." instance=ExtResource("2_player")]
 position = Vector2(48, 152)
+
+[node name="Raider" parent="." instance=ExtResource("4_raider")]
+position = Vector2(168, 152)
+direction = -1
+patrol_left = 96.0
+patrol_right = 208.0
+
+[node name="Peltast" parent="." instance=ExtResource("5_peltast")]
+position = Vector2(304, 120)
+direction = -1
+patrol_left = 268.0
+patrol_right = 340.0
+
+[node name="Hoplite" parent="." instance=ExtResource("6_hoplite")]
+position = Vector2(800, 152)
+direction = -1
+patrol_left = 560.0
+patrol_right = 900.0
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
 
 [node name="PauseLayer" type="CanvasLayer" parent="."]
 process_mode = 3

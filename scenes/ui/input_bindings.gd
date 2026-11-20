@@ -6,6 +6,7 @@ const ACTIONS: Array[String] = [
 	"move_left",
 	"move_right",
 	"jump",
+	"duck",
 	"attack",
 	"pause",
 ]
@@ -14,6 +15,7 @@ const LABELS := {
 	"move_left": "Move Left",
 	"move_right": "Move Right",
 	"jump": "Jump",
+	"duck": "Duck",
 	"attack": "Attack",
 	"pause": "Pause",
 }
