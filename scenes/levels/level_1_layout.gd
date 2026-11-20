@@ -71,7 +71,7 @@ const GATE_GUARD := "HopliteTempleGuard"
 const TIPS := [
 	{"x": 96, "end": 224, "text": "Sword hits deal damage. Two hits fell a raider."},
 	{"x": 224, "end": 288, "text": "Hold Jump to climb these terraces."},
-	{"x": 288, "end": 480, "text": "Sword hits damage throwers. A stomp while they throw finishes them."},
+	{"x": 288, "end": 480, "text": "Bait the javelin jab, then strike or stomp."},
 	{"x": 640, "end": 832, "text": "Spear guards take two sword hits."},
 ]
 
