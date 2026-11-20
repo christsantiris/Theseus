@@ -11,4 +11,7 @@ override.cfg
 .DS_Store
 Thumbs.db
 
+# vscode settings
+.vscode
+
 # Keep .gd.uid files and export_presets.cfg in version control when created.

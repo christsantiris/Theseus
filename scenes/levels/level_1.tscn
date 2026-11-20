@@ -1,0 +1,178 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/level_1.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
+size = Vector2(960, 28)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
+size = Vector2(8, 180)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_platform_a"]
+size = Vector2(112, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_platform_b"]
+size = Vector2(96, 16)
+
+[node name="Level1" type="Node2D"]
+script = ExtResource("1_level")
+
+[node name="Sky" type="Polygon2D" parent="."]
+color = Color(0.42, 0.66, 0.85, 1)
+polygon = PackedVector2Array(0, 0, 960, 0, 960, 180, 0, 180)
+
+[node name="Mountains" type="Polygon2D" parent="."]
+color = Color(0.62, 0.66, 0.72, 1)
+polygon = PackedVector2Array(0, 108, 140, 72, 260, 112, 420, 64, 600, 104, 760, 58, 960, 96, 960, 140, 0, 140)
+
+[node name="Terraces" type="Polygon2D" parent="."]
+color = Color(0.55, 0.52, 0.32, 1)
+polygon = PackedVector2Array(0, 128, 960, 116, 960, 152, 0, 152)
+
+[node name="CypressLeft" type="Polygon2D" parent="."]
+position = Vector2(150, 96)
+color = Color(0.1, 0.28, 0.16, 1)
+polygon = PackedVector2Array(-7, 56, 0, 0, 7, 56)
+
+[node name="CypressMid" type="Polygon2D" parent="."]
+position = Vector2(760, 92)
+color = Color(0.08, 0.24, 0.14, 1)
+polygon = PackedVector2Array(-8, 60, 0, 0, 8, 60)
+
+[node name="CypressRight" type="Polygon2D" parent="."]
+position = Vector2(880, 100)
+color = Color(0.1, 0.28, 0.16, 1)
+polygon = PackedVector2Array(-6, 52, 0, 0, 6, 52)
+
+[node name="Ground" type="StaticBody2D" parent="."]
+position = Vector2(0, 152)
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+position = Vector2(480, 14)
+shape = SubResource("RectangleShape2D_ground")
+
+[node name="Visual" type="Polygon2D" parent="Ground"]
+color = Color(0.78, 0.75, 0.68, 1)
+polygon = PackedVector2Array(0, 0, 960, 0, 960, 28, 0, 28)
+
+[node name="Cap" type="Polygon2D" parent="Ground"]
+color = Color(0.9, 0.87, 0.8, 1)
+polygon = PackedVector2Array(0, 0, 960, 0, 960, 4, 0, 4)
+
+[node name="LeftWall" type="StaticBody2D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftWall"]
+position = Vector2(4, 90)
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="RightWall" type="StaticBody2D" parent="."]
+position = Vector2(952, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightWall"]
+position = Vector2(4, 90)
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="PlatformA" type="StaticBody2D" parent="."]
+position = Vector2(248, 120)
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformA"]
+position = Vector2(56, 8)
+shape = SubResource("RectangleShape2D_platform_a")
+
+[node name="Visual" type="Polygon2D" parent="PlatformA"]
+color = Color(0.82, 0.79, 0.7, 1)
+polygon = PackedVector2Array(0, 0, 112, 0, 112, 16, 0, 16)
+
+[node name="Cap" type="Polygon2D" parent="PlatformA"]
+color = Color(0.93, 0.9, 0.82, 1)
+polygon = PackedVector2Array(0, 0, 112, 0, 112, 3, 0, 3)
+
+[node name="PlatformB" type="StaticBody2D" parent="."]
+position = Vector2(376, 104)
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformB"]
+position = Vector2(48, 8)
+shape = SubResource("RectangleShape2D_platform_b")
+
+[node name="Visual" type="Polygon2D" parent="PlatformB"]
+color = Color(0.82, 0.79, 0.7, 1)
+polygon = PackedVector2Array(0, 0, 96, 0, 96, 16, 0, 16)
+
+[node name="Cap" type="Polygon2D" parent="PlatformB"]
+color = Color(0.93, 0.9, 0.82, 1)
+polygon = PackedVector2Array(0, 0, 96, 0, 96, 3, 0, 3)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(48, 152)
+
+[node name="PauseLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+
+[node name="PauseScreen" type="Control" parent="PauseLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="PauseLayer/PauseScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.03, 0.06, 0.55)
+
+[node name="Center" type="CenterContainer" parent="PauseLayer/PauseScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="PauseLayer/PauseScreen/Center"]
+layout_mode = 2
+
+[node name="Stack" type="VBoxContainer" parent="PauseLayer/PauseScreen/Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="PauseLayer/PauseScreen/Center/Panel/Stack"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.77, 0.36, 1)
+theme_override_font_sizes/font_size = 14
+text = "Paused"
+horizontal_alignment = 1
+
+[node name="Buttons" type="VBoxContainer" parent="PauseLayer/PauseScreen/Center/Panel/Stack"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Resume" type="Button" parent="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Resume"
+
+[node name="Title" type="Button" parent="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Title"
+
+[connection signal="pressed" from="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Title" to="." method="_on_title_pressed"]

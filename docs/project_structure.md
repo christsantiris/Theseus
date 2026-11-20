@@ -3,8 +3,7 @@
 ## Scene ownership
 
 `scenes/main/main.tscn` is the project entry point. Its `World` node will host the
-active level; its `UI` CanvasLayer will host screen-space controls. The temporary
-`ScaffoldScreen` can be removed when the first playable level is connected.
+active level; its `UI` CanvasLayer hosts the title screen and the controls screen.
 
 Create reusable scenes for the player, each enemy, and interactive objects. A
 level owns its terrain and instances those scenes. Keep each scene's GDScript

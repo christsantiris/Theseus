@@ -10,8 +10,8 @@ expressive movement, and pixel art of early SNES platformers.
 2. In Godot's Project Manager, choose **Import** and select `project.godot`.
 3. Open the project and press **F6** with `scenes/main/main.tscn` open, or **F5** to run the project.
 
-The current milestone displays a small startup screen. Player movement and levels
-will be added in later milestones.
+New Game starts Level 1. Theseus can run, jump, and thrust. Controls can be
+rebound from the title screen, and those bindings are saved for the next launch.
 
 If Godot is available as `godot` on your PATH:
 
@@ -65,24 +65,27 @@ for rendering, naming, and scene ownership decisions.
 - Named 2D physics layers: World, Player, Enemies, Collectibles, and Hazards.
 - Audio buses: Master, Music, and SFX.
 
-| Input action | Keyboard binding | Planned use |
+| Input action | Default keys | Use |
 | --- | --- | --- |
 | `move_left` | A / Left arrow | Move left |
 | `move_right` | D / Right arrow | Move right |
-| `jump` | Space | Jump |
-| `pause` | Escape | Pause/menu |
+| `jump` | Up arrow / W | Jump. Release early for a shorter hop |
+| `attack` | Space | Sword thrust |
+| `pause` | Escape | Pause, then resume or return to the title |
 
-These actions are configured for future scripts; the startup screen has no input behavior.
-Letter bindings use physical keys, corresponding to A/D positions on a US keyboard.
+The title screen's Controls button rebinds these keys. Bindings are stored in
+`user://input_bindings.cfg`. Letter keys use physical positions, so A/D/W stay
+on those keys for a US keyboard layout.
 
 ## Milestones
 
-1. **Project structure (current):** folders, settings, input actions, audio buses,
-   startup scene, and development notes.
-2. **Player prototype:** horizontal movement, jump feel, collisions, camera, and a
-   small test level.
+1. **Project structure:** folders, settings, input actions, audio buses, startup
+   scene, and development notes.
+2. **Player prototype (current):** Theseus can run, jump, and thrust in Level 1.
+   The title screen has New Game and remappable controls. The backdrop is a flat
+   Greek color study, not a finished tileset.
 3. **Adventure loop:** level progression, hazards, collectibles, enemies, and HUD.
-4. **Presentation:** original pixel art, animation, backgrounds, music, and sound.
+4. **Presentation:** finished level art, animation polish, music, and sound.
 
 Stop after each milestone for review and a manual commit. No commits or GitHub
 publishing are performed automatically.

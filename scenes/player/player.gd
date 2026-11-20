@@ -1,0 +1,94 @@
+extends CharacterBody2D
+
+const FRAME_SIZE := Vector2i(72, 56)
+const FOOT_ROW := 54
+const SPEED := 90.0
+const JUMP_VELOCITY := -260.0
+const GRAVITY := 900.0
+
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+
+var _attacking := false
+
+
+func _ready() -> void:
+	_build_frames()
+	sprite.offset = Vector2(0, -(FOOT_ROW - FRAME_SIZE.y * 0.5))
+	sprite.animation_finished.connect(_on_animation_finished)
+	sprite.play("idle")
+
+
+func _physics_process(delta: float) -> void:
+	if not is_on_floor():
+		velocity.y += GRAVITY * delta
+
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+	if Input.is_action_just_released("jump") and velocity.y < 0.0:
+		velocity.y *= 0.45
+
+	if Input.is_action_just_pressed("attack") and not _attacking:
+		_attacking = true
+		sprite.play("attack")
+
+	var direction := Input.get_axis("move_left", "move_right")
+	if direction != 0.0:
+		velocity.x = direction * SPEED
+		sprite.flip_h = direction < 0.0
+	else:
+		velocity.x = move_toward(velocity.x, 0.0, SPEED * 8.0 * delta)
+
+	move_and_slide()
+	_update_animation()
+
+
+func _update_animation() -> void:
+	if _attacking:
+		return
+	if not is_on_floor():
+		_play("jump_rise" if velocity.y < 0.0 else "jump_fall")
+	elif absf(velocity.x) > 5.0:
+		_play("walk")
+	else:
+		_play("idle")
+
+
+func _play(animation_name: String) -> void:
+	if sprite.animation != animation_name:
+		sprite.play(animation_name)
+
+
+func _on_animation_finished() -> void:
+	if sprite.animation == "attack":
+		_attacking = false
+
+
+func _build_frames() -> void:
+	var texture := preload("res://assets/art/characters/theseus.png")
+	var frames := SpriteFrames.new()
+	_add_animation(frames, texture, "idle", [0], 1.0, true)
+	_add_animation(frames, texture, "walk", [1, 2, 3, 4], 8.0, true)
+	_add_animation(frames, texture, "jump_rise", [5], 1.0, true)
+	_add_animation(frames, texture, "jump_fall", [6], 1.0, true)
+	_add_animation(frames, texture, "attack", [7, 8, 9], 12.0, false)
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	sprite.sprite_frames = frames
+
+
+func _add_animation(
+	frames: SpriteFrames,
+	texture: Texture2D,
+	animation_name: String,
+	indices: Array,
+	speed: float,
+	looped: bool
+) -> void:
+	frames.add_animation(animation_name)
+	frames.set_animation_speed(animation_name, speed)
+	frames.set_animation_loop(animation_name, looped)
+	for index in indices:
+		var atlas := AtlasTexture.new()
+		atlas.atlas = texture
+		atlas.region = Rect2(int(index) * FRAME_SIZE.x, 0, FRAME_SIZE.x, FRAME_SIZE.y)
+		frames.add_frame(animation_name, atlas)
