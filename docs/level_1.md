@@ -56,11 +56,12 @@ takes approximately **53 simulated seconds** and uses 15 jumps.
 - Backtracking to an earlier shrine cannot replace a later checkpoint or farm healing.
 - Checkpoints last for the current run. New Game and Replay Level start fresh;
   disk saving is a separate feature.
-- The temple gate remains physically closed until its guard is defeated. Entering
-  the open gate pauses combat and displays score, defeated count, and time, with
-  Replay Level and Title buttons.
+- The temple gate remains physically closed until its guard is defeated. Reaching
+  the open temple pauses combat while Theseus walks up the steps and fades into
+  the doorway. The level-clear screen appears after he has entered, showing
+  score, defeated count, and time, with Replay Level and Return to Title buttons.
 
-![Level-clear screen](level_1_complete.png)
+![Theseus entering the temple before the level-clear screen](temple_entry_preview.gif)
 
 ## Editing and validation
 

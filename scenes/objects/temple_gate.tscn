@@ -6,9 +6,10 @@
 size = Vector2(20, 60)
 
 [sub_resource type="RectangleShape2D" id="FinishShape"]
-size = Vector2(16, 48)
+size = Vector2(16, 56)
 
 [node name="TempleGate" type="Node2D"]
+z_index = -1
 script = ExtResource("1_gate")
 
 [node name="Barrier" type="StaticBody2D" parent="."]
@@ -24,5 +25,5 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Finish"]
-position = Vector2(0, -40)
+position = Vector2(-50, -24)
 shape = SubResource("FinishShape")
