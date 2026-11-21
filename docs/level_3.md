@@ -35,9 +35,8 @@ defeated to open the exit.
 | Spartoi | Reuses Raider's committed sword lunge. Bait the windup and counter during recovery. |
 | Peltast | Reuses the held javelin's stationary melee jab. Step away or jump the telegraph, then counter. |
 
-Lamia uses the approved [artwork and behavior](lamia_review.md) unchanged. Her
-workshop, agora, and temple landings provide room to back out of her 68-pixel
-engagement range. Her protective retreat and guard last 0.83 seconds, followed
+Lamia's workshop, agora, and temple landings provide room to back out of her
+68-pixel engagement range. Her protective retreat and guard last 0.83 seconds, followed
 by an exposed recovery and idle cooldown. The final Lamia is on a 192-pixel
 landing. No ranged attacks, new controls, or additional enemy variants are added.
 

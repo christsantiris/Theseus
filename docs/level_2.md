@@ -38,8 +38,7 @@ uses the existing mutual collision rule: each actor loses one health.
 The humanoids reuse the tested melee controllers and hitboxes. Art uses
 four walking frames and three attack poses, matching the existing soldiers.
 The birds use four wing frames. All sheets use 72×56 transparent cells and
-nearest-neighbor filtering; generation prompts are in
-[level_2_sprite_prompts.json](level_2_sprite_prompts.json).
+nearest-neighbor filtering.
 
 ## Checkpoints and completion
 
