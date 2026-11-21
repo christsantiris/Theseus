@@ -1,0 +1,55 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/bronze_bull.gd" id="1_bull"]
+[ext_resource type="Script" path="res://scenes/enemies/bull_back.gd" id="2_back"]
+
+[sub_resource type="RectangleShape2D" id="BodyShape"]
+size = Vector2(44, 24)
+
+[sub_resource type="RectangleShape2D" id="BackShape"]
+size = Vector2(28, 6)
+
+[sub_resource type="RectangleShape2D" id="PlatformShape"]
+size = Vector2(44, 4)
+
+[node name="BronzeBull" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_bull")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -12)
+shape = SubResource("BodyShape")
+
+[node name="Contact" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Contact"]
+position = Vector2(0, -12)
+shape = SubResource("BodyShape")
+
+[node name="Back" type="Area2D" parent="."]
+position = Vector2(0, -28)
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource("2_back")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Back"]
+shape = SubResource("BackShape")
+
+[node name="BackPlatform" type="AnimatableBody2D" parent="."]
+position = Vector2(0, -28)
+collision_layer = 0
+collision_mask = 0
+sync_to_physics = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BackPlatform"]
+shape = SubResource("PlatformShape")
+disabled = true
+one_way_collision = true
+one_way_collision_margin = 2.0

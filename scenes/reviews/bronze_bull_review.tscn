@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scenes/reviews/bronze_bull_review.gd" id="1_review"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/bronze_bull.tscn" id="3_bronze_bull"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
+
+[node name="BronzeBullReview" type="Node2D"]
+script = ExtResource("1_review")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(80, 152)
+
+[node name="BronzeBull" parent="." instance=ExtResource("3_bronze_bull")]
+position = Vector2(240, 152)
+direction = -1
+patrol_left = 32.0
+patrol_right = 536.0
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]
+
+[node name="ReviewUI" type="CanvasLayer" parent="."]
+layer = 2
