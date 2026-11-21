@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scenes/reviews/cyclops_review.gd" id="1_review"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/cyclops_slinger.tscn" id="3_cyclops"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
+
+[node name="CyclopsReview" type="Node2D"]
+script = ExtResource("1_review")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(40, 152)
+
+[node name="Cyclops" parent="." instance=ExtResource("3_cyclops")]
+position = Vector2(256, 136)
+direction = -1
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]
+
+[node name="ReviewUI" type="CanvasLayer" parent="."]
+layer = 2
