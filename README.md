@@ -23,7 +23,7 @@ A left-to-right side scroller. Theseus runs the road from Athens to a guarded te
 
 ### Title
 
-![Theseus stands on a Greek shore beside the title menu](docs/screenshots/title.png)
+<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/176b3e11-5bb4-4580-80d6-e69ba5de2f34" />
 
 ### Broken Colonnade
 
