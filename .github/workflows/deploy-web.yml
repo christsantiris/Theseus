@@ -6,7 +6,9 @@ on:
     # A push that only edits the overview does not publish. Any other file in the same push still does.
     paths-ignore:
       - "README.md"
+      - "AGENTS.md"
       - "docs/**"
+      - "tests/**"
   workflow_dispatch:
 
 permissions:
