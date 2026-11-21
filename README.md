@@ -26,6 +26,15 @@ To play Level 2 directly while testing:
 godot --path . --scene res://scenes/levels/level_2.tscn
 ```
 
+Clear Level 2 and choose **Continue to Level 3** to enter [The Sacred City](docs/level_3.md):
+Greek houses, tiled roofs, colonnades, and temples behind a route through the
+workshops, agora, and acropolis. Four Lamia share the town with Hoplites, Spartoi,
+and Peltasts. The Level 3 entrance immediately becomes the new load checkpoint.
+
+```sh
+godot --path . --scene res://scenes/levels/level_3.tscn
+```
+
 If Godot is available as `godot` on your PATH:
 
 ```sh
@@ -96,6 +105,10 @@ for rendering, naming, and scene ownership decisions.
   fixed aspect ratio keep the pixel grid consistent. This is a widescreen starting
   point rather than an exact SNES display resolution.
 - Nearest-neighbor texture filtering for pixel art.
+- UI text uses the Theseus Inscription bitmap fonts and carved-marble panels from
+  `resources/themes/theseus.tres` (set as the project theme). Text sits on the 320×180
+  pixel grid, so it stays sharp at any window size. To change glyphs or marble, edit
+  `tools/make_ui_assets.py` and run `python3 tools/make_ui_assets.py`.
 - Named 2D physics layers: World, Player, Enemies, Collectibles, and Hazards.
 - Audio buses: Master, Music, and SFX.
 
@@ -122,9 +135,11 @@ on those keys for a US keyboard layout.
    Greek color study, not a finished tileset.
 3. **Level 1:** a 4,800-pixel route with five areas, sixteen enemies,
    health pickups, checkpoint recovery, score, and a temple-gate ending.
-4. **Level 2 (current):** a rocky coastal route with thirty ledges, three new
+4. **Level 2:** a rocky coastal route with thirty ledges, three new
    enemy types, vertical camera movement, and level-aware checkpoint recovery.
-5. **Presentation:** finished level art, animation polish, music, and sound.
+5. **Level 3 (current):** a Greek town with twenty-three terraces, Lamia encounters,
+   familiar soldier types, checkpoint recovery, and an acropolis temple exit.
+6. **Presentation:** finished level art, animation polish, music, and sound.
 
 Stop after each milestone for review and a manual commit. No commits or GitHub
 publishing are performed automatically.

@@ -96,7 +96,7 @@ func _run() -> void:
 	_expect(level.level_number == 2 and level.player.position.distance_to(Coast.CHECKPOINTS[1].spawn) < 1.0, "Title Load resumes the latest Level 2 shrine")
 	await _traverse()
 	level = current_scene
-	_expect(not level.next_button.visible and level.pause_heading.text == "Level 2 Complete", "Coastal temple completes Level 2 without a missing next level")
+	_expect(level.next_button.visible and level.next_button.text == "Continue to Level 3" and level.pause_heading.text == "Level 2 Complete", "Coastal temple completion offers Level 3")
 	level._on_replay_pressed()
 	await _frames()
 	_expect(current_scene.level_number == 2 and state.can_load(), "Replay restarts the current level and retains its entrance checkpoint")

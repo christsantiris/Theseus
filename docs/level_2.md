@@ -57,7 +57,9 @@ cannot replace a later shrine. Five health flasks restore two bars each.
 Defeat SpartoiSanctuaryGuard to open the temple at (4752, 280). Theseus climbs
 the temple steps and disappears into the doorway before the completion menu.
 Replay Level restarts Level 2; New Game on the title starts Level 1 and clears
-the run. Level 2 completion offers replay or return to title.
+the run. Level 2 completion also offers **Continue to Level 3**, leading to
+[The Sacred City](level_3.md). Entering town replaces the coastal checkpoint
+with a new load point at the Level 3 entrance.
 
 ## Run and validation
 

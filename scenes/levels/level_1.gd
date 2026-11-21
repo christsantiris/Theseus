@@ -10,6 +10,7 @@ const ENEMY_SCENES := {
 	"telchine": preload("res://scenes/enemies/telchine.tscn"),
 	"spartoi": preload("res://scenes/enemies/spartoi.tscn"),
 	"bird": preload("res://scenes/enemies/stymphalian_bird.tscn"),
+	"lamia": preload("res://scenes/enemies/lamia.tscn"),
 }
 const FLASK := preload("res://scenes/pickups/health_flask.tscn")
 const CHECKPOINT := preload("res://scenes/objects/checkpoint.tscn")
@@ -119,12 +120,6 @@ func _build_encounters() -> void:
 
 func _style_pause_screen() -> void:
 	var theme := preload("res://scenes/ui/theme_helpers.gd")
-	var panel_style := StyleBoxFlat.new()
-	panel_style.bg_color = Color(0.06, 0.08, 0.14, 1)
-	panel_style.border_color = theme.GOLD
-	panel_style.set_border_width_all(1)
-	panel_style.set_content_margin_all(8)
-	pause_panel.add_theme_stylebox_override("panel", panel_style)
 	for button in [resume_button, next_button, replay_button, title_button]:
 		theme.style_button(button, 8)
 		button.custom_minimum_size = Vector2(96, 16)
@@ -253,6 +248,7 @@ func _on_gate_entered() -> void:
 	resume_button.hide()
 	replay_button.show()
 	next_button.visible = not next_level.is_empty()
+	next_button.text = "Continue to Level %d" % (level_number + 1)
 	pause_screen.show()
 	if next_button.visible:
 		next_button.grab_focus()
