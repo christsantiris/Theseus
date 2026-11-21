@@ -104,7 +104,7 @@ func _run() -> void:
 		player.position = Vector2(enemy.position.x - 8.0, top + 6.0)
 		player.velocity = Vector2(0, 60)
 		await _frames(15)
-		_expect(player.health == 5 and enemy.hp == 2, kind + ": falling beside the head is not a stomp collision")
+		_expect(player.health == 4 and enemy.hp == 1 and enemy.alive, kind + ": falling into the body costs both fighters exactly one HP")
 		setup = await _fixture(kind)
 		enemy = setup.enemy
 		await _begin_attack()
@@ -135,7 +135,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: all three enemy types, passive contact, mutual one-HP stomp collisions, collision cooldown, side grazes, visible sword strikes, expired/interrupted swings, facing and scoring.")
+		print("PASS: all three enemy types, passive contact, mutual one-HP jump collisions, collision cooldown, body impacts, visible sword strikes, expired/interrupted swings, facing and scoring.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)

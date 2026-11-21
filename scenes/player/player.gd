@@ -35,6 +35,7 @@ var _hurt_lock := 0.0
 var _sword: Area2D
 var _sword_shape: CollisionShape2D
 var _swing_hits := {}
+var _air_hits := {}
 var _ducked := false
 
 
@@ -113,7 +114,7 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0.0, SPEED * 8.0 * delta)
 	_set_ducked(ducking)
 
-	_resolve_landing_collision(delta)
+	_resolve_jump_collision()
 	if health <= 0:
 		return
 	move_and_slide()
@@ -151,29 +152,41 @@ func _die() -> void:
 	)
 
 
-func _resolve_landing_collision(delta: float) -> void:
-	if velocity.y <= 0.0 or _hurt_lock > 0.0:
+func _resolve_jump_collision() -> void:
+	if is_on_floor() or health <= 0:
+		_air_hits.clear()
 		return
 	var player_rect: Rect2 = _body.global_transform * _body.shape.get_rect()
-	var foot := player_rect.end.y
-	var next_foot := foot + velocity.y * delta
+	var touching := {}
 	for enemy in get_tree().get_nodes_in_group("enemies"):
-		if not enemy.alive or not enemy.has_method("take_damage"):
+		if not is_instance_valid(enemy) or not enemy.alive or not enemy.has_method("take_damage"):
 			continue
 		var collision := enemy.get_node_or_null("CollisionShape2D") as CollisionShape2D
 		if collision == null or collision.disabled or collision.shape == null:
 			continue
 		var enemy_rect: Rect2 = collision.global_transform * collision.shape.get_rect()
-		var overlap := minf(player_rect.end.x, enemy_rect.end.x) - maxf(player_rect.position.x, enemy_rect.position.x)
-		# Require a genuine crossing of the current head height, not a side graze.
-		if overlap <= 2.0 or foot > enemy_rect.position.y + 1.0 or next_foot < enemy_rect.position.y:
+		var overlap := player_rect.intersection(enemy_rect)
+		if overlap.size.x < 4.0 or overlap.size.y < 4.0:
 			continue
-		global_position.y += enemy_rect.position.y - foot - 1.0
-		# Hurt supplies the existing recoil and invulnerability window. The enemy
-		# loses exactly one HP as well, rather than being defeated outright.
+		var id := enemy.get_instance_id()
+		touching[id] = true
+		if _air_hits.has(id) or _hurt_lock > 0.0:
+			continue
+		var foot := player_rect.end.y
+		if velocity.y > 0.0 and foot <= enemy_rect.position.y + 8.0:
+			global_position.y += enemy_rect.position.y - foot - 1.0
 		hurt(1)
-		enemy.take_damage(1)
-		return
+		if is_instance_valid(enemy) and enemy.alive:
+			enemy.take_damage(1)
+		if health <= 0:
+			break
+	for id in touching:
+		_air_hits[id] = true
+	var kept := {}
+	for id in _air_hits:
+		if touching.has(id):
+			kept[id] = true
+	_air_hits = kept
 
 
 func _strike() -> void:
