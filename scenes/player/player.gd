@@ -28,6 +28,8 @@ const LAND_IMPACT_SECONDS := 0.25
 var health := MAX_HEALTH
 var _attacking := false
 var _downward_attack := false
+var _attack_animation := "attack"
+var _next_ground_swing := false
 var _swing: AudioStreamPlayer
 var _swing_token := 0
 var _land: AudioStreamPlayer
@@ -104,14 +106,22 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("attack") and not ducking:
 		_attacking = true
-		_downward_attack = not is_on_floor() and Input.is_action_pressed("duck")
+		var airborne := jumped_this_frame or not is_on_floor()
+		_downward_attack = airborne and Input.is_action_pressed("duck")
 		sprite.speed_scale = 1.0
 		_swing_hits.clear()
-		var animation_name := "down_thrust" if _downward_attack else "attack"
-		if sprite.animation == animation_name:
+		if _downward_attack:
+			_attack_animation = "down_thrust"
+		elif airborne:
+			_attack_animation = "swing"
+		else:
+			_attack_animation = "swing" if _next_ground_swing else "attack"
+			# Only attacks started on the ground advance the alternating sequence.
+			_next_ground_swing = not _next_ground_swing
+		if sprite.animation == _attack_animation:
 			sprite.stop()
-		Art.anchor(sprite, animation_name)
-		sprite.play(animation_name)
+		Art.anchor(sprite, _attack_animation)
+		sprite.play(_attack_animation)
 		_play_swing()
 
 	var direction := Input.get_axis("move_left", "move_right")
@@ -130,6 +140,7 @@ func _physics_process(delta: float) -> void:
 	if health <= 0:
 		return
 	move_and_slide()
+	_convert_airborne_stab()
 	_strike()
 	_update_landing(jumped_this_frame)
 	_update_animation()
@@ -228,11 +239,23 @@ func _resolve_jump_collision() -> void:
 	_air_hits = kept
 
 
+func _convert_airborne_stab() -> void:
+	if is_on_floor() or not _attacking or _attack_animation != "attack" or sprite.animation != "attack":
+		return
+	# Taking off or leaving a ledge also changes an existing stab to a slash.
+	# Keep its elapsed phase and hit history so this cannot restart or double-hit.
+	var frame := sprite.frame
+	var progress := sprite.frame_progress
+	_attack_animation = "swing"
+	Art.anchor(sprite, _attack_animation)
+	sprite.play(_attack_animation)
+	sprite.set_frame_and_progress(frame, progress)
+
+
 func _strike() -> void:
 	if not _attacking:
 		return
-	var attack_animation := "down_thrust" if _downward_attack else "attack"
-	if sprite.animation != attack_animation or not sprite.is_playing():
+	if sprite.animation != _attack_animation or not sprite.is_playing():
 		_finish_attack()
 		return
 	# Both extended-blade frames share the original 1/12-second hit window.
@@ -342,7 +365,7 @@ func _play(animation_name: String) -> void:
 
 
 func _on_animation_finished() -> void:
-	if sprite.animation in ["attack", "down_thrust"]:
+	if sprite.animation in ["attack", "swing", "down_thrust"]:
 		_finish_attack()
 		_update_animation()
 
