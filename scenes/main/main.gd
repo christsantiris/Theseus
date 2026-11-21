@@ -1,6 +1,7 @@
 extends Node2D
 
 const ThemeHelpers := preload("res://scenes/ui/theme_helpers.gd")
+const TheseusArt := preload("res://scenes/player/theseus_art.gd")
 
 @onready var title_screen: Control = $UI/TitleScreen
 @onready var controls_screen: Control = $UI/ControlsScreen
@@ -13,6 +14,13 @@ const ThemeHelpers := preload("res://scenes/ui/theme_helpers.gd")
 
 func _ready() -> void:
 	get_tree().paused = false
+	var hero := AnimatedSprite2D.new()
+	hero.name = "Theseus"
+	TheseusArt.configure(hero)
+	hero.position = Vector2(80, 151)
+	$UI.add_child(hero)
+	$UI.move_child(hero, 1)
+	hero.play("idle")
 	for button in [new_game_button, load_button, controls_button]:
 		ThemeHelpers.style_button(button, 8)
 		button.custom_minimum_size = Vector2(96, 16)

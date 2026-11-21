@@ -2,7 +2,7 @@ extends "res://scenes/levels/level_geometry.gd"
 
 const Head := preload("res://scenes/enemies/hydra_head.gd")
 const BODY_ART := preload("res://assets/art/characters/hydra_body.png")
-const THESEUS_ART := preload("res://assets/art/characters/theseus.png")
+const TheseusArt := preload("res://scenes/player/theseus_art.gd")
 
 @onready var player = $Player
 @onready var hydra = $Hydra
@@ -68,11 +68,8 @@ func _build_review_ui() -> void:
 		_label(gallery, captions[index], at + Vector2(-26, -70), 7)
 		_gallery_hydra(at, [0, 1, 2] if index != 1 and index != 2 else [1, 2] if index == 1 else [2], [0, 0, 0, 2, 3, 5][index])
 	var hero := Sprite2D.new()
-	var hero_art := AtlasTexture.new()
-	hero_art.atlas = THESEUS_ART
-	hero_art.region = Rect2(0, 0, 72, 56)
-	hero.texture = hero_art
-	hero.position = Vector2(292, 60)
+	TheseusArt.configure_reference(hero)
+	hero.position = Vector2(292, 86)
 	gallery.add_child(hero)
 	gallery.hide()
 

@@ -3,8 +3,7 @@ extends CharacterBody2D
 signal health_changed(current: int, maximum: int)
 signal speed_boost_changed(seconds_remaining: int)
 
-const FRAME_SIZE := Vector2i(72, 56)
-const FOOT_ROW := 54
+const Art := preload("res://scenes/player/theseus_art.gd")
 const SPEED := 90.0
 const SPEED_BOOST_MULTIPLIER := 1.35
 const JUMP_VELOCITY := -260.0
@@ -17,7 +16,7 @@ const DUCK_SIZE := Vector2(14, 36)
 const DUCK_CENTER := Vector2(0, -18)
 const MAX_HEALTH := 5
 const HURT_LOCK := 0.5
-const ATTACK_HIT_FRAME := 1
+const ATTACK_HIT_FRAMES := [2, 3]
 const SWING := preload("res://assets/audio/sfx/daviddumaisaudio-sword-slash-and-swing-185432.mp3")
 const SWING_AUDIBLE_SECONDS := 0.92
 const LAND := preload("res://assets/audio/sfx/u_qqkrn9bn55-jumplanding-398256.mp3")
@@ -28,6 +27,7 @@ const LAND_IMPACT_SECONDS := 0.25
 
 var health := MAX_HEALTH
 var _attacking := false
+var _downward_attack := false
 var _swing: AudioStreamPlayer
 var _swing_token := 0
 var _land: AudioStreamPlayer
@@ -45,7 +45,6 @@ var _speed_boost_left := 0.0
 func _ready() -> void:
 	add_to_group("player")
 	_build_frames()
-	sprite.offset = Vector2(0, -(FOOT_ROW - FRAME_SIZE.y * 0.5))
 	sprite.animation_finished.connect(_on_animation_finished)
 	sprite.play("idle")
 	_swing = AudioStreamPlayer.new()
@@ -105,11 +104,14 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("attack") and not ducking:
 		_attacking = true
+		_downward_attack = not is_on_floor() and Input.is_action_pressed("duck")
 		sprite.speed_scale = 1.0
 		_swing_hits.clear()
-		if sprite.animation == "attack":
+		var animation_name := "down_thrust" if _downward_attack else "attack"
+		if sprite.animation == animation_name:
 			sprite.stop()
-		sprite.play("attack")
+		Art.anchor(sprite, animation_name)
+		sprite.play(animation_name)
 		_play_swing()
 
 	var direction := Input.get_axis("move_left", "move_right")
@@ -171,7 +173,10 @@ func _die() -> void:
 	speed_boost_changed.emit(0)
 	_finish_attack()
 	set_physics_process(false)
-	sprite.modulate = Color(1.0, 0.35, 0.35, 1.0)
+	sprite.modulate = Color.WHITE
+	sprite.speed_scale = 1.0
+	Art.anchor(sprite, "death")
+	sprite.play("death")
 	get_tree().create_timer(0.7).timeout.connect(func() -> void:
 		get_tree().reload_current_scene()
 	)
@@ -226,14 +231,17 @@ func _resolve_jump_collision() -> void:
 func _strike() -> void:
 	if not _attacking:
 		return
-	if sprite.animation != "attack" or not sprite.is_playing():
+	var attack_animation := "down_thrust" if _downward_attack else "attack"
+	if sprite.animation != attack_animation or not sprite.is_playing():
 		_finish_attack()
 		return
-	# The middle frame is the extended blade; windup and recovery cannot hit.
-	if sprite.frame != ATTACK_HIT_FRAME:
+	# Both extended-blade frames share the original 1/12-second hit window.
+	if sprite.frame not in ATTACK_HIT_FRAMES:
 		return
 	var facing := -1.0 if sprite.flip_h else 1.0
-	_sword_shape.position = Vector2(18.0 * facing, -16.0)
+	var blade := _sword_shape.shape as RectangleShape2D
+	blade.size = Vector2(8, 12) if _downward_attack else Vector2(26, 14)
+	_sword_shape.position = Vector2(10.0 * facing, 6) if _downward_attack else Vector2(18.0 * facing, -16.0)
 	# Query the blade's current transform, avoiding cached overlaps from a previous
 	# frame or facing direction.
 	var query := PhysicsShapeQueryParameters2D.new()
@@ -244,10 +252,15 @@ func _strike() -> void:
 	query.exclude = [get_rid()]
 	for result: Dictionary in get_world_2d().direct_space_state.intersect_shape(query, 32):
 		var target: Object = result.collider
+		if target.has_method("attack_target"):
+			target = target.attack_target()
 		var id := target.get_instance_id()
 		if _swing_hits.has(id):
 			continue
-		if target.has_method("sword_hit"):
+		if _downward_attack and target.has_method("downward_hit"):
+			_swing_hits[id] = true
+			target.downward_hit(self)
+		elif target.has_method("sword_hit"):
 			_swing_hits[id] = true
 			target.sword_hit()
 		elif target.has_method("cut"):
@@ -257,6 +270,7 @@ func _strike() -> void:
 
 func _finish_attack() -> void:
 	_attacking = false
+	_downward_attack = false
 	_swing_hits.clear()
 
 
@@ -291,7 +305,9 @@ func _set_ducked(ducking: bool) -> void:
 func _update_animation() -> void:
 	if _attacking:
 		return
-	if _wants_duck():
+	if _hurt_lock > HURT_LOCK - 1.0 / 6.0 and not _ducked:
+		_play("hurt")
+	elif _wants_duck():
 		_play("duck")
 	elif not is_on_floor():
 		_play("jump_rise" if velocity.y < 0.0 else "jump_fall")
@@ -319,14 +335,16 @@ func _play_land() -> void:
 
 
 func _play(animation_name: String) -> void:
+	Art.anchor(sprite, animation_name)
 	sprite.speed_scale = SPEED_BOOST_MULTIPLIER if animation_name == "walk" and _speed_boost_left > 0.0 else 1.0
 	if sprite.animation != animation_name:
 		sprite.play(animation_name)
 
 
 func _on_animation_finished() -> void:
-	if sprite.animation == "attack":
+	if sprite.animation in ["attack", "down_thrust"]:
 		_finish_attack()
+		_update_animation()
 
 
 func _play_swing() -> void:
@@ -341,32 +359,4 @@ func _play_swing() -> void:
 
 
 func _build_frames() -> void:
-	var texture := preload("res://assets/art/characters/theseus.png")
-	var frames := SpriteFrames.new()
-	_add_animation(frames, texture, "idle", [0], 1.0, true)
-	_add_animation(frames, texture, "walk", [1, 2, 3, 4], 8.0, true)
-	_add_animation(frames, texture, "duck", [5], 1.0, true)
-	_add_animation(frames, texture, "jump_rise", [5], 1.0, true)
-	_add_animation(frames, texture, "jump_fall", [6], 1.0, true)
-	_add_animation(frames, texture, "attack", [7, 8, 9], 12.0, false)
-	if frames.has_animation("default"):
-		frames.remove_animation("default")
-	sprite.sprite_frames = frames
-
-
-func _add_animation(
-	frames: SpriteFrames,
-	texture: Texture2D,
-	animation_name: String,
-	indices: Array,
-	speed: float,
-	looped: bool
-) -> void:
-	frames.add_animation(animation_name)
-	frames.set_animation_speed(animation_name, speed)
-	frames.set_animation_loop(animation_name, looped)
-	for index in indices:
-		var atlas := AtlasTexture.new()
-		atlas.atlas = texture
-		atlas.region = Rect2(int(index) * FRAME_SIZE.x, 0, FRAME_SIZE.x, FRAME_SIZE.y)
-		frames.add_frame(animation_name, atlas)
+	Art.configure(sprite)

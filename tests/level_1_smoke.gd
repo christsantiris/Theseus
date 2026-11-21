@@ -112,6 +112,7 @@ func _run() -> void:
 	_expect(level._gate.get_node("Barrier/CollisionShape2D").disabled, "Open gate removes its collision barrier")
 	_expect(level._gate.z_index < player.z_index, "Temple is behind Theseus on approach")
 	player.position = Layout.EXIT + Vector2(-60, 0)
+	var entry_scale: Vector2 = player.sprite.scale
 	await _settle()
 	_expect(level._entering_temple and paused and not level._complete, "Approaching the steps starts entry before level completion")
 	_expect(not player.is_physics_processing() and not level.pause_screen.visible, "Entry freezes combat and input without opening the pause menu")
@@ -125,6 +126,7 @@ func _run() -> void:
 		await physics_frame
 	_expect(player.position.distance_to(Layout.EXIT + Vector2(2, -20)) < 0.1, "Entry ends inside the doorway")
 	_expect(player.sprite.modulate.a < 0.01, "Theseus disappears into the temple before the clear screen")
+	_expect(player.sprite.scale.is_equal_approx(entry_scale * 0.72), "Temple entry shrinks the cinematic sprite relative to its game scale")
 	_expect(level._complete and paused, "Level completion pauses the world")
 	_expect(level.replay_button.visible and not level.resume_button.visible, "Completion offers replay instead of resume")
 	level._set_paused(false)

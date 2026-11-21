@@ -1,7 +1,7 @@
 extends "res://scenes/levels/level_geometry.gd"
 
 const BULL_ART := preload("res://assets/art/characters/bronze_bull.png")
-const THESEUS_ART := preload("res://assets/art/characters/theseus.png")
+const TheseusArt := preload("res://scenes/player/theseus_art.gd")
 const POSE_NAMES := ["Idle", "Windup", "Charge 1", "Charge 2", "Charge 3", "Charge 4", "Stagger", "Recover"]
 
 @onready var player = $Player
@@ -66,12 +66,14 @@ func _build_review_ui() -> void:
 		var at := Vector2(16 + (index % 3) * 96, 14 + (index / 3) * 54)
 		_label(gallery, "Theseus" if index == 0 else POSE_NAMES[index - 1], at + Vector2(2, -2), 7)
 		var atlas := AtlasTexture.new()
-		atlas.atlas = THESEUS_ART if index == 0 else BULL_ART
-		atlas.region = Rect2(0, 0, 72, 56) if index == 0 else Rect2((index - 1) * 96, 0, 96, 56)
+		atlas.atlas = BULL_ART
+		atlas.region = Rect2(maxi(0, index - 1) * 96, 0, 96, 56)
 		var sprite := Sprite2D.new()
 		sprite.texture = atlas
 		sprite.position = at + Vector2(44, 52)
-		sprite.offset = Vector2(0, -26) if index == 0 else Vector2(0, -25)
+		sprite.offset = Vector2(0, -25)
+		if index == 0:
+			TheseusArt.configure_reference(sprite)
 		gallery.add_child(sprite)
 	gallery.hide()
 

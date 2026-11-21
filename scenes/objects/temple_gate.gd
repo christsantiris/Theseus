@@ -41,6 +41,7 @@ func _on_body_entered(body: Node2D) -> void:
 	sprite.process_mode = Node.PROCESS_MODE_ALWAYS
 	sprite.flip_h = false
 	sprite.modulate = Color.WHITE
+	preload("res://scenes/player/theseus_art.gd").anchor(sprite, "walk")
 	sprite.play("walk")
 	# Keep the hero in front while he walks up the visible stair treads.
 	var tween := create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
@@ -51,7 +52,7 @@ func _on_body_entered(body: Node2D) -> void:
 			tween.tween_property(body, "global_position", destination, 0.18)
 	# A small inward step and a darkening, shrinking silhouette suggest doorway depth.
 	tween.tween_property(body, "global_position", to_global(Vector2(2, -20)), 0.3)
-	tween.parallel().tween_property(sprite, "scale", Vector2(0.72, 0.72), 0.3)
+	tween.parallel().tween_property(sprite, "scale", sprite.scale * 0.72, 0.3)
 	tween.parallel().tween_property(sprite, "modulate", Color(0.35, 0.4, 0.45, 0.0), 0.3)
 	tween.tween_callback(func() -> void: entered.emit())
 

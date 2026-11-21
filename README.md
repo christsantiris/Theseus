@@ -1,6 +1,6 @@
 # Theseus
 
-A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. The art is small and sharp, in the spirit of early SNES platformers.
+A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. Theseus uses detailed cinematic 3D-style sprites; the enemies and scenery use the original retro artwork.
 
 ## Contents
 
@@ -16,6 +16,10 @@ A left-to-right side scroller. Theseus runs the road from Athens to a guarded te
 - [Play-test any level](#play-test-any-level)
 
 ## Screenshots
+
+### Cinematic Theseus
+
+![Cinematic Theseus in the animation review scene](docs/screenshots/theseus-cinematic.png)
 
 ### Title
 
@@ -90,6 +94,8 @@ Sound effect by <a href="https://pixabay.com/users/u_qqkrn9bn55-52083300/?utm_so
 Sound Effect by <a href="https://pixabay.com/users/dragon-studio-38165424/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=515257">DRAGON-STUDIO</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=515257">Pixabay</a>
 
 ## Play-test any level
+
+To review Theseus, run `godot --path . res://scenes/reviews/theseus_review.tscn`, or open that scene and press **F6**. It shows all nine animations: breathing idle, walk, crouch, jump rise, jump fall, sword thrust, downward thrust, hurt, and death. Use **Slow**, **Hold**, and **Flip** to inspect the 36 frames, or **Play level 1** to try them in the game. The cinematic artwork keeps the same movement, collision sizes, attack timing, and wine-boost cadence. The title screen also uses the animated character.
 
 To review Cerberus Pups, run `godot --path . res://scenes/reviews/cerberus_pup_review.tscn`, or open that scene and press **F6**. The two hounds run together and take turns making a telegraphed leap. Jump over the attack or interrupt it with a sword hit. Each pup has two health bars; the surviving pup continues to pursue Theseus.
 

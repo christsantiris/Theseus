@@ -194,7 +194,7 @@ func _thrust_and_ride() -> void:
 	player.position.x = 600
 	await _frames(180)
 	_expect(not bull.can_ride() and bull.platform.collision_layer == 0, "Ride expires and the back stops being a permanent platform")
-	_expect(not player._downward_attack and player.sprite.offset.y == -26, "Finishing the thrust restores normal sprite anchoring")
+	_expect(not player._downward_attack and player.sprite.offset.y * player.sprite.scale.y == -26, "Finishing the thrust restores normal sprite anchoring")
 	# Re-arm for a death case, then verify the platform is removed immediately.
 	bull.downward_hit(player)
 	player.position = bull.position + Vector2(0, -40)
