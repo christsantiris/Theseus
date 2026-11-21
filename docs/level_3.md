@@ -57,6 +57,8 @@ Defeating HopliteAcropolisGuard unlocks the temple at (4752, 280). Theseus climb
 the steps and fades into the doorway before the Level 3 completion menu. Replay
 Level restarts the town and retains its entrance as a load point. Return to Title
 keeps the latest checkpoint; New Game explicitly clears the run and starts Level 1.
+Completion also offers **Continue to Level 4**, entering the
+[mountain sanctuary](level_4.md) and saving its entrance as the new load point.
 
 ![Level 3 completion screen](level_3_complete.png)
 

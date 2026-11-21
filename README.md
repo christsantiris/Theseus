@@ -1,6 +1,6 @@
 # Theseus
 
-A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, then along a rocky coast, and finally through a sacred city. The art is small and sharp, in the spirit of early SNES platformers.
+A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, and into cypress-covered mountain terraces. The art is small and sharp, in the spirit of early SNES platformers.
 
 ## Contents
 
@@ -9,6 +9,7 @@ A left-to-right side scroller. Theseus runs the road from Athens to a guarded te
   - [The Temple Road](#the-temple-road)
   - [The Rocky Coast](#the-rocky-coast)
   - [The Sacred City](#the-sacred-city)
+  - [The Mountain Sanctuary](#the-mountain-sanctuary)
 - [How to play](#how-to-play)
 - [Credits](#credits)
 - [Play-test any level](#play-test-any-level)
@@ -27,7 +28,7 @@ A left-to-right side scroller. Theseus runs the road from Athens to a guarded te
 
 ## The journey
 
-Light a shrine to keep your place. Death returns you there with full health. Load on the title screen resumes the latest shrine from the current session. New Game starts the road over.
+Light a shrine to keep your place. Entering a new level also saves its entrance. Death returns you to that entrance or the latest shrine with full health. Load resumes the highest level or shrine reached in the current session. New Game starts the road over.
 
 ### The Temple Road
 
@@ -43,13 +44,19 @@ Clear the temple and the road continues onto limestone cliffs above the sea. Bir
 
 ### The Sacred City
 
-The last stretch is a Greek town: houses, tiled roofs, an agora, and the climb to the acropolis. Lamia share the streets with hoplites, peltasts, and spartoi. The temple at the top is the exit.
+The third level is a Greek town: houses, tiled roofs, an agora, and the climb to the acropolis. Lamia share the streets with hoplites, peltasts, and spartoi. The temple at the top opens the way into the mountains.
 
 [Level 3 guide](docs/level_3.md)
 
+### The Mountain Sanctuary
+
+Cypress trees rise above Greek mountain slopes and terraced stone walls. Cyclops Slingers hurl breakable boulders, Satyrs hop between ledges and charge with their horns, and Raiders and Telchines return. Four spike pits interrupt the road: jump across, or climb out after losing a health bar. Satyrs can be bounced on and sometimes drop stolen wine for a brief speed boost.
+
+[Level 4 guide](docs/level_4.md)
+
 ## How to play
 
-Theseus runs, jumps, ducks, and thrusts. A short jump is a released jump. Sword hits and a jump into an enemy each cost that enemy one health. Theseus has five health. Flasks restore two, and they never fill him past five.
+Theseus runs, jumps, ducks, and thrusts. A short jump is a released jump. Sword hits and a jump into an enemy each cost that enemy one health; landing on a Satyr bounces Theseus safely. Theseus has five health. Flasks restore two, and they never fill him past five. Stolen wine grants six seconds of extra speed. Spike pits cost one health bar per damaging contact and have enough room to jump out.
 
 | Action | Keys |
 | --- | --- |

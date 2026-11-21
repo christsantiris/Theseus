@@ -11,6 +11,8 @@ const ENEMY_SCENES := {
 	"spartoi": preload("res://scenes/enemies/spartoi.tscn"),
 	"bird": preload("res://scenes/enemies/stymphalian_bird.tscn"),
 	"lamia": preload("res://scenes/enemies/lamia.tscn"),
+	"cyclops": preload("res://scenes/enemies/cyclops_slinger.tscn"),
+	"satyr": preload("res://scenes/enemies/satyr.tscn"),
 }
 const FLASK := preload("res://scenes/pickups/health_flask.tscn")
 const CHECKPOINT := preload("res://scenes/objects/checkpoint.tscn")

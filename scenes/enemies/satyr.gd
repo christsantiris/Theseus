@@ -115,7 +115,7 @@ func _plan_hop() -> bool:
 		if not _has_focus and (target_x < patrol_left or target_x > patrol_right):
 			continue
 		var landing := _landing_at(target_x)
-		if landing.is_empty() or landing.normal.y > -0.7:
+		if landing.is_empty() or landing.normal.y > -0.7 or landing.collider.has_meta("spike_pit"):
 			continue
 		var dy: float = landing.position.y - global_position.y
 		if dy < -32.0 or dy > 32.0:
