@@ -7,6 +7,20 @@ foreground streets and terraces identify the walkable surfaces.
 
 ![Five areas of the Greek town](level_3_preview.png)
 
+## Cinematic scenery
+
+Each area has two cinematic 3D-style panoramas matching the sunlit materials
+and lighting in Levels 1 and 2. Plaster workshops, faded blue doors, terracotta
+roofs, pottery courtyards, shaded stoas, and Doric temples give the five city
+districts distinct silhouettes. The overlapping panels retain their natural
+proportions, and the skyline follows the height of the route so the buildings
+stay visible above the temple landings. The skyline glides over changes in
+route height. Cut-stone masonry covers the original twenty-three terraces,
+with terracotta amphorae at the existing prop positions and a matching temple exit.
+Terrain collisions, encounter positions, and movement remain unchanged.
+
+## Route
+
 | Area | World X | Route and encounters |
 | --- | --- | --- |
 | City Gate | 0–959 | A street-level Hoplite, then Peltast and Spartoi encounters on the first short climbs. The workshop terrace gives a clear approach to the first Lamia. |
@@ -66,14 +80,19 @@ Completion also offers **Continue to Level 4**, entering the
 ## Editing and validation
 
 `scenes/levels/level_3_layout.gd` owns the route, patrols, shrines, flasks, and tips.
-`level_3_geometry.gd` draws the town using the project's native geometric pixel
-style and creates its terrain collisions, including editor previews. The scene
+`level_3_geometry.gd` creates the original terrain collisions and renders the
+cinematic city, including editor previews. Each section PNG in
+`assets/art/backgrounds/level_3/` stores its west and east panoramas stacked
+vertically; the directory also contains the city masonry and amphora cutout.
+The stone caps and temple facade reuse Level 1's art. The facade keeps its
+bronze bars synchronized with unlocking, including paused temple entry. The scene
 inherits the existing HUD, pause menu, checkpoint system, and temple entry flow.
 The shared controller registers Lamia and labels Continue for the next level.
 
 ```sh
 godot --path . --scene res://scenes/levels/level_3.tscn
 godot --headless --path . --script res://tests/level_3_smoke.gd --fixed-fps 60
+godot --headless --path . --script res://tests/level_3_scenery.gd --fixed-fps 60
 godot --headless --path . --script res://tests/lamia_behavior.gd --fixed-fps 60
 ```
 
@@ -83,5 +102,8 @@ Lamia activation on her platform, flask healing, both shrines, rollback of
 post-checkpoint defeats and score, camera scrolling, temple entry, completion,
 replay, and New Game. Combat is isolated during the route traversal, which uses
 normal movement and fifteen jumps to reach the exit in about 52 simulated
-seconds. The existing two level suites and five combat suites also pass.
+seconds. The scenery check verifies all ten panoramas, full-route coverage at
+street level and the highest landing, unchanged terrace collisions, visible
+facades above the landings, paused gate updates, and isolation from the other
+levels.
 Combat difficulty and first-clear pacing still need a human playthrough.

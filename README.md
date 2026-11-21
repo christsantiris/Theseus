@@ -1,6 +1,6 @@
 # Theseus
 
-A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. Theseus and the scenery in Levels 1 and 2 use detailed cinematic 3D-style artwork. The enemies and Levels 3–5 retain the original retro artwork.
+A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. Theseus and the scenery in Levels 1–3 use detailed cinematic 3D-style artwork. The enemies and Levels 4–5 retain the original retro artwork.
 
 ## Contents
 
@@ -54,6 +54,8 @@ Ten cinematic coastal panoramas show turquoise coves, ruined quays, sea cliffs, 
 ### The Sacred City
 
 The third level is a Greek town: houses, tiled roofs, an agora, and the climb to the acropolis. Lamia share the streets with hoplites, peltasts, and spartoi. The temple at the top opens the way into the mountains.
+
+Ten cinematic city panoramas show plaster workshops, blue doors, terracotta roofs, shaded stoas, and Doric temples. Detailed cut-stone terraces and terracotta amphorae frame the original route, with the skyline following the climb through the temple district.
 
 [Level 3 guide](docs/level_3.md)
 
