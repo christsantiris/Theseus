@@ -75,11 +75,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Resume"
 
-[node name="Save" type="Button" parent="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Save"
-
 [node name="Replay" type="Button" parent="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons"]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -91,6 +86,5 @@ size_flags_horizontal = 4
 text = "Return to Title"
 
 [connection signal="pressed" from="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Resume" to="." method="_on_resume_pressed"]
-[connection signal="pressed" from="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Replay" to="." method="_on_replay_pressed"]
 [connection signal="pressed" from="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Title" to="." method="_on_title_pressed"]

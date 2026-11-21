@@ -33,7 +33,11 @@ func _on_new_game_pressed() -> void:
 
 
 func _on_load_pressed() -> void:
-	hint.text = "Load comes later"
+	if LevelRun.checkpoint_index < 0:
+		hint.text = "No shrine lit yet"
+		return
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://scenes/levels/level_1.tscn")
 
 
 func _on_controls_pressed() -> void:

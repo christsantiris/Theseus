@@ -17,7 +17,6 @@ const GATE := preload("res://scenes/objects/temple_gate.tscn")
 @onready var pause_heading: Label = $PauseLayer/PauseScreen/Center/Panel/Stack/Label
 @onready var details: Label = $PauseLayer/PauseScreen/Center/Panel/Stack/Details
 @onready var resume_button: Button = $PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Resume
-@onready var save_button: Button = $PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Save
 @onready var replay_button: Button = $PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Replay
 @onready var title_button: Button = $PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Title
 @onready var player = $Player
@@ -28,6 +27,7 @@ var _defeated: Array[String] = []
 var _collected: Array[String] = []
 var _section := -1
 var _complete := false
+var _entering_temple := false
 var _gate_hint_shown := false
 var _death_notice_shown := false
 var _shown_tips: Array[int] = []
@@ -98,6 +98,7 @@ func _build_encounters() -> void:
 	_gate = GATE.instantiate()
 	_gate.name = "TempleGate"
 	_gate.position = Layout.EXIT
+	_gate.entry_started.connect(_on_gate_entry_started)
 	_gate.entered.connect(_on_gate_entered)
 	add_child(_gate)
 	if Layout.GATE_GUARD in _defeated:
@@ -112,7 +113,7 @@ func _style_pause_screen() -> void:
 	panel_style.set_border_width_all(1)
 	panel_style.set_content_margin_all(8)
 	pause_panel.add_theme_stylebox_override("panel", panel_style)
-	for button in [resume_button, save_button, replay_button, title_button]:
+	for button in [resume_button, replay_button, title_button]:
 		theme.style_button(button, 8)
 		button.custom_minimum_size = Vector2(96, 16)
 	replay_button.hide()
@@ -151,7 +152,7 @@ func _update_section() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if _complete or player.health <= 0:
+	if _complete or _entering_temple or player.health <= 0:
 		return
 	if event.is_action_pressed("pause"):
 		_set_paused(not get_tree().paused)
@@ -159,7 +160,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _set_paused(paused: bool) -> void:
-	if _complete:
+	if _complete or _entering_temple:
 		return
 	get_tree().paused = paused
 	pause_screen.visible = paused
@@ -170,13 +171,6 @@ func _set_paused(paused: bool) -> void:
 
 func _on_resume_pressed() -> void:
 	_set_paused(false)
-
-
-func _on_save_pressed() -> void:
-	if _complete or not get_tree().paused:
-		return
-	details.text = "Save comes later"
-	details.show()
 
 
 func _on_replay_pressed() -> void:
@@ -218,17 +212,24 @@ func _on_checkpoint_activated(shrine: Area2D) -> void:
 	hud.show_message("Shrine lit — progress saved and health restored.", 4.0, 3)
 
 
+func _on_gate_entry_started(body: Node2D) -> void:
+	_entering_temple = true
+	body.set_physics_process(false)
+	body.velocity = Vector2.ZERO
+	get_tree().paused = true
+
+
 func _on_gate_entered() -> void:
 	if _complete:
 		return
 	_complete = true
+	_entering_temple = false
 	get_tree().paused = true
 	pause_heading.text = "Level 1 Complete"
 	var seconds := int(LevelRun.elapsed_seconds)
 	details.text = "The temple road is clear.\nScore %d  |  Defeated %d/%d\nTime %d:%02d" % [_score, _defeated.size(), Layout.ENEMIES.size(), seconds / 60, seconds % 60]
 	details.show()
 	resume_button.hide()
-	save_button.hide()
 	replay_button.show()
 	pause_screen.show()
 	replay_button.grab_focus()
