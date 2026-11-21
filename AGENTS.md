@@ -9,6 +9,17 @@
 - When a file contains changes from multiple tasks, preserve those edits and
   distinguish the current task's hunks in the handoff.
 
+## Documentation
+
+- Add files to `docs/` only when the README or the game uses them, such as README
+  screenshots and the level guides the README links. Images a kept guide displays
+  count as used.
+- Keep working material out of the repository. That includes sprite prompts, art
+  reviews, rosters, previews, notes, and design scratch. Write it to a temporary or
+  scratch location for in-context building, and do not stage it.
+- When a change makes a README-linked doc out of date, update the doc in the same
+  task. If a doc can't be kept current, remove it instead of letting it go stale.
+
 ## Manual staging and commits
 
 - Do not stage, commit, or push unless the user explicitly authorizes that action.

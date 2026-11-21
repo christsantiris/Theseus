@@ -11,6 +11,7 @@ A left-to-right side scroller. Theseus runs the road from Athens to a guarded te
   - [The Sacred City](#the-sacred-city)
 - [How to play](#how-to-play)
 - [Credits](#credits)
+- [Play-test any level](#play-test-any-level)
 
 ## Screenshots
 
@@ -68,3 +69,15 @@ Music by <a href="https://pixabay.com/users/moonpub-15209240/?utm_source=link-at
 Sound effect by <a href="https://pixabay.com/users/daviddumaisaudio-41768500/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=185432">David Dumais</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=185432">Pixabay</a>
 
 Sound effect by <a href="https://pixabay.com/users/u_qqkrn9bn55-52083300/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=398256">u_qqkrn9bn55</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=398256">Pixabay</a>
+
+## Play-test any level
+
+Start any level at its entrance or at one of its shrines:
+
+```sh
+tools/play_level.sh        # choose a level and shrine from a menu
+tools/play_level.sh 3      # Level 3 from the entrance
+tools/play_level.sh 3 2    # Level 3 from its second shrine
+```
+
+To skip the wrapper script, run `godot --path . res://scenes/debug/level_select.tscn -- --level=3 --shrine=2`, or open `scenes/debug/level_select.tscn` in the editor and press **F6**. A shrine start counts that shrine as lit. Enemies before it are still alive, and the score starts at 0.
