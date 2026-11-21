@@ -67,6 +67,14 @@ func _clear_rocks() -> void:
 		rock.free()
 
 
+func _thuds(host: Node) -> Array[AudioStreamPlayer]:
+	var players: Array[AudioStreamPlayer] = []
+	for child in host.get_children():
+		if child is AudioStreamPlayer:
+			players.append(child)
+	return players
+
+
 func _controller() -> void:
 	fixture = Node2D.new()
 	root.add_child(fixture)
@@ -145,6 +153,7 @@ func _projectiles() -> void:
 	a.collision_mask = 0
 	b.collision_mask = 0
 	await _frames(20)
+	_expect(_thuds(fixture).is_empty(), "Throwing a boulder does not play the impact thud")
 	_expect(is_equal_approx(a.position.y, b.position.y) and is_equal_approx(a.position.x + b.position.x, 600), "Mirrored throws follow the same predictable arc")
 	_expect(a.velocity.y > 0 and a.position.y < -100, "Boulder rises to an apex then descends under gravity")
 	a.free()
@@ -155,18 +164,22 @@ func _projectiles() -> void:
 	rock.shattered.connect(func() -> void: breaks.count += 1)
 	await _frames(40)
 	_expect(breaks.count == 1 and not is_instance_valid(rock), "Boulder shatters once on a wall and cleans up")
+	var thuds := _thuds(fixture)
+	_expect(thuds.size() == 1 and thuds[0].playing and thuds[0].get_playback_position() < 1.0, "Wall impact plays about one second of the boulder thud")
 	rock = _spawn_rock(fixture, Vector2(40, -100))
 	breaks.count = 0
 	rock.shattered.connect(func() -> void: breaks.count += 1)
 	rock.sword_hit()
 	rock.sword_hit()
 	_expect(rock._broken and rock.collision_layer == 0 and breaks.count == 1, "One sword hit disables the projectile; repeated hits cannot break it twice")
+	_expect(_thuds(fixture).size() == 1, "A sword break does not play the impact thud")
 	await _frames(12)
 	_expect(not is_instance_valid(rock), "Sword-broken boulder finishes its short break effect")
 	rock = _spawn_rock(fixture, Vector2(40, -200))
 	rock.collision_mask = 0
 	await _frames(200)
 	_expect(not is_instance_valid(rock), "An offscreen boulder expires instead of leaking")
+	_expect(_thuds(fixture).is_empty(), "The impact thud stops after about one second")
 	fixture.free()
 
 

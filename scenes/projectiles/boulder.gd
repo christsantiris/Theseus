@@ -6,6 +6,8 @@ const SPEED_X := 144.0
 const SPEED_Y := -100.0
 const GRAVITY := 360.0
 const LIFETIME := 3.0
+const THUD := preload("res://assets/audio/sfx/dragon-studio-heavy-boulder-thud-515257.mp3")
+const THUD_SECONDS := 1.0
 
 var _age := 0.0
 var _broken := false
@@ -32,6 +34,7 @@ func _physics_process(delta: float) -> void:
 	var body := collision.get_collider()
 	if body.is_in_group("player") and body.has_method("hurt"):
 		body.hurt(1)
+	_play_impact()
 	shatter()
 
 
@@ -53,3 +56,21 @@ func shatter() -> void:
 	tween.tween_property($Sprite2D, "modulate:a", 0.0, 0.12)
 	tween.tween_property($Sprite2D, "scale", Vector2(1.3, 1.3), 0.12)
 	tween.chain().tween_callback(queue_free)
+
+
+func _play_impact() -> void:
+	var host := get_parent()
+	if host == null:
+		return
+	var thud := AudioStreamPlayer.new()
+	thud.bus = "SFX"
+	thud.stream = THUD
+	host.add_child(thud)
+	thud.play()
+	var clip := Timer.new()
+	clip.wait_time = THUD_SECONDS
+	clip.one_shot = true
+	thud.add_child(clip)
+	clip.timeout.connect(thud.stop)
+	clip.timeout.connect(thud.queue_free)
+	clip.start()
