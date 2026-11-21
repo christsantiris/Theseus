@@ -7,10 +7,12 @@ const FOOT_ROW := 54
 const SPEED := 90.0
 const JUMP_VELOCITY := -260.0
 const GRAVITY := 900.0
-const STAND_SIZE := Vector2(14, 36)
-const STAND_CENTER := Vector2(0, -18)
-const DUCK_SIZE := Vector2(14, 22)
-const DUCK_CENTER := Vector2(0, -11)
+# Match the visible head heights; bird lanes must clear the pose, not just a
+# shorter invisible body. Both shapes keep the same feet and horizontal width.
+const STAND_SIZE := Vector2(14, 44)
+const STAND_CENTER := Vector2(0, -22)
+const DUCK_SIZE := Vector2(14, 36)
+const DUCK_CENTER := Vector2(0, -18)
 const MAX_HEALTH := 5
 const HURT_LOCK := 0.5
 const ATTACK_HIT_FRAME := 1

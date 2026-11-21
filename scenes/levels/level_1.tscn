@@ -80,6 +80,11 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Replay Level"
 
+[node name="Next" type="Button" parent="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Continue to Level 2"
+
 [node name="Title" type="Button" parent="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons"]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -87,4 +92,5 @@ text = "Return to Title"
 
 [connection signal="pressed" from="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Resume" to="." method="_on_resume_pressed"]
 [connection signal="pressed" from="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Replay" to="." method="_on_replay_pressed"]
+[connection signal="pressed" from="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Next" to="." method="_on_next_pressed"]
 [connection signal="pressed" from="PauseLayer/PauseScreen/Center/Panel/Stack/Buttons/Title" to="." method="_on_title_pressed"]

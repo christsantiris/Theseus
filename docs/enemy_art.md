@@ -5,6 +5,14 @@ readable helmets, adult human proportions, layered cloth, and articulated limbs.
 The replacement sheets use the same 72×56 animation cells, right-facing artwork,
 and nearest-neighbor rendering as the player. Enemy feet share pixel row 53.
 
+Level 2 adds [three coastal enemies](level_2.md): bronze Stymphalian Birds,
+dog-headed Telchines, and skeletal Spartoi. Their original sheets use the same
+72×56 cells and material shading. Telchines inherit Peltast's held melee jab;
+Spartoi inherit Raider's committed lunge. Their feet also use row 53. Bird wing
+frames stay above the body, with their lowest visible pixel on row 32; their
+22×8 core is centered on the flight lane. The source prompts are recorded in
+[level_2_sprite_prompts.json](level_2_sprite_prompts.json).
+
 | Enemy | Visual identity | Combat role | Atlas |
 | --- | --- | --- | --- |
 | Hoplite | Bronze cuirass, round shield, red-crested helmet, spear | Crouches on guard, stands when approached, marches and thrusts; takes two sword hits | `hoplite.png`, 9 frames |

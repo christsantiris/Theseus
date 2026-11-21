@@ -64,7 +64,9 @@ Sword damage occurs only while the blade is visibly extended during an attack.
 - The temple gate remains physically closed until its guard is defeated. Reaching
   the open temple pauses combat while Theseus walks up the steps and fades into
   the doorway. The level-clear screen appears after he has entered, showing
-  score, defeated count, and time, with Replay Level and Return to Title buttons.
+  score, defeated count, and time, with Continue to Level 2, Replay Level, and
+  Return to Title buttons. Entering [Level 2](level_2.md) replaces the old shrine
+  with a checkpoint at the coastal entrance; Load resumes that level from then on.
 
 ![Theseus entering the temple before the level-clear screen](temple_entry_preview.gif)
 

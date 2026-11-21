@@ -15,6 +15,17 @@ sixteen Greek soldiers, two checkpoint shrines, and a guarded temple exit.
 See the [level guide and map](docs/level_1.md). Theseus can run, jump, duck, and thrust. Controls can be
 rebound from the title screen, and those bindings are saved for the next launch.
 
+Clear Level 1 and choose **Continue to Level 2** to reach [The Rocky Coast](docs/level_2.md):
+limestone terraces, Greek ruins, Stymphalian Birds, dog-headed Telchines, and
+skeletal Spartoi. Reaching Level 2 saves its entrance as a checkpoint; Load then
+resumes there or at the latest shrine lit in that level during the current session.
+
+To play Level 2 directly while testing:
+
+```sh
+godot --path . --scene res://scenes/levels/level_2.tscn
+```
+
 If Godot is available as `godot` on your PATH:
 
 ```sh
@@ -109,9 +120,11 @@ on those keys for a US keyboard layout.
    The title screen has New Game and remappable controls. The Greek folk track
    starts on the title screen and keeps looping through Level 1. The backdrop is a flat
    Greek color study, not a finished tileset.
-3. **Level 1 (current):** a 4,800-pixel route with five areas, sixteen enemies,
+3. **Level 1:** a 4,800-pixel route with five areas, sixteen enemies,
    health pickups, checkpoint recovery, score, and a temple-gate ending.
-4. **Presentation:** finished level art, animation polish, music, and sound.
+4. **Level 2 (current):** a rocky coastal route with thirty ledges, three new
+   enemy types, vertical camera movement, and level-aware checkpoint recovery.
+5. **Presentation:** finished level art, animation polish, music, and sound.
 
 Stop after each milestone for review and a manual commit. No commits or GitHub
 publishing are performed automatically.
