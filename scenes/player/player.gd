@@ -13,6 +13,7 @@ const DUCK_SIZE := Vector2(14, 22)
 const DUCK_CENTER := Vector2(0, -11)
 const MAX_HEALTH := 5
 const HURT_LOCK := 0.5
+const ATTACK_HIT_FRAME := 1
 const SWING := preload("res://assets/audio/sfx/daviddumaisaudio-sword-slash-and-swing-185432.mp3")
 const SWING_AUDIBLE_SECONDS := 0.92
 const LAND := preload("res://assets/audio/sfx/u_qqkrn9bn55-jumplanding-398256.mp3")
@@ -94,7 +95,6 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("attack") and not ducking:
 		_attacking = true
 		_swing_hits.clear()
-		_sword.monitoring = true
 		if sprite.animation == "attack":
 			sprite.stop()
 		sprite.play("attack")
@@ -111,7 +111,9 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0.0, SPEED * 8.0 * delta)
 	_set_ducked(ducking)
 
-	_try_stomp(delta)
+	_resolve_landing_collision(delta)
+	if health <= 0:
+		return
 	move_and_slide()
 	_strike()
 	_update_landing(jumped_this_frame)
@@ -139,6 +141,7 @@ func hurt(amount: int) -> void:
 
 func _die() -> void:
 	health = 0
+	_finish_attack()
 	set_physics_process(false)
 	sprite.modulate = Color(1.0, 0.35, 0.35, 1.0)
 	get_tree().create_timer(0.7).timeout.connect(func() -> void:
@@ -146,42 +149,66 @@ func _die() -> void:
 	)
 
 
-func _try_stomp(delta: float) -> void:
-	if velocity.y <= 0.0:
+func _resolve_landing_collision(delta: float) -> void:
+	if velocity.y <= 0.0 or _hurt_lock > 0.0:
 		return
-	var next_y := global_position.y + velocity.y * delta
-	for node in get_tree().get_nodes_in_group("enemies"):
-		if not node.has_method("can_be_stomped") or not node.can_be_stomped():
+	var player_rect: Rect2 = _body.global_transform * _body.shape.get_rect()
+	var foot := player_rect.end.y
+	var next_foot := foot + velocity.y * delta
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if not enemy.alive or not enemy.has_method("take_damage"):
 			continue
-		var top: float = node.global_position.y - node.body_height
-		if global_position.y > top + 8.0 or next_y < top:
+		var collision := enemy.get_node_or_null("CollisionShape2D") as CollisionShape2D
+		if collision == null or collision.disabled or collision.shape == null:
 			continue
-		var half: float = node.body_half_width + 6.0
-		if absf(global_position.x - node.global_position.x) > half:
+		var enemy_rect: Rect2 = collision.global_transform * collision.shape.get_rect()
+		var overlap := minf(player_rect.end.x, enemy_rect.end.x) - maxf(player_rect.position.x, enemy_rect.position.x)
+		# Require a genuine crossing of the current head height, not a side graze.
+		if overlap <= 2.0 or foot > enemy_rect.position.y + 1.0 or next_foot < enemy_rect.position.y:
 			continue
-		if node.stomp():
-			global_position.y = top - 1.0
-			velocity.y = JUMP_VELOCITY * 0.45
-			return
+		global_position.y += enemy_rect.position.y - foot - 1.0
+		# Hurt supplies the existing recoil and invulnerability window. The enemy
+		# loses exactly one HP as well, rather than being defeated outright.
+		hurt(1)
+		enemy.take_damage(1)
+		return
 
 
 func _strike() -> void:
 	if not _attacking:
 		return
+	if sprite.animation != "attack" or not sprite.is_playing():
+		_finish_attack()
+		return
+	# The middle frame is the extended blade; windup and recovery cannot hit.
+	if sprite.frame != ATTACK_HIT_FRAME:
+		return
 	var facing := -1.0 if sprite.flip_h else 1.0
 	_sword_shape.position = Vector2(18.0 * facing, -16.0)
-	for body in _sword.get_overlapping_bodies():
-		var id := body.get_instance_id()
-		if _swing_hits.has(id) or not body.has_method("sword_hit"):
+	# Query the blade's current transform, avoiding cached overlaps from a previous
+	# frame or facing direction.
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = _sword_shape.shape
+	query.transform = _sword_shape.global_transform
+	query.collision_mask = _sword.collision_mask
+	query.collide_with_areas = true
+	query.exclude = [get_rid()]
+	for result: Dictionary in get_world_2d().direct_space_state.intersect_shape(query, 32):
+		var target: Object = result.collider
+		var id := target.get_instance_id()
+		if _swing_hits.has(id):
 			continue
-		_swing_hits[id] = true
-		body.sword_hit()
-	for area in _sword.get_overlapping_areas():
-		var id := area.get_instance_id()
-		if _swing_hits.has(id) or not area.has_method("cut"):
-			continue
-		_swing_hits[id] = true
-		area.cut()
+		if target.has_method("sword_hit"):
+			_swing_hits[id] = true
+			target.sword_hit()
+		elif target.has_method("cut"):
+			_swing_hits[id] = true
+			target.cut()
+
+
+func _finish_attack() -> void:
+	_attacking = false
+	_swing_hits.clear()
 
 
 func _wants_duck() -> bool:
@@ -249,8 +276,7 @@ func _play(animation_name: String) -> void:
 
 func _on_animation_finished() -> void:
 	if sprite.animation == "attack":
-		_attacking = false
-		_sword.monitoring = false
+		_finish_attack()
 
 
 func _play_swing() -> void:

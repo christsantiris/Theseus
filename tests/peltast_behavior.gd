@@ -134,15 +134,17 @@ func _run() -> void:
 	peltast.defeated.connect(func(points: int) -> void: awarded.points += points)
 	peltast.sword_hit()
 	_expect(peltast.alive and peltast.hp == 1, "Sword damage still works during recovery")
-	_expect(peltast.can_be_stomped() and peltast.stomp(), "Recovery allows the stomp counter")
-	_expect(not peltast.alive and awarded.points == 100, "Stomp finishes the enemy and awards its existing score")
+	_expect(not peltast.can_be_stomped() and not peltast.stomp(), "Legacy stomp callback cannot automatically defeat Peltast")
+	_expect(peltast.alive and peltast.hp == 1, "Legacy stomp callback leaves enemy health unchanged")
+	peltast.sword_hit()
+	_expect(not peltast.alive and awarded.points == 100, "Second sword hit defeats Peltast and awards its existing score")
 	for child in root.get_node("GameMusic").get_children():
 		if child is AudioStreamPlayer:
 			child.stop()
 			child.stream = null
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: Peltast dormancy, melee range, elevation, walls, windup, stationary held jab, retreat/jump/side-step counters, recovery, single-hit damage, stomp and score.")
+		print("PASS: Peltast dormancy, melee range, elevation, walls, windup, stationary held jab, retreat/jump/side-step counters, recovery, single-hit damage, no automatic stomp kills, and score.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)

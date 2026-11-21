@@ -114,18 +114,6 @@ func _hurt_javelin_overlaps() -> void:
 			body.hurt(1)
 
 
-func can_be_stomped() -> bool:
-	return alive
-
-
-func stomp() -> bool:
-	if not alive:
-		return false
-	if _state == "jab" or _state == "recover":
-		die()
-	return true
-
-
 func sword_hit() -> void:
 	if not alive:
 		return

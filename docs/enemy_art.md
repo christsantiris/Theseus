@@ -40,16 +40,34 @@ have been removed.
 He waits when farther than 192 horizontal pixels from Theseus and starts an
 attack only within 38 horizontal and 12 vertical pixels, with clear line of
 sight. His 0.5-second windup locks his facing direction, followed by a stationary
-0.18-second jab and 0.8-second recovery. Only the attached weapon hitbox damages
-Theseus, once per jab; body overlap during patrol, windup, and recovery is safe.
+0.18-second jab and 0.8-second recovery. Only the attached weapon hitbox deals
+attack damage, once per jab; ordinary body overlap during patrol, windup, and
+recovery is safe. Landing on an enemy's head follows the collision rule below.
 
 Back away, jump over the jab, or move past the committed windup to make it miss.
-Sword hits work in every state. A stomp during the jab or recovery finishes him;
-stomping during patrol or windup only bounces Theseus, matching the existing
-stomp interaction. Raider and Hoplite behavior have not changed with this update.
+Sword hits work in every state. There is no state-specific instant stomp defeat.
+Raider and Hoplite attack behavior is unchanged.
 
 ```sh
 godot --headless --path . --script res://tests/peltast_behavior.gd --fixed-fps 60
+```
+
+## Player hits and landing collisions
+
+A landing from above is a collision: Theseus loses one health and the enemy
+loses one health, regardless of enemy type or stance. A full-health enemy survives
+the first impact. A later damaging impact can defeat an enemy with one health
+remaining, awarding points once. The player's existing recoil and invulnerability
+window prevent repeated damage from the same overlap or free damage while immune.
+Side grazes do not count as landing collisions; detection uses the enemy's actual
+current collision shape, including lowered attack stances.
+
+Sword damage requires an explicit attack and the middle, extended-blade frame.
+Windup, recovery, expired swings, and interrupted animations cannot hit. Each swing
+damages a target at most once, using the blade's current position and facing.
+
+```sh
+godot --headless --path . --script res://tests/player_combat.gd --fixed-fps 60
 ```
 
 ## Review

@@ -46,6 +46,11 @@ pacing is intended to be roughly **2–4 minutes** with combat and exploration;
 this is a design target for human playtesting. The automated combat-free route
 takes approximately **53 simulated seconds** and uses 15 jumps.
 
+Landing on an enemy's head costs **one health for both Theseus and the enemy**.
+It does not instantly defeat an enemy at full health. Side grazes do not count,
+and the existing invulnerability window prevents repeated collision damage.
+Sword damage occurs only while the blade is visibly extended during an attack.
+
 ## Recovery and completion
 
 - Health flasks restore two health and remain available when Theseus is already full.
@@ -83,6 +88,7 @@ Run the integration checks:
 ```sh
 godot --headless --path . --import
 godot --headless --path . --script res://tests/level_1_smoke.gd --fixed-fps 60
+godot --headless --path . --script res://tests/player_combat.gd --fixed-fps 60
 ```
 
 The suite checks placement against terrain, full-health pickup retention,

@@ -25,6 +25,27 @@ godot --headless --path . --quit-after 2
 
 The last two commands import and check the project, then briefly run its startup scene.
 
+## Web build and GitHub Pages
+
+`export_presets.cfg` defines a **Web** preset that exports to `builds/web/` (git-ignored).
+Thread support is off, so the build runs on hosts such as GitHub Pages that cannot send
+cross-origin isolation headers.
+
+`.github/workflows/deploy-web.yml` exports and publishes the game on every push to
+`master`, or when run manually from the Actions tab. One-time setup: in the GitHub
+repository, open **Settings → Pages** and set **Source** to **GitHub Actions**. The game
+is then served at `https://<user>.github.io/<repo>/`.
+
+To export locally, install the Godot 4.7.2 export templates (**Editor → Manage Export
+Templates**), then run:
+
+```sh
+godot --headless --path . --export-release "Web" builds/web/index.html
+python3 -m http.server -d builds/web 8000
+```
+
+Open <http://localhost:8000>. Browsers block the build when it is opened as a `file://` URL.
+
 ## Project layout
 
 ```text
