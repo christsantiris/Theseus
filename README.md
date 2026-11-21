@@ -17,10 +17,6 @@ A left-to-right side scroller. Theseus runs the road from Athens to a guarded te
 
 ## Screenshots
 
-### Cinematic Theseus
-
-![Cinematic Theseus in the animation review scene](docs/screenshots/theseus-cinematic.png)
-
 ### Title
 
 <img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/176b3e11-5bb4-4580-80d6-e69ba5de2f34" />
