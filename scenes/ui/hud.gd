@@ -9,7 +9,7 @@ var _root: Control
 var _score: Label
 var _area: Label
 var _message: Label
-var _message_backdrop: ColorRect
+var _message_backdrop: Panel
 var _message_time := 0.0
 var _message_priority := 0
 
@@ -24,7 +24,6 @@ func _ready() -> void:
 	var label := Label.new()
 	label.text = "HP"
 	label.position = Vector2(8, 4)
-	label.add_theme_font_size_override("font_size", 8)
 	label.add_theme_color_override("font_color", GOLD)
 	root.add_child(label)
 
@@ -36,7 +35,6 @@ func _ready() -> void:
 	_score.offset_top = 4.0
 	_score.offset_bottom = 16.0
 	_score.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_score.add_theme_font_size_override("font_size", 8)
 	_score.add_theme_color_override("font_color", GOLD)
 	_score.text = "Score 0"
 	root.add_child(_score)
@@ -44,21 +42,18 @@ func _ready() -> void:
 	_area.position = Vector2(104, 4)
 	_area.size = Vector2(128, 12)
 	_area.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_area.add_theme_font_size_override("font_size", 8)
-	_area.add_theme_color_override("font_color", Color("f1e2c2"))
 	root.add_child(_area)
-	_message_backdrop = ColorRect.new()
-	_message_backdrop.position = Vector2(6, 162)
-	_message_backdrop.size = Vector2(308, 15)
-	_message_backdrop.color = Color(0.05, 0.08, 0.12, 0.88)
+	# Messages are incised into a marble plaque (the theme's Panel style).
+	_message_backdrop = Panel.new()
+	_message_backdrop.position = Vector2(6, 161)
+	_message_backdrop.size = Vector2(308, 17)
 	_message_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(_message_backdrop)
 	_message = Label.new()
-	_message.position = Vector2(10, 163)
-	_message.size = Vector2(300, 13)
+	_message.position = Vector2(10, 165)
+	_message.size = Vector2(300, 11)
 	_message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_message.add_theme_font_size_override("font_size", 9)
-	_message.add_theme_color_override("font_color", GOLD)
+	_message.theme_type_variation = &"CarvedLabel"
 	root.add_child(_message)
 	_message.hide()
 	_message_backdrop.hide()

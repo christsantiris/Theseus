@@ -20,10 +20,14 @@ func _ready() -> void:
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(margin)
 
+	var slab := PanelContainer.new()
+	slab.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	margin.add_child(slab)
+
 	_rows = VBoxContainer.new()
-	_rows.add_theme_constant_override("separation", 3)
+	_rows.add_theme_constant_override("separation", 2)
 	_rows.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	margin.add_child(_rows)
+	slab.add_child(_rows)
 	refresh()
 
 
@@ -36,14 +40,12 @@ func refresh() -> void:
 	var title := Label.new()
 	title.text = "CONTROLS"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 14)
-	title.add_theme_color_override("font_color", ThemeHelpers.GOLD)
+	title.theme_type_variation = &"CarvedHeading"
 	_rows.add_child(title)
 
 	_hint = Label.new()
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_hint.add_theme_font_size_override("font_size", 8)
-	_hint.add_theme_color_override("font_color", Color(0.7, 0.78, 0.86))
+	_hint.theme_type_variation = &"CarvedLabel"
 	_hint.text = "Click a key, then press a new one"
 	_rows.add_child(_hint)
 
@@ -68,8 +70,7 @@ func _make_row(action: String) -> HBoxContainer:
 	name_label.text = InputBindings.label_for(action)
 	name_label.custom_minimum_size = Vector2(72, 0)
 	name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	name_label.add_theme_font_size_override("font_size", 8)
-	name_label.add_theme_color_override("font_color", ThemeHelpers.CREAM)
+	name_label.theme_type_variation = &"CarvedLabel"
 	row.add_child(name_label)
 
 	var codes := InputBindings.keycodes_for(action)

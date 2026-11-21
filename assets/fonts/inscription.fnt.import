@@ -1,0 +1,17 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://lxbwih7urxpg"
+path="res://.godot/imported/inscription.fnt-d16afe4e4b3859b918435a37184d2eac.fontdata"
+
+[deps]
+
+source_file="res://assets/fonts/inscription.fnt"
+dest_files=["res://.godot/imported/inscription.fnt-d16afe4e4b3859b918435a37184d2eac.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true
+scaling_mode=1

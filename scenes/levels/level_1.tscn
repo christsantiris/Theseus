@@ -56,14 +56,13 @@ theme_override_constants/separation = 6
 
 [node name="Label" type="Label" parent="PauseLayer/PauseScreen/Center/Panel/Stack"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.77, 0.36, 1)
-theme_override_font_sizes/font_size = 14
+theme_type_variation = &"CarvedHeading"
 text = "Paused"
 horizontal_alignment = 1
 
 [node name="Details" type="Label" parent="PauseLayer/PauseScreen/Center/Panel/Stack"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 9
+theme_type_variation = &"CarvedLabel"
 horizontal_alignment = 1
 
 [node name="Buttons" type="VBoxContainer" parent="PauseLayer/PauseScreen/Center/Panel/Stack"]

@@ -1,0 +1,17 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://dt6petkawmkva"
+path="res://.godot/imported/inscription_large.fnt-a1f9ba84388522e824f4663c1dd07498.fontdata"
+
+[deps]
+
+source_file="res://assets/fonts/inscription_large.fnt"
+dest_files=["res://.godot/imported/inscription_large.fnt-a1f9ba84388522e824f4663c1dd07498.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true
+scaling_mode=1

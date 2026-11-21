@@ -1,0 +1,86 @@
+[gd_resource type="Theme" load_steps=11 format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/inscription.fnt" id="1_body"]
+[ext_resource type="FontFile" path="res://assets/fonts/inscription_large.fnt" id="2_heading"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/marble_slab.png" id="3_slab"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/marble_button.png" id="4_button"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/marble_button_focus.png" id="5_focus"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/marble_button_pressed.png" id="6_pressed"]
+
+[sub_resource type="StyleBoxTexture" id="slab"]
+content_margin_left = 6.0
+content_margin_top = 5.0
+content_margin_right = 6.0
+content_margin_bottom = 5.0
+texture = ExtResource("3_slab")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id="button"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 1.0
+texture = ExtResource("4_button")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id="button_focus"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 1.0
+texture = ExtResource("5_focus")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id="button_pressed"]
+content_margin_left = 4.0
+content_margin_top = 3.0
+content_margin_right = 4.0
+content_margin_bottom = 0.0
+texture = ExtResource("6_pressed")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+
+[resource]
+default_font = ExtResource("1_body")
+default_font_size = 8
+Button/colors/font_color = Color(0.31, 0.282, 0.235, 1)
+Button/colors/font_focus_color = Color(0.48, 0.3, 0.05, 1)
+Button/colors/font_hover_color = Color(0.48, 0.3, 0.05, 1)
+Button/colors/font_hover_pressed_color = Color(0.48, 0.3, 0.05, 1)
+Button/colors/font_pressed_color = Color(0.48, 0.3, 0.05, 1)
+Button/styles/focus = SubResource("button_focus")
+Button/styles/hover = SubResource("button_focus")
+Button/styles/hover_pressed = SubResource("button_pressed")
+Button/styles/normal = SubResource("button")
+Button/styles/pressed = SubResource("button_pressed")
+CarvedHeading/base_type = &"Label"
+CarvedHeading/colors/font_color = Color(1, 1, 1, 1)
+CarvedHeading/colors/font_shadow_color = Color(0.99, 0.97, 0.93, 0.7)
+CarvedHeading/constants/shadow_offset_x = 0
+CarvedHeading/constants/shadow_offset_y = 1
+CarvedHeading/font_sizes/font_size = 16
+CarvedHeading/fonts/font = ExtResource("2_heading")
+CarvedLabel/base_type = &"Label"
+CarvedLabel/colors/font_color = Color(0.31, 0.282, 0.235, 1)
+CarvedLabel/colors/font_shadow_color = Color(0.99, 0.97, 0.93, 0.9)
+CarvedLabel/constants/shadow_offset_x = 0
+CarvedLabel/constants/shadow_offset_y = 1
+Label/colors/font_color = Color(0.945, 0.922, 0.867, 1)
+Label/colors/font_shadow_color = Color(0.09, 0.08, 0.12, 0.85)
+Label/constants/shadow_offset_x = 1
+Label/constants/shadow_offset_y = 1
+Panel/styles/panel = SubResource("slab")
+PanelContainer/styles/panel = SubResource("slab")
