@@ -9,6 +9,24 @@ drop 16–48 pixels. The camera follows both axes within the taller world.
 
 ![Five areas of the rocky coast](level_2_preview.png)
 
+## Cinematic scenery
+
+Each area has west and east cinematic 3D-style panoramas matching Level 1's
+sunlit materials and lighting. Turquoise water, distant islands, ruined quays,
+eroded cliffs, cyclopean walls, and sanctuary temples fill ten overlapping
+panels. The distant scenery follows the camera vertically, keeping the sea
+and sky visible through both climbs. Textured limestone covers all thirty
+original ledges; carved waystones and the shared cinematic temple facade
+complete the route. Collision rectangles, encounters, and movement are unchanged.
+
+`scenes/levels/level_2_geometry.gd` renders the coastal art from
+`assets/art/backgrounds/level_2/`. Each section PNG stores two panoramas
+stacked vertically. The stone caps, waystones, and temple facade reuse Level 1's
+art; `level_1_temple.gd` keeps its bronze bars synchronized with gate unlocking,
+including paused temple entry. Levels 3–5 retain their existing scenery.
+
+## Route
+
 | Area | X range | Route and encounters |
 | --- | --- | --- |
 | Coastal Road | 0–959 | Flat approach teaches a high bird, then a low bird; short ledge climbs introduce a Telchine. |
@@ -66,6 +84,7 @@ with a new load point at the Level 3 entrance.
 godot --path . --scene res://scenes/levels/level_2.tscn
 godot --headless --path . --script res://tests/coastal_enemies.gd --fixed-fps 60
 godot --headless --path . --script res://tests/level_2_smoke.gd --fixed-fps 60
+godot --headless --path . --script res://tests/level_2_scenery.gd --fixed-fps 60
 ```
 
 The enemy test uses Theseus's actual input, ducking shape, jump arc, attack
@@ -79,3 +98,7 @@ actual death/reload, both shrines, defeated-enemy rollback, camera limits,
 completion, replay, and New Game. A route traversal with combat disabled
 reaches the doorway using normal movement and 20 jumps, in about 52 simulated
 seconds. Combat pacing still benefits from a human playthrough.
+
+The scenery check verifies all ten panoramas, full-route coverage at low and
+high camera positions, original ledge collisions, horizon tracking, paused
+gate updates, and isolation from the other levels.

@@ -2,6 +2,23 @@
 extends "res://scenes/levels/level_geometry.gd"
 
 const Coast := preload("res://scenes/levels/level_2_layout.gd")
+const PANORAMA_SHEETS := [
+	preload("res://assets/art/backgrounds/level_2/coastal_road.png"),
+	preload("res://assets/art/backgrounds/level_2/broken_quays.png"),
+	preload("res://assets/art/backgrounds/level_2/sea_cliffs.png"),
+	preload("res://assets/art/backgrounds/level_2/cyclopean_ruins.png"),
+	preload("res://assets/art/backgrounds/level_2/rocky_sanctuary.png"),
+]
+const CLIFF := preload("res://assets/art/backgrounds/level_2/coastal_limestone.png")
+const CAP_STONE := preload("res://assets/art/backgrounds/level_1/limestone_wall.png")
+const WAYSTONE := preload("res://assets/art/backgrounds/level_1/waystone.png")
+const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
+const BLEND := preload("res://resources/shaders/landscape_blend.gdshader")
+const PANEL_WIDTH := 480.0
+const OVERLAP := 48.0
+const FEATHER_WIDTH := 12.0
+const MATERIAL_DENSITY := 16.0
+var backdrop: Node2D
 
 
 func _ready() -> void:
@@ -10,60 +27,99 @@ func _ready() -> void:
 	_make_solid("RightBoundary", Rect2(Coast.WIDTH, -128, 16, 512))
 	for index in Coast.PLATFORMS.size():
 		_make_solid("CoastalLedge%d" % index, Coast.PLATFORMS[index])
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+	process_priority = 10
+	_build_landscape()
+	_sync_backdrop()
+	if not Engine.is_editor_hint():
+		call_deferred("_decorate_temple")
 	queue_redraw()
 
 
+func _process(_delta: float) -> void:
+	if not Engine.is_editor_hint():
+		_sync_backdrop()
+
+
+func _build_landscape() -> void:
+	var sky := ColorRect.new()
+	sky.name = "DistantSky"
+	sky.size = Vector2(Coast.WIDTH, Coast.HEIGHT)
+	sky.color = Color("a6c4dc")
+	sky.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sky.z_index = -2
+	add_child(sky)
+	backdrop = Node2D.new()
+	backdrop.name = "SeaBackdrop"
+	backdrop.z_index = -1
+	add_child(backdrop)
+	for index in PANORAMA_SHEETS.size() * 2:
+		var sheet: Texture2D = PANORAMA_SHEETS[index / 2]
+		var image := AtlasTexture.new()
+		image.atlas = sheet
+		image.region = Rect2(0, (index % 2) * sheet.get_height() / 2, sheet.get_width(), sheet.get_height() / 2)
+		var panorama := Sprite2D.new()
+		panorama.name = "Landscape%d" % index
+		panorama.texture = image
+		panorama.centered = false
+		panorama.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
+		var factor := (PANEL_WIDTH + OVERLAP * 2.0) / image.get_width()
+		panorama.scale = Vector2.ONE * factor
+		panorama.position = Vector2(index * PANEL_WIDTH - OVERLAP, 180.0 - image.get_height() * factor)
+		var material := ShaderMaterial.new()
+		material.shader = BLEND
+		material.set_shader_parameter("blend_left", index > 0)
+		material.set_shader_parameter("feather_width", FEATHER_WIDTH / (PANEL_WIDTH + OVERLAP * 2.0))
+		# Soften sky joins while keeping the coastal silhouettes readable.
+		material.set_shader_parameter("sky_feather_width", OVERLAP / (PANEL_WIDTH + OVERLAP * 2.0))
+		material.set_shader_parameter("panel_row", float(index % 2))
+		panorama.material = material
+		backdrop.add_child(panorama)
+
+
+func _sync_backdrop() -> void:
+	if not is_instance_valid(backdrop):
+		return
+	var camera := get_viewport().get_camera_2d()
+	if camera == null or Engine.is_editor_hint():
+		backdrop.position.y = Coast.FLOOR_Y - 152.0
+		return
+	# Distant scenery stays at the horizon while the camera follows the taller
+	# cliffs. The rock surfaces, actors, and every collision remain in world space.
+	var logical_height := float(get_window().content_scale_size.y)
+	if logical_height <= 0.0:
+		logical_height = 180.0
+	backdrop.position.y = camera.get_screen_center_position().y - logical_height * 0.5 / camera.zoom.y
+
+
+func _decorate_temple() -> void:
+	var gate := get_parent().get_node_or_null("TempleGate") as Node2D
+	if gate == null:
+		return
+	gate.self_modulate.a = 0.0
+	var facade := Node2D.new()
+	facade.name = "CinematicFacade"
+	facade.set_script(TEMPLE)
+	gate.add_child(facade)
+
+
 func _draw() -> void:
-	for y in range(0, Coast.HEIGHT, 8):
-		draw_rect(Rect2(0, y, Coast.WIDTH, 8), Color("638fa9").lerp(Color("d6d9c3"), float(y) / 280.0))
-	# Aegean horizon, distant dry islands, and restrained pixel wave bands.
-	draw_rect(Rect2(0, 174, Coast.WIDTH, 146), Color("427e93"))
-	for y in range(180, 280, 8):
-		draw_rect(Rect2(0, y, Coast.WIDTH, 3), Color("5599a5") if y % 16 == 4 else Color("4b899b"))
-		for x in range((y * 7) % 80, Coast.WIDTH, 80):
-			draw_rect(Rect2(x, y, 18 + y % 13, 1), Color("8ab8b4"))
-	for x in range(-160, Coast.WIDTH, 400):
-		draw_colored_polygon(PackedVector2Array([Vector2(x, 180), Vector2(x + 72, 152), Vector2(x + 94, 152), Vector2(x + 126, 139), Vector2(x + 151, 147), Vector2(x + 192, 145), Vector2(x + 274, 180)]), Color("8ba3a2"))
-	# Jagged offshore limestone outcrops, clearly separated from walkable terrain.
-	for x in range(128, Coast.WIDTH, 448):
-		draw_colored_polygon(PackedVector2Array([Vector2(x, 274), Vector2(x + 28, 230), Vector2(x + 39, 230), Vector2(x + 54, 204), Vector2(x + 70, 212), Vector2(x + 91, 251), Vector2(x + 112, 274)]), Color("929f98"))
-		draw_line(Vector2(x + 52, 213), Vector2(x + 65, 256), Color("bac0a9"), 3)
-	for x in [96, 512, 1744, 2080, 3680, 4160]:
-		_coastal_cypress(x, Coast.surface_at(x))
-	for x in [1056, 1440, 2480, 3088, 3440, 4384]:
-		_ruined_column(x, Coast.surface_at(x), 52 if x % 3 else 36)
-	_limestone(Rect2(0, Coast.FLOOR_Y, Coast.WIDTH, 40))
+	_draw_cliff(Rect2(0, Coast.FLOOR_Y, Coast.WIDTH, 64))
 	for platform: Rect2 in Coast.PLATFORMS:
-		_limestone(platform)
+		_draw_cliff(platform)
 	for x in [520, 1960, 4024]:
-		var y := Coast.surface_at(x)
-		draw_rect(Rect2(x - 2, y - 18, 4, 18), Color("796d50"))
-		draw_colored_polygon(PackedVector2Array([Vector2(x - 8, y - 20), Vector2(x + 7, y - 20), Vector2(x + 13, y - 15), Vector2(x + 7, y - 10), Vector2(x - 8, y - 10)]), Color("d9c38e"))
+		draw_texture_rect(WAYSTONE, Rect2(x - 9, Coast.surface_at(x) - 21, 18, 21), false)
 
 
-func _limestone(rectangle: Rect2) -> void:
-	draw_rect(rectangle, Color("a69c80"))
-	for y in range(int(rectangle.position.y) + 10, int(rectangle.end.y), 16):
-		var shift := 13 if y % 32 < 16 else 0
-		for x in range(int(rectangle.position.x) + shift, int(rectangle.end.x) - 12, 32):
-			draw_rect(Rect2(x + 3, y, 20, 7), Color("bcb397"))
-			draw_line(Vector2(x + 2, y + 8), Vector2(x + 23, y + 8), Color("877e68"))
-			draw_line(Vector2(x + 25, y - 3), Vector2(x + 22, y + 4), Color("877e68"))
-	draw_rect(Rect2(rectangle.position, Vector2(rectangle.size.x, 4)), Color("e7dbb7"))
-	draw_rect(Rect2(rectangle.position + Vector2(0, 4), Vector2(rectangle.size.x, 2)), Color("cec19c"))
-	for x in range(int(rectangle.position.x) + 6, int(rectangle.end.x) - 5, 24):
-		draw_rect(Rect2(x, rectangle.position.y + 1, 8, 1), Color("f3e9cd"))
-
-
-func _coastal_cypress(x: float, base: float) -> void:
-	draw_rect(Rect2(x - 2, base - 24, 4, 24), Color("70674d"))
-	draw_colored_polygon(PackedVector2Array([Vector2(x - 10, base - 12), Vector2(x - 7, base - 40), Vector2(x, base - 76), Vector2(x + 7, base - 46), Vector2(x + 11, base - 12)]), Color("405c4c"))
-	draw_line(Vector2(x, base - 62), Vector2(x + 4, base - 20), Color("647c58"), 2)
-
-
-func _ruined_column(x: float, base: float, height: float) -> void:
-	draw_rect(Rect2(x - 10, base - height, 20, height), Color("b7b297"))
-	draw_rect(Rect2(x - 8, base - height, 5, height), Color("d0c9aa"))
-	draw_line(Vector2(x + 4, base - height + 6), Vector2(x + 4, base - 6), Color("8d927f"), 2)
-	draw_line(Vector2(x - 10, base - height), Vector2(x + 9, base - height + 5), Color("e0d6b5"), 2)
-	draw_rect(Rect2(x - 14, base - 5, 28, 5), Color("c8bea0"))
+func _draw_cliff(rectangle: Rect2) -> void:
+	draw_set_transform(rectangle.position, 0.0, Vector2.ONE / MATERIAL_DENSITY)
+	draw_texture_rect(CLIFF, Rect2(Vector2.ZERO, rectangle.size * MATERIAL_DENSITY), true)
+	draw_set_transform(Vector2.ZERO)
+	var x := rectangle.position.x
+	while x < rectangle.end.x:
+		var width := minf(CAP_STONE.get_width() / MATERIAL_DENSITY, rectangle.end.x - x)
+		draw_texture_rect_region(CAP_STONE, Rect2(x, rectangle.position.y, width, 4), Rect2(0, 96, width * MATERIAL_DENSITY, 64), Color(1.10, 1.10, 1.08))
+		x += width
+	draw_line(rectangle.position, Vector2(rectangle.end.x, rectangle.position.y), Color("f0e8d2"), 0.35, true)
+	draw_line(rectangle.position + Vector2(0, 4), Vector2(rectangle.end.x, rectangle.position.y + 4), Color(0.24, 0.26, 0.24, 0.35), 0.45, true)
