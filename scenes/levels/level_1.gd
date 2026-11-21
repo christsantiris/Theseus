@@ -13,6 +13,9 @@ const ENEMY_SCENES := {
 	"lamia": preload("res://scenes/enemies/lamia.tscn"),
 	"cyclops": preload("res://scenes/enemies/cyclops_slinger.tscn"),
 	"satyr": preload("res://scenes/enemies/satyr.tscn"),
+	"bronze_bull": preload("res://scenes/enemies/bronze_bull.tscn"),
+	"cerberus_pup": preload("res://scenes/enemies/cerberus_pup.tscn"),
+	"hydra": preload("res://scenes/enemies/hydra.tscn"),
 }
 const FLASK := preload("res://scenes/pickups/health_flask.tscn")
 const CHECKPOINT := preload("res://scenes/objects/checkpoint.tscn")
@@ -80,18 +83,7 @@ func _ready() -> void:
 
 
 func _build_encounters() -> void:
-	for encounter: Dictionary in layout.ENEMIES:
-		var enemy_id := String(encounter.name)
-		if enemy_id in _defeated:
-			continue
-		var enemy = ENEMY_SCENES[encounter.kind].instantiate()
-		enemy.name = enemy_id
-		enemy.position = encounter.position
-		enemy.direction = -1
-		enemy.patrol_left = encounter.patrol.x
-		enemy.patrol_right = encounter.patrol.y
-		enemy.defeated.connect(_on_enemy_defeated.bind(enemy_id))
-		add_child(enemy)
+	_build_enemies()
 	for pickup: Dictionary in layout.FLASKS:
 		var pickup_id := String(pickup.name)
 		if pickup_id in _collected:
@@ -119,6 +111,23 @@ func _build_encounters() -> void:
 	add_child(_gate)
 	if layout.GATE_GUARD in _defeated:
 		_gate.unlock()
+
+
+func _build_enemies() -> void:
+	for encounter: Dictionary in layout.ENEMIES:
+		if encounter.name not in _defeated:
+			add_child(_create_enemy(encounter))
+
+
+func _create_enemy(encounter: Dictionary) -> Node2D:
+	var enemy = ENEMY_SCENES[encounter.kind].instantiate()
+	enemy.name = encounter.name
+	enemy.position = encounter.position
+	enemy.direction = -1
+	enemy.patrol_left = encounter.patrol.x
+	enemy.patrol_right = encounter.patrol.y
+	enemy.defeated.connect(_on_enemy_defeated.bind(String(encounter.name)))
+	return enemy
 
 
 func _style_pause_screen() -> void:

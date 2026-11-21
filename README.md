@@ -1,6 +1,6 @@
 # Theseus
 
-A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, and into cypress-covered mountain terraces. The art is small and sharp, in the spirit of early SNES platformers.
+A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. The art is small and sharp, in the spirit of early SNES platformers.
 
 ## Contents
 
@@ -10,6 +10,7 @@ A left-to-right side scroller. Theseus runs the road from Athens to a guarded te
   - [The Rocky Coast](#the-rocky-coast)
   - [The Sacred City](#the-sacred-city)
   - [The Mountain Sanctuary](#the-mountain-sanctuary)
+  - [The Gorge Sanctuary](#the-gorge-sanctuary)
 - [How to play](#how-to-play)
 - [Credits](#credits)
 - [Play-test any level](#play-test-any-level)
@@ -53,6 +54,12 @@ The third level is a Greek town: houses, tiled roofs, an agora, and the climb to
 Cypress trees rise above Greek mountain slopes and terraced stone walls. Cyclops Slingers hurl breakable boulders, Satyrs hop between ledges and charge with their horns, and Raiders and Telchines return. Four spike pits interrupt the road: jump across, or climb out after losing a health bar. Satyrs can be bounced on and sometimes drop stolen wine for a brief speed boost.
 
 [Level 4 guide](docs/level_4.md)
+
+### The Gorge Sanctuary
+
+Pale limestone cliffs, dark clefts, ruined temples, and stone causeways frame the fifth level. Bronze Bulls charge along flat corridors, Cerberus Pups pursue in pairs, and a three-headed Hydra guards the exit. Two optional high flask ledges reward riding a staggered bull. The main route uses normal jumps, with two spike pits and two checkpoint shrines.
+
+[Level 5 guide](docs/level_5.md)
 
 ## How to play
 

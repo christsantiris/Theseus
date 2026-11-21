@@ -1,0 +1,111 @@
+extends RefCounted
+
+const WIDTH := 4800
+const HEIGHT := 352
+const FLOOR_Y := 280
+const START := Vector2(48, FLOOR_Y)
+const SECTIONS := [
+	{"x": 0, "name": "Gorge Mouth"},
+	{"x": 960, "name": "Temple Ledges"},
+	{"x": 1920, "name": "Broken Causeway"},
+	{"x": 2880, "name": "High Colonnade"},
+	{"x": 3840, "name": "Hydra Sanctuary"},
+]
+
+const PLATFORMS := [
+	Rect2(736, 264, 96, 16), Rect2(832, 248, 96, 32),
+	Rect2(928, 232, 256, 48), Rect2(1184, 248, 80, 32),
+	Rect2(1264, 264, 80, 16),
+	Rect2(2144, 264, 112, 16), Rect2(2256, 248, 112, 32),
+	Rect2(2368, 232, 256, 48), Rect2(2624, 216, 112, 64),
+	Rect2(2736, 200, 112, 80), Rect2(2848, 184, 112, 96),
+	Rect2(2960, 168, 512, 112),
+	Rect2(3472, 184, 112, 96), Rect2(3584, 200, 112, 80),
+	Rect2(3696, 216, 112, 64), Rect2(3808, 232, 256, 48),
+	Rect2(4064, 248, 64, 32), Rect2(4128, 264, 64, 16),
+]
+
+# These ledges can be reached from a staggered bull. The main route never
+# requires a ride, and their one-way tops leave the charging lane clear.
+const BONUS_LEDGES := [Rect2(544, 224, 112, 8), Rect2(3328, 112, 112, 8)]
+const PITS := [
+	{"name": "CausewayPit", "position": Vector2(2080, 280), "width": 32.0, "depth": 24.0},
+	{"name": "SanctuaryPit", "position": Vector2(4160, 264), "width": 32.0, "depth": 24.0},
+]
+
+const ENEMIES := [
+	{"name": "BullGorgeMouth", "kind": "bronze_bull", "position": Vector2(432, 280), "patrol": Vector2(192, 704)},
+	{"name": "TemplePupA", "kind": "cerberus_pup", "position": Vector2(1024, 232), "patrol": Vector2(960, 1152), "pack": "TemplePack", "delay": 0.3},
+	{"name": "TemplePupB", "kind": "cerberus_pup", "position": Vector2(1072, 232), "patrol": Vector2(960, 1152), "pack": "TemplePack", "delay": 0.9},
+	{"name": "BullDryRiver", "kind": "bronze_bull", "position": Vector2(1696, 280), "patrol": Vector2(1376, 1888)},
+	{"name": "CausewayPupA", "kind": "cerberus_pup", "position": Vector2(2448, 232), "patrol": Vector2(2400, 2592), "pack": "CausewayPack", "delay": 0.3},
+	{"name": "CausewayPupB", "kind": "cerberus_pup", "position": Vector2(2496, 232), "patrol": Vector2(2400, 2592), "pack": "CausewayPack", "delay": 0.9},
+	{"name": "BullColonnade", "kind": "bronze_bull", "position": Vector2(3264, 168), "patrol": Vector2(3008, 3440)},
+	{"name": "SanctuaryPupA", "kind": "cerberus_pup", "position": Vector2(3904, 232), "patrol": Vector2(3840, 4032), "pack": "SanctuaryPack", "delay": 0.3},
+	{"name": "SanctuaryPupB", "kind": "cerberus_pup", "position": Vector2(3952, 232), "patrol": Vector2(3840, 4032), "pack": "SanctuaryPack", "delay": 0.9},
+	{"name": "HydraTempleGuard", "kind": "hydra", "position": Vector2(4608, 280), "patrol": Vector2(4480, 4688)},
+]
+
+const FLASKS := [
+	{"name": "HealthFlaskBullLedge", "position": Vector2(616, 224), "bonus": true},
+	{"name": "HealthFlaskTemple", "position": Vector2(1216, 248)},
+	{"name": "HealthFlaskCauseway", "position": Vector2(2120, 280)},
+	{"name": "HealthFlaskClimb", "position": Vector2(2784, 200)},
+	{"name": "HealthFlaskHighLedge", "position": Vector2(3384, 112), "bonus": true},
+	{"name": "HealthFlaskSanctuary", "position": Vector2(4368, 280)},
+]
+const CHECKPOINTS := [
+	{"name": "CausewayShrine", "position": Vector2(2016, 280), "spawn": Vector2(2040, 280)},
+	{"name": "HydraShrine", "position": Vector2(4256, 280), "spawn": Vector2(4280, 280)},
+]
+const EXIT := Vector2(4752, FLOOR_Y)
+const GATE_GUARD := "HydraTempleGuard"
+const TIPS := [
+	{"x": 160, "end": 352, "text": "Jump the bull's charge; it cannot turn mid-charge."},
+	{"x": 480, "end": 704, "text": "Airborne Duck + Sword staggers a bull's back."},
+	{"x": 800, "end": 1056, "text": "Pups run in pairs. Sword hits interrupt their leaps."},
+	{"x": 1920, "end": 2072, "text": "Light the shrine, then jump the causeway spikes."},
+	{"x": 3104, "end": 3376, "text": "Ride the bull, then jump to the high flask ledge."},
+	{"x": 4320, "end": 4512, "text": "Cut all three Hydra heads. Jump for the high heads."},
+]
+
+
+static func surface_at(x: float, include_bonus: bool = false) -> float:
+	var surface := float(FLOOR_Y)
+	for platform: Rect2 in PLATFORMS:
+		if x >= platform.position.x and x < platform.end.x:
+			surface = minf(surface, platform.position.y)
+	if include_bonus:
+		for ledge: Rect2 in BONUS_LEDGES:
+			if x >= ledge.position.x and x < ledge.end.x:
+				surface = minf(surface, ledge.position.y)
+	for pit: Dictionary in PITS:
+		if x >= pit.position.x and x < pit.position.x + pit.width:
+			surface = pit.position.y + pit.depth
+	return surface
+
+
+static func terrain_pieces(rectangle: Rect2) -> Array[Rect2]:
+	var pieces: Array[Rect2] = []
+	var cursor := rectangle.position.x
+	for pit: Dictionary in PITS:
+		var bottom: float = pit.position.y + pit.depth
+		var left: float = maxf(cursor, pit.position.x)
+		var right: float = minf(rectangle.end.x, pit.position.x + pit.width)
+		if right <= left or pit.position.y > rectangle.position.y or bottom <= rectangle.position.y:
+			continue
+		if left > cursor:
+			pieces.append(Rect2(cursor, rectangle.position.y, left - cursor, rectangle.size.y))
+		if bottom < rectangle.end.y:
+			pieces.append(Rect2(left, bottom, right - left, rectangle.end.y - bottom))
+		cursor = right
+	if cursor < rectangle.end.x:
+		pieces.append(Rect2(cursor, rectangle.position.y, rectangle.end.x - cursor, rectangle.size.y))
+	return pieces
+
+
+static func is_spike_floor(rectangle: Rect2) -> bool:
+	for pit: Dictionary in PITS:
+		if rectangle.position.x == pit.position.x and rectangle.position.y == pit.position.y + pit.depth:
+			return true
+	return false

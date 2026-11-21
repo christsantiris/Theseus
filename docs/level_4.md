@@ -67,8 +67,9 @@ cannot replace a later shrine. Title Load resumes the highest level or shrine
 reached during the current session.
 
 Defeat RaiderSummitGuard to unlock the sanctuary at (4752, 280). Theseus climbs
-the steps and disappears into its doorway before the completion menu. Replay
-Level restarts Level 4, while New Game explicitly resets the campaign to Level 1.
+the steps and disappears into its doorway before the completion menu. Continue
+opens [Level 5's rocky gorge](level_5.md) and saves its entrance. Replay Level
+restarts Level 4, while New Game explicitly resets the campaign to Level 1.
 
 ## Play and validation
 

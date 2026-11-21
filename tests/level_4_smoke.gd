@@ -124,9 +124,8 @@ func _run() -> void:
 	_expect(level.level_number == 4 and level.player.position.distance_to(Mountain.CHECKPOINTS[1].spawn) < 1, "Load resumes the highest mountain shrine")
 	await _traverse()
 	level = current_scene
-	_expect(level.pause_heading.text == "Level 4 Complete" and not level.next_button.visible, "Mountain temple completes the current final level")
-	level._on_next_pressed()
-	_expect(state.level_number == 4, "Final completion cannot advance to a missing scene")
+	_expect(level.pause_heading.text == "Level 4 Complete" and level.next_button.visible and level.next_button.text == "Continue to Level 5", "Mountain temple offers the gorge level")
+	_expect(ResourceLoader.exists(level.next_level), "Mountain continuation points to a real level scene")
 	level._on_replay_pressed()
 	await _frames()
 	_expect(current_scene.level_number == 4 and state.checkpoint_index == -1 and state.can_load(), "Replay restarts Level 4 while retaining its entrance load point")

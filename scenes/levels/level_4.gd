@@ -6,7 +6,7 @@ const SPIKE_PIT := preload("res://scenes/objects/spike_pit.tscn")
 func _ready() -> void:
 	layout = preload("res://scenes/levels/level_4_layout.gd")
 	level_number = 4
-	next_level = ""
+	next_level = "res://scenes/levels/level_5.tscn"
 	objective = "Climb the mountain. Jump pits; jump out if you fall."
 	completion_text = "The mountain sanctuary is clear."
 	$Player/Camera2D.position.y = -24
