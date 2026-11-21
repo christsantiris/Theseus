@@ -67,7 +67,7 @@ func _tick(delta: float) -> void:
 				_enter("windup")
 		"windup":
 			velocity.x = 0
-			if _state_time >= WINDUP_SECONDS:
+			if _state_time >= _telegraph(WINDUP_SECONDS):
 				# Follow the telegraphed direction, even if Theseus crossed behind us.
 				_enter("pounce" if _pounce_safe() else "recover")
 		"pounce":
@@ -79,9 +79,9 @@ func _tick(delta: float) -> void:
 			velocity.x = 0
 			if _has_focus:
 				_face_player(FOCUS_HEIGHT)
-			if _state_time >= RECOVERY_SECONDS:
+			if _state_time >= _punish(RECOVERY_SECONDS):
 				_release_attack()
-				_cooldown = 0.9
+				_cooldown = _rest(0.9)
 				_enter("run")
 	sprite.modulate = Color(1.15, 0.92, 0.75) if _state == "windup" else Color.WHITE
 

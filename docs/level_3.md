@@ -23,7 +23,8 @@ landing is y=152, 128 pixels above the street. Connected high terraces prevent
 narrow gaps from trapping the player. The street catches missed jumps at lower
 ledges, and the camera follows the taller route vertically.
 
-There are four enemies of each type, sixteen total. Each has two health points.
+There are four enemies of each type, sixteen total. Each has two health points,
+except HopliteAcropolisGuard: gate guards from this level on are elites with three.
 Lamia and Hoplites award 150 points; Spartoi and Peltasts award 100, for a maximum
 combat score of 2,000. Earlier fights can be bypassed; the temple Hoplite must be
 defeated to open the exit.

@@ -60,7 +60,7 @@ func _tick(delta: float) -> void:
 				_enter("windup")
 	elif _state == "windup":
 		velocity.x = 0.0
-		if _state_time >= WINDUP_SECONDS:
+		if _state_time >= _telegraph(WINDUP_SECONDS):
 			# Commit to the telegraphed direction; stepping past him causes a miss.
 			if _can_lunge():
 				_enter("lunge")
@@ -76,8 +76,8 @@ func _tick(delta: float) -> void:
 		velocity.x = 0.0
 		if _has_focus:
 			_face_player(FOCUS_HEIGHT)
-		if _state_time >= RECOVERY_SECONDS:
-			_cooldown = ATTACK_COOLDOWN
+		if _state_time >= _punish(RECOVERY_SECONDS):
+			_cooldown = _rest(ATTACK_COOLDOWN)
 			_enter("patrol")
 	_tint()
 

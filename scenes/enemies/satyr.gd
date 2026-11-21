@@ -83,7 +83,7 @@ func _tick(delta: float) -> void:
 					velocity.x = 0.0
 				_play("jump_rise" if velocity.y < 0 else "jump_fall")
 		"windup":
-			if _state_time >= WINDUP_SECONDS:
+			if _state_time >= _telegraph(WINDUP_SECONDS):
 				_enter("charge" if _charge_safe() else "recover")
 		"charge":
 			if _state_time >= CHARGE_SECONDS or not _charge_safe():
@@ -94,7 +94,7 @@ func _tick(delta: float) -> void:
 		"recover", "stagger":
 			if _has_focus:
 				_face_player(FOCUS_HEIGHT)
-			if _state_time >= RECOVERY_SECONDS:
+			if _state_time >= _punish(RECOVERY_SECONDS):
 				_hop_wait = _rng.randf_range(0.3, 0.8)
 				_enter("idle")
 
@@ -169,7 +169,7 @@ func _enter(next: String) -> void:
 	velocity.x = 0.0
 	horns.position = Vector2(direction * 18, -24)
 	if next == "charge":
-		_cooldown = 1.1
+		_cooldown = _rest(1.1)
 		_strike_hits.clear()
 		_set_body(26, 28, Vector2(direction * 5, -14))
 		velocity.x = direction * CHARGE_SPEED

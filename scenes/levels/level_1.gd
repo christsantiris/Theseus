@@ -17,6 +17,7 @@ const ENEMY_SCENES := {
 	"cerberus_pup": preload("res://scenes/enemies/cerberus_pup.tscn"),
 	"hydra": preload("res://scenes/enemies/hydra.tscn"),
 }
+const Difficulty := preload("res://scenes/levels/difficulty.gd")
 const FLASK := preload("res://scenes/pickups/health_flask.tscn")
 const CHECKPOINT := preload("res://scenes/objects/checkpoint.tscn")
 const GATE := preload("res://scenes/objects/temple_gate.tscn")
@@ -126,6 +127,10 @@ func _create_enemy(encounter: Dictionary) -> Node2D:
 	enemy.direction = -1
 	enemy.patrol_left = encounter.patrol.x
 	enemy.patrol_right = encounter.patrol.y
+	# The Hydra is already a multi-head boss, so only ordinary gate guards gain
+	# the elite health bonus.
+	var elite: bool = encounter.name == layout.GATE_GUARD and encounter.kind != "hydra"
+	enemy.tuning = Difficulty.for_level(level_number, elite)
 	enemy.defeated.connect(_on_enemy_defeated.bind(String(encounter.name)))
 	return enemy
 

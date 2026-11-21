@@ -81,7 +81,7 @@ func _tick(delta: float) -> void:
 				if _active_head != null:
 					_enter("windup")
 		"windup":
-			if _state_time >= WINDUP_SECONDS:
+			if _state_time >= _telegraph(WINDUP_SECONDS):
 				_enter("strike" if _bite_clear() else "recover")
 		"strike":
 			if _state_time >= STRIKE_SECONDS:
@@ -90,8 +90,8 @@ func _tick(delta: float) -> void:
 			if _state_time >= RETREAT_SECONDS:
 				_enter("recover")
 		"recover":
-			if _state_time >= RECOVERY_SECONDS:
-				_cooldown = 0.35
+			if _state_time >= _punish(RECOVERY_SECONDS):
+				_cooldown = _rest(0.35)
 				_enter("idle")
 	_update_heads()
 

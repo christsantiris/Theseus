@@ -68,14 +68,14 @@ func _tick(delta: float) -> void:
 			frame = 2
 		_show_rise(frame)
 		if _state_time >= 0.66:
-			_thrust_lock = 0.45
+			_thrust_lock = _rest(0.45)
 			_enter("march")
 	elif _state == "stun":
 		velocity.x = 0.0
 		_play("windup")
 		sprite.modulate = Color(1.45, 1.35, 0.85)
 		if _stun <= 0.0:
-			_thrust_lock = 0.4
+			_thrust_lock = _rest(0.4)
 			_enter("march")
 	elif _state == "march":
 		_move_with_focus(walk_speed, 30.0, delta)
@@ -87,7 +87,7 @@ func _tick(delta: float) -> void:
 	elif _state == "windup":
 		velocity.x = 0.0
 		_play("windup")
-		if _state_time >= 0.22:
+		if _state_time >= _telegraph(0.22):
 			_enter("thrust")
 	elif _state == "thrust":
 		velocity.x = 0.0
@@ -101,7 +101,7 @@ func _tick(delta: float) -> void:
 				_strike_hits[id] = true
 				body.hurt(1)
 		if _state_time >= 0.18:
-			_thrust_lock = 1.15
+			_thrust_lock = _rest(1.15)
 			_enter("march")
 
 

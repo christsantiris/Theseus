@@ -1,6 +1,6 @@
 # Theseus
 
-A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. Theseus uses detailed cinematic 3D-style sprites; the enemies and scenery use the original retro artwork.
+A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. Theseus and Level 1's scenery use detailed cinematic 3D-style artwork. The enemies and later levels retain the original retro artwork.
 
 ## Contents
 
@@ -33,11 +33,13 @@ A left-to-right side scroller. Theseus runs the road from Athens to a guarded te
 
 ## The journey
 
-Light a shrine to keep your place. Entering a new level also saves its entrance. Death returns you to that entrance or the latest shrine with full health. Load resumes the highest level or shrine reached in the current session. New Game starts the road over.
+Each level is a little harder than the last: enemies telegraph faster, recover sooner, and attack more often, while healing is balanced against each level's enemies. Light a shrine to keep your place. Entering a new level also saves its entrance. Death returns you to that entrance or the latest shrine with full health. Load resumes the highest level or shrine reached in the current session. New Game starts the road over.
 
 ### The Temple Road
 
 The opening level is a 4,800-pixel road in five stretches: the King's Road, the Broken Colonnade, the Olive Terraces, the Ruined Aqueduct, and the Temple Approach. Sixteen soldiers wait along it — raiders, peltasts, and hoplites — with health flasks and two shrines. The temple gate stays shut until its guard falls.
+
+Ten cinematic landscape panoramas cover the full road, with detailed limestone surfaces, carved waystones, and a matching temple entrance. The platform layout, encounters, and movement are unchanged.
 
 [Level 1 guide](docs/level_1.md)
 

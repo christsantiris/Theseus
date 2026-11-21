@@ -83,7 +83,7 @@ func _tick(delta: float) -> void:
 				_face_player(16.0)
 				_enter("windup")
 		"windup":
-			if _state_time >= WINDUP_SECONDS:
+			if _state_time >= _telegraph(WINDUP_SECONDS):
 				_enter("strike")
 		"strike":
 			if _state_time >= STRIKE_SECONDS:
@@ -97,8 +97,8 @@ func _tick(delta: float) -> void:
 			if _state_time >= GUARD_SECONDS:
 				_enter("recover")
 		"recover":
-			if _state_time >= RECOVERY_SECONDS:
-				_cooldown = ATTACK_COOLDOWN
+			if _state_time >= _punish(RECOVERY_SECONDS):
+				_cooldown = _rest(ATTACK_COOLDOWN)
 				_enter("idle")
 	_tint()
 

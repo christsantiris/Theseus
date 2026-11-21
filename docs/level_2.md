@@ -22,8 +22,8 @@ drop 16–48 pixels. The camera follows both axes within the taller world.
 | Enemy | Count | Health / score | Behavior and defense |
 | --- | --- | --- | --- |
 | Stymphalian Bird | 6 | 1 / 75 | Flies horizontally at 48 pixels/second, roughly half Theseus's running speed. High lanes are 44 pixels above a landing: duck in place and let the bird pass, or jump and time a sword strike. Low lanes are 8 pixels above a landing: jump forward over the approaching bird, or time a standing sword strike. |
-| Telchine | 5 | 2 / 100 | Dog-headed sea daemon in Greek soldier armor, carrying a held bronze trident. Uses Peltast's stationary melee jab: 0.5-second windup, 0.18-second strike, 0.8-second recovery. Retreat, jump, or pass the committed windup, then counter. |
-| Spartoi | 5 | 2 / 100 | Exposed skull, ribs, and bone limbs under Greek helmet and armor. Uses Raider's 0.45-second windup, 0.22-second committed sword lunge, and 0.85-second recovery. Bait the lunge and counter. |
+| Telchine | 5 | 2 / 100 | Dog-headed sea daemon in Greek soldier armor, carrying a held bronze trident. Uses Peltast's stationary melee jab, tuned for this level: a 0.55-second windup, 0.18-second strike, and 0.87-second recovery. Retreat, jump, or pass the committed windup, then counter. |
+| Spartoi | 5 | 2 / 100 | Exposed skull, ribs, and bone limbs under Greek helmet and armor. Uses Raider's committed sword lunge, tuned for this level: a 0.5-second windup, 0.22-second lunge, and 0.92-second recovery. Bait the lunge and counter. |
 
 Birds stay at their assigned height and reverse at their patrol endpoints.
 Every high-bird wing frame clears the visible ducking helmet by four pixels.
@@ -51,7 +51,7 @@ Level 2 shrine. Progress remains in memory for the current game session.
 The Coastal Shrine at x=2000 saves a safe spawn at (2024, 280). The Sanctuary
 Shrine at x=4048 saves (4072, 280). Each snapshots
 this level's score, defeated enemies, and collected flasks. Backtracking
-cannot replace a later shrine. Five health flasks restore two bars each.
+cannot replace a later shrine. Four health flasks restore two bars each.
 
 Defeat SpartoiSanctuaryGuard to open the temple at (4752, 280). Theseus climbs
 the temple steps and disappears into the doorway before the completion menu.

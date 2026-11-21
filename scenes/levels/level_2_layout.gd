@@ -43,11 +43,11 @@ const ENEMIES := [
 	{"name": "SpartoiQuay", "kind": "spartoi", "position": Vector2(1328, 168), "patrol": Vector2(1280, 1376)},
 	{"name": "BirdHighQuay", "kind": "bird", "position": Vector2(1536, 124), "patrol": Vector2(1424, 1552)},
 	{"name": "BirdLowQuay", "kind": "bird", "position": Vector2(1664, 176), "patrol": Vector2(1600, 1680)},
-	{"name": "TelchineCliffs", "kind": "telchine", "position": Vector2(2464, 216), "patrol": Vector2(2432, 2512)},
+	{"name": "TelchineCliffs", "kind": "telchine", "position": Vector2(2496, 216), "patrol": Vector2(2432, 2512)},
 	{"name": "SpartoiCliffs", "kind": "spartoi", "position": Vector2(2608, 200), "patrol": Vector2(2560, 2656)},
 	{"name": "BirdHighCliffs", "kind": "bird", "position": Vector2(2768, 140), "patrol": Vector2(2704, 2800)},
 	{"name": "BirdLowRuins", "kind": "bird", "position": Vector2(3168, 128), "patrol": Vector2(3120, 3216)},
-	{"name": "TelchineRuins", "kind": "telchine", "position": Vector2(3312, 120), "patrol": Vector2(3264, 3360)},
+	{"name": "TelchineRuins", "kind": "telchine", "position": Vector2(3344, 120), "patrol": Vector2(3264, 3360)},
 	{"name": "SpartoiSummit", "kind": "spartoi", "position": Vector2(3456, 104), "patrol": Vector2(3408, 3504)},
 	{"name": "SpartoiCoast", "kind": "spartoi", "position": Vector2(4144, 280), "patrol": Vector2(4080, 4208)},
 	{"name": "TelchineSanctuary", "kind": "telchine", "position": Vector2(4400, 248), "patrol": Vector2(4352, 4448)},
@@ -55,7 +55,6 @@ const ENEMIES := [
 ]
 
 const FLASKS := [
-	{"name": "HealthFlaskCoast", "position": Vector2(520, 280)},
 	{"name": "HealthFlaskQuay", "position": Vector2(1200, 184)},
 	{"name": "HealthFlaskCliff", "position": Vector2(2880, 168)},
 	{"name": "HealthFlaskDescent", "position": Vector2(3760, 200)},

@@ -87,7 +87,7 @@ func _tick(delta: float) -> void:
 				_enter("windup")
 		"windup":
 			# The direction and launch velocity stay fixed once the windup begins.
-			if _state_time >= WINDUP_SECONDS:
+			if _state_time >= _telegraph(WINDUP_SECONDS):
 				_enter("throw")
 		"throw":
 			if _state_time >= THROW_SECONDS:
@@ -95,13 +95,13 @@ func _tick(delta: float) -> void:
 		"reload":
 			if _has_focus:
 				_face_player(FOCUS_HEIGHT)
-			if _state_time >= RELOAD_SECONDS:
+			if _state_time >= _punish(RELOAD_SECONDS):
 				_enter("recover")
 		"recover":
 			if _has_focus:
 				_face_player(FOCUS_HEIGHT)
-			if _state_time >= RECOVERY_SECONDS:
-				_cooldown = ATTACK_COOLDOWN
+			if _state_time >= _punish(RECOVERY_SECONDS):
+				_cooldown = _rest(ATTACK_COOLDOWN)
 				_enter("idle")
 	_tint()
 

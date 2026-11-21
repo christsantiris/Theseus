@@ -74,7 +74,7 @@ func _tick(delta: float) -> void:
 			if _cooldown <= 0 and _can_engage():
 				_enter("windup")
 		"windup":
-			if _state_time >= WINDUP_SECONDS:
+			if _state_time >= _telegraph(WINDUP_SECONDS):
 				_enter("charge" if _corridor_clear(40) else "recover")
 		"charge":
 			if _state_time >= CHARGE_SECONDS or not _corridor_clear(36):
@@ -90,8 +90,8 @@ func _tick(delta: float) -> void:
 			elif _corridor_clear(32):
 				velocity.x = direction * RIDE_SPEED
 		"recover":
-			if _state_time >= 0.5:
-				_cooldown = 1.0
+			if _state_time >= _punish(0.5):
+				_cooldown = _rest(1.0)
 				_enter("idle")
 	# A cool sheen marks the exposed back; amber warns that the ride is ending.
 	sprite.modulate = Color(1.15, 0.88, 0.65) if _state == "recover" else Color(0.85, 1.1, 1.15) if can_ride() else Color.WHITE

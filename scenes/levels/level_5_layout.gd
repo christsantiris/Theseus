@@ -50,7 +50,6 @@ const FLASKS := [
 	{"name": "HealthFlaskBullLedge", "position": Vector2(616, 224), "bonus": true},
 	{"name": "HealthFlaskTemple", "position": Vector2(1216, 248)},
 	{"name": "HealthFlaskCauseway", "position": Vector2(2120, 280)},
-	{"name": "HealthFlaskClimb", "position": Vector2(2784, 200)},
 	{"name": "HealthFlaskHighLedge", "position": Vector2(3384, 112), "bonus": true},
 	{"name": "HealthFlaskSanctuary", "position": Vector2(4368, 280)},
 ]

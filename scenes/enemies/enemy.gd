@@ -7,6 +7,7 @@ const FOOT_ROW := 53
 const GRAVITY := 900.0
 const FOCUS_RANGE := 224.0
 const FOCUS_HEIGHT := 96.0
+const Difficulty := preload("res://scenes/levels/difficulty.gd")
 
 @export var points := 100
 @export var direction := 1
@@ -20,6 +21,9 @@ const FOCUS_HEIGHT := 96.0
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var contact: Area2D = $Contact
 
+## Level difficulty, assigned by the level before the enemy enters the tree.
+## Enemies placed elsewhere keep their authored timings.
+var tuning: Dictionary = Difficulty.NEUTRAL
 var alive := true
 var hp := 2
 var _body_shape := RectangleShape2D.new()
@@ -27,7 +31,10 @@ var _has_focus := false
 
 
 func _ready() -> void:
+	if tuning.elite:
+		max_hp += 1
 	hp = max_hp
+	walk_speed *= tuning.speed
 	add_to_group("enemies")
 	_body_shape.size = Vector2(body_half_width * 2.0, body_height)
 	$CollisionShape2D.shape = _body_shape
@@ -55,6 +62,21 @@ func _physics_process(delta: float) -> void:
 
 func _tick(_delta: float) -> void:
 	pass
+
+
+## Windup before an attack lands, scaled for the level.
+func _telegraph(seconds: float) -> float:
+	return Difficulty.telegraph(seconds, tuning)
+
+
+## Recovery after an attack, while the enemy can be countered.
+func _punish(seconds: float) -> float:
+	return Difficulty.punish(seconds, tuning)
+
+
+## Pause before the next attack.
+func _rest(seconds: float) -> float:
+	return Difficulty.rest(seconds, tuning)
 
 
 func _initial_animation() -> String:
