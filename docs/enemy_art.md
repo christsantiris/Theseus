@@ -30,7 +30,7 @@ and a 0.85-second recovery. He commits to his windup direction and hits each
 target at most once per lunge, using a sword hitbox rather than body contact.
 He attacks only within 64 horizontal pixels and 24 vertical pixels, with a clear
 line of sight and safe space to lunge. Sword hits still deal damage in every
-state. His fire effect has been removed. Hoplite behavior is unchanged.
+state. His fire effect has been removed.
 
 Test the Raider's engagement, damage, telegraph, recovery, and terrain safety:
 
@@ -54,11 +54,49 @@ recovery is safe. Landing on an enemy's head follows the collision rule below.
 
 Back away, jump over the jab, or move past the committed windup to make it miss.
 Sword hits work in every state. There is no state-specific instant stomp defeat.
-Raider and Hoplite attack behavior is unchanged.
+Raider and Hoplite retain their respective sword-lunge and spear-thrust attacks.
 
 ```sh
 godot --headless --path . --script res://tests/peltast_behavior.gd --fixed-fps 60
 ```
+
+## Combat focus
+
+Raider, Spartoi, Peltast, Telchine, and Hoplite keep a live target between
+attacks. They face Theseus and close to melee distance, then hold a planted
+stance while their attack cooldown runs. Recovery no longer sends them back
+into a patrol that turns away from the player. Pursuit can cross their original
+patrol endpoints on supported ground; walls and unsupported edges make them
+stop and keep watching the target instead of reversing or falling.
+
+Raider/Peltast families acquire a visible player within 96 horizontal and 48
+vertical pixels. Hoplite retains his 80-by-36-pixel wake-up range and crouch/rise
+sequence, now facing the approaching player. Focus persists within 224 horizontal
+and 96 vertical pixels, including jumps and temporary obstructions. It ends
+when the target escapes that range, dies, or leaves the scene. Targets cannot
+be acquired through walls.
+
+Windups and active attacks still commit to their original direction. Moving
+behind a windup remains a defense; soldiers turn toward the new side in recovery
+or their next movement phase. Cooldowns, movement speeds, damage, and health
+are retained. Lamia remains anchored to her coils, and birds use their existing
+flight lanes.
+
+Hoplite's spear detector now remains available between physics frames and is
+read only during thrusts. Previously, switching it off and on every tick erased
+its overlaps and could make thrusts miss entirely. Each thrust can damage its
+target once, with a clear line of sight; passive body contact retains the
+player's existing damage cooldown.
+
+```sh
+godot --headless --path . --script res://tests/enemy_focus.gd --fixed-fps 60
+```
+
+This regression runs sustained fights for all five soldier variants, checking
+multiple attacks and hits, target-facing movement beyond patrol bounds, changing
+sides, jumping, escape/death release, acquisition line of sight, and holding
+position at walls and ledges. Existing attack, player-combat, Lamia, bird, and
+three level integration suites also pass.
 
 ## Player hits and landing collisions
 

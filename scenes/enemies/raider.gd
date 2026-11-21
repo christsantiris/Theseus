@@ -41,6 +41,7 @@ func _deals_contact() -> bool:
 
 
 func _tick(delta: float) -> void:
+	_update_focus()
 	_state_time += delta
 	_flash = maxf(_flash - delta, 0.0)
 	if not is_on_floor():
@@ -50,8 +51,8 @@ func _tick(delta: float) -> void:
 		_tint()
 		return
 	if _state == "patrol":
-		_patrol(walk_speed)
-		_play("walk")
+		_move_with_focus(walk_speed, 40.0, delta)
+		_play_locomotion("walk")
 		_cooldown = maxf(_cooldown - delta, 0.0)
 		if _cooldown <= 0.0 and _can_engage():
 			_face_player(24.0)
@@ -66,13 +67,15 @@ func _tick(delta: float) -> void:
 			else:
 				_enter("recover")
 	elif _state == "lunge":
-		if _state_time >= LUNGE_SECONDS or is_on_wall() or not _inside_patrol(4.0) or not _floor_ahead():
+		if _state_time >= LUNGE_SECONDS or is_on_wall() or (not _has_focus and not _inside_patrol(4.0)) or not _floor_ahead():
 			_enter("recover")
 		else:
 			velocity.x = direction * LUNGE_SPEED
 			_hurt_sword_overlaps()
 	elif _state == "recover":
 		velocity.x = 0.0
+		if _has_focus:
+			_face_player(FOCUS_HEIGHT)
 		if _state_time >= RECOVERY_SECONDS:
 			_cooldown = ATTACK_COOLDOWN
 			_enter("patrol")
@@ -100,10 +103,11 @@ func _can_engage() -> bool:
 
 
 func _can_lunge() -> bool:
-	# Patrol limits constrain the body origin; terrain probes include its leading edge.
+	# Focused pursuits can leave the patrol route; terrain probes still include
+	# the leading edge of the complete lunge.
 	var destination_x := global_position.x + direction * LUNGE_SPEED * LUNGE_SECONDS
 	var leading_x := destination_x + direction * 24.0
-	if destination_x <= patrol_left + 8.0 or destination_x >= patrol_right - 8.0:
+	if not _has_focus and (destination_x <= patrol_left + 8.0 or destination_x >= patrol_right - 8.0):
 		return false
 	var space := get_world_2d().direct_space_state
 	var wall := PhysicsRayQueryParameters2D.create(

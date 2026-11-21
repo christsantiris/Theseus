@@ -37,7 +37,7 @@ func _build_frames() -> void:
 
 func _physics_process(delta: float) -> void:
 	# Distant patrols wait. A committed attack finishes even if the player retreats.
-	if alive and _state == "patrol" and not _player_close(AWARENESS_RANGE, 96.0):
+	if alive and _state == "patrol" and not _has_focus and not _player_close(AWARENESS_RANGE, 96.0):
 		velocity = Vector2.ZERO
 		return
 	super(delta)
@@ -48,6 +48,7 @@ func _deals_contact() -> bool:
 
 
 func _tick(delta: float) -> void:
+	_update_focus()
 	_state_time += delta
 	_flash = maxf(_flash - delta, 0.0)
 	if not is_on_floor():
@@ -57,8 +58,8 @@ func _tick(delta: float) -> void:
 		_tint()
 		return
 	if _state == "patrol":
-		_patrol(walk_speed)
-		_play("walk")
+		_move_with_focus(walk_speed, 28.0, delta)
+		_play_locomotion("walk")
 		_cooldown = maxf(0.0, _cooldown - delta)
 		if _cooldown <= 0.0 and _can_engage():
 			_face_player(12.0)
@@ -75,6 +76,8 @@ func _tick(delta: float) -> void:
 			_hurt_javelin_overlaps()
 	elif _state == "recover":
 		velocity.x = 0.0
+		if _has_focus:
+			_face_player(FOCUS_HEIGHT)
 		if _state_time >= RECOVERY_SECONDS:
 			_cooldown = ATTACK_COOLDOWN
 			_enter("patrol")

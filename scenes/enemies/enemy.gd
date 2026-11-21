@@ -5,6 +5,8 @@ signal defeated(points: int)
 const FRAME_SIZE := Vector2i(72, 56)
 const FOOT_ROW := 53
 const GRAVITY := 900.0
+const FOCUS_RANGE := 224.0
+const FOCUS_HEIGHT := 96.0
 
 @export var points := 100
 @export var direction := 1
@@ -21,6 +23,7 @@ const GRAVITY := 900.0
 var alive := true
 var hp := 2
 var _body_shape := RectangleShape2D.new()
+var _has_focus := false
 
 
 func _ready() -> void:
@@ -132,6 +135,57 @@ func _patrol(speed: float) -> void:
 	elif is_on_floor() and (is_on_wall() or not _floor_ahead()):
 		direction *= -1
 	velocity.x = direction * speed
+
+
+func _update_focus(notice_range: float = 96.0, notice_height: float = 48.0) -> void:
+	var player := _player()
+	if player == null or player.get("health") == 0:
+		_has_focus = false
+	elif _has_focus:
+		# A jump, recovery, or temporary obstruction must not restart a patrol.
+		_has_focus = _player_close(FOCUS_RANGE, FOCUS_HEIGHT)
+	elif _player_close(notice_range, notice_height) and _can_see_player():
+		_has_focus = true
+
+
+func _can_see_player() -> bool:
+	var player := _player()
+	if player == null:
+		return false
+	var query := PhysicsRayQueryParameters2D.create(
+		global_position + Vector2(0, -24),
+		player.global_position + Vector2(0, -24), 1
+	)
+	return get_world_2d().direct_space_state.intersect_ray(query).is_empty()
+
+
+func _move_with_focus(speed: float, stand_off: float, delta: float) -> void:
+	if not _has_focus:
+		_patrol(speed)
+		return
+	velocity.x = 0.0
+	_face_player(FOCUS_HEIGHT)
+	var player := _player()
+	if player == null or absf(player.global_position.x - global_position.x) <= stand_off:
+		return
+	# Patrol endpoints do not reverse a pursuit. Terrain still limits movement;
+	# at a wall or unsupported edge, hold position and keep facing Theseus.
+	if not _floor_ahead():
+		return
+	var query := PhysicsRayQueryParameters2D.create(
+		global_position + Vector2(0, -12),
+		global_position + Vector2(direction * (body_half_width + speed * delta + 2.0), -12), 1
+	)
+	if get_world_2d().direct_space_state.intersect_ray(query).is_empty():
+		velocity.x = direction * speed
+
+
+func _play_locomotion(animation_name: String) -> void:
+	_play(animation_name)
+	if _has_focus and is_zero_approx(velocity.x):
+		# Use a planted standing pose while waiting for the next attack.
+		sprite.pause()
+		sprite.frame = 0
 
 
 func _floor_ahead() -> bool:

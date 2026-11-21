@@ -7,6 +7,7 @@ var _state_time := 0.0
 var _stun := 0.0
 var _thrust_lock := 0.4
 var _strike: Area2D
+var _strike_hits: Dictionary = {}
 
 
 func _ready() -> void:
@@ -20,7 +21,7 @@ func _ready() -> void:
 	_strike.name = "Strike"
 	_strike.collision_layer = 0
 	_strike.collision_mask = 2
-	_strike.monitoring = false
+	_strike.monitoring = true
 	_strike.monitorable = false
 	var shape_node := CollisionShape2D.new()
 	var shape := RectangleShape2D.new()
@@ -49,13 +50,14 @@ func _deals_contact() -> bool:
 
 
 func _tick(delta: float) -> void:
+	_update_focus(80.0, 36.0)
 	_state_time += delta
 	_stun = maxf(_stun - delta, 0.0)
-	_strike.monitoring = false
 	if _state == "crouch":
 		velocity.x = 0.0
 		_show_rise(0)
-		if _player_close(80.0, 36.0):
+		if _has_focus:
+			_face_player(FOCUS_HEIGHT)
 			_enter("rise")
 	elif _state == "rise":
 		velocity.x = 0.0
@@ -76,8 +78,8 @@ func _tick(delta: float) -> void:
 			_thrust_lock = 0.4
 			_enter("march")
 	elif _state == "march":
-		_patrol(walk_speed)
-		_play("march")
+		_move_with_focus(walk_speed, 30.0, delta)
+		_play_locomotion("march")
 		sprite.modulate = Color.WHITE
 		_thrust_lock -= delta
 		if _thrust_lock <= 0.0 and _player_in_front(42.0):
@@ -90,10 +92,13 @@ func _tick(delta: float) -> void:
 	elif _state == "thrust":
 		velocity.x = 0.0
 		_play("thrust")
-		_strike.monitoring = true
 		_strike.position = Vector2(direction * 18.0, -24.0)
 		for body in _strike.get_overlapping_bodies():
-			if body.has_method("hurt"):
+			if not body.is_in_group("player") or not body.has_method("hurt") or not _can_see_player():
+				continue
+			var id := body.get_instance_id()
+			if not _strike_hits.has(id):
+				_strike_hits[id] = true
 				body.hurt(1)
 		if _state_time >= 0.18:
 			_thrust_lock = 1.15
@@ -122,7 +127,7 @@ func _show_rise(frame: int) -> void:
 
 func _player_in_front(reach: float) -> bool:
 	var player := _player()
-	if player == null:
+	if player == null or player.get("health") == 0 or not _can_see_player():
 		return false
 	var dx := (player.global_position.x - global_position.x) * direction
 	var dy := absf(player.global_position.y - global_position.y)
@@ -132,3 +137,6 @@ func _player_in_front(reach: float) -> bool:
 func _enter(next: String) -> void:
 	_state = next
 	_state_time = 0.0
+	_strike.position = Vector2(direction * 18.0, -24.0)
+	if next == "thrust":
+		_strike_hits.clear()
