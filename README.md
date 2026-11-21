@@ -65,9 +65,12 @@ Theseus runs, jumps, ducks, and thrusts. A short jump is a released jump. Sword 
 | Jump | W / Up arrow |
 | Duck | S / Down arrow |
 | Sword | Space |
+| Downward thrust | Hold Duck + Sword while airborne |
 | Pause | Escape |
 
 Controls on the title screen rebinds these keys for the next time you play.
+
+The Bronze Bull is available in a separate review arena. Jump its committed charge, or use a downward thrust on its back to stagger it and ride it briefly. Its cool sheen marks the safe platform; amber warns that it is recovering. Run `godot --path . res://scenes/reviews/bronze_bull_review.tscn` to try it, or open that scene and press **F6**. The pose gallery pauses the fight.
 
 ## Credits
 
@@ -80,6 +83,8 @@ Sound effect by <a href="https://pixabay.com/users/u_qqkrn9bn55-52083300/?utm_so
 Sound Effect by <a href="https://pixabay.com/users/dragon-studio-38165424/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=515257">DRAGON-STUDIO</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=515257">Pixabay</a>
 
 ## Play-test any level
+
+To review Cerberus Pups, run `godot --path . res://scenes/reviews/cerberus_pup_review.tscn`, or open that scene and press **F6**. The two hounds run together and take turns making a telegraphed leap. Jump over the attack or interrupt it with a sword hit. Each pup has two health bars; the surviving pup continues to pursue Theseus.
 
 Start any level at its entrance or at one of its shrines:
 

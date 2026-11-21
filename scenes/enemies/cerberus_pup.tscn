@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/cerberus_pup.gd" id="1_pup"]
+
+[sub_resource type="RectangleShape2D" id="BodyShape"]
+size = Vector2(28, 22)
+
+[node name="CerberusPup" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_pup")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -11)
+shape = SubResource("BodyShape")
+
+[node name="Contact" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Contact"]
+position = Vector2(0, -11)
+shape = SubResource("BodyShape")

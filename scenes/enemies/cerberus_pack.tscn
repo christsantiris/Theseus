@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/cerberus_pack.gd" id="1_pack"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/cerberus_pup.tscn" id="2_pup"]
+
+[node name="CerberusPack" type="Node2D"]
+script = ExtResource("1_pack")
+
+[node name="PupA" parent="." instance=ExtResource("2_pup")]
+position = Vector2(-24, 0)
+attack_delay = 0.3
+
+[node name="PupB" parent="." instance=ExtResource("2_pup")]
+position = Vector2(24, 0)
+attack_delay = 0.9
