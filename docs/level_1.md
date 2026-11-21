@@ -54,11 +54,11 @@ Sword damage occurs only while the blade is visibly extended during an attack.
 ## Recovery and completion
 
 - Health flasks restore two health and remain available when Theseus is already full.
-- Shrines at X=1920 and X=3840 restore full health and snapshot score, defeated
-  enemies, collected flasks, and a safe spawn just beyond the shrine.
+- Shrines at X=1920 and X=3840 snapshot score, defeated enemies, collected
+  flasks, and a safe spawn just beyond the shrine. They do not restore health.
 - Death reloads Level 1 at the latest shrine with full health. Everything after
   that checkpoint resets, including its score gains, enemies, and pickups.
-- Backtracking to an earlier shrine cannot replace a later checkpoint or farm healing.
+- Backtracking to an earlier shrine cannot replace a later checkpoint.
 - Checkpoints last for the current run. New Game and Replay Level start fresh;
   disk saving is a separate feature.
 - The temple gate remains physically closed until its guard is defeated. Reaching

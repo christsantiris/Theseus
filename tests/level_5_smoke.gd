@@ -352,7 +352,7 @@ func _pit_escape() -> void:
 	for pit: Dictionary in Gorge.PITS:
 		for direction in [-1, 1]:
 			var level = await _fresh()
-			# Nearby shrines and flasks normally heal an escaped player. Remove
+			# Nearby flasks normally heal an escaped player. Remove
 			# them here so the check can detect any extra spike damage directly.
 			for definition: Dictionary in Gorge.FLASKS + Gorge.CHECKPOINTS:
 				level.get_node(NodePath(definition.name)).free()

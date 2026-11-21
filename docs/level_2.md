@@ -49,7 +49,7 @@ a Level 2 shrine is lit. Death also restarts from this entrance or the latest
 Level 2 shrine. Progress remains in memory for the current game session.
 
 The Coastal Shrine at x=2000 saves a safe spawn at (2024, 280). The Sanctuary
-Shrine at x=4048 saves (4072, 280). Each restores full health and snapshots
+Shrine at x=4048 saves (4072, 280). Each snapshots
 this level's score, defeated enemies, and collected flasks. Backtracking
 cannot replace a later shrine. Five health flasks restore two bars each.
 

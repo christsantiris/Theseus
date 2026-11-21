@@ -62,7 +62,7 @@ latest level entrance or shrine.
 
 Continuing from Level 4 saves the gorge entrance at (48, 280). The Causeway
 Shrine at x=2016 saves (2040, 280); the Hydra Shrine at x=4256 saves
-(4280, 280). Both restore health and snapshot score, defeated enemies, and
+(4280, 280). Both snapshot score, defeated enemies, and
 collected flasks. Load resumes the highest level or shrine reached in the
 current session, and backtracking cannot replace a later shrine.
 

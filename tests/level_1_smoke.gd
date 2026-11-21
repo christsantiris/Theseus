@@ -75,8 +75,10 @@ func _run() -> void:
 	_expect(distant_enemy._state_time > 0.0, "Nearby encounters wake up")
 	distant_enemy.set_physics_process(false)
 	level.get_node("Raider").die()
+	player.health = 3
 	player.position = Vector2(1920, 152)
 	await _settle()
+	_expect(player.health == 3, "A shrine saves progress without restoring health")
 	_expect(_run_state.checkpoint_index == 0, "First shrine activates through its trigger")
 	_expect(_run_state.checkpoint_score == 100, "Checkpoint saves the current score")
 	_expect(_run_state.spawn_position == Vector2(1952, 152), "Checkpoint has a safe spawn position")

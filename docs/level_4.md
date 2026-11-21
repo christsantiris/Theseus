@@ -61,7 +61,7 @@ jumps all work without it. Six health flasks restore two bars each.
 
 Entering from Level 3 saves the foothill entrance at (48, 280). The Mountain
 Shrine at x=2048 saves a safe spawn at (2072, 280); the Summit Shrine at x=4096
-saves (4120, 280). Each restores health and snapshots score, defeated enemies,
+saves (4120, 280). Each snapshots score, defeated enemies,
 and collected flasks. Later defeats and score gains reset on death. Backtracking
 cannot replace a later shrine. Title Load resumes the highest level or shrine
 reached during the current session.

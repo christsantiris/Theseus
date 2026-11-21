@@ -79,7 +79,7 @@ func _ready() -> void:
 	_update_section()
 	hud.show_message(objective, 4.5)
 	if LevelRun.checkpoint_index >= 0:
-		hud.show_message("Restored at shrine — health and progress recovered.", 3.5)
+		hud.show_message("Restored at shrine — progress recovered.", 3.5)
 
 
 func _build_encounters() -> void:
@@ -235,9 +235,8 @@ func _on_flask_collected(pickup_id: String) -> void:
 func _on_checkpoint_activated(shrine: Area2D) -> void:
 	if shrine.checkpoint_index <= LevelRun.checkpoint_index:
 		return
-	player.heal(player.MAX_HEALTH)
 	LevelRun.save_checkpoint(shrine.checkpoint_index, shrine.spawn_position, _score, _defeated, _collected)
-	hud.show_message("Shrine lit — progress saved and health restored.", 4.0, 3)
+	hud.show_message("Shrine lit — progress saved.", 4.0, 3)
 
 
 func _on_gate_entry_started(body: Node2D) -> void:
