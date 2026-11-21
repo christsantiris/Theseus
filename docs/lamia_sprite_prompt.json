@@ -1,0 +1,42 @@
+{
+  "tool": "Built-in imagegen",
+  "use_case": "stylized-concept",
+  "prompt": "Use case: stylized-concept\nAsset type: production animation sprite sheet for a 320x180 Godot retro Greek side-scroller.\nPrimary request: Lamia, a serpentine woman who coils on platforms, uncoils for a long reaching melee strike, and retreats inside a protective coil.\nReference images: Image 1 Theseus and Image 2 Peltast are style and scale references only. Match their detailed early SNES pixel art, shaded materials and adult proportions.\nSubject: one consistent adult Greek woman's human head, two arms and clothed upper torso joining one thick serpent tail instead of legs. Warm olive skin, dark auburn hair, small bronze Greek diadem and bracers, opaque ivory Greek draped bodice covering chest and waist; muted olive/teal scales and a pale belly. Readable face, hands, layered coils, highlights and shadow. No snake hair.\nComposition: exactly EIGHT separate complete right-facing poses, in ONE horizontal row with wide transparent gaps, same scale, no overlap. Each pose fits a 96x56 game cell at native scale. Tail's grounded coil is anchored around x32 on ground row53; upright head near row8. Long attack can extend right to x90. Keep anchor and floor stable. Total native sheet 768x56; generated output may be proportionally larger.\nPoses in order: 0 relaxed upright on low tail coils, hands ready; 1 subtle second idle breathing pose; 2 clear windup leaning backward over anchored coil, arms drawn in; 3 FULL long melee strike, serpent body stretched horizontally forward from a rear coil with torso/head/hands reaching far to the right, unmistakably longer reach; 4 retreat halfway back into coils; 5 tightly coiled defensive posture, raised thick snake loops shield the lowered torso; 6 deepest protective coil, woman crouches behind thick layered tail, face and arms still readable; 7 uncoiling back upright, hands lowered, exposed recovery posture.\nStyle: crisp native pixel clusters matching references, no smoothing, consistent upper-left light, distinct cloth/bronze/skin/scales, transparent background, no ground or shadows. Whole body in every pose, no cropping. No legs, feet, extra arms, detached parts, weapons, projectiles, labels, text, grid or watermark. Protected poses must be visibly lower than upright.",
+  "packing": {
+    "method": "Godot Image API: alpha cleanup, isolated pose extraction, consistent nearest-neighbor scaling and atlas packing.",
+    "atlas_size": [
+      768,
+      56
+    ],
+    "cell_size": [
+      96,
+      56
+    ],
+    "frame_count": 8,
+    "anchor_x": 28,
+    "ground_row": 53,
+    "maximum_height": 46,
+    "animation_frames": {
+      "idle": [
+        0,
+        1
+      ],
+      "windup": [
+        2
+      ],
+      "strike": [
+        3
+      ],
+      "retreat": [
+        4
+      ],
+      "guard": [
+        5,
+        6
+      ],
+      "recover": [
+        7
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/lamia.gd" id="1_lamia"]
+
+[sub_resource type="RectangleShape2D" id="BodyShape"]
+size = Vector2(26, 42)
+
+[sub_resource type="RectangleShape2D" id="StrikeShape"]
+size = Vector2(56, 12)
+
+[node name="Lamia" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_lamia")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -21)
+shape = SubResource("BodyShape")
+
+[node name="Contact" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Contact"]
+position = Vector2(0, -21)
+shape = SubResource("BodyShape")
+
+[node name="Strike" type="Area2D" parent="."]
+position = Vector2(36, -24)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Strike"]
+shape = SubResource("StrikeShape")

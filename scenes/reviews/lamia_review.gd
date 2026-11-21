@@ -1,0 +1,124 @@
+extends "res://scenes/levels/level_geometry.gd"
+
+const LAMIA_ART := preload("res://assets/art/characters/lamia.png")
+const THESEUS_ART := preload("res://assets/art/characters/theseus.png")
+const POSE_NAMES := ["Idle", "Breathe", "Windup", "Long strike", "Retreat", "Guard", "Deep coil", "Recovery"]
+
+@onready var player = $Player
+@onready var lamia = $Lamia
+@onready var hud = $HUD
+var gallery: Control
+var phase_label: Label
+
+
+func _ready() -> void:
+	get_tree().paused = false
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	_make_solid("Floor", Rect2(0, 152, 320, 32))
+	_make_solid("ReviewPlatform", Rect2(160, 136, 144, 16))
+	_make_solid("LeftWall", Rect2(-16, -64, 16, 256))
+	_make_solid("RightWall", Rect2(320, -64, 16, 256))
+	for child in get_children():
+		child.process_mode = Node.PROCESS_MODE_PAUSABLE
+	$ReviewUI.process_mode = Node.PROCESS_MODE_ALWAYS
+	var camera: Camera2D = $Player/Camera2D
+	camera.limit_enabled = true
+	camera.limit_left = 0
+	camera.limit_top = 0
+	camera.limit_right = 320
+	camera.limit_bottom = 180
+	camera.reset_smoothing()
+	hud.set_area("Lamia Review")
+	hud.set_health(player.health, player.MAX_HEALTH)
+	player.health_changed.connect(hud.set_health)
+	lamia.defeated.connect(_on_defeated)
+	hud.show_message("Jump onto the ledge. Counter after her coils open.", 7.0)
+	_build_review_ui()
+	queue_redraw()
+
+
+func _draw() -> void:
+	draw_rect(Rect2(0, 0, 320, 180), Color("73919c"))
+	draw_rect(Rect2(0, 108, 320, 44), Color("8e9b81"))
+	_column(92, 60, false)
+	_column(284, 72, false)
+	_stone(Rect2(0, 152, 320, 28))
+	_stone(Rect2(160, 136, 144, 16))
+
+
+func _build_review_ui() -> void:
+	var ui := $ReviewUI
+	_button(ui, "Reset", Vector2(8, 21), _on_reset)
+	_button(ui, "Pose gallery", Vector2(62, 21), _toggle_gallery)
+	phase_label = _label(ui, "", Vector2(151, 24), 8)
+	gallery = Control.new()
+	gallery.name = "PoseGallery"
+	gallery.size = Vector2(320, 180)
+	ui.add_child(gallery)
+	var background := ColorRect.new()
+	background.size = Vector2(320, 180)
+	background.color = Color("111a26")
+	gallery.add_child(background)
+	_label(gallery, "LAMIA / THESEUS SCALE REFERENCE", Vector2(8, 0), 9)
+	_button(gallery, "Back", Vector2(270, 0), _toggle_gallery)
+	for index in 9:
+		var at := Vector2(16 + (index % 3) * 96, 14 + (index / 3) * 54)
+		_label(gallery, "Theseus" if index == 0 else POSE_NAMES[index - 1], at + Vector2(2, -2), 7)
+		var atlas := AtlasTexture.new()
+		atlas.atlas = THESEUS_ART if index == 0 else LAMIA_ART
+		atlas.region = Rect2(0, 0, 72, 56) if index == 0 else Rect2((index - 1) * 96, 0, 96, 56)
+		var sprite := Sprite2D.new()
+		sprite.texture = atlas
+		sprite.position = at + Vector2(32, 52)
+		sprite.offset = Vector2(0, -26) if index == 0 else Vector2(20, -25)
+		gallery.add_child(sprite)
+	gallery.hide()
+
+
+func _label(parent: Node, text: String, at: Vector2, size: int) -> Label:
+	var label := Label.new()
+	label.text = text
+	label.position = at
+	label.add_theme_font_size_override("font_size", size)
+	label.add_theme_color_override("font_color", Color("f2dbab"))
+	parent.add_child(label)
+	return label
+
+
+func _button(parent: Node, text: String, at: Vector2, callback: Callable) -> void:
+	var button := Button.new()
+	button.text = text
+	button.focus_mode = Control.FOCUS_NONE
+	button.position = at
+	button.custom_minimum_size = Vector2(48, 14)
+	preload("res://scenes/ui/theme_helpers.gd").style_button(button, 8)
+	button.pressed.connect(callback)
+	parent.add_child(button)
+
+
+func _process(_delta: float) -> void:
+	if is_instance_valid(lamia):
+		phase_label.text = ("PROTECTED: " if lamia.is_protected() else "Exposed: ") + lamia._state
+	else:
+		phase_label.text = "Defeated / Reset to retry"
+
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause"):
+		_toggle_gallery()
+		get_viewport().set_input_as_handled()
+
+
+func _toggle_gallery() -> void:
+	gallery.visible = not gallery.visible
+	get_tree().paused = gallery.visible
+
+
+func _on_reset() -> void:
+	get_tree().paused = false
+	get_tree().reload_current_scene()
+
+
+func _on_defeated(points: int) -> void:
+	hud.set_score(points)
+	hud.show_message("Lamia defeated. Reset to review again.", 10.0, 3)
