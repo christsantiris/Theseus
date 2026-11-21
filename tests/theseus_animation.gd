@@ -20,7 +20,7 @@ func _run() -> void:
 	player.set_physics_process(false)
 	player.get_node("Camera2D").enabled = false
 	var frames: SpriteFrames = player.sprite.sprite_frames
-	var expected := {"idle": 4, "walk": 8, "duck": 2, "jump_rise": 2, "jump_fall": 2, "hurt": 2, "attack": 6, "death": 4, "down_thrust": 6}
+	var expected := {"idle": 4, "walk": 8, "duck": 2, "jump_rise": 2, "jump_fall": 2, "hurt": 2, "attack": 6, "swing": 6, "death": 4, "down_thrust": 6}
 	for animation: String in expected:
 		_expect(frames.has_animation(animation), animation + " has cinematic artwork")
 		_expect(frames.get_frame_count(animation) == expected[animation], animation + " has its full animation sequence")
@@ -31,12 +31,12 @@ func _run() -> void:
 			var used := image.get_used_rect()
 			_expect(used.has_area(), "%s frame %d is visible" % [animation, index])
 			_expect(used.position.x > 1 and used.end.x < image.get_width() - 1 and used.position.y > 1 and used.end.y < image.get_height() - 1, "%s frame %d has no clipped silhouette or opaque background" % [animation, index])
-			if animation in ["idle", "walk", "duck"]:
+			if animation in ["idle", "walk", "duck", "attack", "swing"]:
 				var top: float = (-texture.get_height() * 0.5 + player.sprite.offset.y + used.position.y) * player.sprite.scale.y
 				var foot: float = (-texture.get_height() * 0.5 + player.sprite.offset.y + used.end.y) * player.sprite.scale.y
 				_expect(absf(foot) < 0.5, "%s frame %d keeps its soles on the collision floor" % [animation, index])
 				_expect(absf(top + (36.0 if animation == "duck" else 44.0)) < 1.5, "%s frame %d matches the collision head height" % [animation, index])
-	for animation in ["attack", "down_thrust"]:
+	for animation in ["attack", "swing", "down_thrust"]:
 		var duration := 0.0
 		for index in frames.get_frame_count(animation):
 			duration += frames.get_frame_duration(animation, index) / frames.get_animation_speed(animation)
@@ -65,7 +65,7 @@ func _run() -> void:
 	player.free()
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: 36 cinematic frames, transparent unclipped silhouettes, standing/crouch heights, foot registration, original attack timing, visible downward blades, wine cadence and pause.")
+		print("PASS: 42 cinematic frames, transparent unclipped silhouettes, standing/crouch heights, foot registration, stab/swing/downward attack timing, visible downward blades, wine cadence and pause.")
 	quit(0 if failures.is_empty() else 1)
 
 
