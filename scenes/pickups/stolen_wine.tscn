@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scenes/pickups/stolen_wine.gd" id="1_wine"]
+[ext_resource type="Texture2D" path="res://assets/art/items/stolen_wine.png" id="2_art"]
+
+[sub_resource type="RectangleShape2D" id="BodyShape"]
+size = Vector2(8, 10)
+
+[sub_resource type="RectangleShape2D" id="CollectShape"]
+size = Vector2(18, 20)
+
+[node name="StolenWine" type="CharacterBody2D"]
+process_mode = 1
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("1_wine")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -8)
+texture = ExtResource("2_art")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -5)
+shape = SubResource("BodyShape")
+
+[node name="Collect" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collect"]
+position = Vector2(0, -8)
+shape = SubResource("CollectShape")

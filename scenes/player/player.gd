@@ -1,10 +1,12 @@
 extends CharacterBody2D
 
 signal health_changed(current: int, maximum: int)
+signal speed_boost_changed(seconds_remaining: int)
 
 const FRAME_SIZE := Vector2i(72, 56)
 const FOOT_ROW := 54
 const SPEED := 90.0
+const SPEED_BOOST_MULTIPLIER := 1.35
 const JUMP_VELOCITY := -260.0
 const GRAVITY := 900.0
 # Match the visible head heights; bird lanes must clear the pose, not just a
@@ -37,6 +39,7 @@ var _sword_shape: CollisionShape2D
 var _swing_hits := {}
 var _air_hits := {}
 var _ducked := false
+var _speed_boost_left := 0.0
 
 
 func _ready() -> void:
@@ -76,6 +79,11 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if health <= 0:
 		return
+	if _speed_boost_left > 0.0:
+		var before := ceili(_speed_boost_left)
+		_speed_boost_left = maxf(0.0, _speed_boost_left - delta)
+		if ceili(_speed_boost_left) != before:
+			speed_boost_changed.emit(ceili(_speed_boost_left))
 	if _hurt_lock > 0.0:
 		_hurt_lock = maxf(_hurt_lock - delta, 0.0)
 		sprite.modulate.a = 0.4 if int(_hurt_lock * 14.0) % 2 == 0 else 1.0
@@ -97,6 +105,7 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("attack") and not ducking:
 		_attacking = true
+		sprite.speed_scale = 1.0
 		_swing_hits.clear()
 		if sprite.animation == "attack":
 			sprite.stop()
@@ -104,14 +113,15 @@ func _physics_process(delta: float) -> void:
 		_play_swing()
 
 	var direction := Input.get_axis("move_left", "move_right")
+	var speed := movement_speed()
 	if direction != 0.0:
 		sprite.flip_h = direction < 0.0
 	if ducking:
 		velocity.x = 0.0
 	elif direction != 0.0:
-		velocity.x = direction * SPEED
+		velocity.x = direction * speed
 	else:
-		velocity.x = move_toward(velocity.x, 0.0, SPEED * 8.0 * delta)
+		velocity.x = move_toward(velocity.x, 0.0, speed * 8.0 * delta)
 	_set_ducked(ducking)
 
 	_resolve_jump_collision()
@@ -131,6 +141,19 @@ func heal(amount: int) -> bool:
 	return true
 
 
+func movement_speed() -> float:
+	return SPEED * (SPEED_BOOST_MULTIPLIER if _speed_boost_left > 0.0 else 1.0)
+
+
+func grant_speed_boost(seconds: float = 6.0) -> bool:
+	if health <= 0 or seconds <= 0.0:
+		return false
+	# Further wine refreshes the timer without stacking speed or duration.
+	_speed_boost_left = minf(seconds, 6.0)
+	speed_boost_changed.emit(ceili(_speed_boost_left))
+	return true
+
+
 func hurt(amount: int) -> void:
 	if health <= 0 or _hurt_lock > 0.0:
 		return
@@ -144,6 +167,8 @@ func hurt(amount: int) -> void:
 
 func _die() -> void:
 	health = 0
+	_speed_boost_left = 0.0
+	speed_boost_changed.emit(0)
 	_finish_attack()
 	set_physics_process(false)
 	sprite.modulate = Color(1.0, 0.35, 0.35, 1.0)
@@ -173,6 +198,15 @@ func _resolve_jump_collision() -> void:
 		if _air_hits.has(id) or _hurt_lock > 0.0:
 			continue
 		var foot := player_rect.end.y
+		var bounce_depth := maxf(8.0, velocity.y * get_physics_process_delta_time() + 1.0)
+		if velocity.y > 0.0 and foot <= enemy_rect.position.y + bounce_depth and enemy.has_method("bounce_on"):
+			if enemy.bounce_on():
+				var new_top: float = (collision.global_transform * collision.shape.get_rect()).position.y
+				global_position.y += new_top - foot - 1.0
+				velocity.y = JUMP_VELOCITY
+				_jumped = true
+				_was_airborne = true
+				break
 		if velocity.y > 0.0 and foot <= enemy_rect.position.y + 8.0:
 			global_position.y += enemy_rect.position.y - foot - 1.0
 		hurt(1)
@@ -285,6 +319,7 @@ func _play_land() -> void:
 
 
 func _play(animation_name: String) -> void:
+	sprite.speed_scale = SPEED_BOOST_MULTIPLIER if animation_name == "walk" and _speed_boost_left > 0.0 else 1.0
 	if sprite.animation != animation_name:
 		sprite.play(animation_name)
 

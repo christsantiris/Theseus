@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/satyr.gd" id="1_satyr"]
+
+[sub_resource type="RectangleShape2D" id="BodyShape"]
+size = Vector2(18, 36)
+
+[sub_resource type="RectangleShape2D" id="HornShape"]
+size = Vector2(20, 12)
+
+[node name="Satyr" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_satyr")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -18)
+shape = SubResource("BodyShape")
+
+[node name="Contact" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Contact"]
+position = Vector2(0, -18)
+shape = SubResource("BodyShape")
+
+[node name="Horns" type="Area2D" parent="."]
+position = Vector2(18, -24)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Horns"]
+shape = SubResource("HornShape")

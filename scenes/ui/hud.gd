@@ -12,6 +12,7 @@ var _message: Label
 var _message_backdrop: Panel
 var _message_time := 0.0
 var _message_priority := 0
+var _speed_status: Label
 
 
 func _ready() -> void:
@@ -43,6 +44,11 @@ func _ready() -> void:
 	_area.size = Vector2(128, 12)
 	_area.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	root.add_child(_area)
+	_speed_status = Label.new()
+	_speed_status.position = Vector2(8, 148)
+	_speed_status.add_theme_color_override("font_color", GOLD)
+	_speed_status.hide()
+	root.add_child(_speed_status)
 	# Messages are incised into a marble plaque (the theme's Panel style).
 	_message_backdrop = Panel.new()
 	_message_backdrop.position = Vector2(6, 161)
@@ -98,3 +104,8 @@ func set_health(current: int, maximum: int) -> void:
 
 func set_score(value: int) -> void:
 	_score.text = "Score %d" % value
+
+
+func set_speed_boost(seconds_remaining: int) -> void:
+	_speed_status.text = "Swift %ds" % seconds_remaining
+	_speed_status.visible = seconds_remaining > 0

@@ -68,6 +68,7 @@ func _ready() -> void:
 	camera.force_update_scroll()
 	_style_pause_screen()
 	player.health_changed.connect(_on_health_changed)
+	player.speed_boost_changed.connect(hud.set_speed_boost)
 	_on_health_changed(player.health, player.MAX_HEALTH)
 	hud.set_score(_score)
 	_update_section()
