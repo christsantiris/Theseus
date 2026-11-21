@@ -6,6 +6,16 @@ leading from a cypress-lined road to the guarded temple entrance.
 
 ![Five playable areas captured from Godot](level_1_preview.png)
 
+## Cinematic scenery
+
+Each of the five areas has two connected cinematic 3D-style panoramas, with
+sunlit limestone, cypress trees, olive groves, distant mountains, ruined
+colonnades, aqueduct arches, and sanctuary architecture. The panels blend at
+their edges and preserve their natural proportions. Detailed masonry textures
+cover the original walkable surfaces; carved waystones and a matching temple
+facade complete the scenery. These are pre-rendered backgrounds in the existing
+2D game, with the same collision rectangles, camera limits, and encounter layout.
+
 ## Route and encounter progression
 
 | Area | World X | Purpose | Encounters |
@@ -73,9 +83,14 @@ Sword damage occurs only while the blade is visibly extended during an attack.
 ## Editing and validation
 
 `scenes/levels/level_1_layout.gd` contains the route, terraces, enemy patrols,
-pickup positions, shrine positions, and tutorial prompts. `level_geometry.gd`
-creates collision geometry and draws the Greek landscape and masonry. Geometry
-is also visible in the editor. `level_1.gd` builds the encounters and manages
+pickup positions, shrine positions, and tutorial prompts. `level_1_geometry.gd`
+inherits the original collision construction from `level_geometry.gd`, then
+renders the cinematic panoramas and stone surfaces. Each section texture in
+`assets/art/backgrounds/level_1/` contains its west and east panels stacked
+vertically. `level_1_temple.gd` replaces only Level 1's facade, leaving gate
+collision, unlocking, and entry logic on the existing temple. The later levels
+keep their existing renderers. Scenery is also visible in the editor.
+`level_1.gd` builds the encounters and manages
 checkpoints, camera limits, pause, and completion. Enemy and pickup instances are
 created from their existing reusable scenes at runtime.
 
@@ -90,6 +105,7 @@ Run the integration checks:
 ```sh
 godot --headless --path . --import
 godot --headless --path . --script res://tests/level_1_smoke.gd --fixed-fps 60
+godot --headless --path . --script res://tests/level_1_scenery.gd --fixed-fps 60
 godot --headless --path . --script res://tests/player_combat.gd --fixed-fps 60
 ```
 
@@ -99,3 +115,7 @@ checkpoint rollback, gate collision and unlocking, completion, replay, and a
 physics-driven traversal of the full route. Enemies are held still for that
 traversal so it tests geometry independently of combat skill. Combat difficulty
 and first-clear pacing still need human playtesting.
+
+The scenery check verifies full-route background coverage, panel proportions,
+unchanged terrace collisions, the open facade during paused temple entry, and
+isolation from Levels 2–5.

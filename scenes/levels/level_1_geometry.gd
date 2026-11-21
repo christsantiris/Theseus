@@ -1,0 +1,90 @@
+@tool
+extends "res://scenes/levels/level_geometry.gd"
+
+const PANORAMA_SHEETS := [
+	preload("res://assets/art/backgrounds/level_1/kings_road.png"),
+	preload("res://assets/art/backgrounds/level_1/broken_colonnade.png"),
+	preload("res://assets/art/backgrounds/level_1/olive_terraces.png"),
+	preload("res://assets/art/backgrounds/level_1/ruined_aqueduct.png"),
+	preload("res://assets/art/backgrounds/level_1/temple_approach.png"),
+]
+const WALL := preload("res://assets/art/backgrounds/level_1/limestone_wall.png")
+const WAYSTONE := preload("res://assets/art/backgrounds/level_1/waystone.png")
+const BLEND := preload("res://resources/shaders/landscape_blend.gdshader")
+const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
+const PANEL_WIDTH := 480.0
+const OVERLAP := 48.0
+const FEATHER_WIDTH := 12.0
+const MATERIAL_DENSITY := 16.0
+
+
+func _ready() -> void:
+	# Keep every original collision body, surface height and node name.
+	super()
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+	_build_landscape()
+	if not Engine.is_editor_hint():
+		call_deferred("_decorate_temple")
+
+
+func _build_landscape() -> void:
+	# Each section sheet contains west/east panoramas stacked vertically.
+	for index in PANORAMA_SHEETS.size() * 2:
+		var sheet: Texture2D = PANORAMA_SHEETS[index / 2]
+		var image := AtlasTexture.new()
+		image.atlas = sheet
+		image.region = Rect2(0, (index % 2) * sheet.get_height() / 2, sheet.get_width(), sheet.get_height() / 2)
+		var panorama := Sprite2D.new()
+		panorama.name = "Landscape%d" % index
+		panorama.texture = image
+		panorama.centered = false
+		panorama.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
+		var scale_factor := (PANEL_WIDTH + OVERLAP * 2.0) / image.get_width()
+		panorama.scale = Vector2.ONE * scale_factor
+		panorama.position = Vector2(index * PANEL_WIDTH - OVERLAP, 180.0 - image.get_height() * scale_factor)
+		panorama.z_index = -1
+		var material := ShaderMaterial.new()
+		material.shader = BLEND
+		material.set_shader_parameter("blend_left", index > 0)
+		# A short edge fade keeps columns and arches visually solid at joins.
+		material.set_shader_parameter("feather_width", FEATHER_WIDTH / (PANEL_WIDTH + OVERLAP * 2.0))
+		material.set_shader_parameter("sky_feather_width", OVERLAP * 2.0 / (PANEL_WIDTH + OVERLAP * 2.0))
+		material.set_shader_parameter("panel_row", float(index % 2))
+		panorama.material = material
+		add_child(panorama)
+
+
+func _decorate_temple() -> void:
+	var gate := get_parent().get_node_or_null("TempleGate") as Node2D
+	if gate == null:
+		return
+	# self_modulate hides only the old facade; the replacement child stays visible.
+	# Gate collision, unlocking, entry movement and completion remain on the gate.
+	gate.self_modulate.a = 0.0
+	var facade := Node2D.new()
+	facade.name = "CinematicFacade"
+	facade.set_script(TEMPLE)
+	gate.add_child(facade)
+
+
+func _draw() -> void:
+	_draw_masonry(Rect2(0, Layout.FLOOR_Y, Layout.WIDTH, 64))
+	for platform: Rect2 in Layout.PLATFORMS:
+		_draw_masonry(platform)
+	for x in [624, 944, 1856, 2272, 2832, 3744, 4576]:
+		draw_texture_rect(WAYSTONE, Rect2(x - 9, 131, 18, 21), false)
+
+
+func _draw_masonry(rectangle: Rect2) -> void:
+	# Render detailed stone at source resolution while retaining exact flat ledges.
+	draw_set_transform(rectangle.position, 0.0, Vector2.ONE / MATERIAL_DENSITY)
+	draw_texture_rect(WALL, Rect2(Vector2.ZERO, rectangle.size * MATERIAL_DENSITY), true)
+	draw_set_transform(Vector2.ZERO)
+	var x := rectangle.position.x
+	while x < rectangle.end.x:
+		var width := minf(WALL.get_width() / MATERIAL_DENSITY, rectangle.end.x - x)
+		draw_texture_rect_region(WALL, Rect2(x, rectangle.position.y, width, 4), Rect2(0, 96, width * MATERIAL_DENSITY, 64), Color(1.12, 1.10, 1.06))
+		x += width
+	draw_line(rectangle.position, Vector2(rectangle.end.x, rectangle.position.y), Color("f0e5ca"), 0.35, true)
+	draw_line(rectangle.position + Vector2(0, 4), Vector2(rectangle.end.x, rectangle.position.y + 4), Color(0.28, 0.23, 0.16, 0.35), 0.45, true)
