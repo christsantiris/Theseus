@@ -1,6 +1,7 @@
 extends "res://scenes/enemies/enemy.gd"
 
 const ART := preload("res://assets/art/characters/lamia.png")
+const ART_SCALE := 8.0
 const CELL_SIZE := Vector2(96, 56)
 const ANCHOR_X := 28.0
 const REACH := 68.0
@@ -27,7 +28,7 @@ func _ready() -> void:
 	body_half_width = 13.0
 	super()
 	# Wider cells let the uncoiling attack reach forward while its tail stays put.
-	sprite.offset.x = CELL_SIZE.x * 0.5 - ANCHOR_X
+	sprite.offset.x = (CELL_SIZE.x * 0.5 - ANCHOR_X) * ART_SCALE
 	_enter("idle")
 
 
@@ -43,7 +44,7 @@ func _build_frames() -> void:
 	_add_pose_animation(frames, "retreat", [4])
 	_add_pose_animation(frames, "guard", [5, 6], 6.0)
 	_add_pose_animation(frames, "recover", [7])
-	_bind_frames(frames)
+	_bind_frames(frames, ART_SCALE)
 
 
 func _add_pose_animation(frames: SpriteFrames, animation_name: String, indices: Array, speed: float = 1.0) -> void:
@@ -53,14 +54,14 @@ func _add_pose_animation(frames: SpriteFrames, animation_name: String, indices: 
 	for index in indices:
 		var atlas := AtlasTexture.new()
 		atlas.atlas = ART
-		atlas.region = Rect2(Vector2(index * CELL_SIZE.x, 0), CELL_SIZE)
+		atlas.region = Rect2(Vector2(index * CELL_SIZE.x, 0) * ART_SCALE, CELL_SIZE * ART_SCALE)
 		frames.add_frame(animation_name, atlas)
 
 
 func _face() -> void:
 	super()
 	# Mirror around the tail anchor, rather than around the wide atlas cell.
-	sprite.offset.x = direction * (CELL_SIZE.x * 0.5 - ANCHOR_X)
+	sprite.offset.x = direction * (CELL_SIZE.x * 0.5 - ANCHOR_X) * ART_SCALE
 
 
 func _deals_contact() -> bool:

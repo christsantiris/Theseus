@@ -91,11 +91,21 @@ func _until(state: String, limit: int = 180) -> bool:
 func _heads_and_completion() -> void:
 	await _fresh()
 	var art: Image = hydra.Head.ART.get_image()
-	_expect(art.get_size() == Vector2i(576, 72), "Head atlas has six native poses")
+	_expect(art.get_size() == Vector2i(4608, 576), "Head atlas has six cinematic poses")
 	for index in 6:
-		var used := art.get_region(Rect2i(index * 96, 0, 96, 72)).get_used_rect()
-		_expect(used.end.y == 68 and used.position.x > 0 and used.end.x < 96, "Each head pose keeps the common neck anchor and fits its cell")
-	_expect(hydra.ART.get_image().get_used_rect().end.y == 53, "Shared coils sit on their native foot row")
+		var used := art.get_region(Rect2i(index * 768, 0, 768, 576)).get_used_rect()
+		_expect(used.size.x > 240 and used.size.y > 420 and used.end.y == 544 and used.position.x > 0 and used.end.x < 768, "Each cinematic head pose keeps the common neck baseline and fits its cell")
+	var body: Image = hydra.ART.get_image()
+	_expect(body.get_size() == Vector2i(768, 448) and body.get_used_rect().end.y == 424, "Cinematic shared coils retain the original ground row")
+	_expect(hydra.sprite.scale == Vector2.ONE / 8.0 and hydra.sprite.offset.y * hydra.sprite.scale.y == -25.0 and hydra._body_shape.size == Vector2(48, 16), "Hydra body keeps its world size, foot anchor, and terrain support")
+	for head in hydra.heads:
+		_expect(head.sprite.scale == Vector2.ONE / 8.0 and head.get_node("CollisionShape2D").shape.size == Vector2(18, 12), "Hydra head keeps its world size and mouth hit area")
+		for index in 6:
+			head.set_pose(index, head.base_y)
+			var mouth: Vector2 = hydra.Head.MOUTHS[index]
+			_expect(head.sprite.to_global(mouth * 8.0).is_equal_approx(head.global_position), "Every cinematic jaw stays registered to its gameplay mouth")
+			_expect(head._atlas.region.size.x == 768 and head._atlas.region.size.y == minf(72, 68 - head.base_y) * 8.0, "Neck clipping stays above the floor at every head height")
+		head.set_pose(0, head.base_y)
 	_expect(get_nodes_in_group("enemies").size() == 3 and not hydra.is_in_group("enemies"), "Only the three independently damageable mouths participate in jump collisions")
 	var awards := {"count": 0, "score": 0}
 	hydra.defeated.connect(func(points: int) -> void:

@@ -4,9 +4,10 @@ signal damaged(head: Node)
 signal severed(head: Node)
 
 const ART := preload("res://assets/art/characters/hydra_heads.png")
+const ART_SCALE := 8.0
 const CELL_SIZE := Vector2(96, 72)
 const BASE := Vector2(24, 68)
-# Mouth centres are pinned to the corresponding native sprite poses.
+# Mouth centres stay in world units, independent of the atlas resolution.
 const MOUTHS := [Vector2(39, 24), Vector2(39, 24), Vector2(32, 26), Vector2(81, 26), Vector2(54, 24), Vector2(41, 26)]
 
 @export var base_x := 0.0
@@ -23,6 +24,8 @@ func _ready() -> void:
 	add_to_group("enemies")
 	_atlas.atlas = ART
 	sprite.texture = _atlas
+	sprite.scale = Vector2.ONE / ART_SCALE
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	set_pose(0, base_y)
 
 
@@ -42,7 +45,7 @@ func set_pose(index: int, height: float) -> void:
 	sprite.position = -mouth
 	# Shorter necks sink into the common coils, never below the floor. The body
 	# is drawn in front of their bases; head size remains the same at every height.
-	_atlas.region = Rect2(index * CELL_SIZE.x, 0, CELL_SIZE.x, minf(CELL_SIZE.y, BASE.y - height))
+	_atlas.region = Rect2(index * CELL_SIZE.x * ART_SCALE, 0, CELL_SIZE.x * ART_SCALE, minf(CELL_SIZE.y, BASE.y - height) * ART_SCALE)
 	queue_redraw()
 
 

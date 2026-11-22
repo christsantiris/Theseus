@@ -46,6 +46,12 @@ shapes, including the bull's ride platform. Their separate review arenas include
 pose galleries: `scenes/reviews/bronze_bull_review.tscn` and
 `scenes/reviews/cerberus_pup_review.tscn`.
 
+The Hydra now uses matching cinematic coils and six head-and-neck poses. Each
+jaw stays aligned with its original mouth hit area through idle, windup, bite,
+retreat, and recovery. The three heads still have independent health and can be
+severed separately; only defeating all three opens the exit. Review the complete
+boss with `godot --path . res://scenes/reviews/hydra_review.tscn`.
+
 | Enemy | Count | Health / score | Counter |
 | --- | --- | --- | --- |
 | Bronze Bull | 3 | 4 / 250 | Jump the committed charge. While airborne, hold Duck and press Sword to thrust onto its back, deal one damage, and stagger it into a temporary moving platform. |

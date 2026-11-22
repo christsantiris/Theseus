@@ -1,6 +1,7 @@
 extends "res://scenes/levels/level_geometry.gd"
 
 const LAMIA_ART := preload("res://assets/art/characters/lamia.png")
+const ART_SCALE := 8.0
 const TheseusArt := preload("res://scenes/player/theseus_art.gd")
 const POSE_NAMES := ["Idle", "Breathe", "Windup", "Long strike", "Retreat", "Guard", "Deep coil", "Recovery"]
 
@@ -66,11 +67,13 @@ func _build_review_ui() -> void:
 		_label(gallery, "Theseus" if index == 0 else POSE_NAMES[index - 1], at + Vector2(2, -2), 7)
 		var atlas := AtlasTexture.new()
 		atlas.atlas = LAMIA_ART
-		atlas.region = Rect2(maxi(0, index - 1) * 96, 0, 96, 56)
+		atlas.region = Rect2(maxi(0, index - 1) * 96 * ART_SCALE, 0, 96 * ART_SCALE, 56 * ART_SCALE)
 		var sprite := Sprite2D.new()
 		sprite.texture = atlas
 		sprite.position = at + Vector2(32, 52)
-		sprite.offset = Vector2(20, -25)
+		sprite.scale = Vector2.ONE / ART_SCALE
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		sprite.offset = Vector2(20, -25) * ART_SCALE
 		if index == 0:
 			TheseusArt.configure_reference(sprite)
 		gallery.add_child(sprite)

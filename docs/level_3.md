@@ -36,6 +36,11 @@ their trigger areas and saved spawn positions are unchanged.
 
 ## Movement and enemies
 
+Lamia now matches the other characters' cinematic 3D-style artwork across eight
+idle, windup, long-strike, retreat, protective-coil, and recovery poses. Her tail
+anchor, world size, collision shapes, and attack timing are unchanged. Review
+the poses or fight her with `godot --path . res://scenes/reviews/lamia_review.tscn`.
+
 Twenty-three terraces form fifteen uphill jumps, open courtyards, and descending
 steps. Upward steps rise 16 pixels; downward steps drop 16–32 pixels. The highest
 landing is y=152, 128 pixels above the street. Connected high terraces prevent

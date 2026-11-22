@@ -1,6 +1,6 @@
 # Theseus
 
-A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. Theseus, Raiders, Peltasts, Hoplites, Spartoi, Telchines, Stymphalian Birds, Bronze Bulls, Cerberus Pups, Cyclops Slingers, and the scenery in all five levels use detailed cinematic 3D-style artwork. The remaining enemies retain the original retro artwork.
+A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. All characters, including Theseus and all twelve enemy types, and the scenery in all five levels use detailed cinematic 3D-style artwork.
 
 Background panoramas blend across their full overlap. Checkpoint shrines use matching cinematic limestone and bronze, with lit and unlit brazier states.
 

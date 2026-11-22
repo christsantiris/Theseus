@@ -1,6 +1,7 @@
 extends "res://scenes/enemies/enemy.gd"
 
 const ART := preload("res://assets/art/characters/hydra_body.png")
+const ART_SCALE := 8.0
 const Head := preload("res://scenes/enemies/hydra_head.gd")
 const REACH := 84.0
 const WINDUP_SECONDS := 0.65
@@ -43,9 +44,9 @@ func _build_frames() -> void:
 	frames.add_animation("idle")
 	var atlas := AtlasTexture.new()
 	atlas.atlas = ART
-	atlas.region = Rect2(0, 0, 96, 56)
+	atlas.region = Rect2(0, 0, 96 * ART_SCALE, 56 * ART_SCALE)
 	frames.add_frame("idle", atlas)
-	_bind_frames(frames)
+	_bind_frames(frames, ART_SCALE)
 
 
 func _draw() -> void:

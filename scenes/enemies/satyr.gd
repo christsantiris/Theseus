@@ -1,6 +1,7 @@
 extends "res://scenes/enemies/enemy.gd"
 
 const ART := preload("res://assets/art/characters/satyr.png")
+const ART_SCALE := 8.0
 const WINE := preload("res://scenes/pickups/stolen_wine.tscn")
 const HOP_VELOCITY := -260.0
 const CHARGE_SPEED := 130.0
@@ -35,10 +36,10 @@ func _initial_animation() -> String:
 
 func _build_frames() -> void:
 	var frames := SpriteFrames.new()
-	_add_animation(frames, ART, "idle", [0, 1], 4.0, true)
+	_add_animation(frames, ART, "idle", [0, 1], 4.0, true, ART_SCALE)
 	for pose in [["hop_ready", 2], ["jump_rise", 3], ["jump_fall", 4], ["windup", 5], ["charge", 6], ["recover", 7]]:
-		_add_animation(frames, ART, pose[0], [pose[1]], 1.0, true)
-	_bind_frames(frames)
+		_add_animation(frames, ART, pose[0], [pose[1]], 1.0, true, ART_SCALE)
+	_bind_frames(frames, ART_SCALE)
 
 
 func _deals_contact() -> bool:

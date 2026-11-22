@@ -65,7 +65,7 @@ func _build_review_ui() -> void:
 	for index in 6:
 		var at := Vector2(32 + (index % 3) * 106, 86 + (index / 3) * 84)
 		var captions := ["Three heads", "Two heads", "Last + Theseus", "Windup", "Bite", "Recover"]
-		_label(gallery, captions[index], at + Vector2(-26, -70), 7)
+		_label(gallery, captions[index], at + Vector2(-26, -74), 7)
 		_gallery_hydra(at, [0, 1, 2] if index != 1 and index != 2 else [1, 2] if index == 1 else [2], [0, 0, 0, 2, 3, 5][index])
 	var hero := Sprite2D.new()
 	TheseusArt.configure_reference(hero)
@@ -85,14 +85,18 @@ func _gallery_hydra(at: Vector2, remaining: Array, active_pose: int) -> void:
 			height = Head.BASE.y - Head.MOUTHS[3].y - 22
 		var atlas := AtlasTexture.new()
 		atlas.atlas = Head.ART
-		atlas.region = Rect2(pose * 96, 0, 96, minf(72, 68 - height))
+		atlas.region = Rect2(pose * 96 * Head.ART_SCALE, 0, 96 * Head.ART_SCALE, minf(72, 68 - height) * Head.ART_SCALE)
 		var sprite := Sprite2D.new()
 		sprite.centered = false
 		sprite.texture = atlas
+		sprite.scale = Vector2.ONE / Head.ART_SCALE
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		sprite.position = Vector2([8.0, 0.0, -8.0][index] - 24, height - 68)
 		picture.add_child(sprite)
 	var body := Sprite2D.new()
 	body.texture = BODY_ART
+	body.scale = Vector2.ONE / Head.ART_SCALE
+	body.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	body.position.y = -25
 	picture.add_child(body)
 

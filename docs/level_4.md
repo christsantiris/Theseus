@@ -73,6 +73,11 @@ windup, throw, reload, and recovery poses. The larger source atlas keeps their
 original world size, planted feet, collision shapes, and attack timing. Review
 the poses or fight one with `godot --path . res://scenes/reviews/cyclops_review.tscn`.
 
+Satyrs also use eight cinematic poses for breathing, hop preparation, rising
+and falling hops, horn windup, charge, and recovery. Their collision shapes,
+horn reach, safe bounce, and wine drops are unchanged. Review them with
+`godot --path . res://scenes/reviews/satyr_review.tscn`.
+
 | Enemy | Count | Health / score | Counter |
 | --- | --- | --- | --- |
 | Cyclops Slinger | 4 | 3 / 200 | A slow, committed windup launches one boulder along a fixed arc. Jump the descending boulder or destroy it with a timed sword hit. Close during the long reload opening. |
