@@ -1,6 +1,7 @@
 extends "res://scenes/enemies/enemy.gd"
 
 const ART := preload("res://assets/art/characters/bronze_bull.png")
+const ART_SCALE := 8.0
 const CHARGE_SPEED := 180.0
 const RIDE_SPEED := 40.0
 const WINDUP_SECONDS := 0.8
@@ -36,7 +37,7 @@ func _build_frames() -> void:
 	_add_bull_animation(frames, "stagger", [6], 1)
 	_add_bull_animation(frames, "ride", [2, 3, 4, 5], 4)
 	_add_bull_animation(frames, "recover", [7], 1)
-	_bind_frames(frames)
+	_bind_frames(frames, ART_SCALE)
 
 
 func _add_bull_animation(frames: SpriteFrames, animation_name: String, indices: Array, speed: float) -> void:
@@ -46,7 +47,7 @@ func _add_bull_animation(frames: SpriteFrames, animation_name: String, indices: 
 	for index in indices:
 		var atlas := AtlasTexture.new()
 		atlas.atlas = ART
-		atlas.region = Rect2(index * 96, 0, 96, 56)
+		atlas.region = Rect2(index * 96 * ART_SCALE, 0, 96 * ART_SCALE, 56 * ART_SCALE)
 		frames.add_frame(animation_name, atlas)
 
 

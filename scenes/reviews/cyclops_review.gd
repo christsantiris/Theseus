@@ -1,6 +1,7 @@
 extends "res://scenes/levels/level_geometry.gd"
 
 const CYCLOPS_ART := preload("res://assets/art/characters/cyclops_slinger.png")
+const ART_SCALE := 8.0
 const POSE_NAMES := ["Ready", "Breathe", "Lift", "Windup", "Throw", "Reload", "New stone", "Recover"]
 
 @onready var player = $Player
@@ -65,11 +66,13 @@ func _build_review_ui() -> void:
 		_label(gallery, POSE_NAMES[index], at + Vector2(2, -2), 7)
 		var atlas := AtlasTexture.new()
 		atlas.atlas = CYCLOPS_ART
-		atlas.region = Rect2(index * 80, 0, 80, 80)
+		atlas.region = Rect2(index * 80 * ART_SCALE, 0, 80 * ART_SCALE, 80 * ART_SCALE)
 		var sprite := Sprite2D.new()
 		sprite.texture = atlas
 		sprite.position = at + Vector2(40, 80)
-		sprite.offset = Vector2(0, -37)
+		sprite.scale = Vector2.ONE / ART_SCALE
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		sprite.offset = Vector2(0, -37 * ART_SCALE)
 		gallery.add_child(sprite)
 	gallery.hide()
 

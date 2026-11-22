@@ -39,6 +39,13 @@ their trigger areas and saved spawn positions are unchanged.
 
 ## Encounters
 
+Bronze Bulls and Cerberus Pups use cinematic 3D-style artwork, with eight poses
+each covering their charge, stagger, run, pounce, and recovery states. The larger
+source atlases keep their original world sizes, combat timing, and collision
+shapes, including the bull's ride platform. Their separate review arenas include
+pose galleries: `scenes/reviews/bronze_bull_review.tscn` and
+`scenes/reviews/cerberus_pup_review.tscn`.
+
 | Enemy | Count | Health / score | Counter |
 | --- | --- | --- | --- |
 | Bronze Bull | 3 | 4 / 250 | Jump the committed charge. While airborne, hold Duck and press Sword to thrust onto its back, deal one damage, and stagger it into a temporary moving platform. |

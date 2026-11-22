@@ -101,10 +101,18 @@ func _controller() -> void:
 	_expect(cyclops._state == "idle" and throws == 0, "Distant Cyclops does not throw at an unseen player")
 	_expect(cyclops.hp == 3 and cyclops.points == 200, "Cyclops has three health and awards 200 points")
 	var atlas: Image = cyclops.ART.get_image()
-	_expect(atlas.get_size() == Vector2i(640, 80), "Cyclops atlas has eight 80-by-80 cells")
+	_expect(atlas.get_size() == Vector2i(5120, 640), "Cyclops atlas has eight cinematic 640-by-640 cells")
+	_expect(cyclops.sprite.scale == Vector2.ONE / 8.0 and cyclops.sprite.offset.y * cyclops.sprite.scale.y == -37.0, "Cinematic Cyclops retains its world size and foot anchor")
+	_expect(cyclops._body_shape.size == Vector2(34, 56), "Cyclops retains its standing collision geometry")
+	var frames: SpriteFrames = cyclops.sprite.sprite_frames
+	_expect(frames.get_frame_count("idle") == 2 and frames.get_frame_count("reload") == 2 and frames.get_animation_speed("windup") == 2.0, "Cyclops retains its breathing, windup, and reload cadence")
+	for animation in frames.get_animation_names():
+		for frame in frames.get_frame_count(animation):
+			var pose := frames.get_frame_texture(animation, frame) as AtlasTexture
+			_expect(pose.region.size == Vector2(640, 640) and Rect2(Vector2.ZERO, atlas.get_size()).encloses(pose.region), "Cyclops animation binds a complete cinematic pose")
 	for index in 8:
-		var used := atlas.get_region(Rect2i(index * 80, 0, 80, 80)).get_used_rect()
-		_expect(used.position.x >= 1 and used.end.x <= 79 and used.end.y == 78, "Pose %d fits the cell and stays grounded" % index)
+		var used := atlas.get_region(Rect2i(index * 640, 0, 640, 640)).get_used_rect()
+		_expect(used.size.x > 280 and used.size.y > 360 and used.position.x > 0 and used.position.y > 0 and used.end.x < 640 and used.end.y == 624, "Pose %d fits the cell and stays grounded" % index)
 	player.position = Vector2(160, 152)
 	var wall := _solid(fixture, Rect2(240, 56, 8, 80))
 	await _frames()

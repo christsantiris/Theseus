@@ -3,6 +3,7 @@ extends "res://scenes/enemies/enemy.gd"
 signal boulder_thrown(boulder: CharacterBody2D)
 
 const ART := preload("res://assets/art/characters/cyclops_slinger.png")
+const ART_SCALE := 8.0
 const BOULDER := preload("res://scenes/projectiles/boulder.tscn")
 const CELL_SIZE := Vector2(80, 80)
 const GROUND_ROW := 77.0
@@ -26,7 +27,7 @@ func _ready() -> void:
 	body_height = 56.0
 	body_half_width = 17.0
 	super()
-	sprite.offset = Vector2(0, -(GROUND_ROW - CELL_SIZE.y * 0.5))
+	sprite.offset = Vector2(0, -(GROUND_ROW - CELL_SIZE.y * 0.5) * ART_SCALE)
 	_enter("idle")
 
 
@@ -41,7 +42,7 @@ func _build_frames() -> void:
 	_add_pose_animation(frames, "throw", [4], 1.0)
 	_add_pose_animation(frames, "reload", [5, 6], 1.25)
 	_add_pose_animation(frames, "recover", [7], 1.0)
-	_bind_frames(frames)
+	_bind_frames(frames, ART_SCALE)
 
 
 func _add_pose_animation(frames: SpriteFrames, animation_name: String, indices: Array, speed: float, looped: bool = false) -> void:
@@ -51,7 +52,7 @@ func _add_pose_animation(frames: SpriteFrames, animation_name: String, indices: 
 	for index in indices:
 		var atlas := AtlasTexture.new()
 		atlas.atlas = ART
-		atlas.region = Rect2(Vector2(index * CELL_SIZE.x, 0), CELL_SIZE)
+		atlas.region = Rect2(Vector2(index * CELL_SIZE.x, 0) * ART_SCALE, CELL_SIZE * ART_SCALE)
 		frames.add_frame(animation_name, atlas)
 
 

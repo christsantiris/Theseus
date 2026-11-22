@@ -1,6 +1,7 @@
 extends "res://scenes/enemies/enemy.gd"
 
 const ART := preload("res://assets/art/characters/cerberus_pup.png")
+const ART_SCALE := 8.0
 const POUNCE_SPEED := 128.0
 const POUNCE_VELOCITY := -135.0
 const WINDUP_SECONDS := 0.45
@@ -30,12 +31,12 @@ func _initial_animation() -> String:
 
 func _build_frames() -> void:
 	var frames := SpriteFrames.new()
-	_add_animation(frames, ART, "idle", [0], 1, true)
-	_add_animation(frames, ART, "run", [1, 2, 3, 4], 10, true)
-	_add_animation(frames, ART, "windup", [5], 1, true)
-	_add_animation(frames, ART, "pounce", [6], 1, true)
-	_add_animation(frames, ART, "recover", [7], 1, true)
-	_bind_frames(frames)
+	_add_animation(frames, ART, "idle", [0], 1, true, ART_SCALE)
+	_add_animation(frames, ART, "run", [1, 2, 3, 4], 10, true, ART_SCALE)
+	_add_animation(frames, ART, "windup", [5], 1, true, ART_SCALE)
+	_add_animation(frames, ART, "pounce", [6], 1, true, ART_SCALE)
+	_add_animation(frames, ART, "recover", [7], 1, true, ART_SCALE)
+	_bind_frames(frames, ART_SCALE)
 
 
 func _draw() -> void:

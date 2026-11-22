@@ -68,6 +68,11 @@ hits after exiting or loading past a pit. Pausing freezes the hazard timers.
 
 ## Enemies and recovery
 
+Cyclops Slingers use cinematic 3D-style artwork across all eight ready, lift,
+windup, throw, reload, and recovery poses. The larger source atlas keeps their
+original world size, planted feet, collision shapes, and attack timing. Review
+the poses or fight one with `godot --path . res://scenes/reviews/cyclops_review.tscn`.
+
 | Enemy | Count | Health / score | Counter |
 | --- | --- | --- | --- |
 | Cyclops Slinger | 4 | 3 / 200 | A slow, committed windup launches one boulder along a fixed arc. Jump the descending boulder or destroy it with a timed sword hit. Close during the long reload opening. |

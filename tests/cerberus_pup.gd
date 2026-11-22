@@ -107,10 +107,21 @@ func _pack_behavior() -> void:
 	await _fresh()
 	_expect(pack.get_child_count() == 2 and get_nodes_in_group("enemies").size() == 2, "A pack spawns exactly two independently damageable pups")
 	var art: Image = pup.ART.get_image()
-	_expect(art.get_size() == Vector2i(576, 56), "Pup has eight native art cells")
+	_expect(art.get_size() == Vector2i(4608, 448), "Pup has eight cinematic art cells")
+	_expect(pup.sprite.scale == Vector2.ONE / 8.0 and pup.sprite.offset.y * pup.sprite.scale.y == -25.0, "Cinematic pup retains its world size and foot anchor")
+	_expect(pup._body_shape.size == Vector2(28, 22), "Cinematic pup retains its contact geometry")
+	var frames: SpriteFrames = pup.sprite.sprite_frames
+	_expect(frames.get_frame_count("run") == 4 and frames.get_animation_speed("run") == 10, "Pup keeps four running poses at the original cadence")
+	for animation in frames.get_animation_names():
+		for frame in frames.get_frame_count(animation):
+			var pose := frames.get_frame_texture(animation, frame) as AtlasTexture
+			_expect(pose.region.size == Vector2(576, 448) and Rect2(Vector2.ZERO, art.get_size()).encloses(pose.region), "Pup animation binds a complete cinematic pose")
 	for index in 8:
-		var used := art.get_region(Rect2i(index * 72, 0, 72, 56)).get_used_rect()
-		_expect(used.end.y == 53 and used.position.x > 0 and used.end.x < 72, "Pup pose stays within its cell and on the common foot row")
+		var used := art.get_region(Rect2i(index * 576, 0, 576, 448)).get_used_rect()
+		_expect(used.size.x > 240 and used.size.y > 170 and used.position.x > 0 and used.end.x < 576, "Pup poses are complete with transparent cell margins")
+		_expect(used.end.y >= 376 and used.end.y <= 424, "Running and pouncing paws stay at or just above the ground")
+		if index in [0, 5, 7]:
+			_expect(used.end.y == 424, "Planted pup poses share the original foot baseline")
 	var patrol_left: float = pup.global_position.x
 	var patrol_right: float = patrol_left
 	var closest := 1000.0
