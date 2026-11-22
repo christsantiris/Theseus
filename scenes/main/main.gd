@@ -18,6 +18,10 @@ func _ready() -> void:
 	hero.name = "Theseus"
 	TheseusArt.configure(hero)
 	hero.position = Vector2(80, 151)
+	# Stay in front of the painted coast and behind both menus.
+	hero.z_index = 1
+	title_screen.z_index = 2
+	controls_screen.z_index = 3
 	$UI.add_child(hero)
 	$UI.move_child(hero, 1)
 	hero.play("idle")
