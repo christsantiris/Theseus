@@ -21,12 +21,6 @@ A left-to-right side scroller. Theseus runs the road from Athens to a guarded te
 
 <img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/176b3e11-5bb4-4580-80d6-e69ba5de2f34" />
 
-### Broken Colonnade
-
-![Theseus faces a raider among the columns](docs/screenshots/broken-colonnade.png)
-
-![A hoplite thrusts as Theseus closes in](docs/screenshots/hoplite.png)
-
 ## The journey
 
 Each level is a little harder than the last: enemies telegraph faster, recover sooner, and attack more often, while healing is balanced against each level's enemies. Light a shrine to keep your place. Entering a new level also saves its entrance. Death returns you to that entrance or the latest shrine with full health. Load resumes the highest level or shrine reached in the current session. New Game starts the road over.
