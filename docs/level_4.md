@@ -8,6 +8,22 @@ muted slopes and smaller walls form the background.
 
 ![Five areas of the mountain route](level_4.png)
 
+## Cinematic scenery
+
+Each area has west and east cinematic 3D-style panoramas matching the sunlit
+materials and lighting in Levels 1–3. Detailed cypress groves, pale rocky
+ridges, terraced switchbacks, olive gardens, and Doric sanctuary temples fill
+ten overlapping panels. The ridgeline glides over changes in route height,
+keeping the mountains visible above the highest landings. Rustic retaining
+stone covers the original terrain pieces, with weathered column fragments
+at the existing prop positions and a matching temple entrance.
+
+All twenty-seven terraces, four recessed spike pits, hazard areas, and unsafe
+Satyr landing markers keep their original geometry and behavior. Bright stone
+caps still identify the walkable lips; the pit beds remain visibly recessed.
+
+## Route
+
 | Area | World X | Route and encounters |
 | --- | --- | --- |
 | Cypress Foothills | 0–959 | An empty approach teaches the first spike pit. A Satyr occupies a broad low terrace; the first Cyclops throws from an elevated ledge. |
@@ -79,6 +95,7 @@ tools/play_level.sh 4 2
 godot --path . --scene res://scenes/levels/level_4.tscn
 godot --headless --path . --script res://tests/spike_pits.gd --fixed-fps 60
 godot --headless --path . --script res://tests/level_4_smoke.gd --fixed-fps 60
+godot --headless --path . --script res://tests/level_4_scenery.gd --fixed-fps 60
 ```
 
 The pit suite tests all four jumps and escapes in both directions, actual fall
@@ -92,3 +109,14 @@ A traversal with combat isolated clears the entire route at normal speed in
 about 52 simulated seconds, using 17 terrace jumps and four pit jumps, without
 losing health. Existing level and combat regressions also pass. Combat pacing
 still benefits from a human playthrough.
+
+`scenes/levels/level_4_geometry.gd` keeps the original terrain construction,
+including `terrain_pieces` and spike-floor metadata, and renders the cinematic
+mountains in the game and editor. Each section PNG in
+`assets/art/backgrounds/level_4/` stores west and east panoramas stacked
+vertically; the directory also contains the retaining stone and column cutout.
+The stone caps and temple facade reuse Level 1's art.
+
+The scenery check verifies all ten panoramas, route coverage from the foothills
+to the high pass and pit bottoms, every terrain collision and cutout, spike-floor
+metadata, hazard dimensions, paused gate updates, and isolation from other levels.

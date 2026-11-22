@@ -87,9 +87,9 @@ pickup positions, shrine positions, and tutorial prompts. `level_1_geometry.gd`
 inherits the original collision construction from `level_geometry.gd`, then
 renders the cinematic panoramas and stone surfaces. Each section texture in
 `assets/art/backgrounds/level_1/` contains its west and east panels stacked
-vertically. `level_1_temple.gd` renders the cinematic facade shared by Levels 1–3,
+vertically. `level_1_temple.gd` renders the cinematic facade shared by Levels 1–4,
 leaving gate collision, unlocking, and entry logic on the existing temple.
-Levels 4–5 keep their existing renderers. Scenery is also visible in the editor.
+Level 5 keeps its existing renderer. Scenery is also visible in the editor.
 `level_1.gd` builds the encounters and manages
 checkpoints, camera limits, pause, and completion. Enemy and pickup instances are
 created from their existing reusable scenes at runtime.
@@ -118,4 +118,4 @@ and first-clear pacing still need human playtesting.
 
 The scenery check verifies full-route background coverage, panel proportions,
 unchanged terrace collisions, the open facade during paused temple entry, and
-isolation from Levels 4–5. Levels 2 and 3 have their own scenery checks.
+isolation from Level 5. Levels 2–4 have their own scenery checks.

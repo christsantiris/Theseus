@@ -68,9 +68,8 @@ func _run() -> void:
 	paused = true
 	await _frames()
 	_expect(facade._last_unlocked and gate.get_node("Barrier/CollisionShape2D").disabled, "Cinematic gate updates its open state during the paused entry sequence")
-	# Levels 1–3 now own cinematic renderers; the remaining inherited levels
-	# must keep their original scenery and gate visuals.
-	for number in [4, 5]:
+	# Levels 1–4 own cinematic renderers; Level 5 keeps its original scenery.
+	for number in [5]:
 		await _load_level(number)
 		var later_world := level.get_node("World")
 		_expect(later_world.get_script().resource_path != "res://scenes/levels/level_1_geometry.gd", "Level %d keeps its existing renderer" % number)
@@ -80,7 +79,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: ten detailed panoramas, full-route coverage, natural aspect ratios, original terrace collisions, cinematic gate state, and Levels 4–5 art isolation.")
+		print("PASS: ten detailed panoramas, full-route coverage, natural aspect ratios, original terrace collisions, cinematic gate state, and Level 5 art isolation.")
 	quit(0 if failures.is_empty() else 1)
 
 

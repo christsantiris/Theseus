@@ -1,6 +1,6 @@
 # Theseus
 
-A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. Theseus and the scenery in Levels 1–3 use detailed cinematic 3D-style artwork. The enemies and Levels 4–5 retain the original retro artwork.
+A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. Theseus and the scenery in Levels 1–4 use detailed cinematic 3D-style artwork. The enemies and Level 5 retain the original retro artwork.
 
 ## Contents
 
@@ -58,6 +58,8 @@ Ten cinematic city panoramas show plaster workshops, blue doors, terracotta roof
 ### The Mountain Sanctuary
 
 Cypress trees rise above Greek mountain slopes and terraced stone walls. Cyclops Slingers hurl breakable boulders, Satyrs hop between ledges and charge with their horns, and Raiders and Telchines return. Four spike pits interrupt the road: jump across, or climb out after losing a health bar. Satyrs can be bounced on and sometimes drop stolen wine for a brief speed boost.
+
+Ten cinematic mountain panoramas show cypress foothills, stone switchbacks, olive gardens, rugged high passes, and a summit sanctuary. Detailed retaining stone, weathered column fragments, and a matching temple entrance frame the original terraces and four recessed pits.
 
 [Level 4 guide](docs/level_4.md)
 
