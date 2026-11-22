@@ -21,7 +21,15 @@ Background panoramas blend across their full overlap. Checkpoint shrines use mat
 
 ### Title
 
-<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/176b3e11-5bb4-4580-80d6-e69ba5de2f34" />
+<img width="1600" height="900" alt="Title screen, with Theseus beside the sea and the temple" src="docs/screenshots/title.png" />
+
+### Broken Colonnade
+
+<img width="1600" height="900" alt="Theseus facing a raider among the broken columns" src="docs/screenshots/broken-colonnade.png" />
+
+### Hoplite
+
+<img width="1600" height="900" alt="Theseus fighting a hoplite in front of the colonnade" src="docs/screenshots/hoplite.png" />
 
 ## The journey
 
