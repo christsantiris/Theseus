@@ -8,6 +8,22 @@ the playable path.
 
 ![Five areas of the rocky gorge](level_5.png)
 
+## Cinematic scenery
+
+Each area has west and east cinematic 3D-style panoramas matching the detailed
+stone and warm Mediterranean lighting in Levels 1–4. Pale stratified cliff
+walls, dark dry clefts, ruined Doric temples, and elevated colonnades fill ten
+overlapping panels. The cliff shelves follow the route height smoothly so the
+ruins stay visible above the causeways. Weathered masonry covers the original
+terrain; column fragments and the cinematic temple facade reuse the earlier
+levels' art.
+
+All eighteen main terraces, both one-way bull ledges, both recessed spike pits,
+and their collision settings are unchanged. The temple remains closed until
+the Hydra's final head falls, and the facade updates during paused entry.
+
+## Route
+
 | Area | World X | Route and encounters |
 | --- | --- | --- |
 | Gorge Mouth | 0–959 | A broad, flat lane introduces the first Bronze Bull. Staggering it opens an optional route to a high flask ledge. Three low steps lead to the temple terraces. |
@@ -84,6 +100,7 @@ tools/play_level.sh 5
 tools/play_level.sh 5 2
 godot --path . res://scenes/levels/level_5.tscn
 godot --headless --path . --script res://tests/level_5_smoke.gd --fixed-fps 60
+godot --headless --path . --script res://tests/level_5_scenery.gd --fixed-fps 60
 ```
 
 The integration suite checks Level 4→5, entrance and shrine loading, actual
@@ -92,3 +109,15 @@ placement, fatal spike recovery, real sword-and-jump combat against the Hydra
 guard, the bull ride and high flask reward, camera scrolling, temple entry,
 replay, and New Game. With combat isolated, the complete main route takes
 about 52 simulated seconds and twelve jumps without damage or a speed boost.
+
+`scenes/levels/level_5_geometry.gd` keeps the original terrain cuts, spike-floor
+metadata, and one-way ledge construction while rendering the gorge in the game
+and editor. Each section PNG in `assets/art/backgrounds/level_5/` stores west
+and east panoramas stacked vertically; the directory also contains the causeway
+masonry. Column fragments reuse Level 4's cutout; stone caps and the temple
+facade reuse Level 1's art.
+
+The scenery check verifies all ten panoramas, coverage at street level, both
+bonus ledges and pit bottoms, original terrain collisions, one-way settings,
+spike metadata, the Hydra's three-head gate requirement, paused facade updates,
+and isolation from the other levels.

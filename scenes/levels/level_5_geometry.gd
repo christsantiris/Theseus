@@ -2,6 +2,23 @@
 extends "res://scenes/levels/level_geometry.gd"
 
 const Gorge := preload("res://scenes/levels/level_5_layout.gd")
+const PANORAMA_SHEETS := [
+	preload("res://assets/art/backgrounds/level_5/gorge_mouth.png"),
+	preload("res://assets/art/backgrounds/level_5/temple_ledges.png"),
+	preload("res://assets/art/backgrounds/level_5/broken_causeway.png"),
+	preload("res://assets/art/backgrounds/level_5/high_colonnade.png"),
+	preload("res://assets/art/backgrounds/level_5/hydra_sanctuary.png"),
+]
+const MASONRY := preload("res://assets/art/backgrounds/level_5/gorge_masonry.png")
+const CAP_STONE := preload("res://assets/art/backgrounds/level_1/limestone_wall.png")
+const COLUMN := preload("res://assets/art/backgrounds/level_4/broken_column.png")
+const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
+const BLEND := preload("res://resources/shaders/landscape_blend.gdshader")
+const PANEL_WIDTH := 480.0
+const OVERLAP := 48.0
+const FEATHER_WIDTH := 12.0
+const MATERIAL_DENSITY := 16.0
+var backdrop: Node2D
 
 
 func _ready() -> void:
@@ -16,6 +33,13 @@ func _ready() -> void:
 		var collision := get_node(body_name).get_child(0) as CollisionShape2D
 		collision.one_way_collision = true
 		collision.one_way_collision_margin = 2
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+	process_priority = 10
+	_build_landscape()
+	_sync_backdrop()
+	if not Engine.is_editor_hint():
+		call_deferred("_decorate_temple")
 	queue_redraw()
 
 
@@ -29,103 +53,118 @@ func _add_terrain(prefix: String, rectangle: Rect2) -> void:
 		index += 1
 
 
+func _process(_delta: float) -> void:
+	if not Engine.is_editor_hint():
+		_sync_backdrop()
+
+
+func _build_landscape() -> void:
+	var sky := ColorRect.new()
+	sky.name = "DistantSky"
+	sky.size = Vector2(Gorge.WIDTH, Gorge.HEIGHT)
+	sky.color = Color("a6c4dc")
+	sky.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sky.z_index = -2
+	add_child(sky)
+	backdrop = Node2D.new()
+	backdrop.name = "GorgeBackdrop"
+	backdrop.z_index = -1
+	add_child(backdrop)
+	# Continue the dusty gorge floor below the panoramas where descending
+	# terraces reveal the distance behind them.
+	var road := ColorRect.new()
+	road.name = "GorgeContinuation"
+	road.position.y = 180.0
+	road.size = Vector2(Gorge.WIDTH, Gorge.HEIGHT)
+	road.color = Color("d4c1a3")
+	road.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	backdrop.add_child(road)
+	for index in PANORAMA_SHEETS.size() * 2:
+		var sheet: Texture2D = PANORAMA_SHEETS[index / 2]
+		var image := AtlasTexture.new()
+		image.atlas = sheet
+		image.region = Rect2(0, (index % 2) * sheet.get_height() / 2, sheet.get_width(), sheet.get_height() / 2)
+		var panorama := Sprite2D.new()
+		panorama.name = "Landscape%d" % index
+		panorama.texture = image
+		panorama.centered = false
+		panorama.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
+		var factor := (PANEL_WIDTH + OVERLAP * 2.0) / image.get_width()
+		panorama.scale = Vector2.ONE * factor
+		panorama.position = Vector2(index * PANEL_WIDTH - OVERLAP, 180.0 - image.get_height() * factor)
+		var material := ShaderMaterial.new()
+		material.shader = BLEND
+		material.set_shader_parameter("blend_left", index > 0)
+		material.set_shader_parameter("feather_width", FEATHER_WIDTH / (PANEL_WIDTH + OVERLAP * 2.0))
+		# Soften sky joins while keeping the cliff silhouettes readable.
+		material.set_shader_parameter("sky_feather_width", OVERLAP / (PANEL_WIDTH + OVERLAP * 2.0))
+		material.set_shader_parameter("panel_row", float(index % 2))
+		panorama.material = material
+		backdrop.add_child(panorama)
+
+
+func _sync_backdrop() -> void:
+	if not is_instance_valid(backdrop):
+		return
+	var camera := get_viewport().get_camera_2d()
+	if camera == null or Engine.is_editor_hint():
+		backdrop.position.y = Gorge.FLOOR_Y - 152.0
+		return
+	# Keep the cliff shelves and distant ruins visible above the local landing
+	# through the climb. Every terrain and spike collision stays in world space.
+	var logical_height := float(get_window().content_scale_size.y)
+	if logical_height <= 0.0:
+		logical_height = 180.0
+	var center := camera.get_screen_center_position()
+	var view_top := center.y - logical_height * 0.5 / camera.zoom.y
+	backdrop.position.y = minf(view_top, _ridge_surface(center.x) - 160.0)
+
+
+func _ridge_surface(x: float) -> float:
+	# Average the nearby route height so the skyline glides over step edges.
+	var height := float(Gorge.FLOOR_Y)
+	for terrace: Rect2 in Gorge.PLATFORMS:
+		var overlap := maxf(0.0, minf(x + 64.0, terrace.end.x) - maxf(x - 64.0, terrace.position.x))
+		height -= overlap / 128.0 * (Gorge.FLOOR_Y - terrace.position.y)
+	return height
+
+
+func _decorate_temple() -> void:
+	var gate := get_parent().get_node_or_null("TempleGate") as Node2D
+	if gate == null:
+		return
+	gate.self_modulate.a = 0.0
+	var facade := Node2D.new()
+	facade.name = "CinematicFacade"
+	facade.set_script(TEMPLE)
+	gate.add_child(facade)
+
+
 func _draw() -> void:
-	for y in range(0, Gorge.HEIGHT, 8):
-		draw_rect(Rect2(0, y, Gorge.WIDTH, 8), Color("8ca6a5").lerp(Color("d9d3b7"), float(y) / Gorge.HEIGHT))
-	# Pale, flat-topped limestone faces replace the open mountain ridgelines.
-	# Their darker clefts descend below the causeway rather than forming water.
-	for x in range(-256, Gorge.WIDTH + 320, 320):
-		var base := _road_height(x + 160)
-		var top := base - 156 - posmod(x, 3) * 8
-		draw_colored_polygon(PackedVector2Array([Vector2(x - 48, Gorge.HEIGHT), Vector2(x - 24, top + 48), Vector2(x + 20, top + 48), Vector2(x + 34, top + 8), Vector2(x + 132, top), Vector2(x + 156, top + 32), Vector2(x + 230, top + 32), Vector2(x + 300, Gorge.HEIGHT)]), Color("a7b1a4"))
-		for row in range(int(top) + 24, Gorge.HEIGHT, 24):
-			draw_line(Vector2(x + 34, row), Vector2(x + 200, row + 4), Color("b9bdac"), 2)
-	for x in range(-96, Gorge.WIDTH + 224, 224):
-		_cliff_face(x, _road_height(x + 80) - 86 - posmod(x, 5) * 5)
-	# Small sanctuaries are set back on the cliff shelves. Their muted doors and
-	# roofs distinguish them from the larger, interactive exit temple.
-	for x in [256, 1056, 1824, 2496, 3168, 4000, 4464]:
-		_ruined_temple(x, _road_height(x) + 8)
-	for x in [96, 688, 1392, 1936, 2704, 3552, 4216]:
-		_broken_column(x, _road_height(x) + 4)
-	for x in [176, 704, 1312, 1968, 2176, 2816, 3536, 4080, 4336]:
-		_scrub(x, _road_height(x) + 3)
 	_draw_terrain(Rect2(0, Gorge.FLOOR_Y, Gorge.WIDTH, 72))
 	for platform: Rect2 in Gorge.PLATFORMS:
 		_draw_terrain(platform)
 	for ledge: Rect2 in Gorge.BONUS_LEDGES:
-		_paving(ledge)
-		for x in [ledge.position.x + 12, ledge.end.x - 20]:
-			draw_colored_polygon(PackedVector2Array([Vector2(x, ledge.end.y), Vector2(x + 8, ledge.end.y), Vector2(x, ledge.end.y + 10)]), Color("9c947c"))
-
-
-func _road_height(x: float) -> float:
-	var ground := float(Gorge.FLOOR_Y)
-	for platform: Rect2 in Gorge.PLATFORMS:
-		if x >= platform.position.x and x < platform.end.x:
-			ground = minf(ground, platform.position.y)
-	return ground
-
-
-func _cliff_face(x: float, top: float) -> void:
-	draw_colored_polygon(PackedVector2Array([Vector2(x - 20, Gorge.HEIGHT), Vector2(x + 6, top + 38), Vector2(x + 18, top + 38), Vector2(x + 30, top + 8), Vector2(x + 84, top), Vector2(x + 108, top + 18), Vector2(x + 138, top + 18), Vector2(x + 160, Gorge.HEIGHT)]), Color("9ba18d"))
-	draw_colored_polygon(PackedVector2Array([Vector2(x + 84, top), Vector2(x + 108, top + 18), Vector2(x + 138, top + 18), Vector2(x + 160, Gorge.HEIGHT), Vector2(x + 100, Gorge.HEIGHT), Vector2(x + 96, top + 60)]), Color("858e7f"))
-	draw_colored_polygon(PackedVector2Array([Vector2(x + 160, top + 76), Vector2(x + 184, top + 38), Vector2(x + 176, Gorge.HEIGHT), Vector2(x + 150, Gorge.HEIGHT)]), Color("657a74"))
-	for row in range(int(top) + 20, Gorge.HEIGHT, 16):
-		var inset := posmod(row, 3) * 8
-		draw_line(Vector2(x + 28 + inset, row), Vector2(x + 92, row + 2), Color("b3b39b"), 2)
-		draw_line(Vector2(x + 104, row + 5), Vector2(x + 132, row + 8), Color("929984"))
-	draw_line(Vector2(x + 60, top + 16), Vector2(x + 54, top + 46), Color("858e7c"))
-	draw_line(Vector2(x + 54, top + 46), Vector2(x + 64, top + 68), Color("858e7c"))
-
-
-func _ruined_temple(x: float, base: float) -> void:
-	var roof := base - 77
-	draw_rect(Rect2(x - 48, base - 6, 96, 6), Color("a8a58c"))
-	draw_rect(Rect2(x - 39, roof + 14, 78, 57), Color("8f9b8b"))
-	draw_rect(Rect2(x - 10, base - 43, 20, 37), Color("737f75"))
-	for column_x in [-32, -11, 11, 32]:
-		var height := 50 if column_x != 32 else 34
-		draw_rect(Rect2(x + column_x - 4, base - height - 6, 8, height), Color("c1bda2"))
-		draw_rect(Rect2(x + column_x - 4, base - height - 6, 2, height - 2), Color("d4ceb0"))
-		draw_rect(Rect2(x + column_x - 6, base - height - 9, 12, 4), Color("c8c2a6"))
-	draw_rect(Rect2(x - 44, roof + 8, 88, 7), Color("c1b89b"))
-	draw_colored_polygon(PackedVector2Array([Vector2(x - 47, roof + 8), Vector2(x - 3, roof - 14), Vector2(x + 12, roof - 8), Vector2(x + 38, roof + 4)]), Color("c9bda0"))
-	draw_colored_polygon(PackedVector2Array([Vector2(x - 32, roof + 6), Vector2(x - 3, roof - 8), Vector2(x + 25, roof + 6)]), Color("9d8167"))
-	draw_rect(Rect2(x + 22, base - 12, 18, 6), Color("b7ae92"))
-	draw_line(Vector2(x + 25, base - 11), Vector2(x + 35, base - 11), Color("d0c5a6"))
-
-
-func _broken_column(x: float, base: float) -> void:
-	draw_rect(Rect2(x - 7, base - 6, 14, 6), Color("aaa38a"))
-	draw_rect(Rect2(x - 4, base - 44, 8, 38), Color("c4bca0"))
-	draw_rect(Rect2(x - 4, base - 43, 2, 35), Color("dbd0af"))
-	draw_line(Vector2(x - 4, base - 44), Vector2(x + 4, base - 39), Color("8b907c"))
-	draw_rect(Rect2(x + 12, base - 6, 14, 6), Color("b9b095"))
-
-
-func _scrub(x: float, base: float) -> void:
-	draw_rect(Rect2(x - 11, base - 6, 22, 6), Color("7b8b69"))
-	draw_rect(Rect2(x - 7, base - 10, 15, 4), Color("8f9870"))
-	draw_rect(Rect2(x - 3, base - 13, 7, 4), Color("9da178"))
+		_retaining_stone(ledge)
+	for x in [96, 688, 1392, 1936, 2704, 3552, 4216]:
+		var height := 44.0
+		var width := height * COLUMN.get_width() / float(COLUMN.get_height())
+		draw_texture_rect(COLUMN, Rect2(x - width * 0.5, Gorge.surface_at(x) - height, width, height), false)
 
 
 func _draw_terrain(rectangle: Rect2) -> void:
 	for piece in Gorge.terrain_pieces(rectangle):
-		_paving(piece)
+		_retaining_stone(piece)
 
 
-func _paving(rectangle: Rect2) -> void:
-	draw_rect(rectangle, Color("a89b7d"))
-	for y in range(int(rectangle.position.y) + 12, int(rectangle.end.y), 12):
-		draw_line(Vector2(rectangle.position.x, y), Vector2(rectangle.end.x, y), Color("7e7c65"))
-		var offset := 12 if y % 24 == 0 else 0
-		for x in range(int(rectangle.position.x) + offset, int(rectangle.end.x), 28):
-			draw_line(Vector2(x, y - 10), Vector2(x + 1, y), Color("7e7c65"))
-			var width := minf(16, rectangle.end.x - x - 4)
-			if width > 0:
-				draw_rect(Rect2(x + 3, y - 8, width, 2), Color("bab092"))
-	draw_rect(Rect2(rectangle.position, Vector2(rectangle.size.x, 4)), Color("e5d9b4"))
-	draw_rect(Rect2(rectangle.position + Vector2(0, 4), Vector2(rectangle.size.x, 2)), Color("b8a783"))
-	for x in range(int(rectangle.position.x) + 4, int(rectangle.end.x) - 4, 24):
-		draw_rect(Rect2(x, rectangle.position.y + 1, 7, 1), Color("f4e9c9"))
+func _retaining_stone(rectangle: Rect2) -> void:
+	draw_set_transform(rectangle.position, 0.0, Vector2.ONE / MATERIAL_DENSITY)
+	draw_texture_rect(MASONRY, Rect2(Vector2.ZERO, rectangle.size * MATERIAL_DENSITY), true)
+	draw_set_transform(Vector2.ZERO)
+	var x := rectangle.position.x
+	while x < rectangle.end.x:
+		var width := minf(CAP_STONE.get_width() / MATERIAL_DENSITY, rectangle.end.x - x)
+		draw_texture_rect_region(CAP_STONE, Rect2(x, rectangle.position.y, width, 4), Rect2(0, 96, width * MATERIAL_DENSITY, 64), Color(1.10, 1.10, 1.08))
+		x += width
+	draw_line(rectangle.position, Vector2(rectangle.end.x, rectangle.position.y), Color("f0e8d2"), 0.35, true)
+	draw_line(rectangle.position + Vector2(0, 4), Vector2(rectangle.end.x, rectangle.position.y + 4), Color(0.24, 0.26, 0.24, 0.35), 0.45, true)

@@ -68,18 +68,18 @@ func _run() -> void:
 	paused = true
 	await _frames()
 	_expect(facade._last_unlocked and gate.get_node("Barrier/CollisionShape2D").disabled, "Cinematic gate updates its open state during the paused entry sequence")
-	# Levels 1–4 own cinematic renderers; Level 5 keeps its original scenery.
-	for number in [5]:
+	# Each level owns its cinematic renderer; the shared facade follows its gate.
+	for number in [2, 3, 4, 5]:
 		await _load_level(number)
 		var later_world := level.get_node("World")
 		_expect(later_world.get_script().resource_path != "res://scenes/levels/level_1_geometry.gd", "Level %d keeps its existing renderer" % number)
 		var later_gate := level.get_node("TempleGate") as Node2D
-		_expect(later_gate.self_modulate.a == 1 and not later_gate.has_node("CinematicFacade"), "Level %d keeps its existing temple facade" % number)
+		_expect(later_gate.self_modulate.a == 0 and later_gate.has_node("CinematicFacade"), "Level %d uses its own cinematic temple facade" % number)
 	paused = false
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: ten detailed panoramas, full-route coverage, natural aspect ratios, original terrace collisions, cinematic gate state, and Level 5 art isolation.")
+		print("PASS: ten detailed panoramas, full-route coverage, natural aspect ratios, original terrace collisions, cinematic gate state, and Levels 2–5 renderer isolation.")
 	quit(0 if failures.is_empty() else 1)
 
 

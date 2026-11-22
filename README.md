@@ -1,6 +1,6 @@
 # Theseus
 
-A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. Theseus and the scenery in Levels 1–4 use detailed cinematic 3D-style artwork. The enemies and Level 5 retain the original retro artwork.
+A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. Theseus and the scenery in all five levels use detailed cinematic 3D-style artwork. The enemies retain the original retro artwork.
 
 ## Contents
 
@@ -66,6 +66,8 @@ Ten cinematic mountain panoramas show cypress foothills, stone switchbacks, oliv
 ### The Gorge Sanctuary
 
 Pale limestone cliffs, dark clefts, ruined temples, and stone causeways frame the fifth level. Bronze Bulls charge along flat corridors, Cerberus Pups pursue in pairs, and a three-headed Hydra guards the exit. Two optional high flask ledges reward riding a staggered bull. The main route uses normal jumps, with two spike pits and two checkpoint shrines.
+
+Ten cinematic gorge panoramas show stratified limestone walls, dry ravines, ruined cliffside temples, and the Hydra sanctuary. Weathered causeway masonry and column fragments match the other levels, while both bull ledges and pit openings keep their original geometry.
 
 [Level 5 guide](docs/level_5.md)
 

@@ -78,8 +78,16 @@ func _run() -> void:
 		Input.action_press("move_right")
 		await _frames(40)
 		Input.action_release("move_right")
-		await _frames(30)
-		_expect(enemy.alive and enemy.hp == 2 and setup.points.total == 0, kind + ": walking past cannot kill or damage an enemy")
+		await _frames(8)
+		var player_rect: Rect2 = player._body.global_transform * player._body.shape.get_rect()
+		var enemy_shape: CollisionShape2D = enemy.get_node("CollisionShape2D")
+		var enemy_rect: Rect2 = enemy_shape.global_transform * enemy_shape.shape.get_rect()
+		var shared := player_rect.intersection(enemy_rect)
+		_expect(shared.size.x <= 0.1 or shared.size.y <= 0.1, kind + ": a collision leaves no shared space")
+		_expect(player.health == 4 and enemy.hp == 1 and enemy.alive and setup.points.total == 0, kind + ": walking into an enemy damages both fighters once")
+		setup = await _fixture(kind)
+		player = setup.player
+		enemy = setup.enemy
 		var top: float = enemy.get_node("CollisionShape2D").global_position.y - enemy.get_node("CollisionShape2D").shape.size.y * 0.5
 		player.position = Vector2(enemy.position.x, top - 2.0)
 		player.velocity = Vector2(0, 60)
@@ -91,11 +99,14 @@ func _run() -> void:
 		await _frames(4)
 		_expect(player.health == 4 and enemy.hp == 1, kind + ": invulnerability prevents repeated collision damage to either fighter")
 		await _frames(40)
-		_expect(enemy.alive and enemy.hp == 1, kind + ": lingering overlap does not drain enemy health")
+		_expect(enemy.alive and enemy.hp == 1, kind + ": lingering contact does not drain enemy health")
+		player.position = Vector2(enemy.position.x - 48.0, 152)
+		player.velocity = Vector2.ZERO
+		await _frames(8)
 		player.position = Vector2(enemy.position.x, top - 2.0)
 		player.velocity = Vector2(0, 60)
-		await _frames(6)
-		_expect(player.health == 3 and not enemy.alive, kind + ": a second distinct collision pays another player HP and depletes the final enemy HP")
+		await _frames(12)
+		_expect(player.health == 3 and (not is_instance_valid(enemy) or not enemy.alive), kind + ": a second distinct collision pays another player HP and depletes the final enemy HP")
 		_expect(setup.points.total == (150 if kind == "hoplite" else 100), kind + ": collision defeat awards points once")
 		setup = await _fixture(kind)
 		player = setup.player
@@ -140,7 +151,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: all three enemy types, passive contact, mutual jump damage, grounded stab/slash alternation, rising/falling and simultaneous-jump slashes, takeoff/ledge transitions, downward variation, interrupted attacks, facing and scoring.")
+		print("PASS: all three enemy types, solid mutual contact, mutual jump damage, grounded stab/slash alternation, rising/falling and simultaneous-jump slashes, takeoff/ledge transitions, downward variation, interrupted attacks, facing and scoring.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)

@@ -76,9 +76,6 @@ func _run() -> void:
 	for number in [1, 3, 4, 5]:
 		await _load_level(number)
 		_expect(not level.get_node("World").has_node("SeaBackdrop"), "Level %d does not inherit coastal scenery" % number)
-		if number == 5:
-			var other_gate := level.get_node("TempleGate") as Node2D
-			_expect(other_gate.self_modulate.a == 1 and not other_gate.has_node("CinematicFacade"), "Level %d retains its original facade" % number)
 	paused = false
 	_stop_audio(root)
 	OS.delay_msec(150)

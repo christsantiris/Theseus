@@ -23,8 +23,7 @@ complete the route. Collision rectangles, encounters, and movement are unchanged
 `assets/art/backgrounds/level_2/`. Each section PNG stores two panoramas
 stacked vertically. The stone caps, waystones, and temple facade reuse Level 1's
 art; `level_1_temple.gd` keeps its bronze bars synchronized with gate unlocking,
-including paused temple entry. Levels 3 and 4 have their own cinematic scenery;
-Level 5 retains its existing art.
+including paused temple entry. Levels 3–5 have their own cinematic scenery.
 
 ## Route
 

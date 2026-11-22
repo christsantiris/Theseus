@@ -39,13 +39,15 @@ var _hurt_lock := 0.0
 var _sword: Area2D
 var _sword_shape: CollisionShape2D
 var _swing_hits := {}
-var _air_hits := {}
+var _body_hits := {}
 var _ducked := false
 var _speed_boost_left := 0.0
 
 
 func _ready() -> void:
 	add_to_group("player")
+	# Enemies move first. Theseus resolves shared space after their step.
+	process_priority = -1
 	_build_frames()
 	sprite.animation_finished.connect(_on_animation_finished)
 	sprite.play("idle")
@@ -136,10 +138,10 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0.0, speed * 8.0 * delta)
 	_set_ducked(ducking)
 
-	_resolve_jump_collision()
+	move_and_slide()
+	_resolve_character_collision()
 	if health <= 0:
 		return
-	move_and_slide()
 	_convert_airborne_stab()
 	_strike()
 	_update_landing(jumped_this_frame)
@@ -193,50 +195,99 @@ func _die() -> void:
 	)
 
 
-func _resolve_jump_collision() -> void:
-	if is_on_floor() or health <= 0:
-		_air_hits.clear()
+func _resolve_character_collision() -> void:
+	if health <= 0:
 		return
-	var player_rect: Rect2 = _body.global_transform * _body.shape.get_rect()
 	var touching := {}
 	for enemy in get_tree().get_nodes_in_group("enemies"):
-		if not is_instance_valid(enemy) or not enemy.alive or not enemy.has_method("take_damage"):
+		var enemy_rect := _enemy_body_rect(enemy)
+		if enemy_rect.size == Vector2.ZERO:
 			continue
-		var collision := enemy.get_node_or_null("CollisionShape2D") as CollisionShape2D
-		if collision == null or collision.disabled or collision.shape == null:
-			continue
-		var enemy_rect: Rect2 = collision.global_transform * collision.shape.get_rect()
+		var player_rect := _body_rect()
 		var overlap := player_rect.intersection(enemy_rect)
-		if overlap.size.x < 4.0 or overlap.size.y < 4.0:
+		if overlap.size.x <= 0.05 or overlap.size.y <= 0.05:
 			continue
-		var id := enemy.get_instance_id()
-		touching[id] = true
-		if _air_hits.has(id) or _hurt_lock > 0.0:
-			continue
-		var foot := player_rect.end.y
+		var id: int = enemy.get_instance_id()
 		var bounce_depth := maxf(8.0, velocity.y * get_physics_process_delta_time() + 1.0)
-		if velocity.y > 0.0 and foot <= enemy_rect.position.y + bounce_depth and enemy.has_method("bounce_on"):
-			if enemy.bounce_on():
-				var new_top: float = (collision.global_transform * collision.shape.get_rect()).position.y
-				global_position.y += new_top - foot - 1.0
+		var from_above := player_rect.end.y <= enemy_rect.position.y + bounce_depth and velocity.y > 0.0
+		var side_press := overlap.size.y >= 8.0 and overlap.size.y > overlap.size.x
+		var embedded := overlap.size.x >= 4.0 and overlap.size.y >= 4.0
+		var landing := from_above and overlap.size.x >= 4.0
+		# A sword can reach an attack area. Falling onto that area still collides.
+		var collides: bool = enemy is CharacterBody2D and (side_press or embedded or landing)
+		if not collides and (landing or (embedded and from_above)):
+			collides = true
+		if collides:
+			touching[id] = true
+			if _trade_contact(enemy, id, from_above):
+				_separate_from(enemy_rect)
 				velocity.y = JUMP_VELOCITY
 				_jumped = true
 				_was_airborne = true
-				break
-		if velocity.y > 0.0 and foot <= enemy_rect.position.y + 8.0:
-			global_position.y += enemy_rect.position.y - foot - 1.0
-		hurt(1)
-		if is_instance_valid(enemy) and enemy.alive:
-			enemy.take_damage(1)
+			else:
+				_separate_from(enemy_rect)
+		elif enemy is CharacterBody2D:
+			_separate_from(enemy_rect)
 		if health <= 0:
-			break
-	for id in touching:
-		_air_hits[id] = true
-	var kept := {}
-	for id in _air_hits:
-		if touching.has(id):
-			kept[id] = true
-	_air_hits = kept
+			return
+	# A one-frame gap while Theseus is still pressed against a fighter is the same
+	# collision. The hurt hop is remembered until that recovery ends.
+	for id in _body_hits:
+		if _hurt_lock > 0.0:
+			touching[id] = true
+			continue
+		var previous := instance_from_id(id)
+		var previous_rect := _enemy_body_rect(previous)
+		if previous_rect.size != Vector2.ZERO and _body_rect().grow(1.5).intersects(previous_rect):
+			touching[id] = true
+	_body_hits = touching
+
+
+func _trade_contact(enemy: Object, id: int, from_above: bool) -> bool:
+	if _body_hits.has(id) or _hurt_lock > 0.0:
+		_body_hits[id] = true
+		return false
+	_body_hits[id] = true
+	if from_above and enemy.has_method("bounce_on") and enemy.bounce_on():
+		return true
+	hurt(1)
+	if is_instance_valid(enemy) and enemy.get("alive") == true:
+		enemy.take_damage(1)
+	return false
+
+
+func _separate_from(enemy_rect: Rect2) -> void:
+	var player_rect := _body_rect()
+	var overlap := player_rect.intersection(enemy_rect)
+	if overlap.size.x <= 0.05 or overlap.size.y <= 0.05:
+		return
+	if overlap.size.x <= overlap.size.y:
+		var dir := -1.0 if player_rect.get_center().x < enemy_rect.get_center().x else 1.0
+		if is_equal_approx(player_rect.get_center().x, enemy_rect.get_center().x):
+			dir = -1.0 if velocity.x >= 0.0 else 1.0
+		global_position.x += dir * (overlap.size.x + 0.5)
+		if velocity.x * dir < 0.0:
+			velocity.x = 0.0
+	else:
+		var dir := -1.0 if player_rect.get_center().y < enemy_rect.get_center().y else 1.0
+		global_position.y += dir * (overlap.size.y + 0.5)
+		if dir < 0.0 and velocity.y > 0.0:
+			velocity.y = 0.0
+
+
+func _body_rect() -> Rect2:
+	return _body.global_transform * _body.shape.get_rect()
+
+
+func _enemy_body_rect(enemy: Object) -> Rect2:
+	if not is_instance_valid(enemy) or enemy.get("alive") != true or not enemy.has_method("take_damage"):
+		return Rect2()
+	if not enemy is CollisionObject2D or (enemy as CollisionObject2D).collision_layer == 0:
+		return Rect2()
+	var collision := enemy.get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if collision == null or collision.disabled or collision.shape == null:
+		return Rect2()
+	return collision.global_transform * collision.shape.get_rect()
 
 
 func _convert_airborne_stab() -> void:
