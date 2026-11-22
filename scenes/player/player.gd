@@ -220,7 +220,7 @@ func _resolve_character_collision() -> void:
 		if collides:
 			touching[id] = true
 			if _trade_contact(enemy, id, from_above):
-				_separate_from(enemy_rect)
+				_separate_from(enemy_rect, true)
 				velocity.y = JUMP_VELOCITY
 				_jumped = true
 				_was_airborne = true
@@ -256,12 +256,17 @@ func _trade_contact(enemy: Object, id: int, from_above: bool) -> bool:
 	return false
 
 
-func _separate_from(enemy_rect: Rect2) -> void:
+func _separate_from(enemy_rect: Rect2, bouncing: bool = false) -> void:
 	var player_rect := _body_rect()
 	var overlap := player_rect.intersection(enemy_rect)
 	if overlap.size.x <= 0.05 or overlap.size.y <= 0.05:
 		return
-	if overlap.size.x <= overlap.size.y:
+	# Normal fighters cannot support Theseus. Repeated upward separation during
+	# hurt immunity used to cancel gravity and turn their heads into platforms,
+	# including when an enemy stood just below a ledge. Satyr bounces explicitly
+	# keep the upward separation; the bull's ride uses its real terrain platform.
+	var above := player_rect.get_center().y < enemy_rect.get_center().y
+	if overlap.size.x <= overlap.size.y or (above and not bouncing):
 		var dir := -1.0 if player_rect.get_center().x < enemy_rect.get_center().x else 1.0
 		if is_equal_approx(player_rect.get_center().x, enemy_rect.get_center().x):
 			dir = -1.0 if velocity.x >= 0.0 else 1.0

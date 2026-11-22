@@ -148,10 +148,11 @@ func _run() -> void:
 	_expect(setup.enemy.hp == 1, "Left-facing sword query hits the correct side")
 	await _verify_attack_variations()
 	await _verify_air_attacks()
+	await _verify_no_head_platforms()
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: all three enemy types, solid mutual contact, mutual jump damage, grounded stab/slash alternation, rising/falling and simultaneous-jump slashes, takeoff/ledge transitions, downward variation, interrupted attacks, facing and scoring.")
+		print("PASS: all three enemy types, solid mutual contact without head platforms, mutual jump damage, grounded stab/slash alternation, rising/falling and simultaneous-jump slashes, takeoff/ledge transitions, downward variation, interrupted attacks, facing and scoring.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)
@@ -269,3 +270,37 @@ func _verify_air_attacks() -> void:
 			break
 	_expect(player.is_on_floor() and player._attacking and player.sprite.animation == "swing", "Landing during a slash restores the grounded swing pose")
 	_expect(player.sprite.frame + player.sprite.frame_progress >= phase and player._swing_hits.has(setup.enemy.get_instance_id()), "Landing preserves attack progress and hit history")
+
+
+func _verify_no_head_platforms() -> void:
+	for kind in ["raider", "peltast", "hoplite"]:
+		var setup = await _fixture(kind)
+		var player = setup.player
+		var enemy = setup.enemy
+		var top: float = player._enemy_body_rect(enemy).position.y
+		# During hurt immunity a second landing used to cancel falling velocity
+		# every tick, leaving Theseus perched indefinitely on the enemy's head.
+		player._hurt_lock = 2.0
+		player.position = Vector2(enemy.position.x, top - 2.0)
+		player.velocity = Vector2(0, 60)
+		await _frames(45)
+		_expect(player.is_on_floor() and absf(player.position.y - 152) < 1, kind + ": immune landing clears the enemy and reaches the real floor")
+		_expect(player.health == 5 and enemy.hp == 2, kind + ": clearing a head during immunity adds no damage")
+		for side in [-1, 1]:
+			setup = await _fixture(kind)
+			player = setup.player
+			enemy = setup.enemy
+			enemy.position.x = 232
+			var ledge := StaticBody2D.new()
+			ledge.position = Vector2(192 if side == -1 else 272, 136)
+			var collision := CollisionShape2D.new()
+			var shape := RectangleShape2D.new()
+			shape.size = Vector2(64, 32)
+			collision.shape = shape
+			ledge.add_child(collision)
+			_arena.add_child(ledge)
+			player._hurt_lock = 2.0
+			player.position = Vector2(232 + side * 7, 120)
+			player.velocity = Vector2.ZERO
+			await _frames(45)
+			_expect(player.is_on_floor() and absf(player.position.y - 120) < 1, kind + ": an enemy beside either ledge cannot lift Theseus onto its head")
