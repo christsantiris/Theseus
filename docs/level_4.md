@@ -23,9 +23,9 @@ Satyr landing markers keep their original geometry and behavior. Bright stone
 caps still identify the walkable lips. Each pit bed is a row of cinematic
 bronze spikes set in the same limestone as the terraces.
 
-Adjacent panoramas blend sky and shared ground across their full 96-pixel
-overlap. Columns, trees, and stone stay opaque where the paintings differ.
-Checkpoint shrines use matching
+Panorama joins follow matching scenery within their 96-pixel overlap. Smooth
+sky fades broadly; detailed stone and foliage use a narrow transition, avoiding
+patchy cutouts and hard vertical edges. Checkpoint shrines use matching
 cinematic limestone-and-bronze artwork, with cold and burning brazier states;
 their trigger areas and saved spawn positions are unchanged.
 
@@ -51,8 +51,8 @@ there is no teleport or automatic escape. After landing, hold Jump and move
 toward either side to clear the 24-pixel wall. The damage recoil is too small
 to escape on its own. Each pit gives 1.25 seconds between damaging contacts,
 in addition to Theseus's normal damage cooldown, leaving time to jump out.
-Remaining on the spikes eventually costs another bar. A fatal hit uses normal
-checkpoint recovery rather than creating a separate death rule.
+Remaining on the spikes eventually costs another bar. A fatal hit opens Hades.
+Load Game uses the same checkpoint recovery as any other death.
 
 ![Theseus falls into a pit, loses one bar, then jumps out](spike_pit_escape.gif)
 

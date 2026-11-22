@@ -25,8 +25,9 @@ stacked vertically. The stone caps, waystones, and temple facade reuse Level 1's
 art; `level_1_temple.gd` keeps its bronze bars synchronized with gate unlocking,
 including paused temple entry. Levels 3–5 have their own cinematic scenery.
 
-Adjacent panoramas blend across their full 96-pixel overlap at every height,
-including rocks, trees, and architecture. Checkpoint shrines use matching
+Panorama joins follow matching scenery within their 96-pixel overlap. Smooth
+sky fades broadly; detailed stone and foliage use a narrow transition, avoiding
+patchy cutouts and hard vertical edges. Checkpoint shrines use matching
 cinematic limestone-and-bronze artwork, with cold and burning brazier states;
 their trigger areas and saved spawn positions are unchanged.
 
@@ -71,8 +72,8 @@ retaining the original logical size, flight lanes, hitboxes, and animation speed
 Clearing Level 1 offers **Continue to Level 2**. On entering Level 2, its entrance
 at (48, 280) becomes the saved checkpoint immediately, replacing the Level 1
 shrine. Returning to the title and choosing Load resumes that entrance until
-a Level 2 shrine is lit. Death also restarts from this entrance or the latest
-Level 2 shrine. Progress remains in memory for the current game session.
+a Level 2 shrine is lit. Death opens Hades, and Load Game restarts from this
+entrance or the latest Level 2 shrine. Progress remains in memory for the current game session.
 
 The Coastal Shrine at x=2000 saves a safe spawn at (2024, 280). The Sanctuary
 Shrine at x=4048 saves (4072, 280). Each snapshots

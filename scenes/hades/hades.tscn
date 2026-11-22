@@ -1,0 +1,74 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/hades/hades.gd" id="1_hades"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/hades_backdrop.png" id="2_backdrop"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/meander.png" id="3_meander"]
+
+[node name="Hades" type="Node2D"]
+script = ExtResource("1_hades")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Backdrop" type="TextureRect" parent="UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_backdrop")
+texture_filter = 2
+expand_mode = 1
+stretch_mode = 0
+
+[node name="Menu" type="PanelContainer" parent="UI"]
+z_index = 2
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -58.0
+offset_top = -96.0
+offset_right = 58.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Content" type="VBoxContainer" parent="UI/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Title" type="Label" parent="UI/Menu/Content"]
+layout_mode = 2
+theme_type_variation = &"CarvedHeading"
+text = "HADES"
+horizontal_alignment = 1
+
+[node name="Meander" type="TextureRect" parent="UI/Menu/Content"]
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("3_meander")
+stretch_mode = 2
+
+[node name="Subtitle" type="Label" parent="UI/Menu/Content"]
+layout_mode = 2
+theme_type_variation = &"CarvedLabel"
+text = "The shade of Theseus"
+horizontal_alignment = 1
+
+[node name="NewGame" type="Button" parent="UI/Menu/Content"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "New Game"
+
+[node name="LoadGame" type="Button" parent="UI/Menu/Content"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Load Game"
+
+[connection signal="pressed" from="UI/Menu/Content/NewGame" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="UI/Menu/Content/LoadGame" to="." method="_on_load_game_pressed"]

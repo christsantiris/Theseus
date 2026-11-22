@@ -152,7 +152,7 @@ func _process(delta: float) -> void:
 	if player.health <= 0:
 		if not _death_notice_shown:
 			_death_notice_shown = true
-			hud.show_message("Fallen — returning to the last shrine.", 1.0, 4)
+			hud.show_message("Fallen.", 1.0, 4)
 		return
 	LevelRun.elapsed_seconds += delta
 	_update_section()

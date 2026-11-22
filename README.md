@@ -2,7 +2,7 @@
 
 A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. All characters, including Theseus and all twelve enemy types, and the scenery in all five levels use detailed cinematic 3D-style artwork.
 
-Background panoramas blend across their full overlap. Checkpoint shrines use matching cinematic limestone and bronze, with lit and unlit brazier states.
+Background panoramas join along continuous seams, with broad fades through smooth sky and narrow transitions around detailed scenery. Checkpoint shrines use matching cinematic limestone and bronze, with lit and unlit brazier states.
 
 ## Contents
 
@@ -33,7 +33,7 @@ Background panoramas blend across their full overlap. Checkpoint shrines use mat
 
 ## The journey
 
-Each level is a little harder than the last: enemies telegraph faster, recover sooner, and attack more often, while healing is balanced against each level's enemies. Light a shrine to keep your place. Entering a new level also saves its entrance. Death returns you to that entrance or the latest shrine with full health. Load resumes the highest level or shrine reached in the current session. New Game starts the road over.
+Each level is a little harder than the last: enemies telegraph faster, recover sooner, and attack more often, while healing is balanced against each level's enemies. Light a shrine to keep your place. Entering a new level also saves its entrance. Death opens Hades, where Theseus stands as an opaque shade. Load Game there returns to the last entrance or shrine with full health. Load resumes the highest level or shrine reached in the current session. New Game starts the road over.
 
 ### The Temple Road
 

@@ -86,9 +86,18 @@ func _run() -> void:
 	_expect(level._score == 200, "Post-checkpoint enemy awards points")
 	var previous_id: int = level.get_instance_id()
 	player._die()
+	var hades: Node = null
 	for frame in 90:
 		await physics_frame
 		if is_instance_valid(current_scene) and current_scene.get_instance_id() != previous_id:
+			hades = current_scene
+			break
+	_expect(hades != null and hades.has_method("load_game"), "Death opens Hades")
+	if hades != null and hades.has_method("load_game"):
+		hades.load_game()
+	for frame in 20:
+		await physics_frame
+		if is_instance_valid(current_scene) and current_scene != hades:
 			break
 	level = current_scene
 	_freeze_enemies()

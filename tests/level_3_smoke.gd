@@ -156,13 +156,22 @@ func _check_encounters(level: Node) -> void:
 
 
 func _reload(previous_id: int) -> void:
+	var hades: Node = null
 	for frame in 100:
 		await physics_frame
 		if is_instance_valid(current_scene) and current_scene.get_instance_id() != previous_id:
+			hades = current_scene
+			break
+	_expect(hades != null and hades.has_method("load_game"), "Death opens Hades")
+	if hades != null and hades.has_method("load_game"):
+		hades.load_game()
+	for frame in 20:
+		await physics_frame
+		if is_instance_valid(current_scene) and current_scene != hades:
 			break
 	_isolate(current_scene)
 	await _frames()
-	_expect(current_scene.get_instance_id() != previous_id, "Death reloads the town scene")
+	_expect(current_scene.get_instance_id() != previous_id and current_scene.has_node("Player"), "Load Game restores the town after death")
 
 
 func _traverse() -> void:

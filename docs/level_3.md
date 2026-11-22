@@ -19,8 +19,9 @@ route height. Cut-stone masonry covers the original twenty-three terraces,
 with terracotta amphorae at the existing prop positions and a matching temple exit.
 Terrain collisions, encounter positions, and movement remain unchanged.
 
-Adjacent panoramas blend across their full 96-pixel overlap at every height,
-including rocks, trees, and architecture. Checkpoint shrines use matching
+Panorama joins follow matching scenery within their 96-pixel overlap. Smooth
+sky fades broadly; detailed stone and foliage use a narrow transition, avoiding
+patchy cutouts and hard vertical edges. Checkpoint shrines use matching
 cinematic limestone-and-bronze artwork, with cold and burning brazier states;
 their trigger areas and saved spawn positions are unchanged.
 
@@ -68,14 +69,15 @@ landing. No ranged attacks, new controls, or additional enemy variants are added
 ## Recovery and progression
 
 Level 2 completion offers **Continue to Level 3**. Entering town immediately saves
-its entrance at (48, 280), replacing the previous level's shrine. Title Load and
-death return to that entrance until a town shrine is lit. Progress is held for
+its entrance at (48, 280), replacing the previous level's shrine. Title Load
+returns to that entrance until a town shrine is lit. Death opens Hades, and
+Load Game returns to the same entrance or shrine. Progress is held for
 the current game session.
 
 The Agora Shrine at x=1960 saves a safe spawn at (1984, 280). The Acropolis Shrine
 at x=4096 saves (4120, 280). Each heals Theseus and snapshots this level's score,
 defeated enemies, and collected flasks. Returning to an earlier shrine cannot
-replace a later checkpoint. Death restores the saved snapshot, resetting later
+replace a later checkpoint. Load Game from Hades restores the saved snapshot, resetting later
 defeats, pickups, and score gains. Five flasks restore two health bars each.
 
 Defeating HopliteAcropolisGuard unlocks the temple at (4752, 280). Theseus climbs

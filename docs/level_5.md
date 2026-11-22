@@ -22,9 +22,9 @@ All eighteen main terraces, both one-way bull ledges, both recessed spike pits,
 and their collision settings are unchanged. The temple remains closed until
 the Hydra's final head falls, and the facade updates during paused entry.
 
-Adjacent panoramas blend sky and shared ground across their full 96-pixel
-overlap. Columns, trees, and stone stay opaque where the paintings differ.
-Checkpoint shrines use matching
+Panorama joins follow matching scenery within their 96-pixel overlap. Smooth
+sky fades broadly; detailed stone and foliage use a narrow transition, avoiding
+patchy cutouts and hard vertical edges. Checkpoint shrines use matching
 cinematic limestone-and-bronze artwork, with cold and burning brazier states;
 their trigger areas and saved spawn positions are unchanged.
 
@@ -90,8 +90,8 @@ Two spike recesses reuse Level 4's bronze spikes and damage-and-escape mechanic:
 
 Falling onto a pit bed costs one health bar. Hold Jump and move toward either
 rim to climb out; there is no automatic ejection. The 1.25-second interval
-between damaging contacts leaves time to escape. A fatal hit restores the
-latest level entrance or shrine.
+between damaging contacts leaves time to escape. A fatal hit opens Hades.
+Load Game restores the latest level entrance or shrine.
 
 ## Progress and the exit
 

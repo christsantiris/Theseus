@@ -190,8 +190,10 @@ func _die() -> void:
 	sprite.speed_scale = 1.0
 	Art.anchor(sprite, "death")
 	sprite.play("death")
-	get_tree().create_timer(0.7).timeout.connect(func() -> void:
-		get_tree().reload_current_scene()
+	var tree := get_tree()
+	tree.create_timer(0.7).timeout.connect(func() -> void:
+		tree.paused = false
+		tree.change_scene_to_file("res://scenes/hades/hades.tscn")
 	)
 
 
