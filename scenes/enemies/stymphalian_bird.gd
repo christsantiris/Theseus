@@ -1,5 +1,6 @@
 extends "res://scenes/enemies/enemy.gd"
 
+const BIRD_ART_SCALE := 8.0
 const BIRD_ART := preload("res://assets/art/characters/stymphalian_bird.png")
 const FLIGHT_SPEED := 48.0
 var _contacted: Dictionary = {}
@@ -22,8 +23,8 @@ func _uses_gravity() -> bool:
 
 func _build_frames() -> void:
 	var frames := SpriteFrames.new()
-	_add_animation(frames, BIRD_ART, "walk", [0, 1, 2, 3], 8.0, true)
-	_bind_frames(frames)
+	_add_animation(frames, BIRD_ART, "walk", [0, 1, 2, 3], 8.0, true, BIRD_ART_SCALE)
+	_bind_frames(frames, BIRD_ART_SCALE)
 
 
 func _tick(_delta: float) -> void:

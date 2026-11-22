@@ -55,8 +55,11 @@ uses the existing mutual collision rule: each actor loses one health.
 
 The humanoids reuse the tested melee controllers and hitboxes. Art uses
 four walking frames and three attack poses, matching the existing soldiers.
-The birds use four wing frames. All sheets use 72×56 transparent cells and
-nearest-neighbor filtering.
+The birds use four wing frames. All three coastal enemies use cinematic
+3D-style artwork matching Theseus: exposed skeletal Spartoi, dog-headed
+Telchines with held tridents, and bronze-feathered Stymphalian Birds. Their
+transparent 576×448 cells render at one-eighth scale with linear filtering,
+retaining the original logical size, flight lanes, hitboxes, and animation speeds.
 
 ## Checkpoints and completion
 

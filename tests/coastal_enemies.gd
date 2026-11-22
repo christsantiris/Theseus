@@ -62,6 +62,15 @@ func _verify_duck_clearance() -> void:
 	var original_player: Vector2 = player.position
 	var original_bird: Vector2 = enemy.position
 	var original_frame: int = enemy.sprite.frame
+	_expect(enemy.sprite.scale == Vector2.ONE / 8.0, "Cinematic bird retains its logical world size")
+	_expect(enemy.sprite.offset == Vector2.ZERO, "Bird stays centered on its flight lane")
+	_expect(enemy.get_node("CollisionShape2D").shape.size == Vector2(22, 8), "Cinematic bird preserves its contact shape")
+	for frame in enemy.sprite.sprite_frames.get_frame_count("walk"):
+		var atlas := enemy.sprite.sprite_frames.get_frame_texture("walk", frame) as AtlasTexture
+		_expect(atlas != null and atlas.region.size == Vector2(576, 448), "Every wing pose uses the high-resolution atlas")
+		var image := atlas.get_image()
+		var used := image.get_used_rect()
+		_expect(used.position.x > 0 and used.position.y > 0 and used.end.x < 576 and used.end.y < 448, "Complete wings, beak and tail fit within transparent margins")
 	var layout := preload("res://scenes/levels/level_2_layout.gd")
 	for encounter: Dictionary in layout.ENEMIES:
 		if not String(encounter.name).begins_with("BirdHigh"):

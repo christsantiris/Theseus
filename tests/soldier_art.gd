@@ -32,7 +32,7 @@ func _run() -> void:
 		root.add_child(actor)
 		actor.set_physics_process(false)
 		actors[kind] = actor
-		var cinematic: bool = kind in ["raider", "peltast", "hoplite"]
+		var cinematic: bool = kind in ["raider", "peltast", "hoplite", "spartoi", "telchine"]
 		var art_scale := 8.0 if cinematic else 1.0
 		_expect(actor.sprite.scale == Vector2.ONE / art_scale, kind + ": world size is independent of texture resolution")
 		_expect(is_equal_approx(actor.sprite.offset.y * actor.sprite.scale.y, -25.0), kind + ": feet and health bar retain their logical anchor")
@@ -86,7 +86,7 @@ func _run() -> void:
 			child.stream = null
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: Cinematic soldier atlas coverage, transparency, complete poses, foot registration, cadence, body/weapon collisions, Hoplite rise, and native Spartoi/Telchine isolation.")
+		print("PASS: Cinematic soldier atlas coverage, transparency, complete poses, foot registration, cadence, body/weapon collisions, Hoplite rise, and cinematic Spartoi/Telchine coverage.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)
