@@ -14,7 +14,14 @@ colonnades, aqueduct arches, and sanctuary architecture. The panels blend at
 their edges and preserve their natural proportions. Detailed masonry textures
 cover the original walkable surfaces; carved waystones and a matching temple
 facade complete the scenery. These are pre-rendered backgrounds in the existing
-2D game, with the same collision rectangles, camera limits, and encounter layout.
+2D game, with the same collision rectangles and encounter layout.
+
+For playtesting, Level 1 now uses the later levels' camera-aware skyline effect.
+Its visual bounds are 4,800×256, with the camera looking 24 pixels above Theseus
+and following his climbs and descents. The background follows a smoothed nearby
+terrain height, giving it relative movement against the foreground. Sky and road
+continuation fill the newly revealed view. Platforms, ground collision, movement,
+enemy positions, and checkpoint spawns are unchanged.
 
 Panorama joins follow matching scenery within their 96-pixel overlap. Smooth
 sky fades broadly; detailed stone and foliage use a narrow transition, avoiding
@@ -122,6 +129,8 @@ physics-driven traversal of the full route. Enemies are held still for that
 traversal so it tests geometry independently of combat skill. Combat difficulty
 and first-clear pacing still need human playtesting.
 
-The scenery check verifies full-route background coverage, panel proportions,
-unchanged terrace collisions, the open facade during paused temple entry, and
-renderer isolation from Levels 2–5, which also have their own scenery checks.
+The scenery check verifies vertical camera and skyline movement, background
+coverage through climbs and jumps, panel proportions, unchanged ground and
+terrace collisions, the open facade during paused temple entry, and camera and
+renderer isolation from Levels 2–5. The route test also checks vertical camera
+travel during actual movement and jumping.

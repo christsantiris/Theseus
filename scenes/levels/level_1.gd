@@ -70,6 +70,8 @@ func _ready() -> void:
 	camera.limit_top = 0
 	camera.limit_right = layout.WIDTH
 	camera.limit_bottom = layout.HEIGHT
+	if level_number == 1:
+		camera.position.y = -24
 	camera.reset_smoothing()
 	camera.force_update_scroll()
 	_style_pause_screen()

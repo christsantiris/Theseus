@@ -93,7 +93,7 @@ func _verify_level(number: int) -> void:
 	for enemy in get_nodes_in_group("enemies"):
 		enemy.set_physics_process(false)
 	var world: Node = level.get_node("World")
-	var parent: Node = world if number == 1 else world.backdrop
+	var parent: Node = world.backdrop
 	var previous: Sprite2D
 	var count := 0
 	for child in parent.get_children():

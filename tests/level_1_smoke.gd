@@ -24,6 +24,11 @@ func _settle(frames: int = 4) -> void:
 func _freeze_enemies() -> void:
 	for enemy in get_nodes_in_group("enemies"):
 		enemy.set_physics_process(false)
+		# Isolate terrain/camera traversal from the soldiers' solid bodies as well
+		# as their AI. Otherwise the frozen first raider blocks the route outright.
+		enemy.collision_layer = 0
+		enemy.get_node("CollisionShape2D").set_deferred("disabled", true)
+		enemy.contact.collision_mask = 0
 
 
 func _stop_audio(node: Node) -> void:
@@ -173,9 +178,14 @@ func _traverse_route() -> void:
 	var jump_held := false
 	var jump_left_floor := false
 	var jumps := 0
+	var camera := player.get_node("Camera2D") as Camera2D
+	var highest_camera := camera.get_screen_center_position().y
+	var lowest_camera := highest_camera
 	Input.action_press("move_right")
 	for frame in 5000:
 		await physics_frame
+		highest_camera = minf(highest_camera, camera.get_screen_center_position().y)
+		lowest_camera = maxf(lowest_camera, camera.get_screen_center_position().y)
 		if level._complete:
 			break
 		if not player.is_on_floor() and jump_held:
@@ -198,4 +208,5 @@ func _traverse_route() -> void:
 	_expect(level._complete, "The complete route is traversable with real movement and jumping; final x=%.1f" % player.position.x)
 	_expect(_run_state.checkpoint_index == 1, "Traversal reaches both shrine triggers")
 	_expect(jumps >= 10, "Traversal exercises the terrace jumps")
+	_expect(lowest_camera - highest_camera > 25, "Normal movement and terrace jumps now scroll the Level 1 camera vertically")
 	print("Traversal: %.1f pixels, %d jumps, %.1f simulated seconds." % [player.position.x, jumps, _run_state.elapsed_seconds])

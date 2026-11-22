@@ -1,7 +1,7 @@
 extends RefCounted
 
 const WIDTH := 4800
-const HEIGHT := 180
+const HEIGHT := 256
 const FLOOR_Y := 152
 const START := Vector2(48, FLOOR_Y)
 
