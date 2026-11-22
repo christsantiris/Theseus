@@ -19,6 +19,11 @@ route height. Cut-stone masonry covers the original twenty-three terraces,
 with terracotta amphorae at the existing prop positions and a matching temple exit.
 Terrain collisions, encounter positions, and movement remain unchanged.
 
+Adjacent panoramas blend across their full 96-pixel overlap at every height,
+including rocks, trees, and architecture. Checkpoint shrines use matching
+cinematic limestone-and-bronze artwork, with cold and burning brazier states;
+their trigger areas and saved spawn positions are unchanged.
+
 ## Route
 
 | Area | World X | Route and encounters |

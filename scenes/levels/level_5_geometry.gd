@@ -16,7 +16,6 @@ const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
 const BLEND := preload("res://resources/shaders/landscape_blend.gdshader")
 const PANEL_WIDTH := 480.0
 const OVERLAP := 48.0
-const FEATHER_WIDTH := 12.0
 const MATERIAL_DENSITY := 16.0
 var backdrop: Node2D
 
@@ -95,10 +94,8 @@ func _build_landscape() -> void:
 		var material := ShaderMaterial.new()
 		material.shader = BLEND
 		material.set_shader_parameter("blend_left", index > 0)
-		material.set_shader_parameter("feather_width", FEATHER_WIDTH / (PANEL_WIDTH + OVERLAP * 2.0))
-		# Soften sky joins while keeping the cliff silhouettes readable.
-		material.set_shader_parameter("sky_feather_width", OVERLAP / (PANEL_WIDTH + OVERLAP * 2.0))
-		material.set_shader_parameter("panel_row", float(index % 2))
+		material.set_shader_parameter("overlap_width", OVERLAP * 2.0 / (PANEL_WIDTH + OVERLAP * 2.0))
+		# Use the full shared width for sky, terrain and architecture alike.
 		panorama.material = material
 		backdrop.add_child(panorama)
 

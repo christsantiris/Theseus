@@ -22,6 +22,11 @@ All twenty-seven terraces, four recessed spike pits, hazard areas, and unsafe
 Satyr landing markers keep their original geometry and behavior. Bright stone
 caps still identify the walkable lips; the pit beds remain visibly recessed.
 
+Adjacent panoramas blend across their full 96-pixel overlap at every height,
+including rocks, trees, and architecture. Checkpoint shrines use matching
+cinematic limestone-and-bronze artwork, with cold and burning brazier states;
+their trigger areas and saved spawn positions are unchanged.
+
 ## Route
 
 | Area | World X | Route and encounters |

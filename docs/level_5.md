@@ -22,6 +22,11 @@ All eighteen main terraces, both one-way bull ledges, both recessed spike pits,
 and their collision settings are unchanged. The temple remains closed until
 the Hydra's final head falls, and the facade updates during paused entry.
 
+Adjacent panoramas blend across their full 96-pixel overlap at every height,
+including rocks, trees, and architecture. Checkpoint shrines use matching
+cinematic limestone-and-bronze artwork, with cold and burning brazier states;
+their trigger areas and saved spawn positions are unchanged.
+
 ## Route
 
 | Area | World X | Route and encounters |

@@ -25,6 +25,11 @@ stacked vertically. The stone caps, waystones, and temple facade reuse Level 1's
 art; `level_1_temple.gd` keeps its bronze bars synchronized with gate unlocking,
 including paused temple entry. Levels 3–5 have their own cinematic scenery.
 
+Adjacent panoramas blend across their full 96-pixel overlap at every height,
+including rocks, trees, and architecture. Checkpoint shrines use matching
+cinematic limestone-and-bronze artwork, with cold and burning brazier states;
+their trigger areas and saved spawn positions are unchanged.
+
 ## Route
 
 | Area | X range | Route and encounters |

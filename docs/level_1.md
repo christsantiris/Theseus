@@ -16,6 +16,11 @@ cover the original walkable surfaces; carved waystones and a matching temple
 facade complete the scenery. These are pre-rendered backgrounds in the existing
 2D game, with the same collision rectangles, camera limits, and encounter layout.
 
+Adjacent panoramas blend across their full 96-pixel overlap at every height,
+including rocks, trees, and architecture. Checkpoint shrines use matching
+cinematic limestone-and-bronze artwork, with cold and burning brazier states;
+their trigger areas and saved spawn positions are unchanged.
+
 ## Route and encounter progression
 
 | Area | World X | Purpose | Encounters |

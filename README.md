@@ -2,6 +2,8 @@
 
 A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. Theseus, Raiders, Peltasts, Hoplites, Spartoi, Telchines, Stymphalian Birds, and the scenery in all five levels use detailed cinematic 3D-style artwork. The remaining enemies retain the original retro artwork.
 
+Background panoramas blend across their full overlap. Checkpoint shrines use matching cinematic limestone and bronze, with lit and unlit brazier states.
+
 ## Contents
 
 - [Screenshots](#screenshots)
@@ -100,6 +102,8 @@ To review Theseus, run `godot --path . res://scenes/reviews/theseus_review.tscn`
 To review Cerberus Pups, run `godot --path . res://scenes/reviews/cerberus_pup_review.tscn`, or open that scene and press **F6**. The two hounds run together and take turns making a telegraphed leap. Jump over the attack or interrupt it with a sword hit. Each pup has two health bars; the surviving pup continues to pursue Theseus.
 
 To review the Hydra, run `godot --path . res://scenes/reviews/hydra_review.tscn`, or open that scene and press **F6**. Each of its three heads has two health and a separate hit area. Cut down every head to defeat it; hitting the coiled body does no damage. Jump to reach the higher heads, or counter their telegraphed bites as they dip toward Theseus. Severed heads stay gone, and the survivors continue taking turns attacking.
+
+To check panorama blending and shrine activation, run `godot --path . --script res://tests/scenery_art.gd`. This check uses the renderer.
 
 Start any level at its entrance or at one of its shrines:
 
