@@ -1,5 +1,6 @@
 extends "res://scenes/enemies/enemy.gd"
 
+const ART_SCALE := 8.0
 const TEXTURE := preload("res://assets/art/characters/raider.png")
 const ENGAGE_RANGE := 64.0
 const WINDUP_SECONDS := 0.45
@@ -28,11 +29,11 @@ func _ready() -> void:
 
 func _build_frames() -> void:
 	var frames := SpriteFrames.new()
-	_add_animation(frames, TEXTURE, "walk", [0, 1, 2, 3], 8.0, true)
-	_add_animation(frames, TEXTURE, "windup", [4], 1.0, true)
-	_add_animation(frames, TEXTURE, "lunge", [5], 1.0, true)
-	_add_animation(frames, TEXTURE, "recover", [6], 1.0, true)
-	_bind_frames(frames)
+	_add_animation(frames, TEXTURE, "walk", [0, 1, 2, 3], 8.0, true, ART_SCALE)
+	_add_animation(frames, TEXTURE, "windup", [4], 1.0, true, ART_SCALE)
+	_add_animation(frames, TEXTURE, "lunge", [5], 1.0, true, ART_SCALE)
+	_add_animation(frames, TEXTURE, "recover", [6], 1.0, true, ART_SCALE)
+	_bind_frames(frames, ART_SCALE)
 
 
 func _deals_contact() -> bool:

@@ -42,7 +42,9 @@ func _ready() -> void:
 	$Contact/CollisionShape2D.shape = _body_shape
 	$Contact/CollisionShape2D.position = $CollisionShape2D.position
 	_build_frames()
-	sprite.offset = Vector2(0, -(FOOT_ROW - FRAME_SIZE.y * 0.5))
+	# Keep the logical foot anchor for both native sheets and cinematic sheets
+	# rendered at a smaller sprite scale.
+	sprite.offset = Vector2(0, -(FOOT_ROW - FRAME_SIZE.y * 0.5) / sprite.scale.y)
 	sprite.play(_initial_animation())
 	queue_redraw()
 
@@ -112,7 +114,7 @@ func _draw() -> void:
 	if not alive or max_hp <= 0:
 		return
 	var width := 16.0
-	var y := sprite.offset.y - float(FRAME_SIZE.y) * 0.5 - 4.0
+	var y := sprite.offset.y * sprite.scale.y - float(FRAME_SIZE.y) * 0.5 - 4.0
 	draw_rect(Rect2(-width * 0.5, y, width, 3), Color(0.12, 0.08, 0.08))
 	var filled := width * float(hp) / float(max_hp)
 	if filled > 0.0:
@@ -268,7 +270,8 @@ func _add_animation(
 	animation_name: String,
 	indices: Array,
 	speed: float,
-	looped: bool
+	looped: bool,
+	art_scale: float = 1.0
 ) -> void:
 	frames.add_animation(animation_name)
 	frames.set_animation_speed(animation_name, speed)
@@ -276,11 +279,14 @@ func _add_animation(
 	for index in indices:
 		var atlas := AtlasTexture.new()
 		atlas.atlas = texture
-		atlas.region = Rect2(int(index) * FRAME_SIZE.x, 0, FRAME_SIZE.x, FRAME_SIZE.y)
+		atlas.region = Rect2(int(index) * FRAME_SIZE.x * art_scale, 0, FRAME_SIZE.x * art_scale, FRAME_SIZE.y * art_scale)
 		frames.add_frame(animation_name, atlas)
 
 
-func _bind_frames(frames: SpriteFrames) -> void:
+func _bind_frames(frames: SpriteFrames, art_scale: float = 1.0) -> void:
 	if frames.has_animation("default"):
 		frames.remove_animation("default")
 	sprite.sprite_frames = frames
+	if art_scale > 1.0:
+		sprite.scale = Vector2.ONE / art_scale
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR

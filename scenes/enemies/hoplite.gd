@@ -1,5 +1,6 @@
 extends "res://scenes/enemies/enemy.gd"
 
+const ART_SCALE := 8.0
 const TEXTURE := preload("res://assets/art/characters/hoplite.png")
 
 var _state := "crouch"
@@ -38,11 +39,11 @@ func _initial_animation() -> String:
 
 func _build_frames() -> void:
 	var frames := SpriteFrames.new()
-	_add_animation(frames, TEXTURE, "rise", [0, 1, 2], 1.0, false)
-	_add_animation(frames, TEXTURE, "march", [3, 4, 5, 6], 6.0, true)
-	_add_animation(frames, TEXTURE, "windup", [7], 1.0, true)
-	_add_animation(frames, TEXTURE, "thrust", [8], 1.0, true)
-	_bind_frames(frames)
+	_add_animation(frames, TEXTURE, "rise", [0, 1, 2], 1.0, false, ART_SCALE)
+	_add_animation(frames, TEXTURE, "march", [3, 4, 5, 6], 6.0, true, ART_SCALE)
+	_add_animation(frames, TEXTURE, "windup", [7], 1.0, true, ART_SCALE)
+	_add_animation(frames, TEXTURE, "thrust", [8], 1.0, true, ART_SCALE)
+	_bind_frames(frames, ART_SCALE)
 
 
 func _deals_contact() -> bool:
