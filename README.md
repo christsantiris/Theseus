@@ -101,7 +101,7 @@ Sound Effect by <a href="https://pixabay.com/users/dragon-studio-38165424/?utm_s
 
 ## Play-test any level
 
-To review Theseus, run `godot --path . res://scenes/reviews/theseus_review.tscn`, or open that scene and press **F6**. It shows all ten animations: breathing idle, walk, crouch, jump rise, jump fall, sword thrust, sword swing, downward thrust, hurt, and death. Use **Slow**, **Hold**, and **Flip** to inspect the 42 frames, or **Play level 1** to try them in the game. The cinematic artwork keeps the same movement, collision sizes, attack timing, and wine-boost cadence. The title screen also uses the animated character.
+To review Theseus, run `godot --path . res://scenes/reviews/theseus_review.tscn`, or open that scene and press **F6**. It shows all eleven animations: breathing idle, walk, crouch, jump rise, jump fall, sword thrust, grounded sword swing, airborne sword swing, downward thrust, hurt, and death. Use **Slow**, **Hold**, and **Flip** to inspect the 48 frames, or **Play level 1** to try them in the game. The airborne slash keeps his knees bent through the whole attack. Walking plays at 8 fps, matching raiders and peltasts and close to the hoplites' 6 fps. Movement speed, collision sizes, attack timing, and the wine boost's 35% cadence increase are unchanged. The title screen also uses the animated character.
 
 To review Cerberus Pups, run `godot --path . res://scenes/reviews/cerberus_pup_review.tscn`, or open that scene and press **F6**. The two hounds run together and take turns making a telegraphed leap. Jump over the attack or interrupt it with a sword hit. Each pup has two health bars; the surviving pup continues to pursue Theseus.
 

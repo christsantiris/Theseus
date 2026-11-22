@@ -2,8 +2,8 @@ extends Node2D
 
 const Art := preload("res://scenes/player/theseus_art.gd")
 const ThemeHelpers := preload("res://scenes/ui/theme_helpers.gd")
-const NAMES := ["idle", "walk", "duck", "jump_rise", "jump_fall", "attack", "swing", "down_thrust", "hurt", "death"]
-const TITLES := ["Idle / breathe", "Walk", "Crouch", "Jump / rise", "Jump / fall", "Sword thrust", "Sword swing", "Downward thrust", "Hurt", "Death"]
+const NAMES := ["idle", "walk", "duck", "jump_rise", "jump_fall", "attack", "swing", "air_swing", "down_thrust", "hurt", "death"]
+const TITLES := ["Idle / breathe", "Walk", "Crouch", "Jump / rise", "Jump / fall", "Sword thrust", "Sword swing", "Airborne swing", "Downward thrust", "Hurt", "Death"]
 
 var preview: AnimatedSprite2D
 var _selected := 0
@@ -24,7 +24,7 @@ func _ready() -> void:
 	_label("THESEUS / CINEMATIC", Vector2(10, 4), 11)
 	_label("Animation review", Vector2(10, 19), 7)
 	for index in NAMES.size():
-		var button := _button(TITLES[index], Vector2(10, 32 + index * 12), func() -> void: _select(index))
+		var button := _button(TITLES[index], Vector2(10, 32 + index * 11), func() -> void: _select(index))
 		button.custom_minimum_size.x = 106
 		_buttons.append(button)
 	_button("Flip", Vector2(144, 23), func() -> void: preview.flip_h = not preview.flip_h)

@@ -115,7 +115,7 @@ func _physics_process(delta: float) -> void:
 		if _downward_attack:
 			_attack_animation = "down_thrust"
 		elif airborne:
-			_attack_animation = "swing"
+			_attack_animation = "air_swing"
 		else:
 			_attack_animation = "swing" if _next_ground_swing else "attack"
 			# Only attacks started on the ground advance the alternating sequence.
@@ -142,7 +142,7 @@ func _physics_process(delta: float) -> void:
 	_resolve_character_collision()
 	if health <= 0:
 		return
-	_convert_airborne_stab()
+	_sync_attack_pose()
 	_strike()
 	_update_landing(jumped_this_frame)
 	_update_animation()
@@ -290,14 +290,21 @@ func _enemy_body_rect(enemy: Object) -> Rect2:
 	return collision.global_transform * collision.shape.get_rect()
 
 
-func _convert_airborne_stab() -> void:
-	if is_on_floor() or not _attacking or _attack_animation != "attack" or sprite.animation != "attack":
+func _sync_attack_pose() -> void:
+	if not _attacking or sprite.animation != _attack_animation:
 		return
-	# Taking off or leaving a ledge also changes an existing stab to a slash.
-	# Keep its elapsed phase and hit history so this cannot restart or double-hit.
+	var animation := _attack_animation
+	if not is_on_floor() and animation in ["attack", "swing"]:
+		animation = "air_swing"
+	elif is_on_floor() and animation == "air_swing":
+		animation = "swing"
+	if animation == _attack_animation:
+		return
+	# Takeoff, ledge exits, and landing change the pose without restarting the
+	# strike, its damage window, or the set of enemies already hit.
 	var frame := sprite.frame
 	var progress := sprite.frame_progress
-	_attack_animation = "swing"
+	_attack_animation = animation
 	Art.anchor(sprite, _attack_animation)
 	sprite.play(_attack_animation)
 	sprite.set_frame_and_progress(frame, progress)
@@ -416,7 +423,7 @@ func _play(animation_name: String) -> void:
 
 
 func _on_animation_finished() -> void:
-	if sprite.animation in ["attack", "swing", "down_thrust"]:
+	if sprite.animation in ["attack", "swing", "air_swing", "down_thrust"]:
 		_finish_attack()
 		_update_animation()
 

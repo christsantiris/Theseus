@@ -10,9 +10,10 @@ const COLUMNS := 8
 const ART := preload("res://assets/art/characters/theseus.png")
 const DOWN_ART := preload("res://assets/art/characters/theseus_down_thrust.png")
 const SWING_ART := preload("res://assets/art/characters/theseus_swing.png")
+const AIR_SWING_ART := preload("res://assets/art/characters/theseus_air_swing.png")
 const ANIMATIONS := {
 	"idle": {"indices": [0, 1, 2, 3], "fps": 4.0, "loop": true},
-	"walk": {"indices": [4, 5, 6, 7, 8, 9, 10, 11], "fps": 16.0, "loop": true},
+	"walk": {"indices": [4, 5, 6, 7, 8, 9, 10, 11], "fps": 8.0, "loop": true},
 	"duck": {"indices": [12, 13], "fps": 3.0, "loop": true},
 	"jump_rise": {"indices": [14, 15], "fps": 8.0, "loop": false},
 	"jump_fall": {"indices": [16, 17], "fps": 8.0, "loop": false},
@@ -21,6 +22,7 @@ const ANIMATIONS := {
 	# two extended-blade frames, two recovery. The hit window is unchanged.
 	"attack": {"indices": [20, 21, 22, 23, 24, 25], "fps": 24.0, "loop": false},
 	"swing": {"indices": [0, 1, 2, 3, 4, 5], "fps": 24.0, "loop": false},
+	"air_swing": {"indices": [0, 1, 2, 3, 4, 5], "fps": 24.0, "loop": false},
 	"death": {"indices": [26, 27, 28, 29], "fps": 8.0, "loop": false},
 	"down_thrust": {"indices": [0, 1, 2, 3, 4, 5], "fps": 24.0, "loop": false},
 }
@@ -30,7 +32,7 @@ static func texture(index: int, animation: String = "idle") -> AtlasTexture:
 	var atlas := AtlasTexture.new()
 	var downward := animation == "down_thrust"
 	var size := DOWN_FRAME_SIZE if downward else FRAME_SIZE
-	atlas.atlas = DOWN_ART if downward else SWING_ART if animation == "swing" else ART
+	atlas.atlas = DOWN_ART if downward else AIR_SWING_ART if animation == "air_swing" else SWING_ART if animation == "swing" else ART
 	atlas.region = Rect2(Vector2i(index % COLUMNS, index / COLUMNS) * size, size)
 	return atlas
 

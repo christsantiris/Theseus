@@ -20,7 +20,7 @@ func _run() -> void:
 	player.set_physics_process(false)
 	player.get_node("Camera2D").enabled = false
 	var frames: SpriteFrames = player.sprite.sprite_frames
-	var expected := {"idle": 4, "walk": 8, "duck": 2, "jump_rise": 2, "jump_fall": 2, "hurt": 2, "attack": 6, "swing": 6, "death": 4, "down_thrust": 6}
+	var expected := {"idle": 4, "walk": 8, "duck": 2, "jump_rise": 2, "jump_fall": 2, "hurt": 2, "attack": 6, "swing": 6, "air_swing": 6, "death": 4, "down_thrust": 6}
 	for animation: String in expected:
 		_expect(frames.has_animation(animation), animation + " has cinematic artwork")
 		_expect(frames.get_frame_count(animation) == expected[animation], animation + " has its full animation sequence")
@@ -36,7 +36,7 @@ func _run() -> void:
 				var foot: float = (-texture.get_height() * 0.5 + player.sprite.offset.y + used.end.y) * player.sprite.scale.y
 				_expect(absf(foot) < 0.5, "%s frame %d keeps its soles on the collision floor" % [animation, index])
 				_expect(absf(top + (36.0 if animation == "duck" else 44.0)) < 1.5, "%s frame %d matches the collision head height" % [animation, index])
-	for animation in ["attack", "swing", "down_thrust"]:
+	for animation in ["attack", "swing", "air_swing", "down_thrust"]:
 		var duration := 0.0
 		for index in frames.get_frame_count(animation):
 			duration += frames.get_frame_duration(animation, index) / frames.get_animation_speed(animation)
@@ -44,6 +44,10 @@ func _run() -> void:
 		var windup := float(player.ATTACK_HIT_FRAMES[0]) / frames.get_animation_speed(animation)
 		var hit_window := float(player.ATTACK_HIT_FRAMES.size()) / frames.get_animation_speed(animation)
 		_expect(is_equal_approx(windup, 1.0 / 12.0) and is_equal_approx(hit_window, 1.0 / 12.0), animation + " retains its windup and damage window")
+	_expect(frames.get_animation_speed("walk") == 8.0, "Theseus walks at the raider and peltast frame rate")
+	for index in frames.get_frame_count("air_swing"):
+		var used := frames.get_frame_texture("air_swing", index).get_image().get_used_rect()
+		_expect(used.end.y <= Art.FOOT_ROW - 16, "Airborne slash frame %d keeps its feet tucked above the standing baseline" % index)
 	for index in [2, 3]:
 		var used := frames.get_frame_texture("down_thrust", index).get_image().get_used_rect()
 		_expect(used.end.y > Art.FOOT_ROW + 48, "Active downward blade visibly extends below the sandals")
@@ -65,7 +69,7 @@ func _run() -> void:
 	player.free()
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: 42 cinematic frames, transparent unclipped silhouettes, standing/crouch heights, foot registration, stab/swing/downward attack timing, visible downward blades, wine cadence and pause.")
+		print("PASS: 48 cinematic frames, transparent unclipped silhouettes, standing/crouch heights, foot registration, tucked airborne slashes, unchanged attack timing, slower walk cadence, wine cadence and pause.")
 	quit(0 if failures.is_empty() else 1)
 
 

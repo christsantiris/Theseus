@@ -190,11 +190,11 @@ func _verify_air_attacks() -> void:
 	# Jump and Sword in the same physics tick must not use the stale floor flag.
 	Input.action_press("jump")
 	await _begin_attack()
-	_expect(not player.is_on_floor() and player.velocity.y < 0 and player.sprite.animation == "swing", "Jump + Sword together selects a rising slash")
+	_expect(not player.is_on_floor() and player.velocity.y < 0 and player.sprite.animation == "air_swing", "Jump + Sword together selects a rising slash")
 	await _frames(18)
 	_expect(not player.is_on_floor() and player.velocity.y > 0, "The next attack starts while falling")
 	await _begin_attack()
-	_expect(player.sprite.animation == "swing", "A second airborne attack is also a slash")
+	_expect(player.sprite.animation == "air_swing", "A second airborne attack is also a slash")
 	Input.action_release("jump")
 	await _frames(35)
 	_expect(player.is_on_floor(), "Air-attack fixture lands before testing grounded attacks")
@@ -204,7 +204,7 @@ func _verify_air_attacks() -> void:
 	Input.action_press("jump")
 	await _frames(3)
 	await _begin_attack()
-	_expect(player.sprite.animation == "swing", "An airborne attack after a grounded stab slashes")
+	_expect(player.sprite.animation == "air_swing", "An airborne attack after a grounded stab slashes")
 	Input.action_release("jump")
 	await _frames(40)
 	await _begin_attack()
@@ -221,7 +221,7 @@ func _verify_air_attacks() -> void:
 	var phase: float = player.sprite.frame + player.sprite.frame_progress
 	Input.action_press("jump")
 	await _frames(2)
-	_expect(not player.is_on_floor() and player._attacking and player.sprite.animation == "swing", "Jumping during a grounded stab converts it to a slash")
+	_expect(not player.is_on_floor() and player._attacking and player.sprite.animation == "air_swing", "Jumping during a grounded stab converts it to a slash")
 	_expect(player.sprite.frame + player.sprite.frame_progress >= phase, "Converting a stab preserves attack progress instead of restarting its hit window")
 	_expect(setup.enemy.hp == 1, "Converting an active stab to a slash cannot hit the same enemy twice")
 	Input.action_release("jump")
@@ -236,5 +236,36 @@ func _verify_air_attacks() -> void:
 	await _begin_attack()
 	_expect(player.sprite.animation == "attack", "A ledge attack begins as a grounded stab")
 	await _frames(8)
-	_expect(not player.is_on_floor() and player._attacking and player.sprite.animation == "swing", "Leaving a ledge converts the active stab to a falling slash")
+	_expect(not player.is_on_floor() and player._attacking and player.sprite.animation == "air_swing", "Leaving a ledge converts the active stab to a falling slash")
 	Input.action_release("move_right")
+
+	# A grounded swing also tucks its legs on takeoff, retaining the current phase.
+	setup = await _fixture("raider")
+	player = setup.player
+	setup.enemy.position.x = 500
+	await _begin_attack()
+	await _frames(18)
+	await _begin_attack()
+	_expect(player.sprite.animation == "swing", "The second grounded attack starts with the standing swing")
+	phase = player.sprite.frame + player.sprite.frame_progress
+	Input.action_press("jump")
+	await _frames(2)
+	_expect(player.sprite.animation == "air_swing" and player.sprite.frame + player.sprite.frame_progress >= phase, "Taking off during a swing tucks the legs without restarting the attack")
+	Input.action_release("jump")
+	await _frames(40)
+	# Start a slash immediately before landing; only the visual pose may change.
+	setup = await _fixture("raider")
+	player = setup.player
+	setup.enemy.position.x = 500
+	player.position = Vector2(200, 146)
+	player.velocity = Vector2(0, 45)
+	await _begin_attack()
+	_expect(player.sprite.animation == "air_swing", "A slash just above the floor begins with bent jumping legs")
+	player._swing_hits[setup.enemy.get_instance_id()] = true
+	phase = player.sprite.frame + player.sprite.frame_progress
+	for tick in 10:
+		await _frames(1)
+		if player.is_on_floor():
+			break
+	_expect(player.is_on_floor() and player._attacking and player.sprite.animation == "swing", "Landing during a slash restores the grounded swing pose")
+	_expect(player.sprite.frame + player.sprite.frame_progress >= phase and player._swing_hits.has(setup.enemy.get_instance_id()), "Landing preserves attack progress and hit history")
