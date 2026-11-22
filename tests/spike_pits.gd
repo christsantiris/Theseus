@@ -75,6 +75,8 @@ func _run() -> void:
 		level.get_node(definition.name).free()
 	await _frames()
 	_expect(get_nodes_in_group("spike_pits").size() == 4, "Four spike pits spawn")
+	var sample: Node2D = get_nodes_in_group("spike_pits")[0]
+	_expect(sample.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR and sample.ART.get_height() == sample.ART.get_width() * 3, "Spike pits repeat a cinematic bronze-and-limestone bay")
 	for definition: Dictionary in Mountain.PITS:
 		await _cross(definition, 1)
 		await _cross(definition, -1)

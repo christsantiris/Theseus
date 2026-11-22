@@ -20,10 +20,12 @@ at the existing prop positions and a matching temple entrance.
 
 All twenty-seven terraces, four recessed spike pits, hazard areas, and unsafe
 Satyr landing markers keep their original geometry and behavior. Bright stone
-caps still identify the walkable lips; the pit beds remain visibly recessed.
+caps still identify the walkable lips. Each pit bed is a row of cinematic
+bronze spikes set in the same limestone as the terraces.
 
-Adjacent panoramas blend across their full 96-pixel overlap at every height,
-including rocks, trees, and architecture. Checkpoint shrines use matching
+Adjacent panoramas blend sky and shared ground across their full 96-pixel
+overlap. Columns, trees, and stone stay opaque where the paintings differ.
+Checkpoint shrines use matching
 cinematic limestone-and-bronze artwork, with cold and burning brazier states;
 their trigger areas and saved spawn positions are unchanged.
 

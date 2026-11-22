@@ -22,8 +22,9 @@ All eighteen main terraces, both one-way bull ledges, both recessed spike pits,
 and their collision settings are unchanged. The temple remains closed until
 the Hydra's final head falls, and the facade updates during paused entry.
 
-Adjacent panoramas blend across their full 96-pixel overlap at every height,
-including rocks, trees, and architecture. Checkpoint shrines use matching
+Adjacent panoramas blend sky and shared ground across their full 96-pixel
+overlap. Columns, trees, and stone stay opaque where the paintings differ.
+Checkpoint shrines use matching
 cinematic limestone-and-bronze artwork, with cold and burning brazier states;
 their trigger areas and saved spawn positions are unchanged.
 
@@ -80,7 +81,7 @@ then jump onto its bright stone cap. The ledges allow approach from below,
 leaving the charging corridor clear. Both reward a health flask; three more
 flasks sit on the main route. Each restores two health without exceeding five.
 
-Two spike recesses reuse Level 4's damage-and-escape mechanic:
+Two spike recesses reuse Level 4's bronze spikes and damage-and-escape mechanic:
 
 | Pit | Left edge | Rim Y | Width / depth |
 | --- | --- | --- | --- |

@@ -3,6 +3,9 @@ extends Node2D
 
 signal damaged(player: CharacterBody2D)
 
+const ART := preload("res://assets/art/objects/spike_pit.png")
+const BAY_WIDTH := 8.0
+
 @export var pit_width := 32.0
 @export var pit_depth := 24.0
 const HIT_INTERVAL := 1.25
@@ -10,6 +13,7 @@ var _cooldowns: Dictionary = {}
 
 
 func _ready() -> void:
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	var shape := RectangleShape2D.new()
 	shape.size = Vector2(pit_width - 4, 8)
 	$Spikes/CollisionShape2D.shape = shape
@@ -49,9 +53,9 @@ func _physics_process(delta: float) -> void:
 
 
 func _draw() -> void:
-	draw_rect(Rect2(0, 0, pit_width, pit_depth), Color("454941"))
-	draw_rect(Rect2(1, 2, pit_width - 2, pit_depth - 2), Color("59594a"))
-	for x in range(0, int(pit_width), 8):
-		draw_colored_polygon(PackedVector2Array([Vector2(x + 1, pit_depth), Vector2(x + 4, pit_depth - 8), Vector2(x + 7, pit_depth)]), Color("aaa98f"))
-		draw_line(Vector2(x + 4, pit_depth - 7), Vector2(x + 6, pit_depth - 1), Color("e0d9ba"))
-	draw_rect(Rect2(0, pit_depth - 1, pit_width, 2), Color("787763"))
+	var x := 0.0
+	while x < pit_width:
+		var span := minf(BAY_WIDTH, pit_width - x)
+		var source_width := ART.get_width() * span / BAY_WIDTH
+		draw_texture_rect_region(ART, Rect2(x, 0, span, pit_depth), Rect2(0, 0, source_width, ART.get_height()))
+		x += span
