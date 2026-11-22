@@ -10,7 +10,7 @@ const PANORAMA_SHEETS := [
 ]
 const WALL := preload("res://assets/art/backgrounds/level_1/limestone_wall.png")
 const WAYSTONE := preload("res://assets/art/backgrounds/level_1/waystone.png")
-const BLEND := preload("res://resources/shaders/landscape_blend.gdshader")
+const PANELS := preload("res://scenes/levels/landscape_panels.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
 const PANEL_WIDTH := 480.0
 const OVERLAP := 48.0
@@ -29,6 +29,8 @@ func _ready() -> void:
 
 func _build_landscape() -> void:
 	# Each section sheet contains west/east panoramas stacked vertically.
+	var overlap_width := OVERLAP * 2.0 / (PANEL_WIDTH + OVERLAP * 2.0)
+	var previous: Texture2D
 	for index in PANORAMA_SHEETS.size() * 2:
 		var sheet: Texture2D = PANORAMA_SHEETS[index / 2]
 		var image := AtlasTexture.new()
@@ -43,13 +45,9 @@ func _build_landscape() -> void:
 		panorama.scale = Vector2.ONE * scale_factor
 		panorama.position = Vector2(index * PANEL_WIDTH - OVERLAP, 180.0 - image.get_height() * scale_factor)
 		panorama.z_index = -1
-		var material := ShaderMaterial.new()
-		material.shader = BLEND
-		material.set_shader_parameter("blend_left", index > 0)
-		# Use the full shared width for sky, terrain and architecture alike.
-		material.set_shader_parameter("overlap_width", OVERLAP * 2.0 / (PANEL_WIDTH + OVERLAP * 2.0))
-		panorama.material = material
+		PANELS.prepare(panorama, index > 0, overlap_width, previous)
 		add_child(panorama)
+		previous = image
 
 
 func _decorate_temple() -> void:

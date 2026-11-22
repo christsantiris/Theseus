@@ -13,7 +13,7 @@ const CLIFF := preload("res://assets/art/backgrounds/level_2/coastal_limestone.p
 const CAP_STONE := preload("res://assets/art/backgrounds/level_1/limestone_wall.png")
 const WAYSTONE := preload("res://assets/art/backgrounds/level_1/waystone.png")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
-const BLEND := preload("res://resources/shaders/landscape_blend.gdshader")
+const PANELS := preload("res://scenes/levels/landscape_panels.gd")
 const PANEL_WIDTH := 480.0
 const OVERLAP := 48.0
 const MATERIAL_DENSITY := 16.0
@@ -53,6 +53,8 @@ func _build_landscape() -> void:
 	backdrop.name = "SeaBackdrop"
 	backdrop.z_index = -1
 	add_child(backdrop)
+	var overlap_width := OVERLAP * 2.0 / (PANEL_WIDTH + OVERLAP * 2.0)
+	var previous: Texture2D
 	for index in PANORAMA_SHEETS.size() * 2:
 		var sheet: Texture2D = PANORAMA_SHEETS[index / 2]
 		var image := AtlasTexture.new()
@@ -66,13 +68,9 @@ func _build_landscape() -> void:
 		var factor := (PANEL_WIDTH + OVERLAP * 2.0) / image.get_width()
 		panorama.scale = Vector2.ONE * factor
 		panorama.position = Vector2(index * PANEL_WIDTH - OVERLAP, 180.0 - image.get_height() * factor)
-		var material := ShaderMaterial.new()
-		material.shader = BLEND
-		material.set_shader_parameter("blend_left", index > 0)
-		material.set_shader_parameter("overlap_width", OVERLAP * 2.0 / (PANEL_WIDTH + OVERLAP * 2.0))
-		# Use the full shared width for sky, terrain and architecture alike.
-		panorama.material = material
+		PANELS.prepare(panorama, index > 0, overlap_width, previous)
 		backdrop.add_child(panorama)
+		previous = image
 
 
 func _sync_backdrop() -> void:
