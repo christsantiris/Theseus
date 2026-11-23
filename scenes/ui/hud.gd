@@ -14,6 +14,10 @@ var _message_time := 0.0
 var _message_priority := 0
 var _speed_status: Label
 var _last_safe_rect := Rect2()
+# On touch screens, hints sit between the button groups; this is that strip in
+# HUD coordinates. Empty when the groups leave too little room.
+var _message_gap := Rect2()
+const MIN_MESSAGE_GAP := 96.0
 
 
 func _ready() -> void:
@@ -65,10 +69,6 @@ func _ready() -> void:
 	_message.hide()
 	_message_backdrop.hide()
 	if MobileControls.enabled:
-		# Keep tutorial messages above the thumb controls, rather than behind them.
-		_message_backdrop.position.y = 116
-		_message.position.y = 120
-		_speed_status.position.y = 102
 		_layout_mobile()
 
 
@@ -95,12 +95,37 @@ func _layout_mobile(safe := Rect2()) -> void:
 	_root.offset_bottom = safe.end.y - get_viewport().get_visible_rect().size.y
 	_area.size.x = maxf(0.0, safe.size.x - 192.0)
 	_area.clip_text = true
-	_message_backdrop.size.x = maxf(0.0, safe.size.x - 12.0)
-	_message.size.x = maxf(0.0, safe.size.x - 20.0)
-	var message_top := maxf(0.0, minf(116.0, safe.size.y - 64.0))
-	_message_backdrop.position.y = message_top
-	_message.position.y = message_top + 4.0
-	_speed_status.position.y = maxf(0.0, message_top - 14.0)
+	# Above the thumb controls: the speed timer, and hints when the bottom
+	# strip is too narrow.
+	var above_controls := maxf(0.0, minf(116.0, safe.size.y - 64.0))
+	_speed_status.position.y = maxf(0.0, above_controls - 14.0)
+	var gap: Rect2 = MobileControls.bottom_gap(safe)
+	gap.position -= safe.position
+	_message_gap = gap if gap.size.x >= MIN_MESSAGE_GAP else Rect2()
+	if not _message_gap.has_area():
+		_message.autowrap_mode = TextServer.AUTOWRAP_OFF
+		_message_backdrop.position = Vector2(6, above_controls)
+		_message_backdrop.size = Vector2(maxf(0.0, safe.size.x - 12.0), 17)
+		_message.position = Vector2(10, above_controls + 4.0)
+		_message.size = Vector2(maxf(0.0, safe.size.x - 20.0), 11)
+	_place_message()
+
+
+func _place_message() -> void:
+	if not _message_gap.has_area():
+		return
+	# Wrap the hint inside the strip and grow the plaque upward to fit it,
+	# keeping its base level with the bottom of the buttons.
+	_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var width := _message_gap.size.x - 4.0
+	# Measure through the label itself so its line spacing is included.
+	_message.size = Vector2(width - 8.0, 0)
+	var text_height := _message.get_minimum_size().y
+	var height := text_height + 6.0
+	_message_backdrop.position = Vector2(_message_gap.position.x + 2.0, _message_gap.end.y - height)
+	_message_backdrop.size = Vector2(width, height)
+	_message.position = _message_backdrop.position + Vector2(4, 4)
+	_message.size = Vector2(width - 8.0, text_height)
 
 
 func set_area(title: String) -> void:
@@ -111,6 +136,7 @@ func show_message(text: String, seconds: float = 3.0, priority: int = 1) -> bool
 	if _message_time > 0.0 and priority < _message_priority:
 		return false
 	_message.text = text
+	_place_message()
 	_message_time = seconds
 	_message_priority = priority
 	_message.show()

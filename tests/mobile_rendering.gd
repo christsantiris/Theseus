@@ -107,7 +107,15 @@ func _verify_insets(level: Node) -> void:
 		level.hud._layout_mobile(safe)
 		_expect(level.hud._root.get_global_rect().is_equal_approx(safe), "HUD follows left/right landscape safe areas")
 		_expect(level.hud._area.get_global_rect().end.x <= level.hud._score.get_global_rect().position.x, "Area title cannot cover the score")
-		_expect(level.hud._message_backdrop.get_global_rect().end.y < controls.buttons.jump.position.y - controls.buttons.jump.shape.radius, "Messages stay above touch targets after safe-area changes")
+		level.hud.show_message("Each head has 2 HP. Cut all three; jump for high heads.", 1.0, 9)
+		var plaque: Rect2 = level.hud._message_backdrop.get_global_rect()
+		_expect(safe.encloses(plaque) and plaque.end.y > safe.end.y - 24, "The longest hint sits at the bottom of the safe area")
+		var label: Rect2 = level.hud._message.get_global_rect()
+		_expect(level.hud._message.get_line_count() <= 4 and plaque.encloses(label), "The longest hint wraps to fit its plaque")
+		for action in controls.buttons:
+			var touch: TouchScreenButton = controls.buttons[action]
+			var target := Rect2(touch.position - Vector2.ONE * touch.shape.radius, Vector2.ONE * touch.shape.radius * 2)
+			_expect(not plaque.intersects(target), "Hints never cover the %s button" % action)
 		for action in controls.buttons:
 			var button: TouchScreenButton = controls.buttons[action]
 			_expect(safe.encloses(Rect2(button.position - Vector2.ONE * button.shape.radius, Vector2.ONE * button.shape.radius * 2)), "Landscape safe area contains " + action)

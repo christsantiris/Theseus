@@ -4,6 +4,10 @@ extends CanvasLayer
 # with: godot --path . -- --mobile-controls
 const ACTIONS := ["move_left", "move_right", "duck", "jump", "attack"]
 const RADIUS := 16.0
+# Outer buttons sit this far from the safe area's bottom and side edges, with
+# their neighbors spaced evenly inward.
+const BUTTON_INSET := 22.0
+const BUTTON_SPACING := 40.0
 var enabled := false
 var buttons: Dictionary = {}
 var _faces: Dictionary = {}
@@ -119,13 +123,25 @@ static func safe_rect_for_display(display_safe: Rect2, window_pixels: Vector2, v
 
 func _layout_controls(safe: Rect2) -> void:
 	_last_safe_rect = safe
-	var bottom := safe.end.y - 22
-	buttons.move_left.position = Vector2(safe.position.x + 22, bottom)
-	buttons.move_right.position = Vector2(safe.position.x + 62, bottom)
-	buttons.duck.position = Vector2(safe.position.x + 102, bottom)
-	buttons.jump.position = Vector2(safe.end.x - 62, bottom)
-	buttons.attack.position = Vector2(safe.end.x - 22, bottom)
+	var bottom := safe.end.y - BUTTON_INSET
+	var left := safe.position.x + BUTTON_INSET
+	var right := safe.end.x - BUTTON_INSET
+	buttons.move_left.position = Vector2(left, bottom)
+	buttons.move_right.position = Vector2(left + BUTTON_SPACING, bottom)
+	buttons.duck.position = Vector2(left + BUTTON_SPACING * 2.0, bottom)
+	buttons.jump.position = Vector2(right - BUTTON_SPACING, bottom)
+	buttons.attack.position = Vector2(right, bottom)
 	buttons.pause.position = Vector2(safe.end.x - 14, safe.position.y + 28)
+
+
+static func bottom_gap(safe: Rect2) -> Rect2:
+	# The free strip between the left (walk, duck) and right (jump, sword)
+	# buttons, spanning their touch areas vertically.
+	var touch := RADIUS + 1.0
+	var left := safe.position.x + BUTTON_INSET + BUTTON_SPACING * 2.0 + touch
+	var right := safe.end.x - BUTTON_INSET - BUTTON_SPACING - touch
+	var center := safe.end.y - BUTTON_INSET
+	return Rect2(left, center - touch, maxf(0.0, right - left), touch * 2.0)
 
 
 func _on_viewport_changed() -> void:
