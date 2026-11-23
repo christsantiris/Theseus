@@ -27,7 +27,7 @@ godot --path . -- --mobile-controls
 
 ## Android
 
-The `Android` export preset builds a debug APK with ARM64 for phones and x86_64 for Intel emulators, package `com.theseus.adventure`, version `0.1.0`. It uses Godot's prebuilt template and does not require a Gradle project. The current template requires Android 7.0/API 24 or later and OpenGL ES 3.0. The preset requests no Internet permission.
+The `Android` export preset builds a debug APK with ARM64 for phones and x86_64 for Intel emulators, package `com.theseus.adventure`, version `0.1.0`. It uses a Gradle build so the AdMob library can be packaged. The current template requires Android 7.0/API 24 or later and OpenGL ES 3.0. The preset requests Internet and network-state permission so the between-level ad can load.
 
 Install export templates matching your Godot version through **Editor → Manage Export Templates**. Configure Java SDK Path and Android SDK Path in **Editor Settings → Export → Android**. See [Godot's Android export instructions](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_android.html) for SDK setup.
 
@@ -35,8 +35,10 @@ From the repository root:
 
 ```sh
 mkdir -p builds/android
-godot --headless --path . --export-debug Android builds/android/theseus.apk
+godot --headless --path . --install-android-build-template --export-debug Android builds/android/theseus.apk
 ```
+
+The install flag writes Godot's Gradle project into `android/` the first time. Later exports can omit it once that directory is present. The export templates package must include `android_source.zip`.
 
 Enable USB debugging on a connected Android phone and install the APK:
 
@@ -85,6 +87,14 @@ open builds/ios/Theseus.xcodeproj
 ```
 
 In Xcode, choose the **Theseus** scheme and an **iPhone Simulator** run destination, then press **Command-R**. If no simulator is available, install an iOS Simulator runtime through **Xcode → Settings → Components**. The game's Compatibility renderer and the exported simulator library support this path; no manual architecture edits are needed after running `tools/export_ios.sh`.
+
+## Ads
+
+Android and iOS show one interstitial when Continue is pressed on the level-complete screen. The score stays visible until that press. The next level loads after the ad closes. If the network has nothing ready, Continue opens the next level immediately. Replay, Title, death, and Hades do not show an ad. Level 5 has no next level, so it does not request one.
+
+The project uses Google's sample app ids and interstitial units, which fill with test ads on a development device. Replace the app ids in Project Settings under AdMob, and the unit ids in `scenes/ui/level_ads.gd`, with the ids from your AdMob apps before a store build. Sample units left in a published app can get the AdMob account suspended.
+
+The first iOS export adds the Google Mobile Ads package to the Xcode project. Xcode downloads it on the first build, which needs a network connection.
 
 ## Verification
 

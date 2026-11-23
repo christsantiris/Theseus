@@ -4,18 +4,18 @@ const Layout := preload("res://scenes/levels/level_1_layout.gd")
 const LEVEL_WIDTH := Layout.WIDTH
 const LEVEL_HEIGHT := Layout.HEIGHT
 const ENEMY_SCENES := {
-	"raider": preload("res://scenes/enemies/raider.tscn"),
-	"peltast": preload("res://scenes/enemies/peltast.tscn"),
-	"hoplite": preload("res://scenes/enemies/hoplite.tscn"),
-	"telchine": preload("res://scenes/enemies/telchine.tscn"),
-	"spartoi": preload("res://scenes/enemies/spartoi.tscn"),
-	"bird": preload("res://scenes/enemies/stymphalian_bird.tscn"),
-	"lamia": preload("res://scenes/enemies/lamia.tscn"),
-	"cyclops": preload("res://scenes/enemies/cyclops_slinger.tscn"),
-	"satyr": preload("res://scenes/enemies/satyr.tscn"),
-	"bronze_bull": preload("res://scenes/enemies/bronze_bull.tscn"),
-	"cerberus_pup": preload("res://scenes/enemies/cerberus_pup.tscn"),
-	"hydra": preload("res://scenes/enemies/hydra.tscn"),
+	"raider": "res://scenes/enemies/raider.tscn",
+	"peltast": "res://scenes/enemies/peltast.tscn",
+	"hoplite": "res://scenes/enemies/hoplite.tscn",
+	"telchine": "res://scenes/enemies/telchine.tscn",
+	"spartoi": "res://scenes/enemies/spartoi.tscn",
+	"bird": "res://scenes/enemies/stymphalian_bird.tscn",
+	"lamia": "res://scenes/enemies/lamia.tscn",
+	"cyclops": "res://scenes/enemies/cyclops_slinger.tscn",
+	"satyr": "res://scenes/enemies/satyr.tscn",
+	"bronze_bull": "res://scenes/enemies/bronze_bull.tscn",
+	"cerberus_pup": "res://scenes/enemies/cerberus_pup.tscn",
+	"hydra": "res://scenes/enemies/hydra.tscn",
 }
 const Difficulty := preload("res://scenes/levels/difficulty.gd")
 const FLASK := preload("res://scenes/pickups/health_flask.tscn")
@@ -83,6 +83,8 @@ func _ready() -> void:
 	hud.show_message(objective, 4.5)
 	if LevelRun.checkpoint_index >= 0:
 		hud.show_message("Restored at shrine — progress recovered.", 3.5)
+	if not next_level.is_empty():
+		LevelAds.prepare()
 
 
 func _build_encounters() -> void:
@@ -123,7 +125,9 @@ func _build_enemies() -> void:
 
 
 func _create_enemy(encounter: Dictionary) -> Node2D:
-	var enemy = ENEMY_SCENES[encounter.kind].instantiate()
+	# Load only the enemy types used by this level, keeping later levels' large
+	# sprite sheets out of memory until their encounters are needed.
+	var enemy = load(ENEMY_SCENES[encounter.kind]).instantiate()
 	enemy.name = encounter.name
 	enemy.position = encounter.position
 	enemy.direction = -1
@@ -209,9 +213,14 @@ func _on_replay_pressed() -> void:
 func _on_next_pressed() -> void:
 	if not _complete or next_level.is_empty():
 		return
-	LevelRun.begin_level(level_number + 1)
-	get_tree().paused = false
-	get_tree().change_scene_to_file(next_level)
+	var destination := next_level
+	var number := level_number
+	var tree := get_tree()
+	LevelAds.show_then(func() -> void:
+		LevelRun.begin_level(number + 1)
+		tree.paused = false
+		tree.change_scene_to_file(destination)
+	)
 
 
 func _on_title_pressed() -> void:

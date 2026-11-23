@@ -26,6 +26,17 @@ LevelRun="*res://scenes/levels/level_run.gd"
 InputBindings="*res://scenes/ui/input_bindings.gd"
 GameMusic="*res://scenes/ui/game_music.gd"
 MobileControls="*res://scenes/ui/mobile_controls.gd"
+LevelAds="*res://scenes/ui/level_ads.gd"
+
+[admob]
+
+general/android/enabled=true
+general/android/app_id="ca-app-pub-3940256099942544~3347511713"
+general/android/enable_r8_optimization=false
+general/android/disable_initialization_optimization=false
+general/android/disable_ad_loading_optimization=false
+general/ios/enabled=true
+general/ios/app_id="ca-app-pub-3940256099942544~1458002511"
 
 [display]
 
@@ -37,6 +48,10 @@ window/stretch/mode="canvas_items"
 window/stretch/scale_mode="integer"
 window/handheld/orientation=4
 window/stretch/scale_mode.mobile="fractional"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/admob/plugin.cfg")
 
 [gui]
 

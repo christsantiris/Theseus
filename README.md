@@ -96,7 +96,15 @@ The Bronze Bull is available in a separate review arena. Jump its committed char
 
 ## Mobile version
 
-Android and iOS share the five levels, artwork, combat, and checkpoints. Landscape touch controls support movement, ducking, jumping, sword attacks, and pause, including simultaneous presses for airborne attacks. Menus have larger touch targets. Tutorial messages sit above the controls, and gameplay pauses when the app loses focus.
+Android and iOS share the five levels, artwork, combat, and checkpoints. Landscape touch controls support movement, ducking, jumping, sword attacks, and pause, including simultaneous presses for airborne attacks. Menus have larger touch targets. Tutorial messages sit above the controls, and gameplay pauses when the app loses focus. After a level is cleared, Continue plays a short full-screen ad and then opens the next level. Desktop and the web build skip that ad.
+
+Start the installed Pixel 8 Android emulator on this Mac:
+
+```bash
+"$HOME/Library/Android/sdk/emulator/emulator" -avd Pixel_8
+```
+
+Keep that terminal open while the emulator runs. On another Mac, use `"$HOME/Library/Android/sdk/emulator/emulator" -list-avds` to find its virtual device names and replace `Pixel_8` as needed.
 
 Preview the controls with a mouse on desktop:
 
@@ -105,6 +113,17 @@ tools/play_mobile.sh        # title screen
 tools/play_mobile.sh 2      # Level 2
 tools/play_mobile.sh 5 1    # Level 5, first shrine
 ```
+
+Start the installed iPhone 17 Pro simulator on this Mac:
+
+```bash
+xcrun simctl bootstatus 7789BA5B-D179-4740-A908-29924052D442 -b
+open -a /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID 7789BA5B-D179-4740-A908-29924052D442
+```
+
+The first command boots the virtual iPhone if needed and waits until it is ready; the second opens its window. The device ID is specific to this Mac. Use `xcrun simctl list devices available` to find an ID on another Mac.
+
+To run Theseus, open `builds/ios/Theseus.xcodeproj` in Xcode, select an iPhone Simulator run destination, and press **Command-R**.
 
 [Mobile setup and device testing](docs/mobile.md) covers the Android APK and iOS Xcode export. iOS requires your Apple Developer Team ID before Godot can export it.
 
