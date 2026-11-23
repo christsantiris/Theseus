@@ -50,7 +50,7 @@ func refresh() -> void:
 	_rows.add_child(_hint)
 
 	if MobileControls.enabled:
-		for text in ["Left / Right: move", "Jump: hold for a higher jump", "Duck: hold to crouch", "Sword: tap to attack", "In air: Duck + Sword = downward thrust", "Pause: top-right button"]:
+		for text in ["Left / Right: move", "Jump: tap for a full jump", "Duck: hold to crouch", "Sword: tap, or slide from Jump", "In air: Duck + Sword = downward thrust", "Pause: top-right button"]:
 			var label := Label.new()
 			label.text = text
 			label.theme_type_variation = &"CarvedLabel"

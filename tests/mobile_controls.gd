@@ -128,6 +128,7 @@ func _run() -> void:
 	_touch("jump", 1, false)
 	_touch("attack", 2, false)
 	await _frames(40)
+	await _verify_one_thumb_air_attacks(player)
 	_touch("move_left", 0, true)
 	await _frames()
 	_drag("move_right", 0)
@@ -180,6 +181,96 @@ func _run() -> void:
 	_expect(not controls.buttons.jump.visible, "Hades has no gameplay controls")
 	_check_button_bounds(current_scene)
 	_finish()
+
+
+func _reset_player(player: Node, start: Vector2) -> void:
+	for action in controls.buttons:
+		Input.action_release(action)
+	player.position = start
+	player.velocity = Vector2.ZERO
+	player.health = 5
+	player._hurt_lock = 0.0
+	player._finish_attack()
+	player.sprite.flip_h = false
+	await _frames(4)
+
+
+func _jump_rise(player: Node, touch: bool) -> float:
+	# Tap Jump for 50 ms, as a thumb or a quick key press does.
+	var floor_y: float = player.position.y
+	var highest := floor_y
+	if touch:
+		_touch("jump", 1, true)
+	else:
+		Input.action_press("jump")
+	for frame in 50:
+		if frame == 3:
+			if touch:
+				_touch("jump", 1, false)
+			else:
+				Input.action_release("jump")
+		await _frames(1)
+		highest = minf(highest, player.position.y)
+	return floor_y - highest
+
+
+func _one_thumb_strike(player: Node, start: Vector2, jump_at: int) -> bool:
+	await _reset_player(player, start)
+	var bird: Node = load("res://scenes/enemies/stymphalian_bird.tscn").instantiate()
+	bird.position = start + Vector2(62, -44)
+	bird.direction = -1
+	bird.patrol_left = 0
+	bird.patrol_right = 400
+	player.get_parent().add_child(bird)
+	var won := false
+	# The right thumb taps Jump for 67 ms, then reaches Sword 133 ms later.
+	for frame in 120:
+		if frame == jump_at:
+			_touch("jump", 1, true)
+		elif frame == jump_at + 4:
+			_touch("jump", 1, false)
+		elif frame == jump_at + 12:
+			_touch("attack", 1, true)
+		elif frame == jump_at + 15:
+			_touch("attack", 1, false)
+		await _frames(1)
+		if player.health < 5:
+			break
+		if not bird.alive:
+			won = true
+			break
+	for action in ["jump", "attack"]:
+		if controls.is_touching(action):
+			_touch(action, 1, false)
+	bird.free()
+	return won
+
+
+func _verify_one_thumb_air_attacks(player: Node) -> void:
+	await _frames(40)
+	var start: Vector2 = player.position
+	_expect(player.is_on_floor(), "Air-attack checks start on level ground")
+	var touch_rise := await _jump_rise(player, true)
+	_expect(touch_rise > 36.0, "A quick touch tap on Jump still reaches full height (%.1f px)" % touch_rise)
+	await _reset_player(player, start)
+	var key_rise := await _jump_rise(player, false)
+	_expect(key_rise < 25.0, "A quick keyboard tap still makes a short hop (%.1f px)" % key_rise)
+	await _reset_player(player, start)
+	_touch("jump", 1, true)
+	await _frames(6)
+	_drag("attack", 1)
+	await _frames(1)
+	_expect(Input.is_action_pressed("attack") and Input.is_action_pressed("jump") and player.sprite.animation == "air_swing", "Sliding a thumb from Jump onto Sword swings in the air")
+	_touch("attack", 1, false)
+	await _frames(50)
+	_expect(_all_released() and player.is_on_floor(), "Lifting the sliding thumb releases Jump and Sword")
+	var wins := 0
+	for jump_at in range(0, 40, 2):
+		if await _one_thumb_strike(player, start, jump_at):
+			wins += 1
+	# Before touch jumps kept full height, this pattern never reached the bird.
+	_expect(wins >= 6, "One thumb (tap Jump, then Sword) defeats a high bird across a usable timing window (%d of 20)" % wins)
+	await _reset_player(player, start)
 
 
 func _finish() -> void:

@@ -4,7 +4,7 @@ The same Godot project targets Android and iOS. All five levels use the existing
 
 ## Controls and display
 
-Hold Left or Right to walk, or slide between the arrows to change direction. Hold Duck to crouch. Hold Jump for a full jump; release it early for a short jump. Tap Sword to attack. Jump + Sword performs an airborne slash; while airborne, Duck + Sword performs the downward thrust. These actions accept separate fingers at the same time.
+Hold Left or Right to walk, or slide between the arrows to change direction. Hold Duck to crouch. Tap Jump for a full jump: touch jumps keep their height when the thumb lifts, so the same thumb can reach Sword mid-jump. Tap Sword to attack, or slide a thumb from Jump onto Sword. Keyboard and gamepad keep hold-for-height jumps. Jump + Sword performs an airborne slash; while airborne, Duck + Sword performs the downward thrust. These actions accept separate fingers at the same time.
 
 The top-right button pauses and resumes. Gameplay controls hide in menus, during death, and when entering the exit temple. Returning from another app leaves gameplay paused and releases held touches. Android Back toggles pause in a level and closes the title's Controls screen.
 
@@ -151,6 +151,6 @@ The artwork check verifies mobile-safe texture dimensions, complete atlas region
 
 The rendering check reads back the actual world targets, verifies screen markers through the world and final composition for all five levels, compares identical movement/jump/sword-frame histories across profiles, checks left/right safe-area layouts and display resizes, and sends a real mouse click through the presentation layer to a title button. [Performance measurements](performance.md#mobile-rendering-budget) separate hardware browser results from software-rendered simulators.
 
-Before accepting a device build, play each level and check simultaneous touches, short and full jumps, sword timing, ducking under birds, spike-pit recovery, temple entry, pause/resume, and checkpoint loading. Check both landscape directions, notched screens, interruption by another app, frame rate, audio, and heat. Desktop simulation and package validation do not establish device performance or battery use.
+Before accepting a device build, play each level and check simultaneous touches, one-thumb Jump-then-Sword strikes against high birds, sword timing, ducking under birds, spike-pit recovery, temple entry, pause/resume, and checkpoint loading. Check both landscape directions, notched screens, interruption by another app, frame rate, audio, and heat. Desktop simulation and package validation do not establish device performance or battery use.
 
 Generated builds live in the ignored `builds/` directory. Export credentials and Godot's `.godot/` cache remain ignored.

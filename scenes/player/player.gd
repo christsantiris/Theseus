@@ -34,6 +34,10 @@ var _swing: AudioStreamPlayer
 var _swing_token := 0
 var _land: AudioStreamPlayer
 var _jumped := false
+# Touch jumps always reach full height. The right thumb has to leave Jump to
+# press Sword, so lifting it must not cut the jump short. Keyboard and gamepad
+# jumps keep hold-for-height.
+var _full_jump := false
 var _was_airborne := false
 var _hurt_lock := 0.0
 var _sword: Area2D
@@ -101,9 +105,10 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump") and is_on_floor() and not ducking:
 		velocity.y = JUMP_VELOCITY
 		_jumped = true
+		_full_jump = _jump_touched()
 		jumped_this_frame = true
 		ducking = false
-	if Input.is_action_just_released("jump") and velocity.y < 0.0:
+	if Input.is_action_just_released("jump") and velocity.y < 0.0 and not _full_jump:
 		velocity.y *= 0.45
 
 	if Input.is_action_just_pressed("attack") and not ducking:
@@ -354,6 +359,11 @@ func _strike() -> void:
 		elif target.has_method("cut"):
 			_swing_hits[id] = true
 			target.cut()
+
+
+func _jump_touched() -> bool:
+	var controls := get_node_or_null("/root/MobileControls")
+	return controls != null and controls.enabled and controls.is_touching("jump")
 
 
 func _finish_attack() -> void:

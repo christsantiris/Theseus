@@ -73,7 +73,9 @@ func _add_button(action: String, caption: String) -> void:
 	var button := TouchScreenButton.new()
 	button.name = action
 	button.action = action
-	button.passby_press = action in ["move_left", "move_right", "duck"]
+	# Sliding presses these. Sword included: a thumb can slide off Jump onto it
+	# mid-jump without lifting.
+	button.passby_press = action in ["move_left", "move_right", "duck", "attack"]
 	var shape := CircleShape2D.new()
 	shape.radius = 12 if action == "pause" else RADIUS + 1
 	button.shape = shape
@@ -88,6 +90,10 @@ func _add_button(action: String, caption: String) -> void:
 	buttons[action] = button
 	_faces[action] = face
 	button.hide()
+
+
+func is_touching(action: String) -> bool:
+	return _faces.has(action) and _faces[action].pressed
 
 
 func _set_pressed(action: String, pressed: bool) -> void:
