@@ -27,7 +27,7 @@ godot --path . -- --mobile-controls
 
 ## Android
 
-The `Android` export preset builds an ARM64 debug APK, package `com.theseus.adventure`, version `0.1.0`. It uses Godot's prebuilt template and does not require a Gradle project. The current template requires Android 7.0/API 24 or later and OpenGL ES 3.0. The preset requests no Internet permission.
+The `Android` export preset builds a debug APK with ARM64 for phones and x86_64 for Intel emulators, package `com.theseus.adventure`, version `0.1.0`. It uses Godot's prebuilt template and does not require a Gradle project. The current template requires Android 7.0/API 24 or later and OpenGL ES 3.0. The preset requests no Internet permission.
 
 Install export templates matching your Godot version through **Editor → Manage Export Templates**. Configure Java SDK Path and Android SDK Path in **Editor Settings → Export → Android**. See [Godot's Android export instructions](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_android.html) for SDK setup.
 
@@ -47,6 +47,23 @@ adb shell am start -n com.theseus.adventure/com.godot.game.GodotApp
 
 You can also copy the APK to the phone and open it there. The debug APK is for local testing. Store distribution needs a release keystore, an Android App Bundle export using Gradle, and a final package identifier. Keep signing credentials out of Git.
 
+### Android emulator
+
+This Mac has an x86_64 virtual device named `Pixel_8`. Start it in a terminal:
+
+```sh
+"$HOME/Library/Android/sdk/emulator/emulator" -avd Pixel_8
+```
+
+Once Android's home screen appears, rebuild the APK using the export command above. In another terminal, install and launch it:
+
+```sh
+"$HOME/Library/Android/sdk/platform-tools/adb" -e install -r builds/android/theseus.apk
+"$HOME/Library/Android/sdk/platform-tools/adb" -e shell am start -n com.theseus.adventure/com.godot.game.GodotApp
+```
+
+`-e` selects the emulator instead of a connected physical phone. If using another computer, list its virtual devices with `emulator -list-avds` and substitute the name. No architecture changes in Godot's UI are needed.
+
 ## iOS
 
 The `iOS` preset targets ARM64 iPhones and iPads running iOS 15 or later. It exports an Xcode project, with bundle identifier `com.theseus.adventure` and version `0.1.0`. The existing title backdrop supplies a development app icon; choose final square icon artwork before distribution.
@@ -54,11 +71,20 @@ The `iOS` preset targets ARM64 iPhones and iPads running iOS 15 or later. It exp
 Install matching Godot export templates and Xcode on macOS. Open **Project → Export → iOS** to review the configured 10-character **App Store Team ID**. Godot requires a valid Team ID and bundle identifier even for a project-only export; use a Team ID belonging to your development team. See [Godot's iOS export instructions](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_ios.html).
 
 ```sh
-mkdir -p builds/ios
-godot --headless --path . --export-debug iOS builds/ios/Theseus.zip
+tools/export_ios.sh
 ```
 
+The helper requires Python 3 and Xcode's command-line tools, and uses `GODOT` if set. It exports the game, then sets **Architectures** to `$(ARCHS_STANDARD)` in every generated Xcode build configuration. It also inspects the actual simulator library and adds an iOS Simulator architecture override matching its available slices. The installed template contains x86_64 simulator code, so simulator builds use x86_64 while physical iPhone/iPad builds retain ARM64. Use the helper for subsequent exports: exporting directly through Godot's UI or CLI writes the template's ARM64-only settings again. The generated Xcode project remains in the ignored `builds/ios/` directory.
+
 Open the generated Xcode project in the export directory, select your development team under **Signing & Capabilities**, connect an iPhone or iPad, choose it as the run destination, and run. Xcode manages the device's signing and provisioning. App Store or TestFlight publishing is a separate step.
+
+### iOS Simulator
+
+```sh
+open builds/ios/Theseus.xcodeproj
+```
+
+In Xcode, choose the **Theseus** scheme and an **iPhone Simulator** run destination, then press **Command-R**. If no simulator is available, install an iOS Simulator runtime through **Xcode → Settings → Components**. The game's Compatibility renderer and the exported simulator library support this path; no manual architecture edits are needed after running `tools/export_ios.sh`.
 
 ## Verification
 

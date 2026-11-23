@@ -9,6 +9,18 @@
 - When a file contains changes from multiple tasks, preserve those edits and
   distinguish the current task's hunks in the handoff.
 
+## Desktop and mobile compatibility
+
+- All changes must remain compatible with desktop, iOS, and Android. Preserve
+  desktop keyboard/mouse controls and mobile touch controls, including
+  simultaneous inputs needed for gameplay.
+- Keep gameplay, UI, artwork, and export configuration usable across supported
+  platforms. Account for mobile screen sizes, safe areas, landscape orientation,
+  and app pause/resume behavior when relevant.
+- Validate affected behavior on both desktop and mobile using appropriate tests,
+  builds, or simulator/device checks. Report any validation that could not be
+  completed; do not claim platform compatibility based on desktop checks alone.
+
 ## Documentation
 
 - Add files to `docs/` only when the README or the game uses them, such as README
