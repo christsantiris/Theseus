@@ -86,7 +86,7 @@ Two spike recesses reuse Level 4's bronze spikes and damage-and-escape mechanic:
 | Pit | Left edge | Rim Y | Width / depth |
 | --- | --- | --- | --- |
 | CausewayPit | 2080 | 280 | 32 / 24 |
-| SanctuaryPit | 4160 | 264 | 32 / 24 |
+| SanctuaryPit | 4192 | 280 | 32 / 24 |
 
 Falling onto a pit bed costs one health bar. Hold Jump and move toward either
 rim to climb out; there is no automatic ejection. The 1.25-second interval

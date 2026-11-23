@@ -63,6 +63,8 @@ func _run() -> void:
 			_expect(rectangle == pieces[index], "%s piece %d keeps its exact collision rectangle" % [prefix, index])
 			_expect(bool(body.get_meta("spike_pit", false)) == Mountain.is_spike_floor(rectangle), "Spike-floor metadata stays synchronized for %s piece %d" % [prefix, index])
 	for pit: Dictionary in Mountain.PITS:
+		var rims := maxf(Mountain.surface_at(pit.position.x - 1), Mountain.surface_at(pit.position.x + pit.width))
+		_expect(pit.position.y == rims, "%s rim sits at the lowest neighboring ground, so it reads as a recess" % pit.name)
 		var opening := Rect2(pit.position + Vector2(1, 0), Vector2(pit.width - 2, pit.depth - 1))
 		for rectangle in solid_rectangles:
 			_expect(not rectangle.intersects(opening), "%s remains recessed without an invisible bridge" % pit.name)

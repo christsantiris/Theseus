@@ -142,7 +142,7 @@ func _draw() -> void:
 		_draw_terrain(platform)
 	for ledge: Rect2 in Gorge.BONUS_LEDGES:
 		_retaining_stone(ledge)
-	for x in [96, 688, 1392, 1936, 2704, 3552, 4216]:
+	for x in [96, 688, 1392, 1936, 2704, 3552, 4312]:
 		var height := 44.0
 		var width := height * COLUMN.get_width() / float(COLUMN.get_height())
 		draw_texture_rect(COLUMN, Rect2(x - width * 0.5, Gorge.surface_at(x) - height, width, height), false)

@@ -69,6 +69,8 @@ func _run() -> void:
 		_expect(rectangle == Gorge.BONUS_LEDGES[index], "Bull ledge %d retains its exact position and dimensions" % index)
 		_expect(collision.one_way_collision and collision.one_way_collision_margin == 2, "Bull ledge %d retains its one-way approach and clear charging lane" % index)
 	for pit: Dictionary in Gorge.PITS:
+		var rims := maxf(Gorge.surface_at(pit.position.x - 1), Gorge.surface_at(pit.position.x + pit.width))
+		_expect(pit.position.y == rims, "%s rim sits at the lowest neighboring ground, so it reads as a recess" % pit.name)
 		var opening := Rect2(pit.position + Vector2(1, 0), Vector2(pit.width - 2, pit.depth - 1))
 		for rectangle in solid_rectangles:
 			_expect(not rectangle.intersects(opening), "%s remains recessed without an invisible bridge" % pit.name)
@@ -83,7 +85,7 @@ func _run() -> void:
 		var expected := Rect2(-16, -128, 16, 512) if body_name == "LeftBoundary" else Rect2(Gorge.WIDTH, -128, 16, 512)
 		_expect(rectangle == expected, "%s keeps its original collision rectangle" % body_name)
 	var camera := level.player.get_node("Camera2D") as Camera2D
-	for point: Vector2 in [Vector2(48, 280), Vector2(992, 232), Vector2(2400, 232), Vector2(3184, 168), Vector2(3900, 232), Vector2(4720, 280), Vector2(2096, 304), Vector2(4176, 288), Vector2(600, 224), Vector2(3384, 112)]:
+	for point: Vector2 in [Vector2(48, 280), Vector2(992, 232), Vector2(2400, 232), Vector2(3184, 168), Vector2(3900, 232), Vector2(4720, 280), Vector2(2096, 304), Vector2(4208, 304), Vector2(600, 224), Vector2(3384, 112)]:
 		level.player.position = point
 		camera.reset_smoothing()
 		camera.force_update_scroll()

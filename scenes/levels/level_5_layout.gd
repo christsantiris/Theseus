@@ -22,15 +22,17 @@ const PLATFORMS := [
 	Rect2(2960, 168, 512, 112),
 	Rect2(3472, 184, 112, 96), Rect2(3584, 200, 112, 80),
 	Rect2(3696, 216, 112, 64), Rect2(3808, 232, 256, 48),
-	Rect2(4064, 248, 64, 32), Rect2(4128, 264, 64, 16),
+	Rect2(4064, 248, 64, 32), Rect2(4128, 264, 32, 16),
 ]
 
 # These ledges can be reached from a staggered bull. The main route never
 # requires a ride, and their one-way tops leave the charging lane clear.
 const BONUS_LEDGES := [Rect2(544, 224, 112, 8), Rect2(3328, 112, 112, 8)]
+# A pit's rim sits at the lowest neighboring ground, so it always reads as a
+# recess. Placing one inside a raised step leaves its far wall standing proud.
 const PITS := [
 	{"name": "CausewayPit", "position": Vector2(2080, 280), "width": 32.0, "depth": 24.0},
-	{"name": "SanctuaryPit", "position": Vector2(4160, 264), "width": 32.0, "depth": 24.0},
+	{"name": "SanctuaryPit", "position": Vector2(4192, 280), "width": 32.0, "depth": 24.0},
 ]
 
 const ENEMIES := [
