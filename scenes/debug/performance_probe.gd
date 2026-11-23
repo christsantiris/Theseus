@@ -42,6 +42,9 @@ func _drawn() -> void:
 
 
 func _run() -> void:
+	# Exclude letterbox margins. Window ViewportTexture dimensions can include
+	# an extra stretch factor; this is the actual drawable 2D target instead.
+	var ui_pixels := Vector2i((get_window().get_visible_rect().size * get_window().get_stretch_transform().get_scale()).round())
 	report = {
 		"os": OS.get_name(), "architecture": Engine.get_architecture_name(),
 		"renderer": RenderingServer.get_video_adapter_name(),
@@ -49,6 +52,9 @@ func _run() -> void:
 		"window_pixels": [get_window().size.x, get_window().size.y],
 		"logical_size": [get_window().content_scale_size.x, get_window().content_scale_size.y],
 		"scale_mode": get_window().content_scale_mode,
+		"render_profile": MobileRendering.profile,
+		"world_target_pixels": [MobileRendering.world_viewport.size.x, MobileRendering.world_viewport.size.y] if is_instance_valid(MobileRendering.world_viewport) else [ui_pixels.x, ui_pixels.y],
+		"ui_target_pixels": [ui_pixels.x, ui_pixels.y],
 		"level": number, "requested_seconds": seconds,
 	}
 	var title_start := Time.get_ticks_usec()

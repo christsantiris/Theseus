@@ -99,6 +99,8 @@ The Bronze Bull is available in a separate review arena. Jump its committed char
 
 Android and iOS share the five levels, artwork, combat, and checkpoints. Landscape touch controls support movement, ducking, jumping, sword attacks, and pause, including simultaneous presses for airborne attacks. Menus have larger touch targets. Tutorial messages sit above the controls, and gameplay pauses when the app loses focus. After a level is cleared, Continue plays a short full-screen ad and then opens the next level. Desktop and the web build skip that ad.
 
+Phones render the world at 1280×720 while keeping HUD, menus, and touch controls at display resolution. A 960×540 option reduces world rendering further; simulators use a separate 320×180 preview. All profiles retain the same 320×180 game coordinates. Desktop keeps native rendering. Compare the phone budgets with `tools/play_mobile.sh 1 --mobile-render=720` and `tools/play_mobile.sh 1 --mobile-render=540`; see the [rendering profiles](docs/mobile.md#rendering-profiles).
+
 Start the installed Pixel 8 Android emulator on this Mac:
 
 ```bash

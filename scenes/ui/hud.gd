@@ -13,6 +13,7 @@ var _message_backdrop: Panel
 var _message_time := 0.0
 var _message_priority := 0
 var _speed_status: Label
+var _last_safe_rect := Rect2()
 
 
 func _ready() -> void:
@@ -68,15 +69,38 @@ func _ready() -> void:
 		_message_backdrop.position.y = 116
 		_message.position.y = 120
 		_speed_status.position.y = 102
+		_layout_mobile()
 
 
 func _process(delta: float) -> void:
+	if MobileControls.enabled:
+		_layout_mobile()
 	if _message_time <= 0.0:
 		return
 	_message_time = maxf(0.0, _message_time - delta)
 	if _message_time <= 0.0:
 		_message.hide()
 		_message_backdrop.hide()
+
+
+func _layout_mobile(safe := Rect2()) -> void:
+	if not safe.has_area():
+		safe = MobileControls._safe_rect()
+	if safe.is_equal_approx(_last_safe_rect):
+		return
+	_last_safe_rect = safe
+	_root.offset_left = safe.position.x
+	_root.offset_top = safe.position.y
+	_root.offset_right = safe.end.x - get_viewport().get_visible_rect().size.x
+	_root.offset_bottom = safe.end.y - get_viewport().get_visible_rect().size.y
+	_area.size.x = maxf(0.0, safe.size.x - 192.0)
+	_area.clip_text = true
+	_message_backdrop.size.x = maxf(0.0, safe.size.x - 12.0)
+	_message.size.x = maxf(0.0, safe.size.x - 20.0)
+	var message_top := maxf(0.0, minf(116.0, safe.size.y - 64.0))
+	_message_backdrop.position.y = message_top
+	_message.position.y = message_top + 4.0
+	_speed_status.position.y = maxf(0.0, message_top - 14.0)
 
 
 func set_area(title: String) -> void:

@@ -12,6 +12,32 @@ The game uses either landscape orientation and retains its 320×180 gameplay vie
 
 Character sheets keep their full-resolution artwork and transparency, with frames arranged into rows so every texture fits within 4096×4096. Frame sizes, animation timing, and collision shapes are unchanged. Display safe areas are converted from physical screen pixels to game coordinates, including letterboxing, so movement and action buttons remain separated on phones and tablets.
 
+## Rendering profiles
+
+Physical Android/iOS devices and mobile web browsers default to a **1280×720 world render target**. The world still uses 320×180 coordinates, the same root camera and zoom, physics world, collisions, movement, and attack timing. Scenery, platforms, and characters render into a shared-world `SubViewport`; a presentation layer displays that texture behind the original UI. Scenes stay direct children of the root, preserving scene changes, reloads, checkpoints, and pause behavior.
+
+HUD, menus, and touch controls render at display resolution on phone profiles. HUD content and touch buttons follow the reported safe display area in either landscape direction. A lower world resolution does not shrink or blur those controls. The root viewport still has a native-resolution composition pass; the budget caps world shading rather than every display pixel.
+
+| Profile | World target | UI target | Default |
+| --- | --- | --- | --- |
+| `720` | 1280×720 | Display resolution | Physical phones/tablets and mobile web |
+| `540` | 960×540 | Display resolution | Optional lower-cost mode |
+| `preview` | 320×180 | 320×180, then upscaled | Detected iOS/Android simulators |
+| `native` | Display resolution | Display resolution | Desktop |
+
+Set **`rendering/mobile/world_profile`** to `"540"` in `project.godot` for a native phone build using the lower budget. **`rendering/mobile/simulator_profile`** defaults to `"preview"`; set it to `"720"` or `"540"` to inspect phone rendering on an emulator. Intel iOS and Android emulator models are detected; Apple Silicon iOS Simulator is identified by its simulator environment. Physical-device speed and image quality still require phone testing.
+
+Compare profiles on desktop without changing its normal defaults:
+
+```sh
+tools/play_mobile.sh 1 --mobile-render=720
+tools/play_mobile.sh 1 --mobile-render=540
+tools/play_mobile.sh 1 --mobile-render=preview
+tools/play_mobile.sh 1 --mobile-render=native
+```
+
+The wrapper also accepts engine flags, for example `tools/play_mobile.sh 1 --resolution 1600x900 --mobile-render=540`. Direct Godot launches put the profile after `--`: `godot --path . -- --mobile-controls --mobile-render=720`. A web build accepts `?render=720`, `?render=540`, `?render=preview`, or `?render=native` for comparison. None of these choices changes texture compression or source artwork.
+
 ## Preview on desktop
 
 ```sh
@@ -90,7 +116,7 @@ open builds/ios/Theseus.xcodeproj
 
 In Xcode, choose the **Theseus** scheme and an **iPhone Simulator** run destination, then press **Command-R**. If no simulator is available, install an iOS Simulator runtime through **Xcode → Settings → Components**. The game's Compatibility renderer and the exported simulator library support this path; no manual architecture edits are needed after running `tools/export_ios.sh`.
 
-On this Intel Mac, profiling showed the iOS Simulator's OpenGL renderer rasterizing on the CPU. The iOS x86_64 build therefore renders a 320×180 offscreen preview and scales it to the simulated display. This preview is visibly lower resolution and can still run below the game's target frame rate. Desktop and physical iOS/Android devices retain full-resolution Canvas Items rendering. Use the desktop touch preview for smoother local gameplay checks, and test on a physical phone to assess mobile graphics performance.
+On this Intel Mac, profiling showed the iOS Simulator's OpenGL renderer rasterizing on the CPU. Detected simulators therefore use the separate 320×180 `preview` profile, including the UI, and scale it to the simulated display. This preview is visibly lower resolution and can still run below the game's target frame rate. Phone profiles use a fixed world budget with native-resolution UI. Use the desktop preview commands above for smoother quality comparisons, and test on a physical phone to assess mobile graphics performance.
 
 ## Ads
 
@@ -108,11 +134,16 @@ The mobile interaction check sends actual Godot touch and drag events through th
 godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60 -- --mobile-controls
 godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60
 godot --headless --path . --script res://tests/mobile_art.gd
+godot --path . --script res://tests/mobile_rendering.gd --fixed-fps 60 -- --mobile-controls
+godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60 -- --mobile-controls --mobile-render=720
+godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60 -- --mobile-controls --mobile-render=540
 ```
 
 The second command checks desktop controls and integer scaling. The existing combat, animation, Hades, and five level smoke tests also run without mobile controls.
 
 The artwork check verifies mobile-safe texture dimensions, complete atlas regions, and visible pixels for Theseus and every enemy type. The touch checks include physical display insets on an iPhone, an Android phone, and a tablet.
+
+The rendering check reads back the actual world targets, verifies screen markers through the world and final composition for all five levels, compares identical movement/jump/sword-frame histories across profiles, checks left/right safe-area layouts and display resizes, and sends a real mouse click through the presentation layer to a title button. [Performance measurements](performance.md#mobile-rendering-budget) separate hardware browser results from software-rendered simulators.
 
 Before accepting a device build, play each level and check simultaneous touches, short and full jumps, sword timing, ducking under birds, spike-pit recovery, temple entry, pause/resume, and checkpoint loading. Check both landscape directions, notched screens, interruption by another app, frame rate, audio, and heat. Desktop simulation and package validation do not establish device performance or battery use.
 

@@ -69,3 +69,47 @@ The JSON records the adapter, window and logical sizes, title/startup timing, le
 For a mobile or web export, use a temporary project copy: set its main scene to `res://scenes/debug/performance_probe.tscn` and remove `scenes/debug/*` from that copy's export exclusions. Normal exports deliberately exclude this scene. Export and install using the [mobile guide](mobile.md). The default exercise takes 20 seconds and writes `user://performance.json`; web also exposes the result as `window.theseusBenchmark` for browser developer tools. On iOS Simulator, retrieve the JSON from the app data container's `Documents` directory. On a debug Android APK, read it with `adb shell run-as com.theseus.adventure cat files/performance.json`. Restore the ordinary playable build after testing. Do not publish the benchmark scene as the game.
 
 Keep raw JSON, logs, captures, and temporary export copies outside the repository. Compare the same input exercise, renderer, dimensions, build mode, and artwork revision. Measure physical phones separately from software-rendered emulators.
+
+## Mobile rendering budget
+
+The second milestone adds `720`, `540`, and `preview` profiles. Physical Android/iOS devices and mobile web use a 1280×720 world target by default; 960×540 is the lower-cost option. Desktop retains its original native rendering. Detected simulators default to a separate 320×180 preview, including its UI. See [profile selection and preview commands](mobile.md#rendering-profiles).
+
+The phone profiles draw the existing shared `World2D` through a fixed-size `SubViewport` with a 320×180 2D override. The original root camera remains active, and its completed transform is copied before drawing. A presentation layer displays the result; HUD, menus, and touch controls stay on the native-resolution UI viewport. There is still a native-size composition pass. Source artwork, texture imports, world coordinates, scene ownership, physics, collisions, and attack timing are unchanged.
+
+### Available-target comparison
+
+These are separate 20-second Level 1 development runs using the existing scripted exercise and two-second warmup. Chrome used a Radeon Pro 5300 with a phone-sized 2622×1206 physical display at DPR 3; its results are Mac GPU measurements, not iPhone Safari measurements. Native iOS used Apple Software Renderer; native Android used the emulator's SwiftShader. The Android probes used the standard non-Gradle template without the native AdMob plugin, so this does not validate the production Android Gradle/ads integration.
+
+| Target and profile | Loop FPS | P95 frame | Worst frame | Texture counter, MiB |
+| --- | ---: | ---: | ---: | ---: |
+| Chrome / Radeon, `native` | 60.0 | 17.7 ms | 23.3 ms | 222.03 |
+| Chrome / Radeon, `720` | 60.0 | 17.8 ms | 22.5 ms | 229.06 |
+| Chrome / Radeon, `540` | 60.0 | 17.6 ms | 20.6 ms | 225.99 |
+| iOS Simulator / software, `720` | 3.9 | 283.4 ms | 300.2 ms | 229.06 |
+| iOS Simulator / software, `540` | 5.2 | 217.0 ms | 232.9 ms | 225.99 |
+| iOS Simulator / software, `preview` | 18.2 | 90.0 ms | 129.2 ms | 203.18 |
+| Android emulator / software, `native` | 7.1 | 199.9 ms | 230.8 ms | 218.12 |
+| Android emulator / software, `720` | 7.5 | 190.8 ms | 234.8 ms | 225.15 |
+| Android emulator / software, `540` | 9.2 | 144.2 ms | 203.7 ms | 222.08 |
+| Android emulator / software, `preview` | 14.8 | 92.4 ms | 138.8 ms | 203.18 |
+
+Chrome remained at its approximately 60 FPS cap across all profiles. Software-rendered simulators benefited from the cheaper preview; their low phone-profile frame rates do not establish physical-phone performance. The extra world framebuffer increases the texture counter by about 7.03 MiB at 720p or 3.96 MiB at 540p. This is a shading budget, not a texture-memory optimization. Compression is unchanged.
+
+The benchmark now records `render_profile`, `world_target_pixels`, and `ui_target_pixels`. Native framebuffer dimensions exclude letterbox margins; physical window dimensions are recorded separately. The renderer regression compares the derived UI dimensions against an actual framebuffer readback. A separate five-second metadata check measured a 2144×1206 native gameplay framebuffer within the 2622×1206 window. The 720p and 540p targets reduce world pixel count by about 64% and 80% respectively; UI stays at 2144×1206. That check also confirmed automatic 720p selection for a touch-enabled Mac user agent, the iPadOS desktop-page case. The earlier comparison probe reported physical window dimensions for `native`; its FPS measurements remain valid, but that field should not be used to calculate the native world's pixel count.
+
+### Verification and remaining device checks
+
+The renderer check passed for all five levels at 720p, 540p, and preview resolution. It verifies actual texture sizes and screen-space markers in both the world target and final composition, unchanged root camera/zoom and scene ownership, identical movement/jump/sword animation histories against native rendering, resize/portrait-transition bounds, landscape safe-area fixtures, and title-button clicks through the presentation layer. Desktop and simultaneous-touch checks passed, including jump/sword and downward thrust, and the existing combat checks passed with the budget enabled. A small render-test capture and raw probe data stay outside the repository.
+
+HUD score, health, titles, messages, and controls were inspected at native UI resolution in the iOS Simulator. Messages and speed status move above the touch targets when the home-indicator inset reduces usable height. Android's input service reported both landscape rotations (1 and 3) with a 2400×1080 display; reverse-rotation screenshot capture was incomplete. Physical-device visual rotation, readability, sustained frame rate, and thermal behavior still require testing. The iOS Simulator must remain foregrounded during profiling; a backgrounded attempt was discarded.
+
+```sh
+# Renderer-backed framing and gameplay regression:
+godot --path . --script res://tests/mobile_rendering.gd --fixed-fps 60 -- --mobile-controls
+# Profile-specific interaction checks:
+godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60 -- --mobile-controls --mobile-render=720
+godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60 -- --mobile-controls --mobile-render=540
+# Reproduce a desktop rendering comparison:
+godot --path . res://scenes/debug/performance_probe.tscn -- --mobile-controls --mobile-render=720 --output=/tmp/theseus-720.json
+godot --path . res://scenes/debug/performance_probe.tscn -- --mobile-controls --mobile-render=540 --output=/tmp/theseus-540.json
+```

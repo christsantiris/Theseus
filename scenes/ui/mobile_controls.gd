@@ -52,11 +52,6 @@ func _ready() -> void:
 	if "--mobile-controls" in OS.get_cmdline_user_args():
 		Input.emulate_touch_from_mouse = true
 	get_window().content_scale_stretch = Window.CONTENT_SCALE_STRETCH_FRACTIONAL
-	if OS.get_name() == "iOS" and OS.has_feature("x86_64"):
-		# Intel iOS Simulator emulates OpenGL on the CPU. Render the fixed game
-		# view offscreen instead of shading every Retina display pixel. Desktop
-		# and physical mobile devices retain the full-resolution Canvas Items path.
-		get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
 	if OS.has_feature("mobile"):
 		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 	_layout_root = Control.new()
