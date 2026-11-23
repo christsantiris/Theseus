@@ -3,6 +3,7 @@ extends CharacterBody2D
 signal defeated(points: int)
 
 const FRAME_SIZE := Vector2i(72, 56)
+const Sheet := preload("res://scenes/art/sprite_sheet.gd")
 const FOOT_ROW := 53
 const GRAVITY := 900.0
 const FOCUS_RANGE := 224.0
@@ -279,7 +280,7 @@ func _add_animation(
 	for index in indices:
 		var atlas := AtlasTexture.new()
 		atlas.atlas = texture
-		atlas.region = Rect2(int(index) * FRAME_SIZE.x * art_scale, 0, FRAME_SIZE.x * art_scale, FRAME_SIZE.y * art_scale)
+		atlas.region = Sheet.region(texture, int(index), Vector2(FRAME_SIZE) * art_scale)
 		frames.add_frame(animation_name, atlas)
 
 

@@ -47,7 +47,7 @@ func _add_bull_animation(frames: SpriteFrames, animation_name: String, indices: 
 	for index in indices:
 		var atlas := AtlasTexture.new()
 		atlas.atlas = ART
-		atlas.region = Rect2(index * 96 * ART_SCALE, 0, 96 * ART_SCALE, 56 * ART_SCALE)
+		atlas.region = Sheet.region(ART, int(index), Vector2(96, 56) * ART_SCALE)
 		frames.add_frame(animation_name, atlas)
 
 

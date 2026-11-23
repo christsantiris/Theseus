@@ -4,6 +4,7 @@ signal damaged(head: Node)
 signal severed(head: Node)
 
 const ART := preload("res://assets/art/characters/hydra_heads.png")
+const Sheet := preload("res://scenes/art/sprite_sheet.gd")
 const ART_SCALE := 8.0
 const CELL_SIZE := Vector2(96, 72)
 const BASE := Vector2(24, 68)
@@ -45,7 +46,8 @@ func set_pose(index: int, height: float) -> void:
 	sprite.position = -mouth
 	# Shorter necks sink into the common coils, never below the floor. The body
 	# is drawn in front of their bases; head size remains the same at every height.
-	_atlas.region = Rect2(index * CELL_SIZE.x * ART_SCALE, 0, CELL_SIZE.x * ART_SCALE, minf(CELL_SIZE.y, BASE.y - height) * ART_SCALE)
+	_atlas.region = Sheet.region(ART, index, CELL_SIZE * ART_SCALE)
+	_atlas.region.size.y = minf(CELL_SIZE.y, BASE.y - height) * ART_SCALE
 	queue_redraw()
 
 

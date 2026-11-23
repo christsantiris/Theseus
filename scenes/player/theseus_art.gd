@@ -1,12 +1,12 @@
 extends RefCounted
 
+const Sheet := preload("res://scenes/art/sprite_sheet.gd")
 # Artwork is eight times the logical game size. Keep physics in world units;
 # only the sprite and its texture-space foot anchor use this scale.
 const SCALE := 8.0
 const FRAME_SIZE := Vector2i(576, 448)
 const DOWN_FRAME_SIZE := Vector2i(576, 640)
 const FOOT_ROW := 432.0
-const COLUMNS := 8
 const ART := preload("res://assets/art/characters/theseus.png")
 const DOWN_ART := preload("res://assets/art/characters/theseus_down_thrust.png")
 const SWING_ART := preload("res://assets/art/characters/theseus_swing.png")
@@ -33,7 +33,7 @@ static func texture(index: int, animation: String = "idle") -> AtlasTexture:
 	var downward := animation == "down_thrust"
 	var size := DOWN_FRAME_SIZE if downward else FRAME_SIZE
 	atlas.atlas = DOWN_ART if downward else AIR_SWING_ART if animation == "air_swing" else SWING_ART if animation == "swing" else ART
-	atlas.region = Rect2(Vector2i(index % COLUMNS, index / COLUMNS) * size, size)
+	atlas.region = Sheet.region(atlas.atlas, index, Vector2(size))
 	return atlas
 
 

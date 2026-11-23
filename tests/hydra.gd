@@ -91,9 +91,9 @@ func _until(state: String, limit: int = 180) -> bool:
 func _heads_and_completion() -> void:
 	await _fresh()
 	var art: Image = hydra.Head.ART.get_image()
-	_expect(art.get_size() == Vector2i(4608, 576), "Head atlas has six cinematic poses")
+	_expect(art.get_size() == Vector2i(3072, 1152), "Head atlas has six cinematic poses")
 	for index in 6:
-		var used := art.get_region(Rect2i(index * 768, 0, 768, 576)).get_used_rect()
+		var used := art.get_region(Rect2i((index % 4) * 768, (index / 4) * 576, 768, 576)).get_used_rect()
 		_expect(used.size.x > 240 and used.size.y > 420 and used.end.y == 544 and used.position.x > 0 and used.end.x < 768, "Each cinematic head pose keeps the common neck baseline and fits its cell")
 	var body: Image = hydra.ART.get_image()
 	_expect(body.get_size() == Vector2i(768, 448) and body.get_used_rect().end.y == 424, "Cinematic shared coils retain the original ground row")

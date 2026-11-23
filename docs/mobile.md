@@ -10,6 +10,8 @@ The top-right button pauses and resumes. Gameplay controls hide in menus, during
 
 The game uses either landscape orientation and retains its 320×180 gameplay view. Fractional scaling fits the display; wider phones and tablets can have black bars. Touch targets stay inside the reported safe display area. The title, pause, and Hades menus use larger buttons, and Controls displays touch instructions. Checkpoint loading retains the existing **current-session** behavior; closing the process does not save progress to disk.
 
+Character sheets keep their full-resolution artwork and transparency, with frames arranged into rows so every texture fits within 4096×4096. Frame sizes, animation timing, and collision shapes are unchanged. Display safe areas are converted from physical screen pixels to game coordinates, including letterboxing, so movement and action buttons remain separated on phones and tablets.
+
 ## Preview on desktop
 
 ```sh
@@ -44,7 +46,7 @@ Enable USB debugging on a connected Android phone and install the APK:
 
 ```sh
 adb install -r builds/android/theseus.apk
-adb shell am start -n com.theseus.adventure/com.godot.game.GodotApp
+adb shell am start -n com.theseus.adventure/com.godot.game.GodotAppLauncher
 ```
 
 You can also copy the APK to the phone and open it there. The debug APK is for local testing. Store distribution needs a release keystore, an Android App Bundle export using Gradle, and a final package identifier. Keep signing credentials out of Git.
@@ -61,7 +63,7 @@ Once Android's home screen appears, rebuild the APK using the export command abo
 
 ```sh
 "$HOME/Library/Android/sdk/platform-tools/adb" -e install -r builds/android/theseus.apk
-"$HOME/Library/Android/sdk/platform-tools/adb" -e shell am start -n com.theseus.adventure/com.godot.game.GodotApp
+"$HOME/Library/Android/sdk/platform-tools/adb" -e shell am start -n com.theseus.adventure/com.godot.game.GodotAppLauncher
 ```
 
 `-e` selects the emulator instead of a connected physical phone. If using another computer, list its virtual devices with `emulator -list-avds` and substitute the name. No architecture changes in Godot's UI are needed.
@@ -88,6 +90,8 @@ open builds/ios/Theseus.xcodeproj
 
 In Xcode, choose the **Theseus** scheme and an **iPhone Simulator** run destination, then press **Command-R**. If no simulator is available, install an iOS Simulator runtime through **Xcode → Settings → Components**. The game's Compatibility renderer and the exported simulator library support this path; no manual architecture edits are needed after running `tools/export_ios.sh`.
 
+On this Intel Mac, profiling showed the iOS Simulator's OpenGL renderer rasterizing on the CPU. The iOS x86_64 build therefore renders a 320×180 offscreen preview and scales it to the simulated display. This preview is visibly lower resolution and can still run below the game's target frame rate. Desktop and physical iOS/Android devices retain full-resolution Canvas Items rendering. Use the desktop touch preview for smoother local gameplay checks, and test on a physical phone to assess mobile graphics performance.
+
 ## Ads
 
 Android and iOS show one interstitial when Continue is pressed on the level-complete screen. The score stays visible until that press. The next level loads after the ad closes. If the network has nothing ready, Continue opens the next level immediately. Replay, Title, death, and Hades do not show an ad. Level 5 has no next level, so it does not request one.
@@ -103,9 +107,12 @@ The mobile interaction check sends actual Godot touch and drag events through th
 ```sh
 godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60 -- --mobile-controls
 godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60
+godot --headless --path . --script res://tests/mobile_art.gd
 ```
 
 The second command checks desktop controls and integer scaling. The existing combat, animation, Hades, and five level smoke tests also run without mobile controls.
+
+The artwork check verifies mobile-safe texture dimensions, complete atlas regions, and visible pixels for Theseus and every enemy type. The touch checks include physical display insets on an iPhone, an Android phone, and a tablet.
 
 Before accepting a device build, play each level and check simultaneous touches, short and full jumps, sword timing, ducking under birds, spike-pit recovery, temple entry, pause/resume, and checkpoint loading. Check both landscape directions, notched screens, interruption by another app, frame rate, audio, and heat. Desktop simulation and package validation do not establish device performance or battery use.
 

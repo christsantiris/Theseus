@@ -10,6 +10,7 @@ var _faces: Dictionary = {}
 var _scene_id := 0
 var _playing := false
 var _layout_root: Control
+var _last_safe_rect := Rect2()
 
 
 class ButtonFace:
@@ -32,7 +33,9 @@ class ButtonFace:
 			"play":
 				draw_colored_polygon(PackedVector2Array([Vector2(4, 0), Vector2(-3, -5), Vector2(-3, 5)]), gold)
 			_:
-				var font := ThemeDB.fallback_font
+				# Use the game's bitmap font; tiny dynamic glyphs can fail on the
+				# iOS Simulator's software OpenGL path after viewport scaling.
+				var font := preload("res://assets/fonts/inscription.fnt")
 				var width := font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x
 				draw_string(font, Vector2(-width * 0.5, 2), caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 6, gold)
 
@@ -49,6 +52,11 @@ func _ready() -> void:
 	if "--mobile-controls" in OS.get_cmdline_user_args():
 		Input.emulate_touch_from_mouse = true
 	get_window().content_scale_stretch = Window.CONTENT_SCALE_STRETCH_FRACTIONAL
+	if OS.get_name() == "iOS" and OS.has_feature("x86_64"):
+		# Intel iOS Simulator emulates OpenGL on the CPU. Render the fixed game
+		# view offscreen instead of shading every Retina display pixel. Desktop
+		# and physical mobile devices retain the full-resolution Canvas Items path.
+		get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
 	if OS.has_feature("mobile"):
 		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 	_layout_root = Control.new()
@@ -95,12 +103,27 @@ func _safe_rect() -> Rect2:
 	var display_safe := DisplayServer.get_display_safe_area()
 	if display_safe.size == Vector2i.ZERO:
 		return visible_rect
-	var safe: Rect2 = _layout_root.get_screen_transform().affine_inverse() * Rect2(display_safe)
+	# Screen transforms omit the Canvas Items stretch on some mobile backends.
+	# Convert physical display pixels through the centered gameplay rectangle.
+	var display_rect := Rect2(display_safe)
+	display_rect.position -= Vector2(DisplayServer.window_get_position())
+	return safe_rect_for_display(display_rect, Vector2(get_window().size), visible_rect, get_window().content_scale_aspect != Window.CONTENT_SCALE_ASPECT_IGNORE)
+
+
+static func safe_rect_for_display(display_safe: Rect2, window_pixels: Vector2, visible_rect: Rect2, keep_aspect := true) -> Rect2:
+	if not display_safe.has_area() or window_pixels.x <= 0 or window_pixels.y <= 0:
+		return visible_rect
+	var scale := window_pixels / visible_rect.size
+	if keep_aspect:
+		scale = Vector2.ONE * minf(scale.x, scale.y)
+	var origin := (window_pixels - visible_rect.size * scale) * 0.5
+	var safe := Rect2((display_safe.position - origin) / scale + visible_rect.position, display_safe.size / scale)
 	var clipped := visible_rect.intersection(safe)
 	return clipped if clipped.has_area() else visible_rect
 
 
 func _layout_controls(safe: Rect2) -> void:
+	_last_safe_rect = safe
 	var bottom := safe.end.y - 22
 	buttons.move_left.position = Vector2(safe.position.x + 22, bottom)
 	buttons.move_right.position = Vector2(safe.position.x + 62, bottom)
@@ -116,6 +139,10 @@ func _on_viewport_changed() -> void:
 
 
 func _process(_delta: float) -> void:
+	var safe := _safe_rect()
+	if not safe.is_equal_approx(_last_safe_rect):
+		release_controls()
+		_layout_controls(safe)
 	_sync_scene()
 
 
@@ -136,8 +163,10 @@ func _sync_scene() -> void:
 	for action in ACTIONS:
 		buttons[action].visible = playing
 	buttons.pause.visible = gameplay
-	_faces.pause.caption = "play" if get_tree().paused else "pause"
-	_faces.pause.queue_redraw()
+	var caption := "play" if get_tree().paused else "pause"
+	if _faces.pause.caption != caption:
+		_faces.pause.caption = caption
+		_faces.pause.queue_redraw()
 
 
 func _prepare_menus(node: Node) -> void:

@@ -69,9 +69,20 @@ func _check_button_bounds(node: Node) -> void:
 
 func _run() -> void:
 	controls = root.get_node("MobileControls")
+	var logical := Rect2(0, 0, 320, 180)
+	var iphone: Rect2 = controls.safe_rect_for_display(Rect2(186, 0, 2250, 1146), Vector2(2622, 1206), logical)
+	_expect(is_zero_approx(iphone.position.x) and is_equal_approx(iphone.size.x, 320), "iPhone letterboxing absorbs the side notch insets")
+	_expect(is_equal_approx(iphone.end.y, 1146.0 / 6.7), "iPhone home indicator is converted from physical pixels to game coordinates")
+	var android: Rect2 = controls.safe_rect_for_display(Rect2(80, 0, 2240, 1020), Vector2(2400, 1080), logical)
+	_expect(android.is_equal_approx(Rect2(0, 0, 320, 170)), "Android display insets account for viewport scaling and letterboxing")
+	var notch: Rect2 = controls.safe_rect_for_display(Rect2(300, 0, 2022, 1206), Vector2(2622, 1206), logical)
+	_expect(notch.position.x > 9 and notch.position.x < 10 and notch.size.x > 300, "A notch extending into gameplay moves controls inward without collapsing the layout")
+	var tablet: Rect2 = controls.safe_rect_for_display(Rect2(0, 24, 2732, 2004), Vector2(2732, 2048), logical)
+	_expect(tablet.is_equal_approx(logical), "Tablet letterboxing keeps the entire gameplay rectangle safe")
 	if not controls.enabled:
 		_expect(controls.buttons.is_empty(), "Desktop has no touch buttons")
 		_expect(root.content_scale_stretch == Window.CONTENT_SCALE_STRETCH_INTEGER, "Desktop retains integer scaling")
+		_expect(root.content_scale_mode == Window.CONTENT_SCALE_MODE_CANVAS_ITEMS, "Desktop retains full-resolution Canvas Items rendering")
 		var desktop_level = await _open_level()
 		Input.action_press("move_right")
 		await _frames()

@@ -93,7 +93,7 @@ func _until(next: String) -> bool:
 func _combat() -> void:
 	await _fresh()
 	var image: Image = satyr.ART.get_image()
-	_expect(image.get_size() == Vector2i(4608, 448), "Satyr has eight cinematic sprite cells")
+	_expect(image.get_size() == Vector2i(2304, 896), "Satyr has eight cinematic sprite cells")
 	_expect(satyr.sprite.scale == Vector2.ONE / 8.0 and satyr.sprite.offset.y * satyr.sprite.scale.y == -25.0, "Satyr keeps his world size and foot anchor")
 	_expect(satyr._body_shape.size == Vector2(18, 36), "Satyr keeps his standing collision geometry")
 	var frames: SpriteFrames = satyr.sprite.sprite_frames
@@ -103,7 +103,7 @@ func _combat() -> void:
 			var pose := frames.get_frame_texture(animation, frame) as AtlasTexture
 			_expect(pose.region.size == Vector2(576, 448) and Rect2(Vector2.ZERO, image.get_size()).encloses(pose.region), "Every Satyr animation binds a complete cinematic pose")
 	for index in 8:
-		var used := image.get_region(Rect2i(index * 576, 0, 576, 448)).get_used_rect()
+		var used := image.get_region(Rect2i((index % 4) * 576, (index / 4) * 448, 576, 448)).get_used_rect()
 		_expect(used.size.x > 190 and used.size.y > 220 and used.position.x > 0 and used.end.x < 576 and used.end.y >= 352 and used.end.y <= 432, "Satyr poses fit the atlas, including tucked hooves during hops")
 		if index not in [3, 4]:
 			_expect(used.end.y == 432, "Planted Satyr poses retain their original foot row")

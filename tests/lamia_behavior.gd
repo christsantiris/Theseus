@@ -82,7 +82,7 @@ func _run() -> void:
 	_expect(lamia._state == "idle" and lamia.position.x == 200 and player.hits == 0, "Distant Lamia stays coiled on her platform without timed attacks")
 	_expect(lamia.hp == 2 and lamia.points == 150, "Lamia has two health and awards 150 points")
 	var art: Image = lamia.ART.get_image()
-	_expect(art.get_size() == Vector2i(6144, 448), "Lamia has eight cinematic sprite cells")
+	_expect(art.get_size() == Vector2i(3072, 896), "Lamia has eight cinematic sprite cells")
 	_expect(lamia.sprite.scale == Vector2.ONE / 8.0 and lamia.sprite.offset.y * lamia.sprite.scale.y == -25.0, "Lamia keeps her world size and foot anchor")
 	_expect(lamia._body_shape.size == Vector2(26, 42), "Lamia keeps her standing collision geometry")
 	var frames: SpriteFrames = lamia.sprite.sprite_frames
@@ -92,7 +92,7 @@ func _run() -> void:
 			var pose := frames.get_frame_texture(animation, frame) as AtlasTexture
 			_expect(pose.region.size == Vector2(768, 448) and Rect2(Vector2.ZERO, art.get_size()).encloses(pose.region), "Every Lamia animation binds a complete cinematic pose")
 	for index in 8:
-		var used := art.get_region(Rect2i(index * 768, 0, 768, 448)).get_used_rect()
+		var used := art.get_region(Rect2i((index % 4) * 768, (index / 4) * 448, 768, 448)).get_used_rect()
 		_expect(used.size.x > 220 and used.size.y > 260 and used.position.x > 0 and used.end.x < 768 and used.end.y == 432, "Pose %d fits its cell and stays on the ground row" % index)
 	lamia.set_physics_process(false)
 	player.position = Vector2(256, 120)

@@ -89,7 +89,7 @@ func _until(next: String) -> bool:
 func _charge() -> void:
 	await _fresh()
 	var image: Image = bull.ART.get_image()
-	_expect(image.get_size() == Vector2i(6144, 448), "Bull has eight cinematic sprite cells")
+	_expect(image.get_size() == Vector2i(3072, 896), "Bull has eight cinematic sprite cells")
 	_expect(bull.sprite.scale == Vector2.ONE / 8.0 and bull.sprite.offset.y * bull.sprite.scale.y == -25.0, "Cinematic bull retains its world size and foot anchor")
 	_expect(bull._body_shape.size == Vector2(44, 24) and bull.platform.position == Vector2(0, -28), "Bull body and ride platform keep their gameplay geometry")
 	var frames: SpriteFrames = bull.sprite.sprite_frames
@@ -99,7 +99,7 @@ func _charge() -> void:
 			var pose := frames.get_frame_texture(animation, frame) as AtlasTexture
 			_expect(pose.region.size == Vector2(768, 448) and Rect2(Vector2.ZERO, image.get_size()).encloses(pose.region), "Bull animation binds a complete cinematic pose")
 	for index in 8:
-		var used := image.get_region(Rect2i(index * 768, 0, 768, 448)).get_used_rect()
+		var used := image.get_region(Rect2i((index % 4) * 768, (index / 4) * 448, 768, 448)).get_used_rect()
 		_expect(used.size.x > 400 and used.size.y > 180 and used.position.x > 0 and used.end.x < 768, "Bull art is complete with transparent cell margins")
 		_expect(used.end.y >= 384 and used.end.y <= 424, "Bull feet remain at or just above the ground during a charge")
 		if index in [0, 1, 6, 7]:
