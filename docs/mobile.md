@@ -12,6 +12,8 @@ The game uses either landscape orientation and retains its 320×180 gameplay vie
 
 Character sheets keep their full-resolution artwork and transparency, with frames arranged into rows so every texture fits within 4096×4096. Frame sizes, animation timing, and collision shapes are unchanged. Display safe areas are converted from physical screen pixels to game coordinates, including letterboxing, so movement and action buttons remain separated on phones and tablets.
 
+Opaque panoramas, baked color overlaps, and terrain tiles use S3TC on supported desktop GPUs and ETC2 on supported mobile GPUs. Web exports include both variants. Character sheets, transparent props, fonts, UI, and seam-data masks stay lossless. Only the five separate terrain tiles generate mipmaps; character and panorama atlases do not. Unsupported GPUs may decode textures to uncompressed memory, so emulator results need separate interpretation. See the [texture measurements and tradeoffs](performance.md#texture-memory-budget).
+
 ## Rendering profiles
 
 Physical Android/iOS devices and mobile web browsers default to a **1280×720 world render target**. The world still uses 320×180 coordinates, the same root camera and zoom, physics world, collisions, movement, and attack timing. Scenery, platforms, and characters render into a shared-world `SubViewport`; a presentation layer displays that texture behind the original UI. Scenes stay direct children of the root, preserving scene changes, reloads, checkpoints, and pause behavior.

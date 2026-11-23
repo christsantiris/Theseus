@@ -3,19 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cdyjwcq1w1uhs"
-path="res://.godot/imported/potters_quarter.png-e1ca9cda04f59a38b74885afad8a2104.ctex"
+path.s3tc="res://.godot/imported/potters_quarter.png-e1ca9cda04f59a38b74885afad8a2104.s3tc.ctex"
+path.etc2="res://.godot/imported/potters_quarter.png-e1ca9cda04f59a38b74885afad8a2104.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/art/backgrounds/level_3/potters_quarter.png"
-dest_files=["res://.godot/imported/potters_quarter.png-e1ca9cda04f59a38b74885afad8a2104.ctex"]
+dest_files=["res://.godot/imported/potters_quarter.png-e1ca9cda04f59a38b74885afad8a2104.s3tc.ctex", "res://.godot/imported/potters_quarter.png-e1ca9cda04f59a38b74885afad8a2104.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

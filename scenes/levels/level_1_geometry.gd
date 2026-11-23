@@ -21,7 +21,7 @@ var backdrop: Node2D
 func _ready() -> void:
 	# Keep every original collision body, surface height and node name.
 	super()
-	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	process_priority = 10
 	_build_landscape()

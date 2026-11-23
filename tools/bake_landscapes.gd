@@ -88,14 +88,16 @@ func _panels(number: int) -> Dictionary:
 		"overlap": overlap * 2.0 / (panel_width + overlap * 2.0)}
 
 
-func _pack(images: Array[Image]) -> Dictionary:
-	# One replicated border pixel makes bilinear sampling identical to the old
-	# standalone clamped textures. A 3x3 atlas stays below the mobile 4096 limit.
+func _pack(images: Array[Image], border := 1, alignment := 1) -> Dictionary:
+	# Color atlases need a full replicated 4x4 compression block around each
+	# strip. Masks stay lossless and need only their original bilinear border.
 	var width := 0
 	var height := 0
 	for image in images:
-		width = maxi(width, image.get_width() + 2)
-		height = maxi(height, image.get_height() + 2)
+		width = maxi(width, image.get_width() + border * 2)
+		height = maxi(height, image.get_height() + border * 2)
+	width = ceili(float(width) / alignment) * alignment
+	height = ceili(float(height) / alignment) * alignment
 	var format := images[0].get_format()
 	var atlas := Image.create(width * 3, height * 3, false, format)
 	atlas.fill(Color.BLACK)
@@ -103,15 +105,18 @@ func _pack(images: Array[Image]) -> Dictionary:
 	for index in images.size():
 		var image := images[index]
 		image.convert(format)
-		var position := Vector2i((index % 3) * width + 1, (index / 3) * height + 1)
+		var position := Vector2i((index % 3) * width + border, (index / 3) * height + border)
 		var size := image.get_size()
 		atlas.blit_rect(image, Rect2i(Vector2i.ZERO, size), position)
-		atlas.blit_rect(image, Rect2i(0, 0, size.x, 1), position - Vector2i(0, 1))
-		atlas.blit_rect(image, Rect2i(0, size.y - 1, size.x, 1), position + Vector2i(0, size.y))
-		atlas.blit_rect(image, Rect2i(0, 0, 1, size.y), position - Vector2i(1, 0))
-		atlas.blit_rect(image, Rect2i(size.x - 1, 0, 1, size.y), position + Vector2i(size.x, 0))
-		for corner in [Vector2i(-1, -1), Vector2i(size.x, -1), Vector2i(-1, size.y), size]:
-			atlas.set_pixelv(position + corner, image.get_pixelv(corner.clamp(Vector2i.ZERO, size - Vector2i.ONE)))
+		for y in range(-border, height - border):
+			if y < 0 or y >= size.y:
+				atlas.blit_rect(image, Rect2i(0, clampi(y, 0, size.y - 1), size.x, 1), position + Vector2i(0, y))
+		for x in range(-border, width - border):
+			if x >= 0 and x < size.x:
+				continue
+			atlas.blit_rect(image, Rect2i(clampi(x, 0, size.x - 1), 0, 1, size.y), position + Vector2i(x, 0))
+			atlas.fill_rect(Rect2i(position + Vector2i(x, -border), Vector2i(1, border)), image.get_pixel(clampi(x, 0, size.x - 1), 0))
+			atlas.fill_rect(Rect2i(position + Vector2i(x, size.y), Vector2i(1, height - border - size.y)), image.get_pixel(clampi(x, 0, size.x - 1), size.y - 1))
 		rects.append(Rect2(position, size))
 	if atlas.get_width() > 4096 or atlas.get_height() > 4096:
 		failures.append("Bake exceeds the mobile texture limit")
@@ -153,7 +158,7 @@ func _bake(number: int) -> void:
 		seams.append(SEARCH.seam(under, over))
 		data.panel_keys.append(panels[index].key)
 		data.previous_keys.append(panels[index - 1].key)
-	var overlaps := _pack(strips)
+	var overlaps := _pack(strips, 4, 4)
 	var masks := _pack(seams)
 	if overlaps.is_empty() or masks.is_empty():
 		return

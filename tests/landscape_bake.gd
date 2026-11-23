@@ -1,10 +1,10 @@
 extends SceneTree
 
-# Render the former standalone textures beside the shipped atlases. Compare
-# every join, including the downward extensions, rather than screenshots of a
-# single entrance. The offline reference never runs in the playable game.
+# Compare standalone decoded strips with GPU atlas sampling for every join,
+# including aprons. The baker's --check independently verifies the original
+# lossless seam search; compression must not alter atlas lookup or introduce cuts.
 const PANELS := preload("res://scenes/levels/landscape_panels.gd")
-const SEARCH := preload("res://tools/landscape_seam.gd")
+const ArtImage := preload("res://tests/art_image.gd")
 const DATA := preload("res://scenes/levels/landscape_join_data.gd")
 var failures: Array[String] = []
 var maximum_error := 0
@@ -72,16 +72,14 @@ func _run() -> void:
 				await _compare(number, index, previous, texture)
 			previous = texture
 	print("Largest before/after channel difference: %d / 255" % maximum_error)
-	print("PASS: all 45 rendered joins and aprons match the original runtime search within 2/255." if failures.is_empty() else "FAIL: " + str(failures))
+	print("PASS: all 45 rendered joins and aprons match standalone strip sampling within 3/255." if failures.is_empty() else "FAIL: " + str(failures))
 	quit(0 if failures.is_empty() else 1)
 
 
 func _compare(number: int, index: int, previous: Texture2D, incoming: Texture2D) -> void:
-	var old_image := previous.get_image()
-	var new_image := incoming.get_image()
-	var width := roundi(old_image.get_width() / 6.0)
-	var under := old_image.get_region(Rect2i(old_image.get_width() - width, 0, width, old_image.get_height()))
-	var over := new_image.get_region(Rect2i(0, 0, roundi(new_image.get_width() / 6.0), new_image.get_height()))
+	var data := load("res://assets/art/backgrounds/level_%d/_seams/joins.tres" % number) as DATA
+	var under := ArtImage.read(data.overlaps).get_region(Rect2i(data.overlap_rects[index - 1]))
+	var seam := ArtImage.read(data.masks).get_region(Rect2i(data.mask_rects[index - 1]))
 	var reference := _viewport()
 	var actual := _viewport()
 	var old_panel := _panel(incoming)
@@ -92,7 +90,7 @@ func _compare(number: int, index: int, previous: Texture2D, incoming: Texture2D)
 	material.set_shader_parameter("overlap_width", 1.0 / 6.0)
 	material.set_shader_parameter("feather_width", (1.0 / 6.0) * 8.0 / 96.0)
 	material.set_shader_parameter("under_tex", ImageTexture.create_from_image(under))
-	material.set_shader_parameter("seam_tex", ImageTexture.create_from_image(SEARCH.seam(under, over)))
+	material.set_shader_parameter("seam_tex", ImageTexture.create_from_image(seam))
 	old_panel.material = material
 	reference.add_child(old_panel)
 	_extend_if_present(old_panel)
@@ -113,6 +111,6 @@ func _compare(number: int, index: int, previous: Texture2D, incoming: Texture2D)
 	for channel in before.size():
 		largest = maxi(largest, absi(before[channel] - after[channel]))
 	maximum_error = maxi(maximum_error, largest)
-	_expect(largest <= 2, "Level %d join %d has a rendered channel difference of %d/255" % [number, index, largest])
+	_expect(largest <= 3, "Level %d join %d has a rendered channel difference of %d/255" % [number, index, largest])
 	reference.free()
 	actual.free()

@@ -3,19 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b1xf6rw3gtipe"
-path="res://.godot/imported/city_gate.png-157c36a0677c601a92873d8b65e91c60.ctex"
+path.s3tc="res://.godot/imported/city_gate.png-157c36a0677c601a92873d8b65e91c60.s3tc.ctex"
+path.etc2="res://.godot/imported/city_gate.png-157c36a0677c601a92873d8b65e91c60.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/art/backgrounds/level_3/city_gate.png"
-dest_files=["res://.godot/imported/city_gate.png-157c36a0677c601a92873d8b65e91c60.ctex"]
+dest_files=["res://.godot/imported/city_gate.png-157c36a0677c601a92873d8b65e91c60.s3tc.ctex", "res://.godot/imported/city_gate.png-157c36a0677c601a92873d8b65e91c60.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

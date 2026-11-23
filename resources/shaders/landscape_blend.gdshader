@@ -48,7 +48,12 @@ void fragment() {
 		vec2 under_uv = vec2(clamp(local.x / overlap_width, 0.0, 1.0), clamp(local.y, 0.0, 1.0));
 		vec2 seam = texture(seam_tex, seam_rect.xy + vec2(0.5, under_uv.y) * seam_rect.zw).rg;
 		float fade = feather(under_uv.x, seam.r, max(seam.g, feather_width / overlap_width));
-		vec4 under = texture(under_tex, under_rect.xy + under_uv * under_rect.zw);
+		// Clamp to the strip's own texel centers. Compressed padding can decode
+		// slightly differently from its edge; never blend it into the painting.
+		vec2 inset = 0.5 / vec2(textureSize(under_tex, 0));
+		vec2 sample_uv = clamp(under_rect.xy + under_uv * under_rect.zw,
+			under_rect.xy + inset, under_rect.xy + under_rect.zw - inset);
+		vec4 under = texture(under_tex, sample_uv);
 		COLOR = vec4(mix(under.rgb, over.rgb, fade) * gain, 1.0);
 	}
 }

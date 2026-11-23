@@ -3,19 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dkqb7xdp6nh3o"
-path="res://.godot/imported/cypress_foothills.png-e4349e8a04548366e3d929f2e2f4e7af.ctex"
+path.s3tc="res://.godot/imported/cypress_foothills.png-e4349e8a04548366e3d929f2e2f4e7af.s3tc.ctex"
+path.etc2="res://.godot/imported/cypress_foothills.png-e4349e8a04548366e3d929f2e2f4e7af.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/art/backgrounds/level_4/cypress_foothills.png"
-dest_files=["res://.godot/imported/cypress_foothills.png-e4349e8a04548366e3d929f2e2f4e7af.ctex"]
+dest_files=["res://.godot/imported/cypress_foothills.png-e4349e8a04548366e3d929f2e2f4e7af.s3tc.ctex", "res://.godot/imported/cypress_foothills.png-e4349e8a04548366e3d929f2e2f4e7af.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

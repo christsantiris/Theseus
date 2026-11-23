@@ -162,7 +162,7 @@ To skip the wrapper script, run `godot --path . res://scenes/debug/level_select.
 
 ## Background builds and performance
 
-All 45 panorama joins load baked, lossless overlap strips and seam masks. The game does not search seams or read background images back from the GPU when loading a level. After changing panorama artwork, panel order, overlap width, or the baker, regenerate and import the assets:
+All 45 panorama joins load baked overlap strips and lossless seam masks. Opaque backgrounds use GPU compression; terrain tiles also use mipmaps. Character art, fonts, UI, and transparent props remain lossless. The game does not search seams or read background images back from the GPU when loading a level. After changing panorama artwork, panel order, overlap width, or the baker, regenerate and import the assets:
 
 ```sh
 tools/bake_landscapes.sh
@@ -170,4 +170,4 @@ godot --headless --path . --editor --import
 tools/bake_landscapes.sh --check
 ```
 
-Commit the generated `_seams/` assets with the source change. `--check` detects stale source hashes, masks, overlap pixels, panel order, and atlas coordinates. Run `godot --path . --script res://tests/landscape_bake.gd` to compare every rendered join and its downward extension against the original seam search. See [performance measurements and benchmark instructions](docs/performance.md).
+Commit the generated `_seams/` assets with the source change. `--check` detects stale source hashes, masks, overlap pixels, panel order, and atlas coordinates. Run `godot --path . --script res://tests/landscape_bake.gd` to check compressed atlas sampling at every rendered join and its downward extension. The baker’s `--check` verifies the original lossless seam search. Run `godot --path . --script res://tests/texture_budget.gd` to check compression variants and minified terrain. See [performance measurements and benchmark instructions](docs/performance.md).

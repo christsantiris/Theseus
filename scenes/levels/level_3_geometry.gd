@@ -26,7 +26,7 @@ func _ready() -> void:
 	_make_solid("RightBoundary", Rect2(Town.WIDTH, -128, 16, 512))
 	for index in Town.PLATFORMS.size():
 		_make_solid("TownTerrace%d" % index, Town.PLATFORMS[index])
-	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	process_priority = 10
 	_build_landscape()

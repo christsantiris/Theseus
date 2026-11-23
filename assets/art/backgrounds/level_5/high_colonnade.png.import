@@ -3,19 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dw1mnlu0ft3b6"
-path="res://.godot/imported/high_colonnade.png-e0fd104ec363cd251025ec6204556072.ctex"
+path.s3tc="res://.godot/imported/high_colonnade.png-e0fd104ec363cd251025ec6204556072.s3tc.ctex"
+path.etc2="res://.godot/imported/high_colonnade.png-e0fd104ec363cd251025ec6204556072.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/art/backgrounds/level_5/high_colonnade.png"
-dest_files=["res://.godot/imported/high_colonnade.png-e0fd104ec363cd251025ec6204556072.ctex"]
+dest_files=["res://.godot/imported/high_colonnade.png-e0fd104ec363cd251025ec6204556072.s3tc.ctex", "res://.godot/imported/high_colonnade.png-e0fd104ec363cd251025ec6204556072.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

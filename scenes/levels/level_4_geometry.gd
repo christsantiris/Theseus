@@ -26,7 +26,7 @@ func _ready() -> void:
 	_make_solid("RightBoundary", Rect2(Mountain.WIDTH, -128, 16, 512))
 	for index in Mountain.PLATFORMS.size():
 		_add_terrain("MountainTerrace%d" % index, Mountain.PLATFORMS[index])
-	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	process_priority = 10
 	_build_landscape()

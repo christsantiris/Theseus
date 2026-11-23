@@ -3,19 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b3rlkclxxq24"
-path="res://.godot/imported/olive_terraces.png-6ca5b11aa252695cd8dbe364915cf88f.ctex"
+path.s3tc="res://.godot/imported/olive_terraces.png-6ca5b11aa252695cd8dbe364915cf88f.s3tc.ctex"
+path.etc2="res://.godot/imported/olive_terraces.png-6ca5b11aa252695cd8dbe364915cf88f.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/art/backgrounds/level_1/olive_terraces.png"
-dest_files=["res://.godot/imported/olive_terraces.png-6ca5b11aa252695cd8dbe364915cf88f.ctex"]
+dest_files=["res://.godot/imported/olive_terraces.png-6ca5b11aa252695cd8dbe364915cf88f.s3tc.ctex", "res://.godot/imported/olive_terraces.png-6ca5b11aa252695cd8dbe364915cf88f.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

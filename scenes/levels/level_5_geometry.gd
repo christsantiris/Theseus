@@ -32,7 +32,7 @@ func _ready() -> void:
 		var collision := get_node(body_name).get_child(0) as CollisionShape2D
 		collision.one_way_collision = true
 		collision.one_way_collision_margin = 2
-	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	process_priority = 10
 	_build_landscape()

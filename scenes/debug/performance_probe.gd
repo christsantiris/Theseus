@@ -132,6 +132,15 @@ func _finish(elapsed: float) -> void:
 		"frame_ms_max": intervals.back(), "frames_over_50ms": over_50,
 		"samples": samples, "final_memory": _memory(),
 	})
+	# Inspect the loaded resource after timing; do not include CPU inspection in
+	# the measured exercise. Web/mobile return decoded RGBA readbacks even
+	# when GPU storage is compressed; this field describes the returned Image.
+	var geometry = level.get_node("World")
+	var panorama: Texture2D = geometry.PANORAMA_SHEETS[0]
+	var pixels := panorama.get_image()
+	report["panorama_readback"] = {"format": pixels.get_format(),
+		"compressed": pixels.is_compressed(), "bytes": pixels.get_data_size(),
+		"mipmaps": pixels.has_mipmaps()}
 	var json := JSON.stringify(report, "\t")
 	var file := FileAccess.open(output, FileAccess.WRITE)
 	if file:

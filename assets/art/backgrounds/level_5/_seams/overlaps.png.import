@@ -3,19 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bwofjtengrnn6"
-path="res://.godot/imported/overlaps.png-d0eaa1fcb5a8e40cb1f646217cf56a0d.ctex"
+path.s3tc="res://.godot/imported/overlaps.png-d0eaa1fcb5a8e40cb1f646217cf56a0d.s3tc.ctex"
+path.etc2="res://.godot/imported/overlaps.png-d0eaa1fcb5a8e40cb1f646217cf56a0d.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/art/backgrounds/level_5/_seams/overlaps.png"
-dest_files=["res://.godot/imported/overlaps.png-d0eaa1fcb5a8e40cb1f646217cf56a0d.ctex"]
+dest_files=["res://.godot/imported/overlaps.png-d0eaa1fcb5a8e40cb1f646217cf56a0d.s3tc.ctex", "res://.godot/imported/overlaps.png-d0eaa1fcb5a8e40cb1f646217cf56a0d.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

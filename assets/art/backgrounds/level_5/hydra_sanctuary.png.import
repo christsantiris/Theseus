@@ -3,19 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d343q5ivhybb8"
-path="res://.godot/imported/hydra_sanctuary.png-e5890dc0d9ee96f6b4e019d9edf813c7.ctex"
+path.s3tc="res://.godot/imported/hydra_sanctuary.png-e5890dc0d9ee96f6b4e019d9edf813c7.s3tc.ctex"
+path.etc2="res://.godot/imported/hydra_sanctuary.png-e5890dc0d9ee96f6b4e019d9edf813c7.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/art/backgrounds/level_5/hydra_sanctuary.png"
-dest_files=["res://.godot/imported/hydra_sanctuary.png-e5890dc0d9ee96f6b4e019d9edf813c7.ctex"]
+dest_files=["res://.godot/imported/hydra_sanctuary.png-e5890dc0d9ee96f6b4e019d9edf813c7.s3tc.ctex", "res://.godot/imported/hydra_sanctuary.png-e5890dc0d9ee96f6b4e019d9edf813c7.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
