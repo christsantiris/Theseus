@@ -46,16 +46,23 @@ func refresh() -> void:
 	_hint = Label.new()
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hint.theme_type_variation = &"CarvedLabel"
-	_hint.text = "Click a key, then press a new one"
+	_hint.text = "Landscape touch controls" if MobileControls.enabled else "Click a key, then press a new one"
 	_rows.add_child(_hint)
 
-	for action in InputBindings.ACTIONS:
-		_rows.add_child(_make_row(action))
+	if MobileControls.enabled:
+		for text in ["Left / Right: move", "Jump: hold for a higher jump", "Duck: hold to crouch", "Sword: tap to attack", "In air: Duck + Sword = downward thrust", "Pause: top-right button"]:
+			var label := Label.new()
+			label.text = text
+			label.theme_type_variation = &"CarvedLabel"
+			_rows.add_child(label)
+	else:
+		for action in InputBindings.ACTIONS:
+			_rows.add_child(_make_row(action))
 
 	var back := Button.new()
 	back.text = "Back"
 	back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	back.custom_minimum_size = Vector2(64, 16)
+	back.custom_minimum_size = Vector2(64, 22 if MobileControls.enabled else 16)
 	ThemeHelpers.style_button(back, 8)
 	back.pressed.connect(_on_back_pressed)
 	_rows.add_child(back)

@@ -17,6 +17,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 config/name="Theseus"
 config/description="A retro, left-to-right side-scrolling adventure."
 run/main_scene="res://scenes/main/main.tscn"
+config/quit_on_go_back=false
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [autoload]
@@ -24,6 +25,7 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 LevelRun="*res://scenes/levels/level_run.gd"
 InputBindings="*res://scenes/ui/input_bindings.gd"
 GameMusic="*res://scenes/ui/game_music.gd"
+MobileControls="*res://scenes/ui/mobile_controls.gd"
 
 [display]
 
@@ -33,6 +35,8 @@ window/size/window_width_override=1600
 window/size/window_height_override=900
 window/stretch/mode="canvas_items"
 window/stretch/scale_mode="integer"
+window/handheld/orientation=4
+window/stretch/scale_mode.mobile="fractional"
 
 [gui]
 
@@ -88,4 +92,5 @@ pause={
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0.055, 0.071, 0.125, 1)

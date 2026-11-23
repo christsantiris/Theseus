@@ -63,6 +63,11 @@ func _ready() -> void:
 	root.add_child(_message)
 	_message.hide()
 	_message_backdrop.hide()
+	if MobileControls.enabled:
+		# Keep tutorial messages above the thumb controls, rather than behind them.
+		_message_backdrop.position.y = 116
+		_message.position.y = 120
+		_speed_status.position.y = 102
 
 
 func _process(delta: float) -> void:

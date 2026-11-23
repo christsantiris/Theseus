@@ -14,6 +14,7 @@ Background panoramas join along continuous seams, with broad fades through smoot
   - [The Mountain Sanctuary](#the-mountain-sanctuary)
   - [The Gorge Sanctuary](#the-gorge-sanctuary)
 - [How to play](#how-to-play)
+- [Mobile version](#mobile-version)
 - [Credits](#credits)
 - [Play-test any level](#play-test-any-level)
 
@@ -89,9 +90,23 @@ Theseus runs, jumps, ducks, and fights. Grounded sword attacks alternate between
 | Downward thrust | Hold Duck + Sword while airborne |
 | Pause | Escape |
 
-Controls on the title screen rebinds these keys for the next time you play.
+On desktop, Controls on the title screen rebinds these keys for the next time you play. On mobile, it explains the touch controls.
 
 The Bronze Bull is available in a separate review arena. Jump its committed charge, or use a downward thrust on its back to stagger it and ride it briefly. Its cool sheen marks the safe platform; amber warns that it is recovering. Run `godot --path . res://scenes/reviews/bronze_bull_review.tscn` to try it, or open that scene and press **F6**. The pose gallery pauses the fight.
+
+## Mobile version
+
+Android and iOS share the five levels, artwork, combat, and checkpoints. Landscape touch controls support movement, ducking, jumping, sword attacks, and pause, including simultaneous presses for airborne attacks. Menus have larger touch targets. Tutorial messages sit above the controls, and gameplay pauses when the app loses focus.
+
+Preview the controls with a mouse on desktop:
+
+```sh
+tools/play_mobile.sh        # title screen
+tools/play_mobile.sh 2      # Level 2
+tools/play_mobile.sh 5 1    # Level 5, first shrine
+```
+
+[Mobile setup and device testing](docs/mobile.md) covers the Android APK and iOS Xcode export. iOS requires your Apple Developer Team ID before Godot can export it.
 
 ## Credits
 
