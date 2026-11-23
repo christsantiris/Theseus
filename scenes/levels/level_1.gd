@@ -205,7 +205,7 @@ func _on_resume_pressed() -> void:
 
 
 func _on_replay_pressed() -> void:
-	LevelRun.begin_level(level_number)
+	LevelRun.restart_level()
 	get_tree().paused = false
 	get_tree().reload_current_scene()
 
@@ -215,9 +215,10 @@ func _on_next_pressed() -> void:
 		return
 	var destination := next_level
 	var number := level_number
+	var score := _score
 	var tree := get_tree()
 	LevelAds.show_then(func() -> void:
-		LevelRun.begin_level(number + 1)
+		LevelRun.begin_level(number + 1, score)
 		tree.paused = false
 		tree.change_scene_to_file(destination)
 	)

@@ -92,6 +92,8 @@ Sword damage occurs only while the blade is visibly extended during an attack.
   score, defeated count, and time, with Continue to Level 2, Replay Level, and
   Return to Title buttons. Entering [Level 2](level_2.md) replaces the old shrine
   with a checkpoint at the coastal entrance; Load resumes that level from then on.
+- The score carries into each next level. Replay Level restarts from the score
+  Theseus entered the level with; only New Game resets it to 0.
 
 ![Theseus entering the temple before the level-clear screen](temple_entry_preview.gif)
 

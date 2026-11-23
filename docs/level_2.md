@@ -77,7 +77,7 @@ entrance or the latest Level 2 shrine. Progress remains in memory for the curren
 
 The Coastal Shrine at x=2000 saves a safe spawn at (2024, 280). The Sanctuary
 Shrine at x=4048 saves (4072, 280). Each snapshots
-this level's score, defeated enemies, and collected flasks. Backtracking
+the running score, defeated enemies, and collected flasks. Backtracking
 cannot replace a later shrine. Four health flasks restore two bars each.
 
 Defeat SpartoiSanctuaryGuard to open the temple at (4752, 280). Theseus climbs

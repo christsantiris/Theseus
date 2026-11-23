@@ -5,6 +5,8 @@ const START := Vector2(48, 152)
 var checkpoint_index := -1
 var spawn_position := START
 var checkpoint_score := 0
+# Score carried in from earlier levels; Replay restarts the level from here.
+var level_start_score := 0
 var checkpoint_defeated: Array[String] = []
 var checkpoint_collected: Array[String] = []
 var elapsed_seconds := 0.0
@@ -15,14 +17,19 @@ func begin_run() -> void:
 	begin_level(1)
 
 
-func begin_level(number: int) -> void:
+func begin_level(number: int, carried_score := 0) -> void:
 	level_number = number
 	checkpoint_index = -1
 	spawn_position = START if number == 1 else Vector2(48, 280)
-	checkpoint_score = 0
+	level_start_score = carried_score
+	checkpoint_score = carried_score
 	checkpoint_defeated.clear()
 	checkpoint_collected.clear()
 	elapsed_seconds = 0.0
+
+
+func restart_level() -> void:
+	begin_level(level_number, level_start_score)
 
 
 func scene_path() -> String:

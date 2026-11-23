@@ -75,7 +75,7 @@ Load Game returns to the same entrance or shrine. Progress is held for
 the current game session.
 
 The Agora Shrine at x=1960 saves a safe spawn at (1984, 280). The Acropolis Shrine
-at x=4096 saves (4120, 280). Each heals Theseus and snapshots this level's score,
+at x=4096 saves (4120, 280). Each heals Theseus and snapshots the running score,
 defeated enemies, and collected flasks. Returning to an earlier shrine cannot
 replace a later checkpoint. Load Game from Hades restores the saved snapshot, resetting later
 defeats, pickups, and score gains. Five flasks restore two health bars each.
