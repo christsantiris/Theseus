@@ -19,6 +19,9 @@ func _expect(value: bool, message: String) -> void:
 func _frames(count: int = 3) -> void:
 	for _frame in count:
 		await physics_frame
+		# Touch visibility and menu layout update on process frames. Several
+		# catch-up physics ticks can run before those updates after a level load.
+		await process_frame
 
 
 func _touch(action: String, finger: int, pressed: bool, canceled := false) -> void:
@@ -43,6 +46,9 @@ func _open_level(number := 1) -> Node:
 	paused = false
 	root.get_node("LevelRun").begin_level(number)
 	change_scene_to_file("res://scenes/levels/level_%d.tscn" % number)
+	# Fast baked loads can finish four physics ticks before the deferred scene
+	# change is applied. Wait for the scene itself, then exercise its controls.
+	await scene_changed
 	await _frames(4)
 	for enemy in get_nodes_in_group("enemies"):
 		enemy.process_mode = Node.PROCESS_MODE_DISABLED

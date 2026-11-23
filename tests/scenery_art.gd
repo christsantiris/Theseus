@@ -3,6 +3,7 @@ extends SceneTree
 # Requires a rendering backend:
 # godot --path . --script res://tests/scenery_art.gd
 const BLEND := preload("res://resources/shaders/landscape_blend.gdshader")
+const SEARCH := preload("res://tools/landscape_seam.gd")
 const PANELS := preload("res://scenes/levels/landscape_panels.gd")
 var failures: Array[String] = []
 
@@ -61,7 +62,17 @@ func _verify_rendered_blend() -> void:
 		var panel := Sprite2D.new()
 		panel.centered = false
 		panel.texture = atlas
-		PANELS.prepare(panel, true, 96.0 / 576.0, ImageTexture.create_from_image(under))
+		# Synthetic artwork has no shipped bake. Exercise the unchanged shader
+		# with the offline seam search; real bundles are checked below.
+		var strip := under.get_region(Rect2i(480, 0, 96, 96))
+		var over := image.get_region(Rect2i(0, 0, 96, 96))
+		var material := ShaderMaterial.new()
+		material.shader = BLEND
+		material.set_shader_parameter("atlas_rect", Vector4(0, 0.5, 1, 0.5))
+		material.set_shader_parameter("blend_left", true)
+		material.set_shader_parameter("under_tex", ImageTexture.create_from_image(strip))
+		material.set_shader_parameter("seam_tex", ImageTexture.create_from_image(SEARCH.seam(strip, over)))
+		panel.material = material
 		viewport.add_child(panel)
 		await process_frame
 		await process_frame

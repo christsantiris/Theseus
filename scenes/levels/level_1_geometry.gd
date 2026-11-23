@@ -53,6 +53,8 @@ func _build_landscape() -> void:
 	road.size = Vector2(Layout.WIDTH, Layout.HEIGHT)
 	road.color = Color("d4c1a3")
 	road.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Same layer as the panoramas, so their downward aprons draw over this fill.
+	road.z_index = -1
 	backdrop.add_child(road)
 	# Each section sheet contains west/east panoramas stacked vertically.
 	var overlap_width := OVERLAP * 2.0 / (PANEL_WIDTH + OVERLAP * 2.0)
@@ -72,6 +74,7 @@ func _build_landscape() -> void:
 		panorama.position = Vector2(index * PANEL_WIDTH - OVERLAP, 180.0 - image.get_height() * scale_factor)
 		panorama.z_index = -1
 		PANELS.prepare(panorama, index > 0, overlap_width, previous)
+		PANELS.extend_downward(panorama, Layout.HEIGHT)
 		backdrop.add_child(panorama)
 		previous = image
 

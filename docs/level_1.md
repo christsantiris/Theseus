@@ -19,8 +19,10 @@ facade complete the scenery. These are pre-rendered backgrounds in the existing
 For playtesting, Level 1 now uses the later levels' camera-aware skyline effect.
 Its visual bounds are 4,800×256, with the camera looking 24 pixels above Theseus
 and following his climbs and descents. The background follows a smoothed nearby
-terrain height, giving it relative movement against the foreground. Sky and road
-continuation fill the newly revealed view. Platforms, ground collision, movement,
+terrain height, giving it relative movement against the foreground. When the
+camera looks below the panoramas, each one continues its painted road downward
+by mirroring its lowest rows, so scenery covers the newly revealed view. Levels
+3–5 use the same continuation. Platforms, ground collision, movement,
 enemy positions, and checkpoint spawns are unchanged.
 
 Panorama joins follow matching scenery within their 96-pixel overlap. Smooth

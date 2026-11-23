@@ -17,6 +17,7 @@ Background panoramas join along continuous seams, with broad fades through smoot
 - [Mobile version](#mobile-version)
 - [Credits](#credits)
 - [Play-test any level](#play-test-any-level)
+- [Background builds and performance](docs/performance.md)
 
 ## Screenshots
 
@@ -156,3 +157,15 @@ tools/play_level.sh 3 2    # Level 3 from its second shrine
 ```
 
 To skip the wrapper script, run `godot --path . res://scenes/debug/level_select.tscn -- --level=3 --shrine=2`, or open `scenes/debug/level_select.tscn` in the editor and press **F6**. A shrine start counts that shrine as lit. Enemies before it are still alive, and the score starts at 0.
+
+## Background builds and performance
+
+All 45 panorama joins load baked, lossless overlap strips and seam masks. The game does not search seams or read background images back from the GPU when loading a level. After changing panorama artwork, panel order, overlap width, or the baker, regenerate and import the assets:
+
+```sh
+tools/bake_landscapes.sh
+godot --headless --path . --editor --import
+tools/bake_landscapes.sh --check
+```
+
+Commit the generated `_seams/` assets with the source change. `--check` detects stale source hashes, masks, overlap pixels, panel order, and atlas coordinates. Run `godot --path . --script res://tests/landscape_bake.gd` to compare every rendered join and its downward extension against the original seam search. See [performance measurements and benchmark instructions](docs/performance.md).

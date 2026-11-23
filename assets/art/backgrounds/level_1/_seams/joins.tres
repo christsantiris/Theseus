@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/landscape_join_data.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/backgrounds/level_1/_seams/overlaps.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/art/backgrounds/level_1/_seams/masks.png" id="3"]
+
+[resource]
+script = ExtResource("1")
+overlaps = ExtResource("2")
+masks = ExtResource("3")
+panel_keys = PackedStringArray("res://assets/art/backgrounds/level_1/kings_road.png:[P: (0.0, 724.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/broken_colonnade.png:[P: (0.0, 0.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/broken_colonnade.png:[P: (0.0, 724.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/olive_terraces.png:[P: (0.0, 0.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/olive_terraces.png:[P: (0.0, 724.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/ruined_aqueduct.png:[P: (0.0, 0.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/ruined_aqueduct.png:[P: (0.0, 724.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/temple_approach.png:[P: (0.0, 0.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/temple_approach.png:[P: (0.0, 724.0), S: (2172.0, 724.0)]")
+previous_keys = PackedStringArray("res://assets/art/backgrounds/level_1/kings_road.png:[P: (0.0, 0.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/kings_road.png:[P: (0.0, 724.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/broken_colonnade.png:[P: (0.0, 0.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/broken_colonnade.png:[P: (0.0, 724.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/olive_terraces.png:[P: (0.0, 0.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/olive_terraces.png:[P: (0.0, 724.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/ruined_aqueduct.png:[P: (0.0, 0.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/ruined_aqueduct.png:[P: (0.0, 724.0), S: (2172.0, 724.0)]", "res://assets/art/backgrounds/level_1/temple_approach.png:[P: (0.0, 0.0), S: (2172.0, 724.0)]")
+overlap_width = 0.16666666666666666
+overlap_rects = Array[Rect2]([Rect2(1, 1, 362, 724), Rect2(365, 1, 362, 724), Rect2(729, 1, 362, 724), Rect2(1, 727, 362, 724), Rect2(365, 727, 362, 724), Rect2(729, 727, 362, 724), Rect2(1, 1453, 362, 724), Rect2(365, 1453, 362, 724), Rect2(729, 1453, 362, 724)])
+mask_rects = Array[Rect2]([Rect2(1, 1, 1, 192), Rect2(4, 1, 1, 192), Rect2(7, 1, 1, 192), Rect2(1, 195, 1, 192), Rect2(4, 195, 1, 192), Rect2(7, 195, 1, 192), Rect2(1, 389, 1, 192), Rect2(4, 389, 1, 192), Rect2(7, 389, 1, 192)])
+source_hashes = {
+"res://assets/art/backgrounds/level_1/broken_colonnade.png": "1c1eefd5ddc6c787bd5b4f619168a4b88f7e5ca1858f373607cad7fd44de383b",
+"res://assets/art/backgrounds/level_1/kings_road.png": "6fec64bcdba3f744b3720a3c654ede582767a4839892f3653d360b4465255d4f",
+"res://assets/art/backgrounds/level_1/olive_terraces.png": "bac4450094b141b352406b8f18985a02aa34bbc667ce96ae9b0dbeebead1786f",
+"res://assets/art/backgrounds/level_1/ruined_aqueduct.png": "8077f7e242bee8564ee3404901a70a62fd28b424513bcb257ae2bdb821f2378d",
+"res://assets/art/backgrounds/level_1/temple_approach.png": "5f980e17720ef185b47a3935e69cd1477308a749e79c9e061137b9ebdd4cb5f4"
+}
+baker_hash = "71708071a029dab02bd0e6a59609215a6d7c779307fcfdc61c2b858701087fd7"

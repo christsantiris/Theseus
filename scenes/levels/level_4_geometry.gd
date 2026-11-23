@@ -88,6 +88,7 @@ func _build_landscape() -> void:
 		panorama.scale = Vector2.ONE * factor
 		panorama.position = Vector2(index * PANEL_WIDTH - OVERLAP, 180.0 - image.get_height() * factor)
 		PANELS.prepare(panorama, index > 0, overlap_width, previous)
+		PANELS.extend_downward(panorama, Mountain.HEIGHT)
 		backdrop.add_child(panorama)
 		previous = image
 
