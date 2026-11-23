@@ -107,21 +107,26 @@ func _verify_level(number: int) -> void:
 	var parent: Node = world.backdrop
 	var previous: Sprite2D
 	var count := 0
-	for child in parent.get_children():
-		if not child is Sprite2D or not child.name.begins_with("Landscape"):
-			continue
-		var panel := child as Sprite2D
-		var material := panel.material as ShaderMaterial
-		_expect(material.shader == BLEND, "Level %d uses the shared blend" % number)
-		_expect(bool(material.get_shader_parameter("blend_left")) == (previous != null), "First panel stays opaque; later panels blend")
-		if previous != null:
-			var old_end := previous.position.x + previous.texture.get_width() * previous.scale.x
-			var overlap := old_end - panel.position.x
-			var fade := float(material.get_shader_parameter("overlap_width")) * panel.texture.get_width() * panel.scale.x
-			_expect(overlap > 0 and is_equal_approx(fade, overlap), "Level %d join %d blends across its full physical overlap" % [number, count])
-		previous = panel
-		count += 1
-	_expect(count == 10, "Every level retains all ten panoramas")
+	if number == 1:
+		var continuous := parent.get_node("ContinuousLandscape") as Sprite2D
+		_expect(continuous.material == null and continuous.texture == world.PANORAMA_SHEETS[0], "Level 1 uses one unblended painting")
+		_expect(world.midground.get_child_count() == 13, "Level 1 has complete independent scenery objects")
+	else:
+		for child in parent.get_children():
+			if not child is Sprite2D or not child.name.begins_with("Landscape"):
+				continue
+			var panel := child as Sprite2D
+			var material := panel.material as ShaderMaterial
+			_expect(material.shader == BLEND, "Level %d uses the shared blend" % number)
+			_expect(bool(material.get_shader_parameter("blend_left")) == (previous != null), "First panel stays opaque; later panels blend")
+			if previous != null:
+				var old_end := previous.position.x + previous.texture.get_width() * previous.scale.x
+				var overlap := old_end - panel.position.x
+				var fade := float(material.get_shader_parameter("overlap_width")) * panel.texture.get_width() * panel.scale.x
+				_expect(overlap > 0 and is_equal_approx(fade, overlap), "Level %d join %d blends across its full physical overlap" % [number, count])
+			previous = panel
+			count += 1
+		_expect(count == 10, "Every level retains all ten panoramas")
 	for definition in layout.CHECKPOINTS:
 		var shrine := level.get_node(String(definition.name)) as Area2D
 		var collision := shrine.get_node("CollisionShape2D") as CollisionShape2D
@@ -149,7 +154,7 @@ func _run() -> void:
 			child.stream = null
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: continuous content-aware seams, solid columns, no color-selected holes or overlap-edge cuts, all 45 landscape joins, both shrine states, all ten shrine triggers and checkpoint saves.")
+		print("PASS: continuous content-aware seams, solid columns, no color-selected holes or overlap-edge cuts, 36 legacy landscape joins and Level 1 continuous landscape, both shrine states, all ten shrine triggers and checkpoint saves.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)

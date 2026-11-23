@@ -2,7 +2,7 @@
 
 ## Seam baking
 
-The five levels have ten panoramas each and nine joins per level. `tools/bake_landscapes.sh` reads the source PNGs on the CPU, runs the original content-aware seam search, and writes two lossless atlases plus `joins.tres` to each level's `_seams/` directory. The 1,116×2,196 overlap atlas holds the previous paintings' edge strips; the 9×582 mask atlas holds the nine seam paths and feather widths. Block-aligned strips and at least four replicated border pixels isolate each overlap under GPU compression. The shader clamps lookup to the strip’s own texel centers. Both fit below the existing 4096×4096 mobile texture limit.
+Levels 2–5 have ten panoramas each and nine joins per level. Level 1 now uses one continuous landscape and independent scenery objects; it has no seam bundle. `tools/bake_landscapes.sh` reads the source PNGs on the CPU, runs the original content-aware seam search, and writes two lossless atlases plus `joins.tres` to each level's `_seams/` directory. The 1,116×2,196 overlap atlas holds the previous paintings' edge strips; the 9×582 mask atlas holds the nine seam paths and feather widths. Block-aligned strips and at least four replicated border pixels isolate each overlap under GPU compression. The shader clamps lookup to the strip’s own texel centers. Both fit below the existing 4096×4096 mobile texture limit.
 
 During play, materials load the appropriate level bundle and sample its atlas rectangles. There are no background GPU readbacks, image resizing, pixel searches, or generated `ImageTexture`s on the level-loading path. Missing or mismatched bundles produce a Godot error with the regeneration command; the game does not fall back to a runtime search. Bundles are retained by the level's materials rather than a permanent cache of all visited levels.
 
@@ -14,9 +14,9 @@ godot --headless --path . --editor --import
 tools/bake_landscapes.sh --check
 ```
 
-Commit all five generated `_seams/` directories, including PNG import settings, with the source change. `--check` recomputes the reference output and returns a nonzero status for stale image pixels, source hashes, baker hashes, panel order, overlap width, or atlas coordinates. It does not rewrite the assets. The game uses normal Godot imports; keep mask textures lossless, without mipmaps or resizing. The atlas padding supports the current bilinear filter and is not padding for a future mip chain.
+Commit the four generated `_seams/` directories for Levels 2–5, including PNG import settings, with the source change. `--check` recomputes the reference output and returns a nonzero status for stale image pixels, source hashes, baker hashes, panel order, overlap width, or atlas coordinates. It does not rewrite the assets. The game uses normal Godot imports; keep mask textures lossless, without mipmaps or resizing. The atlas padding supports the current bilinear filter and is not padding for a future mip chain.
 
-Compare all 45 rendered joins against standalone decoded strips, including downward extensions when present. This isolates atlas sampling from codec error; the baker’s `--check` separately verifies the lossless source pixels and original seam search:
+Compare all 36 remaining rendered joins against standalone decoded strips, including downward extensions when present. This isolates atlas sampling from codec error; the baker’s `--check` separately verifies the lossless source pixels and original seam search:
 
 ```sh
 godot --path . --script res://tests/landscape_bake.gd
@@ -26,7 +26,9 @@ godot --path . --script res://tests/landscape_bake.gd -- --captures=/tmp/theseus
 
 The compressed renderer comparison passed with a maximum per-channel difference of **3/255** over all joins. Source overlap PNG pixels and baked seam-mask pixels match the reference exactly; the comparison includes small GPU/CPU codec rounding and atlas-sampling differences. The existing solid-column, foliage, sky-transition, and checkpoint-shrine checks also passed.
 
-## Measurements — November 23, 2026
+## Historical measurements — November 23, 2026
+
+These seam-baking measurements predate the continuous Level 1 scenery rebuild.
 
 These are single paired development runs on this Intel Mac, Godot 4.7.2, Level 1. Both builds contain the same scenery and ongoing downward-extension work; only seam preparation differs. After the title and first level draw, the probe warms up for two seconds, then repeats a 20-second walk, jump, and sword exercise near the entrance. It keeps the player alive. Each target runs separately. These measurements are not a full-level stress test, a distribution build, or a physical-phone benchmark. Disk and driver caches were not purged.
 
@@ -116,17 +118,17 @@ godot --path . res://scenes/debug/performance_probe.tscn -- --mobile-controls --
 
 ## Texture memory budget
 
-The third milestone compresses the **35 opaque background textures**: 25 panorama sheets, five baked overlap atlases, and five terrain tiles. Godot's Compatibility renderer imports standard-quality S3TC for desktop and ETC2 for mobile. Both variants are enabled in the Web export; the runtime selects a supported variant. High-quality BPTC/ASTC is not enabled because this renderer does not support that import mode. See Godot's [texture import documentation](https://docs.godotengine.org/en/stable/tutorials/assets_pipeline/importing_images.html) and [Web export requirements](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_web.html).
+Before the continuous Level 1 rebuild, the third milestone compressed **35 opaque background textures**: 25 panorama sheets, five baked overlap atlases, and five terrain tiles. Godot's Compatibility renderer imports standard-quality S3TC for desktop and ETC2 for mobile. Both variants are enabled in the Web export; the runtime selects a supported variant. High-quality BPTC/ASTC is not enabled because this renderer does not support that import mode. See Godot's [texture import documentation](https://docs.godotengine.org/en/stable/tutorials/assets_pipeline/importing_images.html) and [Web export requirements](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_web.html).
 
-Original panorama and terrain PNGs retain their dimensions and pixels. Overlap PNGs were regenerated with compression-block-aligned padding; the lossless seam-data masks are unchanged. Transparent props, every character sheet, fonts, UI, and other gameplay artwork remain lossless. The character trial covered all 17 sheets at preview, 540p, and 720p scales. S3TC introduced small detail changes. The ETC2 RGBA desktop fallback/readback comparison produced severe artifacts, although independent headless decoding preserved the source artwork. That readback comparison is inconclusive for normal GPU sampling. Character compression remains deferred pending direct-render transparency and detail review on physical mobile devices. The trial assets and captures are outside the repository.
+For that compression milestone, original panorama and terrain PNGs retained their dimensions and pixels. Overlap PNGs were regenerated with compression-block-aligned padding; the lossless seam-data masks are unchanged. Transparent props, every character sheet, fonts, UI, and other gameplay artwork remain lossless. The character trial covered all 17 sheets at preview, 540p, and 720p scales. S3TC introduced small detail changes. The ETC2 RGBA desktop fallback/readback comparison produced severe artifacts, although independent headless decoding preserved the source artwork. That readback comparison is inconclusive for normal GPU sampling. Character compression remains deferred pending direct-render transparency and detail review on physical mobile devices. The trial assets and captures are outside the repository.
 
 Only the five separate repeating stone tiles generate mipmaps, and all five geometry scripts explicitly select a mip-aware filter. At three/four output pixels per 16 source texels, the mip trial reduced RMS error against a lossless mip-filtered reference from 12.3–24.5 to 6.3–13.2 channel values out of 255 across all tiles. The reviewed captures preserve mortar lines while reducing undersampling noise. The ten render checks require at least a 20% error reduction. Mip levels add **1.26 MiB across all five compressed tiles**, about one third over their compressed base levels. Their standalone textures contain no neighboring atlas frames.
 
-Panoramas, overlap atlases, seam masks, and character atlases have no mip chains. This avoids frame mixing and atlas-edge bleeding, and avoids adding a third to the much larger panorama allocation. The atlas regression checks all 45 joins and extended aprons against decoded standalone strips with a maximum difference of 3/255; the baker verifies exact source overlap and mask pixels separately. UI and fonts remain lossless without mipmaps.
+Panoramas, overlap atlases, seam masks, and character atlases have no mip chains. This avoids frame mixing and atlas-edge bleeding, and avoids adding a third to the much larger panorama allocation. The atlas regression now checks the 36 remaining joins and extended aprons against decoded standalone strips with a maximum difference of 3/255; the baker verifies exact source overlap and mask pixels separately. UI and fonts remain lossless without mipmaps.
 
-### Memory and download comparison
+### Historical memory and download comparison
 
-These are five-second Level 1 development probes after a two-second warmup, with the same 1280×720 world target in both builds. They measure texture accounting and format selection; they are too short to establish sustained performance or thermal effects. The desktop probe confirmed RGB8 → DXT1, with its first panorama payload falling from 9,435,168 to 1,572,528 bytes. The 35 background payloads across the whole project total **282.50 → 48.36 MiB** per platform variant, including terrain mips; this is imported pixel payload, not total application memory.
+The following figures predate the continuous Level 1 rebuild. These are five-second Level 1 development probes after a two-second warmup, with the same 1280×720 world target in both builds. They measure texture accounting and format selection; they are too short to establish sustained performance or thermal effects. The desktop probe confirmed RGB8 → DXT1, with its first panorama payload falling from 9,435,168 to 1,572,528 bytes. The 35 background payloads across the whole project total **282.50 → 48.36 MiB** per platform variant, including terrain mips; this is imported pixel payload, not total application memory.
 
 | Target | Texture counter, lossless → compressed |
 | --- | ---: |
@@ -160,3 +162,14 @@ godot --path . --script res://tests/scenery_art.gd
 ```
 
 `tests/texture_budget.gd` checks both imported format payloads, dimensions, protected lossless textures, the selective mip policy, Web variants, overlap block alignment, and minified terrain. It explicitly loads the mobile variant for inspection on desktop; a warning about converting ETC2 to RGBA8 there reflects desktop hardware support, not the format selected by normal desktop gameplay. Add `-- --captures=/tmp/theseus-terrain` to keep the three-column terrain comparisons (lossless mip reference, compressed without mips, compressed with mips) outside the repository. The performance probe records `panorama_readback` after timing. Desktop tools can return compressed image data; [Web/mobile return a decoded RGBA image](https://github.com/godotengine/godot/blob/master/drivers/gles3/storage/texture_storage.cpp) even for compressed GPU textures. Use import payloads and GPU upload inspection to verify the runtime format on those targets.
+
+
+## Continuous Level 1 scenery
+
+Level 1 replaces its ten blended panoramas with one 2,172×724 painting, displayed at 768×256 world units with horizontal/vertical parallax. Thirteen complete transparent midground objects establish its route landmarks. Its five old sheets and seam bundle have been removed. The remaining four seam bundles only change their baker hash because the offline tool now skips continuous landscapes. Levels 2–5 retain their artwork.
+
+The new distant painting uses S3TC/ETC2, while the three cutout textures stay lossless. Grove and colonnade imports have a 1,024-pixel maximum dimension; the aqueduct retains its full width. The five stone terrain mip policies and mobile render budgets are unchanged. A five-second desktop Level 1 probe at the 720p budget reports **161.83 MiB** in the texture counter, versus 158.21 MiB before the rebuild: **3.62 MiB more** for the reusable transparent objects. These counters do not measure total process RSS or physical device VRAM residency. Older tables above refer to the previous artwork and package revision.
+
+The Level 1 scenery regression sweeps the entire camera route, checks all viewport corners through climbs and jumps, and verifies one unblended texture without UV resets or wraps. Full-route physics traversal, all five levels' render-profile framing, terrain import checks, and the 36 remaining legacy-join comparisons also pass. The updated [Level 1 guide](level_1.md) shows in-game captures of all five areas and the temple.
+
+The native iOS artwork preview also rendered the aqueduct at the 720p world budget, with a 2,144×1,206 UI framebuffer, one landscape, and thirteen landmarks. It used the Intel Simulator’s Apple Software Renderer, so this validates the native rendering path rather than physical-phone performance. The ordinary playable iOS app was restored afterward. A stock-template Android artwork probe APK exported successfully without the native AdMob plugin; the production Gradle/ads integration and physical Android display quality remain untested.

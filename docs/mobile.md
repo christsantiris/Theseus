@@ -14,6 +14,8 @@ Character sheets keep their full-resolution artwork and transparency, with frame
 
 Opaque panoramas, baked color overlaps, and terrain tiles use S3TC on supported desktop GPUs and ETC2 on supported mobile GPUs. Web exports include both variants. Character sheets, transparent props, fonts, UI, and seam-data masks stay lossless. Only the five separate terrain tiles generate mipmaps; character and panorama atlases do not. Unsupported GPUs may decode textures to uncompressed memory, so emulator results need separate interpretation. See the [texture measurements and tradeoffs](performance.md#texture-memory-budget).
 
+Level 1 uses one non-repeating landscape and thirteen complete transparent scenery objects instead of panorama blends. Its new cutouts stay lossless; the grove and colonnade import at a 1,024-pixel maximum dimension and the aqueduct at its full 2,172-pixel width. Gameplay coordinates, touch placement, and all render profiles are unchanged.
+
 ## Rendering profiles
 
 Physical Android/iOS devices and mobile web browsers default to a **1280×720 world render target**. The world still uses 320×180 coordinates, the same root camera and zoom, physics world, collisions, movement, and attack timing. Scenery, platforms, and characters render into a shared-world `SubViewport`; a presentation layer displays that texture behind the original UI. Scenes stay direct children of the root, preserving scene changes, reloads, checkpoints, and pause behavior.

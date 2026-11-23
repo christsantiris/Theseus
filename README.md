@@ -2,7 +2,7 @@
 
 A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. All characters, including Theseus and all twelve enemy types, and the scenery in all five levels use detailed cinematic 3D-style artwork.
 
-Background panoramas join along continuous seams, with broad fades through smooth sky and narrow transitions around detailed scenery. Checkpoint shrines use matching cinematic limestone and bronze, with lit and unlit brazier states.
+Level 1 uses one continuous landscape with independent trees and ruins moving at different parallax speeds. Levels 2–5 currently retain their panorama blends. Checkpoint shrines use matching cinematic limestone and bronze, with lit and unlit brazier states.
 
 ## Contents
 
@@ -41,7 +41,7 @@ Each level is a little harder than the last: enemies telegraph faster, recover s
 
 The opening level is a 4,800-pixel road in five stretches: the King's Road, the Broken Colonnade, the Olive Terraces, the Ruined Aqueduct, and the Temple Approach. Sixteen soldiers wait along it — raiders, peltasts, and hoplites — with health flasks and two shrines. The temple gate stays shut until its guard falls.
 
-Ten cinematic landscape panoramas cover the full road, with detailed limestone surfaces, carved waystones, and a matching temple entrance. The platform layout, encounters, and movement are unchanged.
+One continuous Attic landscape covers the full road behind complete olive groves, ruined colonnades, and a three-arch aqueduct. Slower background parallax adds depth, with detailed limestone surfaces, carved waystones, and a matching temple entrance. The platform layout, encounters, and movement are unchanged.
 
 [Level 1 guide](docs/level_1.md)
 
@@ -148,7 +148,7 @@ To review Cerberus Pups, run `godot --path . res://scenes/reviews/cerberus_pup_r
 
 To review the Hydra, run `godot --path . res://scenes/reviews/hydra_review.tscn`, or open that scene and press **F6**. Each of its three heads has two health and a separate hit area. Cut down every head to defeat it; hitting the coiled body does no damage. Jump to reach the higher heads, or counter their telegraphed bites as they dip toward Theseus. Severed heads stay gone, and the survivors continue taking turns attacking.
 
-To check panorama blending and shrine activation, run `godot --path . --script res://tests/scenery_art.gd`. This check uses the renderer.
+To check Level 1’s continuous scenery, the remaining panorama blends, and shrine activation, run `godot --path . --script res://tests/scenery_art.gd`. This check uses the renderer.
 
 Start any level at its entrance or at one of its shrines:
 
@@ -162,7 +162,7 @@ To skip the wrapper script, run `godot --path . res://scenes/debug/level_select.
 
 ## Background builds and performance
 
-All 45 panorama joins load baked overlap strips and lossless seam masks. Opaque backgrounds use GPU compression; terrain tiles also use mipmaps. Character art, fonts, UI, and transparent props remain lossless. The game does not search seams or read background images back from the GPU when loading a level. After changing panorama artwork, panel order, overlap width, or the baker, regenerate and import the assets:
+Level 1 has one continuous landscape and no panorama joins. The 36 remaining joins in Levels 2–5 load baked overlap strips and lossless seam masks. Opaque backgrounds use GPU compression; terrain tiles also use mipmaps. Character art, fonts, UI, and transparent props remain lossless. The game does not search seams or read background images back from the GPU when loading a level. After changing panorama artwork, panel order, overlap width, or the baker, regenerate and import the assets:
 
 ```sh
 tools/bake_landscapes.sh

@@ -1,21 +1,23 @@
 @tool
 extends "res://scenes/levels/level_geometry.gd"
 
-const PANORAMA_SHEETS := [
-	preload("res://assets/art/backgrounds/level_1/kings_road.png"),
-	preload("res://assets/art/backgrounds/level_1/broken_colonnade.png"),
-	preload("res://assets/art/backgrounds/level_1/olive_terraces.png"),
-	preload("res://assets/art/backgrounds/level_1/ruined_aqueduct.png"),
-	preload("res://assets/art/backgrounds/level_1/temple_approach.png"),
-]
+# One authored landscape, never cross-faded or repeated. The camera traverses
+# a slow parallax window across it while complete midground objects mark areas.
+const CONTINUOUS_LANDSCAPE := true
+const PANORAMA_SHEETS := [preload("res://assets/art/backgrounds/level_1/attic_landscape.png")]
+const GROVE := preload("res://assets/art/backgrounds/level_1/olive_grove.png")
+const COLONNADE := preload("res://assets/art/backgrounds/level_1/colonnade.png")
+const AQUEDUCT := preload("res://assets/art/backgrounds/level_1/aqueduct.png")
 const WALL := preload("res://assets/art/backgrounds/level_1/limestone_wall.png")
 const WAYSTONE := preload("res://assets/art/backgrounds/level_1/waystone.png")
-const PANELS := preload("res://scenes/levels/landscape_panels.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
-const PANEL_WIDTH := 480.0
-const OVERLAP := 48.0
+const LANDSCAPE_HEIGHT := 256.0
+const FAR_SCROLL := 0.1
+const FAR_VERTICAL_SCROLL := 0.3
+const MID_SCROLL := 0.82
 const MATERIAL_DENSITY := 16.0
 var backdrop: Node2D
+var midground: Node2D
 
 
 func _ready() -> void:
@@ -36,72 +38,61 @@ func _process(_delta: float) -> void:
 
 
 func _build_landscape() -> void:
-	var sky := ColorRect.new()
-	sky.name = "DistantSky"
-	sky.size = Vector2(Layout.WIDTH, Layout.HEIGHT)
-	sky.color = Color("a6c4dc")
-	sky.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	sky.z_index = -2
-	add_child(sky)
 	backdrop = Node2D.new()
 	backdrop.name = "RoadBackdrop"
-	backdrop.z_index = -1
+	backdrop.z_index = -3
 	add_child(backdrop)
-	var road := ColorRect.new()
-	road.name = "RoadContinuation"
-	road.position.y = 180.0
-	road.size = Vector2(Layout.WIDTH, Layout.HEIGHT)
-	road.color = Color("d4c1a3")
-	road.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# Same layer as the panoramas, so their downward aprons draw over this fill.
-	road.z_index = -1
-	backdrop.add_child(road)
-	# Each section sheet contains west/east panoramas stacked vertically.
-	var overlap_width := OVERLAP * 2.0 / (PANEL_WIDTH + OVERLAP * 2.0)
-	var previous: Texture2D
-	for index in PANORAMA_SHEETS.size() * 2:
-		var sheet: Texture2D = PANORAMA_SHEETS[index / 2]
-		var image := AtlasTexture.new()
-		image.atlas = sheet
-		image.region = Rect2(0, (index % 2) * sheet.get_height() / 2, sheet.get_width(), sheet.get_height() / 2)
-		var panorama := Sprite2D.new()
-		panorama.name = "Landscape%d" % index
-		panorama.texture = image
-		panorama.centered = false
-		panorama.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
-		var scale_factor := (PANEL_WIDTH + OVERLAP * 2.0) / image.get_width()
-		panorama.scale = Vector2.ONE * scale_factor
-		panorama.position = Vector2(index * PANEL_WIDTH - OVERLAP, 180.0 - image.get_height() * scale_factor)
-		panorama.z_index = -1
-		PANELS.prepare(panorama, index > 0, overlap_width, previous)
-		PANELS.extend_downward(panorama, Layout.HEIGHT)
-		backdrop.add_child(panorama)
-		previous = image
+	var landscape := Sprite2D.new()
+	landscape.name = "ContinuousLandscape"
+	landscape.texture = PANORAMA_SHEETS[0]
+	landscape.centered = false
+	landscape.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	landscape.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
+	landscape.scale = Vector2.ONE * LANDSCAPE_HEIGHT / landscape.texture.get_height()
+	backdrop.add_child(landscape)
+
+	midground = Node2D.new()
+	midground.name = "RoadLandmarks"
+	midground.z_index = -2
+	add_child(midground)
+	# Positions refer to the route, heights to the visible object. Every arch,
+	# column and tree is drawn whole, with genuine transparent space around it.
+	for grove in [Vector2(220, 116), Vector2(720, 100), Vector2(1940, 98),
+		Vector2(2300, 126), Vector2(2630, 104), Vector2(3930, 108), Vector2(4240, 96)]:
+		_landmark(GROVE, grove.x, grove.y, "OliveGrove")
+	for ruin in [Vector2(1150, 106), Vector2(1530, 92), Vector2(1770, 76),
+		Vector2(3680, 78), Vector2(4470, 110)]:
+		_landmark(COLONNADE, ruin.x, ruin.y, "Colonnade")
+	_landmark(AQUEDUCT, 3300, 152, "Aqueduct")
+	_sync_backdrop()
+
+
+func _landmark(texture: Texture2D, route_x: float, height: float, label: String) -> void:
+	var sprite := Sprite2D.new()
+	sprite.name = label + str(int(route_x))
+	sprite.texture = texture
+	sprite.centered = false
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
+	sprite.scale = Vector2.ONE * height / texture.get_height()
+	var width := texture.get_width() * sprite.scale.x
+	sprite.position = Vector2(route_x * MID_SCROLL + 160.0 * (1.0 - MID_SCROLL) - width * 0.5, Layout.FLOOR_Y - height)
+	midground.add_child(sprite)
 
 
 func _sync_backdrop() -> void:
 	if not is_instance_valid(backdrop):
 		return
 	var camera := get_viewport().get_camera_2d()
-	if camera == null or Engine.is_editor_hint():
-		backdrop.position.y = 0
-		return
-	var logical_height := float(get_window().content_scale_size.y)
-	if logical_height <= 0:
-		logical_height = 180
-	var center := camera.get_screen_center_position()
-	var view_top := center.y - logical_height * 0.5 / camera.zoom.y
-	backdrop.position.y = minf(view_top, _skyline_surface(center.x) - 160)
-
-
-func _skyline_surface(x: float) -> float:
-	# Match the later levels: blend nearby terrain heights so the skyline glides
-	# over terrace edges while the actual platforms stay fixed in world space.
-	var height := float(Layout.FLOOR_Y)
-	for terrace: Rect2 in Layout.PLATFORMS:
-		var overlap := maxf(0, minf(x + 64, terrace.end.x) - maxf(x - 64, terrace.position.x))
-		height -= overlap / 128 * (Layout.FLOOR_Y - terrace.position.y)
-	return height
+	var view_top_left := Vector2.ZERO
+	if camera != null and not Engine.is_editor_hint():
+		var view := Vector2(get_window().content_scale_size) / camera.zoom
+		view_top_left = camera.get_screen_center_position() - view * 0.5
+	# At the last camera position the right edge of this single 768-unit
+	# painting meets the viewport exactly. No wrapping, stitching or image readback.
+	backdrop.position = Vector2(view_top_left.x * (1.0 - FAR_SCROLL),
+		view_top_left.y * (1.0 - FAR_VERTICAL_SCROLL) - 40.0)
+	midground.position.x = view_top_left.x * (1.0 - MID_SCROLL)
 
 
 func _decorate_temple() -> void:

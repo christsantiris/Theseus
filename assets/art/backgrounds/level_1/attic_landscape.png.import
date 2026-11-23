@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dqld0w6edjv75"
-path.s3tc="res://.godot/imported/broken_colonnade.png-9d8a2f7579391e1ca2e502d11767e564.s3tc.ctex"
-path.etc2="res://.godot/imported/broken_colonnade.png-9d8a2f7579391e1ca2e502d11767e564.etc2.ctex"
+uid="uid://da42we3vsitth"
+path.s3tc="res://.godot/imported/attic_landscape.png-d3c9295296b074637d37552433a52ef1.s3tc.ctex"
+path.etc2="res://.godot/imported/attic_landscape.png-d3c9295296b074637d37552433a52ef1.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/art/backgrounds/level_1/broken_colonnade.png"
-dest_files=["res://.godot/imported/broken_colonnade.png-9d8a2f7579391e1ca2e502d11767e564.s3tc.ctex", "res://.godot/imported/broken_colonnade.png-9d8a2f7579391e1ca2e502d11767e564.etc2.ctex"]
+source_file="res://assets/art/backgrounds/level_1/attic_landscape.png"
+dest_files=["res://.godot/imported/attic_landscape.png-d3c9295296b074637d37552433a52ef1.s3tc.ctex", "res://.godot/imported/attic_landscape.png-d3c9295296b074637d37552433a52ef1.etc2.ctex"]
 
 [params]
 

@@ -55,7 +55,7 @@ func _extend_if_present(panel: Sprite2D) -> void:
 
 
 func _run() -> void:
-	for number in range(1, 6):
+	for number in range(2, 6):
 		var bundle := load("res://assets/art/backgrounds/level_%d/_seams/joins.tres" % number) as DATA
 		_expect(bundle != null and bundle.panel_keys.size() == 9, "Level %d has nine baked joins" % number)
 		if bundle == null:
@@ -72,7 +72,7 @@ func _run() -> void:
 				await _compare(number, index, previous, texture)
 			previous = texture
 	print("Largest before/after channel difference: %d / 255" % maximum_error)
-	print("PASS: all 45 rendered joins and aprons match standalone strip sampling within 3/255." if failures.is_empty() else "FAIL: " + str(failures))
+	print("PASS: all 36 rendered legacy joins and aprons match standalone strip sampling within 3/255." if failures.is_empty() else "FAIL: " + str(failures))
 	quit(0 if failures.is_empty() else 1)
 
 

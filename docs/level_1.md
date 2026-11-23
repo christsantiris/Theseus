@@ -8,28 +8,32 @@ leading from a cypress-lined road to the guarded temple entrance.
 
 ## Cinematic scenery
 
-Each of the five areas has two connected cinematic 3D-style panoramas, with
-sunlit limestone, cypress trees, olive groves, distant mountains, ruined
-colonnades, aqueduct arches, and sanctuary architecture. The panels blend at
-their edges and preserve their natural proportions. Detailed masonry textures
-cover the original walkable surfaces; carved waystones and a matching temple
-facade complete the scenery. These are pre-rendered backgrounds in the existing
-2D game, with the same collision rectangles and encounter layout.
+Level 1 uses **one continuous Attic landscape**, with connected mountains,
+terraced olive groves, a consistent sky, and a distant sanctuary. It never
+switches paintings or blends unrelated edges. A 2,172×724 source image renders
+at 768×256 world units; the camera moves across it at 10% of horizontal travel
+and 30% of vertical travel. The existing camera still follows Theseus' climbs
+and descents within the original 4,800×256 visual bounds.
 
-For playtesting, Level 1 now uses the later levels' camera-aware skyline effect.
-Its visual bounds are 4,800×256, with the camera looking 24 pixels above Theseus
-and following his climbs and descents. The background follows a smoothed nearby
-terrain height, giving it relative movement against the foreground. When the
-camera looks below the panoramas, each one continues its painted road downward
-by mirroring its lowest rows, so scenery covers the newly revealed view. Levels
-3–5 use the same continuation. Platforms, ground collision, movement,
-enemy positions, and checkpoint spawns are unchanged.
+Thirteen complete transparent scenery objects establish the route's five areas:
+seven olive-and-cypress groves, five ruined colonnades, and one three-arch
+aqueduct. These scroll at 82% of horizontal camera travel and stay rooted at
+the road's ground height. Trees, columns and arches remain whole as the camera
+passes them. There are no panorama seams, fading architecture, repeated road
+aprons or runtime background-image processing in this level.
 
-Panorama joins follow matching scenery within their 96-pixel overlap. Smooth
-sky fades broadly; detailed stone and foliage use a narrow transition, avoiding
-patchy cutouts and hard vertical edges. Checkpoint shrines use matching
-cinematic limestone-and-bronze artwork, with cold and burning brazier states;
-their trigger areas and saved spawn positions are unchanged.
+The distant landscape uses desktop/mobile GPU compression. Cutouts remain
+lossless with their transparency intact. Grove and colonnade imports are capped
+at 1,024 pixels on their longest side, sufficient for their displayed sizes;
+the wider aqueduct retains its 2,172-pixel source width. All textures fit the
+project's 4,096-pixel mobile limit. No scenery texture generates mipmaps; the
+separate repeating stone terrain keeps its existing mipmaps.
+
+Detailed masonry, waystones, the limestone-and-bronze checkpoint shrines, and
+the temple facade complete the scenery. Ground and platform collision,
+movement, enemies, pickups, checkpoint spawns, and temple entry are unchanged.
+Levels 2–5 retain their previous panorama renderers pending review of this
+Level 1 milestone.
 
 ## Route and encounter progression
 
@@ -102,9 +106,9 @@ Sword damage occurs only while the blade is visibly extended during an attack.
 `scenes/levels/level_1_layout.gd` contains the route, terraces, enemy patrols,
 pickup positions, shrine positions, and tutorial prompts. `level_1_geometry.gd`
 inherits the original collision construction from `level_geometry.gd`, then
-renders the cinematic panoramas and stone surfaces. Each section texture in
-`assets/art/backgrounds/level_1/` contains its west and east panels stacked
-vertically. `level_1_temple.gd` renders the cinematic facade shared by all five levels,
+renders the continuous landscape, independent scenery cutouts, and stone surfaces.
+`assets/art/backgrounds/level_1/attic_landscape.png` is the single opaque painting;
+`olive_grove.png`, `colonnade.png`, and `aqueduct.png` are transparent landmarks. `level_1_temple.gd` renders the cinematic facade shared by all five levels,
 leaving gate collision, unlocking, and entry logic on the existing temple.
 Each level owns its scenery renderer. Scenery is also visible in the editor.
 `level_1.gd` builds the encounters and manages
@@ -134,7 +138,8 @@ traversal so it tests geometry independently of combat skill. Combat difficulty
 and first-clear pacing still need human playtesting.
 
 The scenery check verifies vertical camera and skyline movement, background
-coverage through climbs and jumps, panel proportions, unchanged ground and
+coverage through climbs and jumps and across the entire route, monotonic sampling
+without wraps, natural proportions, unchanged ground and
 terrace collisions, the open facade during paused temple entry, and camera and
 renderer isolation from Levels 2–5. The route test also checks vertical camera
 travel during actual movement and jumping.

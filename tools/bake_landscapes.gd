@@ -17,7 +17,7 @@ func _run() -> void:
 	for number in range(1, 6):
 		_bake(number)
 	if failures.is_empty():
-		print("PASS: all 45 landscape joins %s; source pixels and seam masks are lossless." % ("are current" if check else "baked"))
+		print("PASS: all 36 legacy landscape joins %s; source pixels and seam masks are lossless." % ("are current" if check else "baked"))
 	else:
 		for failure in failures:
 			push_error(failure)
@@ -58,6 +58,8 @@ func _number(source: String, name: String) -> float:
 func _panels(number: int) -> Dictionary:
 	# Read the authored order without loading geometry scripts or GPU textures.
 	var source := FileAccess.get_file_as_string("res://scenes/levels/level_%d_geometry.gd" % number)
+	if source.contains("const CONTINUOUS_LANDSCAPE := true"):
+		return {"continuous": true}
 	var start := source.find("const PANORAMA_SHEETS := [")
 	if start < 0 or source.find("]", start) < 0:
 		failures.append("Missing panorama list in level %d" % number)
@@ -138,7 +140,7 @@ func _image(path: String, expected: Image) -> void:
 
 func _bake(number: int) -> void:
 	var definition := _panels(number)
-	if definition.is_empty():
+	if definition.is_empty() or definition.get("continuous", false):
 		return
 	var panels: Array = definition.panels
 	var strips: Array[Image] = []
