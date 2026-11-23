@@ -16,6 +16,8 @@ Opaque panoramas, baked color overlaps, and terrain tiles use S3TC on supported 
 
 Level 1 uses one non-repeating landscape and thirteen complete transparent scenery objects instead of panorama blends. Its new cutouts stay lossless; the grove and colonnade import at a 1,024-pixel maximum dimension and the aqueduct at its full 2,172-pixel width. Gameplay coordinates, touch placement, and all render profiles are unchanged.
 
+Level 2 now uses one continuous coast and fourteen complete landmarks anchored to its original ledges. Its three cutouts stay lossless with a 1,024-pixel import limit; the wider sea painting uses GPU compression. Both scenery renderers preserve viewport coverage through their full camera ranges.
+
 ## Rendering profiles
 
 Physical Android/iOS devices and mobile web browsers default to a **1280×720 world render target**. The world still uses 320×180 coordinates, the same root camera and zoom, physics world, collisions, movement, and attack timing. Scenery, platforms, and characters render into a shared-world `SubViewport`; a presentation layer displays that texture behind the original UI. Scenes stay direct children of the root, preserving scene changes, reloads, checkpoints, and pause behavior.

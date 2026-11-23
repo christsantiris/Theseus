@@ -2,22 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dtbhx5i61gyg0"
-path.s3tc="res://.godot/imported/rocky_sanctuary.png-d1525f46dcd5dd122a50acb9703ba18a.s3tc.ctex"
-path.etc2="res://.godot/imported/rocky_sanctuary.png-d1525f46dcd5dd122a50acb9703ba18a.etc2.ctex"
+uid="uid://bc2yrmfcmsjq1"
+path="res://.godot/imported/coastal_outcrop.png-7bbb435ca5a69c0bda62b997ed4914b0.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/backgrounds/level_2/rocky_sanctuary.png"
-dest_files=["res://.godot/imported/rocky_sanctuary.png-d1525f46dcd5dd122a50acb9703ba18a.s3tc.ctex", "res://.godot/imported/rocky_sanctuary.png-d1525f46dcd5dd122a50acb9703ba18a.etc2.ctex"]
+source_file="res://assets/art/backgrounds/level_2/coastal_outcrop.png"
+dest_files=["res://.godot/imported/coastal_outcrop.png-7bbb435ca5a69c0bda62b997ed4914b0.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -38,5 +36,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
+process/size_limit=1024
 detect_3d/compress_to=1

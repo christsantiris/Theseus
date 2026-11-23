@@ -3,6 +3,7 @@ extends SceneTree
 const SEARCH := preload("res://tools/landscape_seam.gd")
 const DATA := preload("res://scenes/levels/landscape_join_data.gd")
 const BAKER_FILES := ["res://tools/bake_landscapes.gd", "res://tools/landscape_seam.gd"]
+var join_count := 0
 var check := false
 var failures: Array[String] = []
 
@@ -17,7 +18,7 @@ func _run() -> void:
 	for number in range(1, 6):
 		_bake(number)
 	if failures.is_empty():
-		print("PASS: all 36 legacy landscape joins %s; source pixels and seam masks are lossless." % ("are current" if check else "baked"))
+		print("PASS: all %d legacy landscape joins %s; source pixels and seam masks are lossless." % [join_count, "are current" if check else "baked"])
 	else:
 		for failure in failures:
 			push_error(failure)
@@ -143,6 +144,7 @@ func _bake(number: int) -> void:
 	if definition.is_empty() or definition.get("continuous", false):
 		return
 	var panels: Array = definition.panels
+	join_count += panels.size() - 1
 	var strips: Array[Image] = []
 	var seams: Array[Image] = []
 	var data := DATA.new()

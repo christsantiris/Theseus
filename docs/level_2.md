@@ -11,25 +11,34 @@ drop 16–48 pixels. The camera follows both axes within the taller world.
 
 ## Cinematic scenery
 
-Each area has west and east cinematic 3D-style panoramas matching Level 1's
-sunlit materials and lighting. Turquoise water, distant islands, ruined quays,
-eroded cliffs, cyclopean walls, and sanctuary temples fill ten overlapping
-panels. The distant scenery follows the camera vertically, keeping the sea
-and sky visible through both climbs. Textured limestone covers all thirty
-original ledges; carved waystones and the shared cinematic temple facade
-complete the route. Collision rectangles, encounters, and movement are unchanged.
+Level 2 uses **one continuous Aegean coastline**: connected blue sea, a single
+horizon, dry offshore islands, limestone coves, and a distant sanctuary. Its
+2,172×724 painting renders at 864×288 world units. It scrolls at 12% of horizontal
+camera travel and 25% of vertical travel, with overscan covering the full
+320-pixel-tall world through low shore, summit jumps, and descent. It never
+switches paintings, wraps, blends architecture, or repeats road aprons.
 
-`scenes/levels/level_2_geometry.gd` renders the coastal art from
-`assets/art/backgrounds/level_2/`. Each section PNG stores two panoramas
-stacked vertically. The stone caps, waystones, and temple facade reuse Level 1's
-art; `level_1_temple.gd` keeps its bronze bars synchronized with gate unlocking,
-including paused temple entry. Levels 3–5 have their own cinematic scenery.
+Fourteen complete transparent landmarks establish the five areas: seven rocky
+outcrops with coastal vegetation, four ruined quay fragments, and three
+Cyclopean gateways. They stay fixed at their authored landings so their feet
+cannot drift off narrow ledges as the camera moves. Cutout footing offsets
+account for the transparent margins around each painting. The distant sea's
+slower movement provides depth against these objects and the walkable terraces.
 
-Panorama joins follow matching scenery within their 96-pixel overlap. Smooth
-sky fades broadly; detailed stone and foliage use a narrow transition, avoiding
-patchy cutouts and hard vertical edges. Checkpoint shrines use matching
-cinematic limestone-and-bronze artwork, with cold and burning brazier states;
-their trigger areas and saved spawn positions are unchanged.
+`scenes/levels/level_2_geometry.gd` renders `aegean_landscape.png`,
+`coastal_outcrop.png`, `ruined_quay.png`, and `cyclopean_gate.png` from
+`assets/art/backgrounds/level_2/`. The sea uses S3TC/ETC2 GPU compression; cutouts
+remain lossless and import at a 1,024-pixel maximum dimension. All textures stay
+below the project's 4,096-pixel mobile limit. Scenery has no mipmaps; the
+separate repeating limestone terrain retains its existing mip chain.
+
+Textured limestone covers all thirty original ledges. Stone caps, carved
+waystones, checkpoint shrines, and the temple facade retain their existing art.
+`level_1_temple.gd` keeps its bronze bars synchronized with unlocking, including
+paused temple entry. Collision rectangles, birds and their flight lanes,
+encounters, movement, checkpoint behavior, and camera framing are unchanged.
+Level 1 retains its continuous countryside; Levels 3–5 keep their previous
+panorama renderers pending subsequent milestones.
 
 ## Route
 
@@ -108,6 +117,8 @@ completion, replay, and New Game. A route traversal with combat disabled
 reaches the doorway using normal movement and 20 jumps, in about 52 simulated
 seconds. Combat pacing still benefits from a human playthrough.
 
-The scenery check verifies all ten panoramas, full-route coverage at low and
-high camera positions, original ledge collisions, horizon tracking, paused
-gate updates, and isolation from the other levels.
+The scenery check sweeps the full camera route and checks viewport coverage at
+the low shore, both climbs, summit jumps, and descent. It verifies one unblended,
+non-repeating painting, monotonic texture sampling, fourteen complete landmarks
+anchored to the world, original ledge collisions, paused gate updates, and
+isolation from the other levels.

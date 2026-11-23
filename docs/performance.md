@@ -2,7 +2,7 @@
 
 ## Seam baking
 
-Levels 2–5 have ten panoramas each and nine joins per level. Level 1 now uses one continuous landscape and independent scenery objects; it has no seam bundle. `tools/bake_landscapes.sh` reads the source PNGs on the CPU, runs the original content-aware seam search, and writes two lossless atlases plus `joins.tres` to each level's `_seams/` directory. The 1,116×2,196 overlap atlas holds the previous paintings' edge strips; the 9×582 mask atlas holds the nine seam paths and feather widths. Block-aligned strips and at least four replicated border pixels isolate each overlap under GPU compression. The shader clamps lookup to the strip’s own texel centers. Both fit below the existing 4096×4096 mobile texture limit.
+Levels 3–5 have ten panoramas each and nine joins per level. Levels 1–2 each use one continuous landscape and independent scenery objects; they have no seam bundles. `tools/bake_landscapes.sh` reads the source PNGs on the CPU, runs the original content-aware seam search, and writes two lossless atlases plus `joins.tres` to each level's `_seams/` directory. The 1,116×2,196 overlap atlas holds the previous paintings' edge strips; the 9×582 mask atlas holds the nine seam paths and feather widths. Block-aligned strips and at least four replicated border pixels isolate each overlap under GPU compression. The shader clamps lookup to the strip’s own texel centers. Both fit below the existing 4096×4096 mobile texture limit.
 
 During play, materials load the appropriate level bundle and sample its atlas rectangles. There are no background GPU readbacks, image resizing, pixel searches, or generated `ImageTexture`s on the level-loading path. Missing or mismatched bundles produce a Godot error with the regeneration command; the game does not fall back to a runtime search. Bundles are retained by the level's materials rather than a permanent cache of all visited levels.
 
@@ -14,9 +14,9 @@ godot --headless --path . --editor --import
 tools/bake_landscapes.sh --check
 ```
 
-Commit the four generated `_seams/` directories for Levels 2–5, including PNG import settings, with the source change. `--check` recomputes the reference output and returns a nonzero status for stale image pixels, source hashes, baker hashes, panel order, overlap width, or atlas coordinates. It does not rewrite the assets. The game uses normal Godot imports; keep mask textures lossless, without mipmaps or resizing. The atlas padding supports the current bilinear filter and is not padding for a future mip chain.
+Commit the three generated `_seams/` directories for Levels 3–5, including PNG import settings, with the source change. `--check` recomputes the reference output and returns a nonzero status for stale image pixels, source hashes, baker hashes, panel order, overlap width, or atlas coordinates. It does not rewrite the assets. The game uses normal Godot imports; keep mask textures lossless, without mipmaps or resizing. The atlas padding supports the current bilinear filter and is not padding for a future mip chain.
 
-Compare all 36 remaining rendered joins against standalone decoded strips, including downward extensions when present. This isolates atlas sampling from codec error; the baker’s `--check` separately verifies the lossless source pixels and original seam search:
+Compare all 27 remaining rendered joins against standalone decoded strips, including downward extensions when present. This isolates atlas sampling from codec error; the baker’s `--check` separately verifies the lossless source pixels and original seam search:
 
 ```sh
 godot --path . --script res://tests/landscape_bake.gd
@@ -124,7 +124,7 @@ For that compression milestone, original panorama and terrain PNGs retained thei
 
 Only the five separate repeating stone tiles generate mipmaps, and all five geometry scripts explicitly select a mip-aware filter. At three/four output pixels per 16 source texels, the mip trial reduced RMS error against a lossless mip-filtered reference from 12.3–24.5 to 6.3–13.2 channel values out of 255 across all tiles. The reviewed captures preserve mortar lines while reducing undersampling noise. The ten render checks require at least a 20% error reduction. Mip levels add **1.26 MiB across all five compressed tiles**, about one third over their compressed base levels. Their standalone textures contain no neighboring atlas frames.
 
-Panoramas, overlap atlases, seam masks, and character atlases have no mip chains. This avoids frame mixing and atlas-edge bleeding, and avoids adding a third to the much larger panorama allocation. The atlas regression now checks the 36 remaining joins and extended aprons against decoded standalone strips with a maximum difference of 3/255; the baker verifies exact source overlap and mask pixels separately. UI and fonts remain lossless without mipmaps.
+Panoramas, overlap atlases, seam masks, and character atlases have no mip chains. This avoids frame mixing and atlas-edge bleeding, and avoids adding a third to the much larger panorama allocation. The atlas regression now checks the 27 remaining joins and extended aprons against decoded standalone strips with a maximum difference of 3/255; the baker verifies exact source overlap and mask pixels separately. UI and fonts remain lossless without mipmaps.
 
 ### Historical memory and download comparison
 
@@ -166,10 +166,21 @@ godot --path . --script res://tests/scenery_art.gd
 
 ## Continuous Level 1 scenery
 
-Level 1 replaces its ten blended panoramas with one 2,172×724 painting, displayed at 768×256 world units with horizontal/vertical parallax. Thirteen complete transparent midground objects establish its route landmarks. Its five old sheets and seam bundle have been removed. The remaining four seam bundles only change their baker hash because the offline tool now skips continuous landscapes. Levels 2–5 retain their artwork.
+Level 1 replaces its ten blended panoramas with one 2,172×724 painting, displayed at 768×256 world units with horizontal/vertical parallax. Thirteen complete transparent midground objects establish its route landmarks. Its five old sheets and seam bundle have been removed. At that milestone the remaining four seam bundles only changed their baker hash because the offline tool skipped continuous landscapes. Level 2 has since received the same continuous treatment; Levels 3–5 retain their artwork.
 
 The new distant painting uses S3TC/ETC2, while the three cutout textures stay lossless. Grove and colonnade imports have a 1,024-pixel maximum dimension; the aqueduct retains its full width. The five stone terrain mip policies and mobile render budgets are unchanged. A five-second desktop Level 1 probe at the 720p budget reports **161.83 MiB** in the texture counter, versus 158.21 MiB before the rebuild: **3.62 MiB more** for the reusable transparent objects. These counters do not measure total process RSS or physical device VRAM residency. Older tables above refer to the previous artwork and package revision.
 
-The Level 1 scenery regression sweeps the entire camera route, checks all viewport corners through climbs and jumps, and verifies one unblended texture without UV resets or wraps. Full-route physics traversal, all five levels' render-profile framing, terrain import checks, and the 36 remaining legacy-join comparisons also pass. The updated [Level 1 guide](level_1.md) shows in-game captures of all five areas and the temple.
+The Level 1 scenery regression sweeps the entire camera route, checks all viewport corners through climbs and jumps, and verifies one unblended texture without UV resets or wraps. Full-route physics traversal, all five levels' render-profile framing, terrain import checks, and the remaining legacy-join comparisons also pass. The updated [Level 1 guide](level_1.md) shows in-game captures of all five areas and the temple.
 
 The native iOS artwork preview also rendered the aqueduct at the 720p world budget, with a 2,144×1,206 UI framebuffer, one landscape, and thirteen landmarks. It used the Intel Simulator’s Apple Software Renderer, so this validates the native rendering path rather than physical-phone performance. The ordinary playable iOS app was restored afterward. A stock-template Android artwork probe APK exported successfully without the native AdMob plugin; the production Gradle/ads integration and physical Android display quality remain untested.
+
+
+## Continuous Level 2 scenery
+
+Level 2 now uses one 2,172×724 Aegean painting at 864×288 world units. It scrolls at 12% of horizontal camera travel and 25% of vertical travel, with enough overscan for the whole 0–140 vertical camera range. Fourteen complete transparent objects remain fixed to authored ledges: seven coastal outcrops, four quay fragments, and three Cyclopean gateways. This avoids moving a landmark's feet off a narrow landing during parallax. The five previous coastal sheets and their seam bundle have been removed.
+
+The sea uses S3TC/ETC2; the three cutouts remain lossless with a 1,024-pixel import cap. Existing stone mipmaps and mobile render budgets are unchanged. Paired Level 2 desktop load probes at the 720p world budget recorded a texture counter of **182.31 → 179.71 MiB** at first draw, a reduction of **2.60 MiB**. These are level-load allocation samples, not sustained FPS measurements, total process RSS, or physical-device residency measurements.
+
+The route regression still traverses the original course with 20 jumps in 51.8 simulated seconds. Continuous-scenery checks cover every camera position along the route, low shore, both climbs, summit jumps, descent, and all four viewport edges. Scene isolation, original ledge collisions, paused temple entry, all five levels' mobile render-profile framing, import policies, and the 27 remaining legacy joins passed. The baker now counts legacy joins automatically; Levels 3–5 change only their baker hash metadata. The [Level 2 guide](level_2.md) includes refreshed in-game views of the five areas and the temple.
+
+The native iOS summit preview rendered one landscape and fourteen landmarks at the 720p world budget, with visible touch controls and a 2,144×1,206 UI framebuffer. It used the Intel Simulator’s Apple Software Renderer and does not establish physical-phone speed or quality. The ordinary playable iOS app was restored afterward. A stock-template Android artwork probe APK exported successfully with native ads excluded; production Gradle/AdMob integration and physical Android display quality remain untested.

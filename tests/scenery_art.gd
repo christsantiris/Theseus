@@ -107,10 +107,10 @@ func _verify_level(number: int) -> void:
 	var parent: Node = world.backdrop
 	var previous: Sprite2D
 	var count := 0
-	if number == 1:
+	if number in [1, 2]:
 		var continuous := parent.get_node("ContinuousLandscape") as Sprite2D
-		_expect(continuous.material == null and continuous.texture == world.PANORAMA_SHEETS[0], "Level 1 uses one unblended painting")
-		_expect(world.midground.get_child_count() == 13, "Level 1 has complete independent scenery objects")
+		_expect(continuous.material == null and continuous.texture == world.PANORAMA_SHEETS[0], "Level %d uses one unblended painting" % number)
+		_expect(world.midground.get_child_count() == (13 if number == 1 else 14), "Continuous levels have complete independent scenery objects")
 	else:
 		for child in parent.get_children():
 			if not child is Sprite2D or not child.name.begins_with("Landscape"):
@@ -126,7 +126,7 @@ func _verify_level(number: int) -> void:
 				_expect(overlap > 0 and is_equal_approx(fade, overlap), "Level %d join %d blends across its full physical overlap" % [number, count])
 			previous = panel
 			count += 1
-		_expect(count == 10, "Every level retains all ten panoramas")
+		_expect(count == 10, "Each legacy level retains all ten panoramas")
 	for definition in layout.CHECKPOINTS:
 		var shrine := level.get_node(String(definition.name)) as Area2D
 		var collision := shrine.get_node("CollisionShape2D") as CollisionShape2D
@@ -154,7 +154,7 @@ func _run() -> void:
 			child.stream = null
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: continuous content-aware seams, solid columns, no color-selected holes or overlap-edge cuts, 36 legacy landscape joins and Level 1 continuous landscape, both shrine states, all ten shrine triggers and checkpoint saves.")
+		print("PASS: continuous content-aware seams, solid columns, no color-selected holes or overlap-edge cuts, 27 legacy landscape joins and Levels 1–2 continuous landscapes, both shrine states, all ten shrine triggers and checkpoint saves.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)

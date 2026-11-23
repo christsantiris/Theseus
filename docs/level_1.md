@@ -32,8 +32,8 @@ separate repeating stone terrain keeps its existing mipmaps.
 Detailed masonry, waystones, the limestone-and-bronze checkpoint shrines, and
 the temple facade complete the scenery. Ground and platform collision,
 movement, enemies, pickups, checkpoint spawns, and temple entry are unchanged.
-Levels 2–5 retain their previous panorama renderers pending review of this
-Level 1 milestone.
+Level 2 now uses a continuous rocky coastline. Levels 3–5 retain their previous
+panorama renderers pending subsequent milestones.
 
 ## Route and encounter progression
 

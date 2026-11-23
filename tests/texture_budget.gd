@@ -116,7 +116,7 @@ func _run() -> void:
 	exports.load("res://export_presets.cfg")
 	_expect(exports.get_value("preset.0.options", "vram_texture_compression/for_desktop") and exports.get_value("preset.0.options", "vram_texture_compression/for_mobile"), "Web ships both platform compression variants")
 	for number in range(1, 6):
-		if number > 1:
+		if number > 2:
 			var joins = load("res://assets/art/backgrounds/level_%d/_seams/joins.tres" % number)
 			for rectangle in joins.overlap_rects:
 				_expect(int(rectangle.position.x) % 4 == 0 and int(rectangle.position.y) % 4 == 0, "Overlap origins align to compression blocks")

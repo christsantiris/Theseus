@@ -2,22 +2,21 @@
 extends "res://scenes/levels/level_geometry.gd"
 
 const Coast := preload("res://scenes/levels/level_2_layout.gd")
-const PANORAMA_SHEETS := [
-	preload("res://assets/art/backgrounds/level_2/coastal_road.png"),
-	preload("res://assets/art/backgrounds/level_2/broken_quays.png"),
-	preload("res://assets/art/backgrounds/level_2/sea_cliffs.png"),
-	preload("res://assets/art/backgrounds/level_2/cyclopean_ruins.png"),
-	preload("res://assets/art/backgrounds/level_2/rocky_sanctuary.png"),
-]
+const CONTINUOUS_LANDSCAPE := true
+const PANORAMA_SHEETS := [preload("res://assets/art/backgrounds/level_2/aegean_landscape.png")]
+const OUTCROP := preload("res://assets/art/backgrounds/level_2/coastal_outcrop.png")
+const QUAY := preload("res://assets/art/backgrounds/level_2/ruined_quay.png")
+const CYCLOPEAN_GATE := preload("res://assets/art/backgrounds/level_2/cyclopean_gate.png")
 const CLIFF := preload("res://assets/art/backgrounds/level_2/coastal_limestone.png")
 const CAP_STONE := preload("res://assets/art/backgrounds/level_1/limestone_wall.png")
 const WAYSTONE := preload("res://assets/art/backgrounds/level_1/waystone.png")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
-const PANELS := preload("res://scenes/levels/landscape_panels.gd")
-const PANEL_WIDTH := 480.0
-const OVERLAP := 48.0
+const LANDSCAPE_HEIGHT := 288.0
+const FAR_SCROLL := 0.12
+const FAR_VERTICAL_SCROLL := 0.25
 const MATERIAL_DENSITY := 16.0
 var backdrop: Node2D
+var midground: Node2D
 
 
 func _ready() -> void:
@@ -42,50 +41,61 @@ func _process(_delta: float) -> void:
 
 
 func _build_landscape() -> void:
-	var sky := ColorRect.new()
-	sky.name = "DistantSky"
-	sky.size = Vector2(Coast.WIDTH, Coast.HEIGHT)
-	sky.color = Color("a6c4dc")
-	sky.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	sky.z_index = -2
-	add_child(sky)
 	backdrop = Node2D.new()
 	backdrop.name = "SeaBackdrop"
-	backdrop.z_index = -1
+	backdrop.z_index = -3
 	add_child(backdrop)
-	var overlap_width := OVERLAP * 2.0 / (PANEL_WIDTH + OVERLAP * 2.0)
-	var previous: Texture2D
-	for index in PANORAMA_SHEETS.size() * 2:
-		var sheet: Texture2D = PANORAMA_SHEETS[index / 2]
-		var image := AtlasTexture.new()
-		image.atlas = sheet
-		image.region = Rect2(0, (index % 2) * sheet.get_height() / 2, sheet.get_width(), sheet.get_height() / 2)
-		var panorama := Sprite2D.new()
-		panorama.name = "Landscape%d" % index
-		panorama.texture = image
-		panorama.centered = false
-		panorama.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
-		var factor := (PANEL_WIDTH + OVERLAP * 2.0) / image.get_width()
-		panorama.scale = Vector2.ONE * factor
-		panorama.position = Vector2(index * PANEL_WIDTH - OVERLAP, 180.0 - image.get_height() * factor)
-		PANELS.prepare(panorama, index > 0, overlap_width, previous)
-		backdrop.add_child(panorama)
-		previous = image
+	var sea := Sprite2D.new()
+	sea.name = "ContinuousLandscape"
+	sea.texture = PANORAMA_SHEETS[0]
+	sea.centered = false
+	sea.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	sea.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
+	sea.scale = Vector2.ONE * LANDSCAPE_HEIGHT / sea.texture.get_height()
+	backdrop.add_child(sea)
+
+	midground = Node2D.new()
+	midground.name = "CoastalLandmarks"
+	midground.z_index = -2
+	add_child(midground)
+	# These complete objects stand on authored landings. Keep them in world
+	# space so their feet never drift off the narrow ledges during a climb.
+	for point in [Vector2(260, 108), Vector2(616, 52), Vector2(2016, 56),
+		Vector2(2360, 48), Vector2(2760, 64), Vector2(3872, 40), Vector2(4100, 80)]:
+		_landmark(OUTCROP, point.x, point.y, "CoastalOutcrop", 0.97)
+	for point in [Vector2(1080, 42), Vector2(1496, 48), Vector2(1776, 40), Vector2(4280, 34)]:
+		_landmark(QUAY, point.x, point.y, "RuinedQuay", 0.82)
+	for point in [Vector2(3032, 88), Vector2(3464, 88), Vector2(4408, 84)]:
+		_landmark(CYCLOPEAN_GATE, point.x, point.y, "CyclopeanGate", 0.96)
+	_sync_backdrop()
+
+
+func _landmark(texture: Texture2D, route_x: float, height: float, label: String, footing := 1.0) -> void:
+	var sprite := Sprite2D.new()
+	sprite.name = label + str(int(route_x))
+	sprite.texture = texture
+	sprite.centered = false
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
+	sprite.scale = Vector2.ONE * height / texture.get_height()
+	var width := texture.get_width() * sprite.scale.x
+	# Align the painted feet, allowing for each cutout’s transparent margin.
+	sprite.position = Vector2(route_x - width * 0.5, Coast.surface_at(route_x) - height * footing + 2.0)
+	midground.add_child(sprite)
 
 
 func _sync_backdrop() -> void:
 	if not is_instance_valid(backdrop):
 		return
 	var camera := get_viewport().get_camera_2d()
-	if camera == null or Engine.is_editor_hint():
-		backdrop.position.y = Coast.FLOOR_Y - 152.0
-		return
-	# Distant scenery stays at the horizon while the camera follows the taller
-	# cliffs. The rock surfaces, actors, and every collision remain in world space.
-	var logical_height := float(get_window().content_scale_size.y)
-	if logical_height <= 0.0:
-		logical_height = 180.0
-	backdrop.position.y = camera.get_screen_center_position().y - logical_height * 0.5 / camera.zoom.y
+	var view_top_left := Vector2.ZERO
+	if camera != null and not Engine.is_editor_hint():
+		var view := Vector2(get_window().content_scale_size) / camera.zoom
+		view_top_left = camera.get_screen_center_position() - view * 0.5
+	# One 864x288 painting covers all 4,800 route units. Its vertical overscan
+	# accommodates the full 0..140 camera range without wrapping or aprons.
+	backdrop.position = Vector2(view_top_left.x * (1.0 - FAR_SCROLL),
+		view_top_left.y * (1.0 - FAR_VERTICAL_SCROLL) - 48.0)
 
 
 func _decorate_temple() -> void:

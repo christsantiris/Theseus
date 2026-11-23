@@ -39,10 +39,11 @@ func _run() -> void:
 	await _load_level(2)
 	var world := level.get_node("World")
 	var backdrop := world.get_node("SeaBackdrop") as Node2D
-	_expect(backdrop.get_child_count() == 10, "Five coastal areas each have west/east panoramas")
+	_expect(backdrop.get_child_count() == 1, "One coastal painting replaces the ten separate views")
 	_expect(backdrop.z_index < 0, "Coastal scenery stays behind walkable terrain")
 	for panorama: Sprite2D in backdrop.get_children():
 		_expect(panorama.texture.get_width() >= 2000, "Coastal panorama retains source detail")
+		_expect(panorama.material == null and panorama.texture_repeat == CanvasItem.TEXTURE_REPEAT_DISABLED, "Coast never blends or wraps its source")
 		_expect(is_equal_approx(panorama.texture.get_width() / float(panorama.texture.get_height()), 3.0), "Coastal panorama keeps its natural 3:1 aspect ratio")
 	for index in Coast.PLATFORMS.size():
 		var body := world.get_node("CoastalLedge%d" % index) as StaticBody2D
@@ -50,22 +51,34 @@ func _run() -> void:
 		var rectangle := Rect2(body.position - collision.shape.size * 0.5, collision.shape.size)
 		_expect(rectangle == Coast.PLATFORMS[index], "Coastal ledge %d keeps its original collision rectangle" % index)
 	var camera := level.player.get_node("Camera2D") as Camera2D
-	for point: Vector2 in [Vector2(48, 280), Vector2(1320, 168), Vector2(2472, 216), Vector2(3460, 104), Vector2(3760, 200), Vector2(4688, 280)]:
+	var previous_sample := -INF
+	for x in range(160, Coast.WIDTH - 160 + 1, 32):
+		level.player.position = Vector2(x, Coast.surface_at(x))
+		camera.reset_smoothing()
+		camera.force_update_scroll()
+		await _frames(1)
+		var corner := camera.get_screen_center_position() - Vector2(160, 90)
+		var painting := backdrop.get_child(0) as Sprite2D
+		var rectangle := Rect2(painting.global_position, painting.texture.get_size() * painting.global_scale)
+		_expect(rectangle.grow(0.001).encloses(Rect2(corner, Vector2(320, 180))), "Continuous sea covers the complete camera at route x=%d" % x)
+		var sample := (corner.x - rectangle.position.x) / painting.scale.x
+		_expect(sample >= previous_sample, "Sea UV advances continuously without switching paintings")
+		previous_sample = sample
+	for point: Vector2 in [Vector2(48, 280), Vector2(1320, 168), Vector2(2472, 216),
+		Vector2(3460, 104), Vector2(3460, 66), Vector2(3760, 200), Vector2(4688, 280), Vector2(4640, 320)]:
 		level.player.position = point
 		camera.reset_smoothing()
 		camera.force_update_scroll()
 		await _frames()
-		var top := camera.get_screen_center_position().y - 90.0
-		_expect(is_equal_approx(backdrop.position.y, top), "Sea horizon follows the vertical camera at %s" % point)
-		for x in range(0, Coast.WIDTH, 32):
-			for y in [top + 1.0, top + 90.0, top + 179.0]:
-				var covered := false
-				for panorama: Sprite2D in backdrop.get_children():
-					var rectangle := Rect2(panorama.global_position, panorama.texture.get_size() * panorama.global_scale)
-					if rectangle.has_point(Vector2(x, y)):
-						covered = true
-						break
-				_expect(covered, "Coastal panoramas cover world %d, %d" % [x, y])
+		var corner := camera.get_screen_center_position() - Vector2(160, 90)
+		var painting := backdrop.get_child(0) as Sprite2D
+		var rectangle := Rect2(painting.global_position, painting.texture.get_size() * painting.global_scale)
+		_expect(rectangle.grow(0.001).encloses(Rect2(corner, Vector2(320, 180))), "Sea and sky cover low shore, both climbs, summit jumps and descent")
+	_expect(world.midground.get_child_count() == 14, "Fourteen coastal landmarks remain complete")
+	for sprite: Sprite2D in world.midground.get_children():
+		_expect(sprite.material == null and sprite.get_child_count() == 0, "Scenery objects need no fades or repeated aprons")
+		_expect(sprite.texture.get_width() <= 4096 and sprite.texture.get_height() <= 4096, "Landmarks fit mobile texture limits")
+		_expect(sprite.position == sprite.global_position, "Landmark feet stay anchored in world space through climbs")
 	var gate := level.get_node("TempleGate") as Node2D
 	var facade := gate.get_node_or_null("CinematicFacade")
 	_expect(facade != null and gate.self_modulate.a == 0, "Coastal exit uses the cinematic facade")
@@ -80,7 +93,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: ten coastal panoramas, full-route coverage through both climbs, natural proportions, original ledge collisions, cinematic gate state, and other-level isolation.")
+		print("PASS: one continuous coastline, fourteen complete landmarks, full-route coverage through both climbs, natural proportions, original ledge collisions, cinematic gate state, and other-level isolation.")
 	quit(0 if failures.is_empty() else 1)
 
 
