@@ -124,7 +124,7 @@ func _run() -> void:
 	_check_bounds(level.pause_panel)
 	_check_bounds(level.high_score_table)
 	var rows: Array = level.high_score_table.rows
-	_expect(rows.size() == 5 and rows[0].get_child(0).get_child(2).text == "YOU", "Five slots and the YOU marker make the current result clear")
+	_expect(rows.size() == 5 and rows[0].get_child(0).get_child_count() == 2, "Five slots highlight the current result without a marker column")
 	level._on_replay_pressed()
 	await scene_changed
 	await _frames()

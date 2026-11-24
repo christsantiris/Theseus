@@ -19,7 +19,7 @@ func _ready() -> void:
 		var cells := HBoxContainer.new()
 		cells.add_theme_constant_override("separation", 2)
 		row.add_child(cells)
-		for column in 3:
+		for column in 2:
 			var cell := Label.new()
 			cell.theme_type_variation = &"CarvedLabel"
 			cell.add_theme_font_size_override("font_size", 8)
@@ -27,8 +27,6 @@ func _ready() -> void:
 			if column == 1:
 				cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				cell.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-			elif column == 2:
-				cell.custom_minimum_size.x = 22
 			cells.add_child(cell)
 		rows.append(row)
 		add_child(row)
@@ -60,7 +58,6 @@ func _refresh() -> void:
 		var cells: HBoxContainer = rows[index].get_child(0)
 		cells.get_child(0).text = str(index + 1) + "."
 		cells.get_child(1).text = str(entry.score) if not entry.is_empty() else "-"
-		cells.get_child(2).text = "YOU" if current else ""
 		var style := StyleBoxFlat.new()
 		style.bg_color = Color(0.72, 0.48, 0.13, 0.24) if current else Color.TRANSPARENT
 		style.content_margin_left = 2

@@ -62,7 +62,7 @@ The exit remains locked until the eighth hit defeats the boss. Theseus then
 enters the existing doorway sequence and reaches **Theseus Victorious**.
 The final menu offers Replay and Return to Title.
 It also shows the persistent local top-five scores, highlighting this victory's
-score in gold with a **YOU** marker when it qualifies. Earlier level completions
+score in gold when it qualifies. Earlier level completions
 do not submit scores; Hades records each life when Theseus dies.
 
 ## Art and lighting
