@@ -4,6 +4,7 @@ extends Node
 # privacy handling and native-device validation are complete.
 const ANDROID_TEST_UNIT := "ca-app-pub-3940256099942544/1033173712"
 const IOS_TEST_UNIT := "ca-app-pub-3940256099942544/4411468910"
+const ANDROID_UNIT := "ca-app-pub-9323307074562151/3770627453"
 const IOS_UNIT := "ca-app-pub-9323307074562151/2070019624"
 const MAX_LOAD_ATTEMPTS := 3
 
@@ -96,9 +97,8 @@ static func unit_id_for(platform: String, debug_build: bool, production_enabled:
 		return ""
 	if debug_build:
 		return IOS_TEST_UNIT if platform == "iOS" else ANDROID_TEST_UNIT
-	if production_enabled and platform == "iOS":
-		return IOS_UNIT
-	# Android's production ad unit has not been registered yet.
+	if production_enabled:
+		return IOS_UNIT if platform == "iOS" else ANDROID_UNIT
 	return ""
 
 

@@ -191,12 +191,12 @@ To run Theseus, open `builds/ios/Theseus.xcodeproj` in Xcode, select an iPhone S
 
 ### Production ads
 
-The [level-complete interstitial](docs/mobile.md#ads) has Theseus's registered iOS app and ad-unit IDs. Debug mobile builds use Google's test ads; live serving is disabled. The intended release uses non-personalized ads with no cross-app tracking. Before enabling production ads:
+The [level-complete interstitial](docs/mobile.md#ads) has Theseus's registered iOS and Android app and ad-unit IDs. Debug mobile builds use Google's test ads; live serving is disabled. The intended release uses non-personalized ads with no cross-app tracking. Before enabling production ads:
 
 - Implement Google's consent handling (UMP), applicable regional messages, and accessible privacy choices. Skip ads when required permission is unavailable; non-personalized ads can still require consent for device storage or identifiers.
 - Verify the iOS integration performs no cross-app tracking, complete App Store privacy disclosures, and validate test ads on a physical iPhone. ATT is needed if tracking is introduced.
 - Move the interstitial ahead of the results screen's Continue button, verify `app-ads.txt`, link the public App Store listing, and complete AdMob's readiness review.
-- Configure Android's production app and interstitial IDs, finish its Gradle build, and validate the Android integration separately.
+- Finish Android's Gradle build, Play privacy disclosures, and native consent handling, and validate the Android integration separately.
 
 ### Remove Ads for $0.99
 

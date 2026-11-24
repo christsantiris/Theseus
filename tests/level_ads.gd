@@ -34,6 +34,7 @@ func _run() -> void:
 	var ads: Node = root.get_node("LevelAds")
 	_expect(ads.has_method("prepare") and ads.has_method("show_then"), "Level ads autoload is present")
 	_expect(not ads.requests_ads(), "Desktop and web do not request an interstitial")
+	_expect(ProjectSettings.get_setting("admob/general/android/app_id") == "ca-app-pub-9323307074562151~4923413670", "Android export uses Theseus's registered AdMob app ID")
 	_expect(ProjectSettings.get_setting("admob/general/ios/app_id") == "ca-app-pub-9323307074562151~5989083331", "iOS export uses Theseus's registered AdMob app ID")
 	_expect(not ProjectSettings.get_setting("advertising/production_enabled", true), "Live serving stays off while privacy setup is incomplete")
 	for platform in ["iOS", "Android"]:
@@ -42,7 +43,7 @@ func _run() -> void:
 		_expect(ads.unit_id_for(platform, true, false) == expected_test, "Debug ads work before live serving is enabled on " + platform)
 		_expect(ads.unit_id_for(platform, false, false).is_empty(), "Release builds skip ads until production is enabled on " + platform)
 	_expect(ads.unit_id_for("iOS", false, true) == "ca-app-pub-9323307074562151/2070019624", "Configured iOS production unit is separate from the test unit")
-	_expect(ads.unit_id_for("Android", false, true).is_empty(), "Android releases skip ads until their own production unit is configured")
+	_expect(ads.unit_id_for("Android", false, true) == "ca-app-pub-9323307074562151/3770627453", "Android production requests select their own registered unit")
 	for platform in ["macOS", "Windows", "Linux", "Web"]:
 		_expect(ads.unit_id_for(platform, true, true).is_empty(), "Mobile ads are unavailable on " + platform)
 	var request: AdRequest = ads._new_request()
@@ -66,7 +67,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: iOS registration, debug test ads, production disabled, non-personalized request parameters, desktop bypass and level continuation.")
+		print("PASS: Android/iOS registration, debug test ads, production disabled, non-personalized request parameters, desktop bypass and level continuation.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)
