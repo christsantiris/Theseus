@@ -7,7 +7,7 @@ const SPIKE_PIT := preload("res://scenes/objects/spike_pit.tscn")
 func _ready() -> void:
 	layout = preload("res://scenes/levels/level_5_layout.gd")
 	level_number = 5
-	next_level = ""
+	next_level = "res://scenes/levels/level_6.tscn"
 	objective = "Cross the gorge. Cut every Hydra head to open the temple."
 	completion_text = "The gorge sanctuary is free of the Hydra."
 	$Player/Camera2D.position.y = -24

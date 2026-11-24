@@ -4,7 +4,7 @@ extends SceneTree
 # and mobile. Run with --headless for asset checks or with a renderer to include
 # texture readback on that graphics driver.
 const MAX_TEXTURE_SIZE := 4096
-const KINDS := ["raider", "peltast", "hoplite", "stymphalian_bird", "telchine", "spartoi", "lamia", "cyclops_slinger", "satyr", "bronze_bull", "cerberus_pup", "hydra"]
+const KINDS := ["raider", "peltast", "hoplite", "stymphalian_bird", "telchine", "spartoi", "lamia", "cyclops_slinger", "satyr", "bronze_bull", "cerberus_pup", "hydra", "merfolk_trident", "merfolk_reefblade"]
 var failures: Array[String] = []
 var checked := 0
 

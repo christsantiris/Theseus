@@ -138,7 +138,7 @@ func _run() -> void:
 	for profile in ["720", "540", "preview"]:
 		var actual := await _trajectory(profile)
 		_expect(actual == native, "Movement, jumps, collisions and sword frames match native rendering: " + profile)
-		for number in range(1, 6):
+		for number in range(1, 7):
 			var level := await _open(number)
 			_expect(current_scene.get_parent() == root, "Scene ownership and reload behavior remain unchanged")
 			_expect(root.get_visible_rect().size == Vector2(320, 180), "Logical view remains 320x180")
@@ -177,5 +177,5 @@ func _run() -> void:
 			child.stop()
 			child.stream = null
 	OS.delay_msec(150)
-	print("PASS: render sizes, all five camera views, identical physics/attacks, HUD and touch safe areas, resizing, menus and desktop restoration." if failures.is_empty() else str(failures))
+	print("PASS: render sizes, all six camera views, identical physics/attacks, HUD and touch safe areas, resizing, menus and desktop restoration." if failures.is_empty() else str(failures))
 	quit(0 if failures.is_empty() else 1)

@@ -1,6 +1,6 @@
 # Mobile setup and testing
 
-The same Godot project targets Android and iOS. All five levels use the existing movement, collision shapes, jump heights, sword timing, enemy behavior, and checkpoint rules. The mobile interface activates automatically on phones and tablets. Desktop play keeps its keyboard interface.
+The same Godot project targets Android and iOS. All six levels use the existing movement, collision shapes, jump heights, sword timing, enemy behavior, and checkpoint rules. The mobile interface activates automatically on phones and tablets. Desktop play keeps its keyboard interface.
 
 ## Controls and display
 
@@ -12,7 +12,7 @@ The game uses either landscape orientation and retains its 320×180 gameplay vie
 
 Character sheets keep their full-resolution artwork and transparency, with frames arranged into rows so every texture fits within 4096×4096. Frame sizes, animation timing, and collision shapes are unchanged. Display safe areas are converted from physical screen pixels to game coordinates, including letterboxing, so movement and action buttons remain separated on phones and tablets.
 
-Opaque panoramas, baked color overlaps, and terrain tiles use S3TC on supported desktop GPUs and ETC2 on supported mobile GPUs. Web exports include both variants. Character sheets, transparent props, fonts, UI, and seam-data masks stay lossless. Only the five separate terrain tiles generate mipmaps; character and panorama atlases do not. Unsupported GPUs may decode textures to uncompressed memory, so emulator results need separate interpretation. See the [texture measurements and tradeoffs](performance.md#texture-memory-budget).
+Opaque continuous landscapes and terrain tiles use S3TC on supported desktop GPUs and ETC2 on supported mobile GPUs. Web exports include both variants. Character sheets, transparent props, fonts and UI stay lossless. Only the five separate terrain tiles generate mipmaps; character and panorama atlases do not. Unsupported GPUs may decode textures to uncompressed memory, so emulator results need separate interpretation. See the [texture measurements and tradeoffs](performance.md#texture-memory-budget).
 
 Level 1 uses one non-repeating landscape and thirteen complete transparent scenery objects instead of panorama blends. Its new cutouts stay lossless; the grove and colonnade import at a 1,024-pixel maximum dimension and the aqueduct at its full 2,172-pixel width. Gameplay coordinates, touch placement, and all render profiles are unchanged.
 
@@ -145,11 +145,11 @@ godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60
 godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60 -- --mobile-controls --mobile-render=540
 ```
 
-The second command checks desktop controls and integer scaling. The existing combat, animation, Hades, and five level smoke tests also run without mobile controls.
+The second command checks desktop controls and integer scaling. The existing combat, animation, Hades, and six level smoke tests also run without mobile controls.
 
 The artwork check verifies mobile-safe texture dimensions, complete atlas regions, and visible pixels for Theseus and every enemy type. The touch checks include physical display insets on an iPhone, an Android phone, and a tablet.
 
-The rendering check reads back the actual world targets, verifies screen markers through the world and final composition for all five levels, compares identical movement/jump/sword-frame histories across profiles, checks left/right safe-area layouts and display resizes, and sends a real mouse click through the presentation layer to a title button. [Performance measurements](performance.md#mobile-rendering-budget) separate hardware browser results from software-rendered simulators.
+The rendering check reads back the actual world targets, verifies screen markers through the world and final composition for all six levels, compares identical movement/jump/sword-frame histories across profiles, checks left/right safe-area layouts and display resizes, and sends a real mouse click through the presentation layer to a title button. [Performance measurements](performance.md#mobile-rendering-budget) separate hardware browser results from software-rendered simulators.
 
 Before accepting a device build, play each level and check simultaneous touches, one-thumb Jump-then-Sword strikes against high birds, sword timing, ducking under birds, spike-pit recovery, temple entry, pause/resume, and checkpoint loading. Check both landscape directions, notched screens, interruption by another app, frame rate, audio, and heat. Desktop simulation and package validation do not establish device performance or battery use.
 

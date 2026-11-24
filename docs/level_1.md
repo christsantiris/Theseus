@@ -32,7 +32,7 @@ separate repeating stone terrain keeps its existing mipmaps.
 Detailed masonry, waystones, the limestone-and-bronze checkpoint shrines, and
 the temple facade complete the scenery. Ground and platform collision,
 movement, enemies, pickups, checkpoint spawns, and temple entry are unchanged.
-All five levels now use continuous landscapes with independent landmarks.
+All six levels now use continuous landscapes with independent landmarks.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
 one world pixel of overlap at the ground. This closes transparent-padding gaps
@@ -112,7 +112,7 @@ pickup positions, shrine positions, and tutorial prompts. `level_1_geometry.gd`
 inherits the original collision construction from `level_geometry.gd`, then
 renders the continuous landscape, independent scenery cutouts, and stone surfaces.
 `assets/art/backgrounds/level_1/attic_landscape.png` is the single opaque painting;
-`olive_grove.png`, `colonnade.png`, and `aqueduct.png` are transparent landmarks. `level_1_temple.gd` renders the cinematic facade shared by all five levels,
+`olive_grove.png`, `colonnade.png`, and `aqueduct.png` are transparent landmarks. `level_1_temple.gd` renders the cinematic facade shared by all six levels,
 leaving gate collision, unlocking, and entry logic on the existing temple.
 Each level owns its scenery renderer. Scenery is also visible in the editor.
 `level_1.gd` builds the encounters and manages

@@ -24,6 +24,8 @@ const WEIGHTS := {
 	"raider": 1.0, "spartoi": 1.0,
 	# Holds ground and jabs at short range.
 	"peltast": 0.9, "telchine": 0.9,
+	# Duckable high thrust; short low lunge. Both have exposed recoveries.
+	"merfolk": 0.9, "reefblade": 1.0,
 	# Invulnerable crouch and the quickest authored windup.
 	"hoplite": 1.25,
 	# Hops and charges; can be bounced on.

@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/levels/level_1.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scenes/levels/level_6.gd" id="2_level"]
+[ext_resource type="Script" path="res://scenes/levels/level_6_geometry.gd" id="3_atlantis"]
+
+[node name="Level6" instance=ExtResource("1_base")]
+script = ExtResource("2_level")
+
+[node name="World" parent="." index="0"]
+script = ExtResource("3_atlantis")
+
+[node name="Player" parent="." index="1"]
+position = Vector2(48, 280)

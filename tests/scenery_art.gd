@@ -29,7 +29,7 @@ func _verify_level(number: int) -> void:
 	var continuous := parent.get_node("ContinuousLandscape") as Sprite2D
 	_expect(parent.get_child_count() == 1 and continuous.material == null and continuous.texture == world.PANORAMA_SHEETS[0], "Level %d uses one unblended painting" % number)
 	_expect(continuous.texture_repeat == CanvasItem.TEXTURE_REPEAT_DISABLED, "Level %d never wraps its landscape" % number)
-	_expect(world.midground.get_child_count() == [13, 14, 12, 13, 11][number - 1], "Level %d has complete independent scenery objects" % number)
+	_expect(world.midground.get_child_count() == [13, 14, 12, 13, 11, 13][number - 1], "Level %d has complete independent scenery objects" % number)
 	for definition in layout.CHECKPOINTS:
 		var shrine := level.get_node(String(definition.name)) as Area2D
 		var collision := shrine.get_node("CollisionShape2D") as CollisionShape2D
@@ -48,7 +48,7 @@ func _verify_level(number: int) -> void:
 
 
 func _run() -> void:
-	for number in range(1, 6):
+	for number in range(1, 7):
 		_verify_level(number)
 	for child in root.get_node("GameMusic").get_children():
 		if child is AudioStreamPlayer:
@@ -56,7 +56,7 @@ func _run() -> void:
 			child.stream = null
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: all five continuous landscapes, complete scenery objects, both shrine states, all ten shrine triggers and checkpoint saves.")
+		print("PASS: all six continuous landscapes, complete scenery objects, both shrine states, all twelve shrine triggers and checkpoint saves.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)

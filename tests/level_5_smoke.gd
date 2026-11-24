@@ -253,9 +253,8 @@ func _guard_combat(level: Node) -> void:
 		if level._complete:
 			break
 	Input.action_release("move_right")
-	_expect(level._complete and saw_entry and level.pause_heading.text == "Level 5 Complete" and not level.next_button.visible, "Entering the unlocked temple completes the current final level")
-	level._on_next_pressed()
-	_expect(state.level_number == 5, "Final completion cannot advance to a missing Level 6")
+	_expect(level._complete and saw_entry and level.pause_heading.text == "Level 5 Complete" and level.next_button.visible and level.next_button.text == "Continue to Level 6", "Entering the unlocked gorge temple offers Atlantis")
+	_expect(ResourceLoader.exists(level.next_level), "Gorge continuation points to the playable Atlantis scene")
 
 
 func _bull_reward() -> void:

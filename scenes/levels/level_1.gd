@@ -4,6 +4,8 @@ const Layout := preload("res://scenes/levels/level_1_layout.gd")
 const LEVEL_WIDTH := Layout.WIDTH
 const LEVEL_HEIGHT := Layout.HEIGHT
 const ENEMY_SCENES := {
+	"merfolk": "res://scenes/enemies/merfolk_trident.tscn",
+	"reefblade": "res://scenes/enemies/merfolk_reefblade.tscn",
 	"raider": "res://scenes/enemies/raider.tscn",
 	"peltast": "res://scenes/enemies/peltast.tscn",
 	"hoplite": "res://scenes/enemies/hoplite.tscn",

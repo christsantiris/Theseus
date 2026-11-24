@@ -37,7 +37,7 @@ waystones, checkpoint shrines, and the temple facade retain their existing art.
 `level_1_temple.gd` keeps its bronze bars synchronized with unlocking, including
 paused temple entry. Collision rectangles, birds and their flight lanes,
 encounters, movement, checkpoint behavior, and camera framing are unchanged.
-Level 1 retains its continuous countryside; All five levels now use continuous landscapes.
+All six levels use continuous landscapes with grounded landmarks.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
 one world pixel of overlap at the ground. This closes transparent-padding gaps

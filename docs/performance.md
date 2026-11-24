@@ -2,7 +2,7 @@
 
 ## Continuous scenery
 
-All five levels now load one continuous distant landscape plus complete
+All six levels now load one continuous distant landscape plus complete
 transparent landmarks. Landmarks stay fixed to authored ground; the distant
 painting scrolls with the camera. Each source landscape is 2,172×724 pixels.
 No runtime seam searches, GPU readbacks, blend shaders, overlap atlases, masks,
@@ -16,6 +16,7 @@ have been removed.
 | 3, sacred city | 864×288 | 12% / 25% | 12 |
 | 4, mountain terraces | 912×304 | 13% / 25% | 13 |
 | 5, temple gorge | 912×304 | 13% / 25% | 11 |
+| 6, Atlantis | 912×304 | 13% / 25% | 13 |
 
 Opaque landscapes retain GPU compression (S3TC desktop, ETC2 mobile). New
 transparent landmarks use lossless imports capped at 1,024 pixels on the longer
@@ -186,15 +187,15 @@ The native iOS summit preview rendered one landscape and fourteen landmarks at t
 
 ## Scenery ground contacts
 
-All five level renderers use `scenes/levels/scenery_grounding.gd` for their floor-standing scenery. Its anchors record the painted base row at 50% alpha in each source image, allowing for transparent margins and import resizing. Placement overlaps the terrain by one world pixel so bilinear filtering does not expose a distant-background strip below the roots or stone bases. The Level 1 olive grove previously floated about 3.5 world pixels above the floor; the corrected sample places its painted base about 0.95 pixels into the ground. Source images, texture formats, mipmaps, camera/parallax behavior, and collision shapes are unchanged.
+All six level renderers use `scenes/levels/scenery_grounding.gd` for their floor-standing scenery. Its anchors record the painted base row at 50% alpha in each source image, allowing for transparent margins and import resizing. Placement overlaps the terrain by one world pixel so bilinear filtering does not expose a distant-background strip below the roots or stone bases. The Level 1 olive grove previously floated about 3.5 world pixels above the floor; the corrected sample places its painted base about 0.95 pixels into the ground. Source images, texture formats, mipmaps, camera/parallax behavior, and collision shapes are unchanged.
 
-The rule covers Level 1 trees, colonnades, aqueduct and waystones; Level 2 outcrops, quays, gateways and waystones; Level 3 amphorae, workshops and stoas; Level 4 groves, walls and outcrops; Level 5 temple ruins, outcrops and colonnades; and Level 4–5 broken columns. Waystones use the local authored surface height, including raised terraces. Anchors are stored with the scenery code; update them when the painted base in an asset changes. Gameplay performs no image readback or alpha search.
+The rule covers Level 1 trees, colonnades, aqueduct and waystones; Level 2 outcrops, quays, gateways and waystones; Level 3 amphorae, workshops and stoas; Level 4 groves, walls and outcrops; Level 5 temple ruins, outcrops and colonnades; Level 6 wave walls, statues, arches and colonnades; and Level 4–5 broken columns. Waystones use the local authored surface height, including raised terraces. Anchors are stored with the scenery code; update them when the painted base in an asset changes. Gameplay performs no image readback or alpha search.
 
 ```sh
 godot --path . --script res://tests/scenery_grounding.gd
 ```
 
-The regression independently finds solid painted rows in imported textures and samples actual rendered contact pixels at 1×, 3×, 4× and 5× world scale (preview, 540p, 720p and desktop). Its negative control reproduces the original floating-tree placement and requires the same pixel check to reject it. It also checks actual Level 1–5 landmark bases as the camera moves through climbs and the full route. The existing five-level scenery and mobile-framing checks cover unchanged terrain, gates, camera ownership and render targets.
+The regression independently finds solid painted rows in imported textures and samples actual rendered contact pixels at 1×, 3×, 4× and 5× world scale (preview, 540p, 720p and desktop). Its negative control reproduces the original floating-tree placement and requires the same pixel check to reject it. It also checks actual Level 1–6 landmark bases as the camera moves through climbs and the full route. The existing five-level scenery and mobile-framing checks cover unchanged terrain, gates, camera ownership and render targets.
 
 The native iOS preview independently read the grove’s imported alpha and measured its painted base 0.95 world pixels inside the floor at the 720p budget, with touch controls visible. It used the Intel Simulator’s software renderer; physical-device performance was not measured. The normal playable iOS app was restored. A stock-template Android probe APK exported successfully without native ads; production Gradle/AdMob integration and physical Android display quality remain untested. Refreshed guide screenshots show all five levels, and the temple-entry animation retains the corrected background contact.
 
@@ -221,3 +222,26 @@ also passed for all five camera profiles, protected texture imports, terrain
 mip sampling, painted ground contacts, and checkpoint shrines. Level 3–5 gameplay
 regressions retained full-route traversal, spike escape/recovery, bull riding,
 and the Hydra's three-head gate requirement.
+
+## Atlantis play-test build
+
+[Level 6](level_6.md) uses the same continuous scenery and render budgets as
+the previous levels. Five wave walls and four bronze statues join four reused
+arches/colonnades; all bases are grounded. The two local canal surfaces draw
+small translucent rectangles and short wave lines, with no extra viewport,
+full-screen shader, reflection pass, image readback, or background seam work.
+The existing city masonry supplies the mipmapped terrain. Both Merfolk sheets
+remain lossless and fit within the mobile GPU size limit.
+
+The native iOS Level 6 probe rendered the harbor guard, Reefblade landing, and
+shallow canal at the 1280×720 world budget, with a 2,144×1,206 UI framebuffer
+and visible touch controls. Both distinct Merfolk atlases loaded correctly.
+The Intel Simulator used Apple Software Renderer; this is an artwork/path
+check, not a physical-phone performance result. The ordinary playable campaign
+app was restored afterward. A stock-template Android APK starts directly in
+Level 6 for play testing; native ads were excluded from that temporary build.
+Production Gradle/AdMob integration and physical Android display quality were
+not validated. Desktop checks cover all six render-profile camera views and
+protected texture imports; route and combat checks cover real duck/sword and
+full touch-jump counters. No sustained performance benchmark was run for this
+level.

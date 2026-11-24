@@ -110,7 +110,8 @@ HydraTempleGuard at (4608, 280) guards the temple at (4752, 280). Cutting
 one or two heads leaves the gate locked. The last head awards 450 points
 once and opens the gate. Theseus climbs the temple steps and disappears
 inside before the Level 5 completion menu. Replay restarts Level 5, and
-New Game resets the campaign to Level 1. Level 5 is the current final level.
+New Game resets the campaign to Level 1. **Continue to Level 6** enters
+[Atlantis](level_6.md) and saves its entrance as the new load point.
 
 ## Play and validation
 

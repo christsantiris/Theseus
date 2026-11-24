@@ -4,6 +4,8 @@ extends RefCounted
 # canvas padding is not a physical foot. Keep these anchors with their artwork;
 # tests inspect imported pixels independently when an image changes.
 const FOOTINGS := {
+	"res://assets/art/backgrounds/level_6/poseidon_statue.png": Vector2(1465, 1536),
+	"res://assets/art/backgrounds/level_6/wave_wall.png": Vector2(599, 724),
 	"res://assets/art/backgrounds/level_3/workshop.png": Vector2(941, 1024),
 	"res://assets/art/backgrounds/level_3/stoa.png": Vector2(672, 724),
 	"res://assets/art/backgrounds/level_4/terrace_wall.png": Vector2(585, 724),
