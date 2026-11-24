@@ -1,9 +1,10 @@
 extends Node
 
-# Full-screen ads play between levels on Android and iOS. Desktop and web
-# continue immediately. These are Google's sample interstitial units.
-const ANDROID_UNIT := "ca-app-pub-3940256099942544/1033173712"
-const IOS_UNIT := "ca-app-pub-3940256099942544/4411468910"
+# Debug mobile builds use Google's demo units. Live serving stays off until
+# privacy handling and native-device validation are complete.
+const ANDROID_TEST_UNIT := "ca-app-pub-3940256099942544/1033173712"
+const IOS_TEST_UNIT := "ca-app-pub-3940256099942544/4411468910"
+const IOS_UNIT := "ca-app-pub-9323307074562151/2070019624"
 const MAX_LOAD_ATTEMPTS := 3
 
 var _ad: InterstitialAd
@@ -17,11 +18,12 @@ var _pending := Callable()
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if requests_ads():
+		MobileAds.set_publisher_first_party_id_enabled(false)
 		MobileAds.initialize()
 
 
 func requests_ads() -> bool:
-	return OS.has_feature("mobile")
+	return OS.has_feature("mobile") and not _unit_id().is_empty()
 
 
 func prepare() -> void:
@@ -33,7 +35,7 @@ func prepare() -> void:
 	var callback := InterstitialAdLoadCallback.new()
 	callback.on_ad_loaded = _on_ad_loaded
 	callback.on_ad_failed_to_load = _on_ad_failed
-	InterstitialAdLoader.new().load(_unit_id(), AdRequest.new(), callback)
+	InterstitialAdLoader.new().load(_unit_id(), _new_request(), callback)
 
 
 func show_then(on_finished: Callable) -> void:
@@ -86,6 +88,21 @@ func _finish() -> void:
 
 
 func _unit_id() -> String:
-	if OS.get_name() == "iOS":
+	return unit_id_for(OS.get_name(), OS.is_debug_build(), bool(ProjectSettings.get_setting("advertising/production_enabled", false)))
+
+
+static func unit_id_for(platform: String, debug_build: bool, production_enabled: bool) -> String:
+	if platform not in ["iOS", "Android"]:
+		return ""
+	if debug_build:
+		return IOS_TEST_UNIT if platform == "iOS" else ANDROID_TEST_UNIT
+	if production_enabled and platform == "iOS":
 		return IOS_UNIT
-	return ANDROID_UNIT
+	# Android's production ad unit has not been registered yet.
+	return ""
+
+
+static func _new_request() -> AdRequest:
+	var request := AdRequest.new()
+	request.extras = {"npa": "1"}
+	return request

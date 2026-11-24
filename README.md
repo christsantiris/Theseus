@@ -130,7 +130,7 @@ Play-test with `tools/play_level.sh 7`, or `tools/play_mobile.sh 7`.
 ## How to play
 
 Hades and the final victory screen show the five highest scores saved on this
-device. A qualifying current result is highlighted in gold and marked **YOU**.
+device. A qualifying current result is highlighted in gold.
 Scores survive app restarts; they are not an online leaderboard. Each death or
 final victory records one result, including all points earned during the attempt.
 Reopening the same result screen does not add it again. New lives and replays

@@ -8,6 +8,14 @@
 
 config_version=5
 
+[admob]
+
+general/ios/app_id="ca-app-pub-9323307074562151~5989083331"
+
+[advertising]
+
+production_enabled=false
+
 [animation]
 
 compatibility/default_parent_skeleton_in_mesh_instance_3d=true
