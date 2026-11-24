@@ -12,6 +12,7 @@ const PANORAMA_SHEETS := [
 const MASONRY := preload("res://assets/art/backgrounds/level_4/mountain_stone.png")
 const CAP_STONE := preload("res://assets/art/backgrounds/level_1/limestone_wall.png")
 const COLUMN := preload("res://assets/art/backgrounds/level_4/broken_column.png")
+const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
 const PANELS := preload("res://scenes/levels/landscape_panels.gd")
 const PANEL_WIDTH := 480.0
@@ -136,8 +137,7 @@ func _draw() -> void:
 		_draw_terrain(platform)
 	for x in [1984, 4048, 4632]:
 		var height := 41.0
-		var width := height * COLUMN.get_width() / float(COLUMN.get_height())
-		draw_texture_rect(COLUMN, Rect2(x - width * 0.5, Mountain.surface_at(x) - height, width, height), false)
+		draw_texture_rect(COLUMN, GROUNDING.rect(COLUMN, x, Mountain.surface_at(x), height), false)
 
 
 func _draw_terrain(rectangle: Rect2) -> void:

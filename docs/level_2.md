@@ -40,6 +40,11 @@ encounters, movement, checkpoint behavior, and camera framing are unchanged.
 Level 1 retains its continuous countryside; Levels 3–5 keep their previous
 panorama renderers pending subsequent milestones.
 
+Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
+one world pixel of overlap at the ground. This closes transparent-padding gaps
+under trees, ruins, pots, columns, and waystones while preserving their artwork
+and collision layout. See the [ground-contact regression](performance.md#scenery-ground-contacts).
+
 ## Route
 
 | Area | X range | Route and encounters |

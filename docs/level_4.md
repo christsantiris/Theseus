@@ -29,6 +29,11 @@ patchy cutouts and hard vertical edges. Checkpoint shrines use matching
 cinematic limestone-and-bronze artwork, with cold and burning brazier states;
 their trigger areas and saved spawn positions are unchanged.
 
+Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
+one world pixel of overlap at the ground. This closes transparent-padding gaps
+under trees, ruins, pots, columns, and waystones while preserving their artwork
+and collision layout. See the [ground-contact regression](performance.md#scenery-ground-contacts).
+
 ## Route
 
 | Area | World X | Route and encounters |

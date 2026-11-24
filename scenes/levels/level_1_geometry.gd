@@ -10,6 +10,7 @@ const COLONNADE := preload("res://assets/art/backgrounds/level_1/colonnade.png")
 const AQUEDUCT := preload("res://assets/art/backgrounds/level_1/aqueduct.png")
 const WALL := preload("res://assets/art/backgrounds/level_1/limestone_wall.png")
 const WAYSTONE := preload("res://assets/art/backgrounds/level_1/waystone.png")
+const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
 const LANDSCAPE_HEIGHT := 256.0
 const FAR_SCROLL := 0.1
@@ -74,9 +75,7 @@ func _landmark(texture: Texture2D, route_x: float, height: float, label: String)
 	sprite.centered = false
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
-	sprite.scale = Vector2.ONE * height / texture.get_height()
-	var width := texture.get_width() * sprite.scale.x
-	sprite.position = Vector2(route_x * MID_SCROLL + 160.0 * (1.0 - MID_SCROLL) - width * 0.5, Layout.FLOOR_Y - height)
+	GROUNDING.place(sprite, route_x * MID_SCROLL + 160.0 * (1.0 - MID_SCROLL), Layout.FLOOR_Y, height)
 	midground.add_child(sprite)
 
 
@@ -115,7 +114,7 @@ func _draw() -> void:
 	for platform: Rect2 in Layout.PLATFORMS:
 		_draw_masonry(platform)
 	for x in [624, 944, 1856, 2272, 2832, 3744, 4576]:
-		draw_texture_rect(WAYSTONE, Rect2(x - 9, 131, 18, 21), false)
+		draw_texture_rect(WAYSTONE, GROUNDING.rect(WAYSTONE, x, Layout.surface_at(x), 21.0, 18.0), false)
 
 
 func _draw_masonry(rectangle: Rect2) -> void:

@@ -35,6 +35,11 @@ movement, enemies, pickups, checkpoint spawns, and temple entry are unchanged.
 Level 2 now uses a continuous rocky coastline. Levels 3–5 retain their previous
 panorama renderers pending subsequent milestones.
 
+Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
+one world pixel of overlap at the ground. This closes transparent-padding gaps
+under trees, ruins, pots, columns, and waystones while preserving their artwork
+and collision layout. See the [ground-contact regression](performance.md#scenery-ground-contacts).
+
 ## Route and encounter progression
 
 | Area | World X | Purpose | Encounters |

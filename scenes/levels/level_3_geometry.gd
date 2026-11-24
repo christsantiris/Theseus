@@ -12,6 +12,7 @@ const PANORAMA_SHEETS := [
 const MASONRY := preload("res://assets/art/backgrounds/level_3/city_masonry.png")
 const CAP_STONE := preload("res://assets/art/backgrounds/level_1/limestone_wall.png")
 const AMPHORA := preload("res://assets/art/backgrounds/level_3/amphora.png")
+const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
 const PANELS := preload("res://scenes/levels/landscape_panels.gd")
 const PANEL_WIDTH := 480.0
@@ -126,8 +127,7 @@ func _draw() -> void:
 		_draw_paving(platform)
 	for x in [1184, 1808, 2944, 3712, 4400]:
 		var height := 24.0
-		var width := height * AMPHORA.get_width() / float(AMPHORA.get_height())
-		draw_texture_rect(AMPHORA, Rect2(x - width * 0.5, Town.surface_at(x) - height, width, height), false)
+		draw_texture_rect(AMPHORA, GROUNDING.rect(AMPHORA, x, Town.surface_at(x), height), false)
 
 
 func _draw_paving(rectangle: Rect2) -> void:

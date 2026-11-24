@@ -10,6 +10,7 @@ const CYCLOPEAN_GATE := preload("res://assets/art/backgrounds/level_2/cyclopean_
 const CLIFF := preload("res://assets/art/backgrounds/level_2/coastal_limestone.png")
 const CAP_STONE := preload("res://assets/art/backgrounds/level_1/limestone_wall.png")
 const WAYSTONE := preload("res://assets/art/backgrounds/level_1/waystone.png")
+const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
 const LANDSCAPE_HEIGHT := 288.0
 const FAR_SCROLL := 0.12
@@ -62,25 +63,22 @@ func _build_landscape() -> void:
 	# space so their feet never drift off the narrow ledges during a climb.
 	for point in [Vector2(260, 108), Vector2(616, 52), Vector2(2016, 56),
 		Vector2(2360, 48), Vector2(2760, 64), Vector2(3872, 40), Vector2(4100, 80)]:
-		_landmark(OUTCROP, point.x, point.y, "CoastalOutcrop", 0.97)
+		_landmark(OUTCROP, point.x, point.y, "CoastalOutcrop")
 	for point in [Vector2(1080, 42), Vector2(1496, 48), Vector2(1776, 40), Vector2(4280, 34)]:
-		_landmark(QUAY, point.x, point.y, "RuinedQuay", 0.82)
+		_landmark(QUAY, point.x, point.y, "RuinedQuay")
 	for point in [Vector2(3032, 88), Vector2(3464, 88), Vector2(4408, 84)]:
-		_landmark(CYCLOPEAN_GATE, point.x, point.y, "CyclopeanGate", 0.96)
+		_landmark(CYCLOPEAN_GATE, point.x, point.y, "CyclopeanGate")
 	_sync_backdrop()
 
 
-func _landmark(texture: Texture2D, route_x: float, height: float, label: String, footing := 1.0) -> void:
+func _landmark(texture: Texture2D, route_x: float, height: float, label: String) -> void:
 	var sprite := Sprite2D.new()
 	sprite.name = label + str(int(route_x))
 	sprite.texture = texture
 	sprite.centered = false
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
-	sprite.scale = Vector2.ONE * height / texture.get_height()
-	var width := texture.get_width() * sprite.scale.x
-	# Align the painted feet, allowing for each cutout’s transparent margin.
-	sprite.position = Vector2(route_x - width * 0.5, Coast.surface_at(route_x) - height * footing + 2.0)
+	GROUNDING.place(sprite, route_x, Coast.surface_at(route_x), height)
 	midground.add_child(sprite)
 
 
@@ -114,7 +112,7 @@ func _draw() -> void:
 	for platform: Rect2 in Coast.PLATFORMS:
 		_draw_cliff(platform)
 	for x in [520, 1960, 4024]:
-		draw_texture_rect(WAYSTONE, Rect2(x - 9, Coast.surface_at(x) - 21, 18, 21), false)
+		draw_texture_rect(WAYSTONE, GROUNDING.rect(WAYSTONE, x, Coast.surface_at(x), 21.0, 18.0), false)
 
 
 func _draw_cliff(rectangle: Rect2) -> void:

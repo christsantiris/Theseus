@@ -184,3 +184,18 @@ The sea uses S3TC/ETC2; the three cutouts remain lossless with a 1,024-pixel imp
 The route regression still traverses the original course with 20 jumps in 51.8 simulated seconds. Continuous-scenery checks cover every camera position along the route, low shore, both climbs, summit jumps, descent, and all four viewport edges. Scene isolation, original ledge collisions, paused temple entry, all five levels' mobile render-profile framing, import policies, and the 27 remaining legacy joins passed. The baker now counts legacy joins automatically; Levels 3–5 change only their baker hash metadata. The [Level 2 guide](level_2.md) includes refreshed in-game views of the five areas and the temple.
 
 The native iOS summit preview rendered one landscape and fourteen landmarks at the 720p world budget, with visible touch controls and a 2,144×1,206 UI framebuffer. It used the Intel Simulator’s Apple Software Renderer and does not establish physical-phone speed or quality. The ordinary playable iOS app was restored afterward. A stock-template Android artwork probe APK exported successfully with native ads excluded; production Gradle/AdMob integration and physical Android display quality remain untested.
+
+
+## Scenery ground contacts
+
+All five level renderers use `scenes/levels/scenery_grounding.gd` for their floor-standing scenery. Its anchors record the painted base row at 50% alpha in each source image, allowing for transparent margins and import resizing. Placement overlaps the terrain by one world pixel so bilinear filtering does not expose a distant-background strip below the roots or stone bases. The Level 1 olive grove previously floated about 3.5 world pixels above the floor; the corrected sample places its painted base about 0.95 pixels into the ground. Source images, texture formats, mipmaps, camera/parallax behavior, and collision shapes are unchanged.
+
+The rule covers Level 1 trees, colonnades, aqueduct and waystones; Level 2 outcrops, quays, gateways and waystones; Level 3 amphorae; and Level 4–5 broken columns. Waystones use the local authored surface height, including raised terraces. Anchors are stored with the scenery code; update them when the painted base in an asset changes. Gameplay performs no image readback or alpha search.
+
+```sh
+godot --path . --script res://tests/scenery_grounding.gd
+```
+
+The regression independently finds solid painted rows in imported textures and samples actual rendered contact pixels at 1×, 3×, 4× and 5× world scale (preview, 540p, 720p and desktop). Its negative control reproduces the original floating-tree placement and requires the same pixel check to reject it. It also checks actual Level 1–2 landmark bases as the camera moves through climbs and the full route. The existing five-level scenery and mobile-framing checks cover unchanged terrain, gates, camera ownership and render targets.
+
+The native iOS preview independently read the grove’s imported alpha and measured its painted base 0.95 world pixels inside the floor at the 720p budget, with touch controls visible. It used the Intel Simulator’s software renderer; physical-device performance was not measured. The normal playable iOS app was restored. A stock-template Android probe APK exported successfully without native ads; production Gradle/AdMob integration and physical Android display quality remain untested. Refreshed guide screenshots show all five levels, and the temple-entry animation retains the corrected background contact.
