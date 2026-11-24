@@ -8,7 +8,7 @@ Hold Left or Right to walk, or slide between the arrows to change direction. Hol
 
 The top-right button pauses and resumes. Gameplay controls hide in menus, during death, and when entering the exit temple. Returning from another app leaves gameplay paused and releases held touches. Android Back toggles pause in a level and closes the title's Controls screen.
 
-The game uses either landscape orientation and retains its 320×180 gameplay view. Fractional scaling fits the display; wider phones and tablets can have black bars. Touch targets stay inside the reported safe display area. The title, pause, and Hades menus use larger buttons, and Controls displays touch instructions. Each level has a five-minute countdown. Running out of time opens Hades; Retry Level restarts the entire level and its timer. Level progression retains **current-session** behavior; closing the process does not save progress to disk. High scores are saved separately on this device and survive process termination. Hades and final victory display the top five, with a gold **YOU** row for a qualifying current result.
+The game uses either landscape orientation and retains its 320×180 gameplay view. Fractional scaling fits the display; wider phones and tablets can have black bars. Touch targets stay inside the reported safe display area. The title, pause, and Hades menus use larger buttons, and Controls displays touch instructions. Each level has a three-minute countdown. Running out of time opens Hades; Retry Level restarts the entire level and its timer. Level progression retains **current-session** behavior; closing the process does not save progress to disk. High scores are saved separately on this device and survive process termination. Hades and final victory display the top five, with a gold **YOU** row for a qualifying current result.
 
 Character sheets keep their full-resolution artwork and transparency, with frames arranged into rows so every texture fits within 4096×4096. Frame sizes, animation timing, and collision shapes are unchanged. Display safe areas are converted from physical screen pixels to game coordinates, including letterboxing, so movement and action buttons remain separated on phones and tablets.
 
@@ -126,11 +126,23 @@ On this Intel Mac, profiling showed the iOS Simulator's OpenGL renderer rasteriz
 
 ## Ads
 
-Android and iOS show one interstitial when Continue is pressed on the level-complete screen. The score stays visible until that press. The next level loads after the ad closes. If the network has nothing ready, Continue opens the next level immediately. Replay, Title, death, and Hades do not show an ad. Level 5 has no next level, so it does not request one.
+The current mobile test flow shows one interstitial when Continue is pressed on the level-complete screen. The score stays visible until that press. The next level loads after the ad closes. If no ad is ready, Continue opens the next level immediately. Replay, Title, death, Hades, and the final Level 7 victory do not show an ad. Before production, move presentation ahead of the results screen's Continue button, following [Google's placement guidance](https://support.google.com/admob/answer/6201350).
 
-The project uses Google's sample app ids and interstitial units, which fill with test ads on a development device. Replace the app ids in Project Settings under AdMob, and the unit ids in `scenes/ui/level_ads.gd`, with the ids from your AdMob apps before a store build. Sample units left in a published app can get the AdMob account suspended.
+Theseus's iOS AdMob app ID is configured under `admob/general/ios/app_id` in `project.godot`: `ca-app-pub-9323307074562151~5989083331`. Its registered interstitial unit is `ca-app-pub-9323307074562151/2070019624` in `scenes/ui/level_ads.gd`. These identifiers are distinct from the Apple bundle identifier, `com.theseus.adventure`.
+
+Debug mobile exports use Google's demo interstitial units, even with the registered iOS app ID. Desktop touch previews do not request ads. `advertising/production_enabled` is explicitly `false`: release builds skip SDK initialization and ad requests, and Continue proceeds normally. Do not enable it until consent handling, privacy disclosures, placement, and physical-device validation are complete. Android still uses its sample app ID for development; release ads remain off until its own production identifiers are configured.
+
+Every interstitial request sets `npa=1`, and SDK initialization disables publisher first-party ID. The game does not request App Tracking Transparency permission. These settings implement the non-personalized request preference; they do not establish that all SDK processing is consent-free or prove the finished integration performs no tracking. Before live serving, integrate and validate UMP on iOS, publish the applicable AdMob privacy messages, add accessible privacy choices, and confirm ads are skipped when required permission is unavailable. Complete the App Store privacy disclosures against the actual SDK configuration. See [Google's consent setup](https://developers.google.com/admob/ios/privacy) and [non-personalized ads guidance](https://support.google.com/admob/answer/7676680).
+
+Once the app is publicly listed, link the existing iOS entry to its App Store listing and complete `app-ads.txt` verification and AdMob's readiness review. Registration alone does not enable full ad serving.
 
 The first iOS export adds the Google Mobile Ads package to the Xcode project. Xcode downloads it on the first build, which needs a network connection.
+
+Check identifier selection, non-personalized request parameters, and continuation while live ads are disabled:
+
+```sh
+godot --headless --path . --script res://tests/level_ads.gd --fixed-fps 60
+```
 
 ## Verification
 

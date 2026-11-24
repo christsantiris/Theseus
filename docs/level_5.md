@@ -95,7 +95,7 @@ Retry Level restarts the level from its entrance.
 
 ## Progress and the exit
 
-Every attempt starts at the level entrance with full health and a **5:00 countdown**.
+Every attempt starts at the level entrance with full health and a **3:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
 interruptions, temple entry, and completion. Running out of time opens Hades,
 just like a fatal hit. **Retry Level** there restarts the entire level, including

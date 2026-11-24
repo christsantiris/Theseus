@@ -42,10 +42,10 @@ func _run() -> void:
 		var level := current_scene
 		_isolate(level)
 		_expect(level.player.position == level.layout.START and level._score == 700, "Level %d begins at its entrance with carried score" % number)
-		_expect(state.elapsed_seconds == 0.0 and level.hud._level_time.text == "Time 5:00", "Every level starts with a full countdown")
+		_expect(state.elapsed_seconds == 0.0 and level.hud._level_time.text == "Time 3:00", "Every level starts with a full countdown")
 		_expect(level.find_children("*Shrine", "Area2D", true, false).is_empty(), "No checkpoint triggers remain")
 		level._process(1.25)
-		_expect(state.elapsed_seconds == 1.25 and level.hud._level_time.text == "Time 4:59", "Countdown advances and rounds remaining seconds up")
+		_expect(state.elapsed_seconds == 1.25 and level.hud._level_time.text == "Time 2:59", "Countdown advances and rounds remaining seconds up")
 		level._set_paused(true)
 		level._process(60.0)
 		_expect(state.elapsed_seconds == 1.25, "Pause does not consume time")
@@ -77,7 +77,7 @@ func _run() -> void:
 		await scene_changed
 		level = current_scene
 		_isolate(level)
-		_expect(state.elapsed_seconds == 0.0 and level.hud._level_time.text == "Time 5:00", "Replay resets the countdown")
+		_expect(state.elapsed_seconds == 0.0 and level.hud._level_time.text == "Time 3:00", "Replay resets the countdown")
 		level._on_enemy_defeated(125, "TimerTestEnemy")
 		state.elapsed_seconds = level.layout.TIME_LIMIT - 30.0
 		level._process(0.0)

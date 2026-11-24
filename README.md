@@ -40,7 +40,7 @@ All seven levels use continuous backgrounds with independent scenery objects and
 
 Enemy windups, recovery windows, cooldowns, and pursuit speed scale with each level. Encounter layouts, counters, healing, and environmental mechanics also determine how difficult a level feels.
 
-Every attempt starts at the level entrance with full health and a **5:00 countdown**.
+Every attempt starts at the level entrance with full health and a **3:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
 interruptions, temple entry, and completion. Running out of time opens Hades,
 just like a fatal hit. **Retry Level** there restarts the entire level, including
@@ -191,11 +191,12 @@ To run Theseus, open `builds/ios/Theseus.xcodeproj` in Xcode, select an iPhone S
 
 ### Production ads
 
-The [level-complete interstitial](docs/mobile.md#ads) currently uses Google's sample ids and test ads. Before release:
+The [level-complete interstitial](docs/mobile.md#ads) has Theseus's registered iOS app and ad-unit IDs. Debug mobile builds use Google's test ads; live serving is disabled. The intended release uses non-personalized ads with no cross-app tracking. Before enabling production ads:
 
-- Replace the sample AdMob app and interstitial unit ids with production ids for iOS and Android.
-- Ask for ad consent where required: Google's consent message (UMP) for GDPR regions, and Apple's App Tracking Transparency prompt on iOS.
-- Finish the production Android Gradle build with AdMob included, and test real ad delivery on physical iPhone and Android devices.
+- Implement Google's consent handling (UMP), applicable regional messages, and accessible privacy choices. Skip ads when required permission is unavailable; non-personalized ads can still require consent for device storage or identifiers.
+- Verify the iOS integration performs no cross-app tracking, complete App Store privacy disclosures, and validate test ads on a physical iPhone. ATT is needed if tracking is introduced.
+- Move the interstitial ahead of the results screen's Continue button, verify `app-ads.txt`, link the public App Store listing, and complete AdMob's readiness review.
+- Configure Android's production app and interstitial IDs, finish its Gradle build, and validate the Android integration separately.
 
 ### Remove Ads for $0.99
 
