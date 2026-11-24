@@ -33,10 +33,10 @@ below the project's 4,096-pixel mobile limit. Scenery has no mipmaps; the
 separate repeating limestone terrain retains its existing mip chain.
 
 Textured limestone covers all thirty original ledges. Stone caps, carved
-waystones, checkpoint shrines, and the temple facade retain their existing art.
+waystones and the temple facade retain their existing art.
 `level_1_temple.gd` keeps its bronze bars synchronized with unlocking, including
 paused temple entry. Collision rectangles, birds and their flight lanes,
-encounters, movement, checkpoint behavior, and camera framing are unchanged.
+encounters, movement and camera framing are unchanged.
 All six levels use continuous landscapes with grounded landmarks.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
@@ -50,9 +50,9 @@ and collision layout. See the [ground-contact regression](performance.md#scenery
 | --- | --- | --- |
 | Coastal Road | 0–959 | Flat approach teaches a high bird, then a low bird; short ledge climbs introduce a Telchine. |
 | Broken Quays | 960–1919 | Terraces climb to y=168. Telchine jabs and Spartoi lunges share broad landings; high and low birds occupy separate lanes. |
-| Sea Cliffs | 1920–2879 | First shrine, then a second climb with melee fights and a high bird. |
+| Sea Cliffs | 1920–2879 | A second climb with melee fights and a high bird. |
 | Cyclopean Ruins | 2880–3839 | Low bird, Telchine, and Spartoi summit guard. Highest landing is y=104, followed by descending ledges. |
-| Rocky Sanctuary | 3840–4799 | Second shrine, final low terraces and melee fights, then the Spartoi temple guard. |
+| Rocky Sanctuary | 3840–4799 | Final low terraces and melee fights, then the Spartoi temple guard. |
 
 ## Enemies
 
@@ -80,25 +80,27 @@ Telchines with held tridents, and bronze-feathered Stymphalian Birds. Their
 transparent 576×448 cells render at one-eighth scale with linear filtering,
 retaining the original logical size, flight lanes, hitboxes, and animation speeds.
 
-## Checkpoints and completion
+## Countdown, recovery, and completion
 
-Clearing Level 1 offers **Continue to Level 2**. On entering Level 2, its entrance
-at (48, 280) becomes the saved checkpoint immediately, replacing the Level 1
-shrine. Returning to the title and choosing Load resumes that entrance until
-a Level 2 shrine is lit. Death opens Hades, and Load Game restarts from this
-entrance or the latest Level 2 shrine. Progress remains in memory for the current game session.
+Four health flasks restore two health each.
 
-The Coastal Shrine at x=2000 saves a safe spawn at (2024, 280). The Sanctuary
-Shrine at x=4048 saves (4072, 280). Each snapshots
-the running score, defeated enemies, and collected flasks. Backtracking
-cannot replace a later shrine. Four health flasks restore two bars each.
+Every attempt starts at the level entrance with full health and a **5:00 countdown**.
+The timer turns red for the final 30 seconds. It freezes during pause, app
+interruptions, temple entry, and completion. Running out of time opens Hades,
+just like a fatal hit. **Retry Level** there restarts the entire level, including
+all enemies and flasks, and restores the score carried in from earlier levels.
+There are no checkpoint shrines or mid-level saves.
+
+The title's **Restart Level** button restarts the current level from its entrance
+once Level 2 or later has been reached in this session. Replay also resets the
+level and countdown. New Game resets the campaign and score to Level 1.
+Session progress is held in memory; high scores are saved separately on disk.
 
 Defeat SpartoiSanctuaryGuard to open the temple at (4752, 280). Theseus climbs
 the temple steps and disappears into the doorway before the completion menu.
 Replay Level restarts Level 2; New Game on the title starts Level 1 and clears
 the run. Level 2 completion also offers **Continue to Level 3**, leading to
-[The Sacred City](level_3.md). Entering town replaces the coastal checkpoint
-with a new load point at the Level 3 entrance.
+[The Sacred City](level_3.md). Entering town starts a new countdown at the Level 3 entrance.
 
 ## Run and validation
 
@@ -115,8 +117,8 @@ checks opaque sprite bounds for every high-bird wing frame at all three high
 lanes, ensuring the art clears the helmet as well as the collision shape. It
 also checks Telchine jabs, Spartoi lunges, recovery, and damage.
 
-The level test covers Level 1→2 progression, entrance checkpoint, title Load,
-actual death/reload, both shrines, defeated-enemy rollback, camera limits,
+The level test covers Level 1→2 progression, entrance retry point, title restart,
+actual death/reload, defeated-enemy rollback, camera limits,
 completion, replay, and New Game. A route traversal with combat disabled
 reaches the doorway using normal movement and 20 jumps, in about 52 simulated
 seconds. Combat pacing still benefits from a human playthrough.

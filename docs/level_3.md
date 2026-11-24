@@ -17,8 +17,8 @@ They remain fixed to the original landings while the distant city scrolls at
 painting is displayed at 864×288 world units, preserving its natural proportions
 and covering the full camera range without wrapping or blending.
 
-Cut-stone masonry covers the original twenty-three terraces. Existing amphorae,
-checkpoint shrines, and the temple exit retain their positions and behavior.
+Cut-stone masonry covers the original twenty-three terraces. Existing amphorae
+and the temple exit retain their positions and behavior.
 No collision shapes, movement, encounters, or attack timing change.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
@@ -32,9 +32,9 @@ and collision layout. See the [ground-contact regression](performance.md#scenery
 | --- | --- | --- |
 | City Gate | 0–959 | A street-level Hoplite, then Peltast and Spartoi encounters on the first short climbs. The workshop terrace gives a clear approach to the first Lamia. |
 | Potters' Quarter | 960–1919 | Lamia on a broad 320-pixel workshop landing, descending streets, a Spartoi, and a Peltast before the agora. |
-| Agora Terraces | 1920–2879 | First shrine, two Hoplites along the colonnade route, and a Lamia on a 256-pixel landing. |
+| Agora Terraces | 1920–2879 | Two Hoplites along the colonnade route, and a Lamia on a 256-pixel landing. |
 | Temple District | 2880–3839 | Ascending marble terraces with Peltast and Spartoi encounters, then a Lamia near the highest temple landing and a stepped descent. |
-| Acropolis Approach | 3840–4799 | Peltast descent guard, second shrine, Spartoi, final Lamia landing, and the Hoplite guarding the temple exit. |
+| Acropolis Approach | 3840–4799 | Peltast descent guard, Spartoi, final Lamia landing, and the Hoplite guarding the temple exit. |
 
 ## Movement and enemies
 
@@ -69,35 +69,36 @@ landing. No ranged attacks, new controls, or additional enemy variants are added
 
 ## Recovery and progression
 
-Level 2 completion offers **Continue to Level 3**. Entering town immediately saves
-its entrance at (48, 280), replacing the previous level's shrine. Title Load
-returns to that entrance until a town shrine is lit. Death opens Hades, and
-Load Game returns to the same entrance or shrine. Progress is held for
-the current game session.
+Five health flasks restore two health each.
 
-The Agora Shrine at x=1960 saves a safe spawn at (1984, 280). The Acropolis Shrine
-at x=4096 saves (4120, 280). Each heals Theseus and snapshots the running score,
-defeated enemies, and collected flasks. Returning to an earlier shrine cannot
-replace a later checkpoint. Load Game from Hades restores the saved snapshot, resetting later
-defeats, pickups, and score gains. Five flasks restore two health bars each.
+Every attempt starts at the level entrance with full health and a **5:00 countdown**.
+The timer turns red for the final 30 seconds. It freezes during pause, app
+interruptions, temple entry, and completion. Running out of time opens Hades,
+just like a fatal hit. **Retry Level** there restarts the entire level, including
+all enemies and flasks, and restores the score carried in from earlier levels.
+There are no checkpoint shrines or mid-level saves.
+
+The title's **Restart Level** button restarts the current level from its entrance
+once Level 2 or later has been reached in this session. Replay also resets the
+level and countdown. New Game resets the campaign and score to Level 1.
+Session progress is held in memory; high scores are saved separately on disk.
 
 Defeating HopliteAcropolisGuard unlocks the temple at (4752, 280). Theseus climbs
 the steps and fades into the doorway before the Level 3 completion menu. Replay
-Level restarts the town and retains its entrance as a load point. Return to Title
-keeps the latest checkpoint; New Game explicitly clears the run and starts Level 1.
+Level restarts the town; New Game explicitly clears the run and starts Level 1.
 Completion also offers **Continue to Level 4**, entering the
-[mountain sanctuary](level_4.md) and saving its entrance as the new load point.
+[mountain sanctuary](level_4.md) and starting a fresh countdown.
 
 ## Editing and validation
 
-`scenes/levels/level_3_layout.gd` owns the route, patrols, shrines, flasks, and tips.
+`scenes/levels/level_3_layout.gd` owns the route, patrols, time limit, flasks, and tips.
 `level_3_geometry.gd` creates the original terrain collisions and renders the
 cinematic city, including editor previews. `assets/art/backgrounds/level_3/`
 contains `city_landscape.png`, complete `workshop.png` and `stoa.png` cutouts,
 city masonry, and the existing amphora. Groves and colonnades reuse Level 1 art.
 The stone caps and temple facade reuse Level 1's art. The facade keeps its
 bronze bars synchronized with unlocking, including paused temple entry. The scene
-inherits the existing HUD, pause menu, checkpoint system, and temple entry flow.
+inherits the existing HUD, pause menu, level countdown, and temple entry flow.
 The shared controller registers Lamia and labels Continue for the next level.
 
 ```sh
@@ -108,9 +109,9 @@ godot --headless --path . --script res://tests/lamia_behavior.gd --fixed-fps 60
 ```
 
 The integration test checks Level 2→3 progression, the automatic entrance
-checkpoint, title Load, actual death/reload, placement of all sixteen enemies,
-Lamia activation on her platform, flask healing, both shrines, rollback of
-post-checkpoint defeats and score, camera scrolling, temple entry, completion,
+retry point, title restart, actual death/reload, placement of all sixteen enemies,
+Lamia activation on her platform, flask healing, rollback of
+level defeats and score, camera scrolling, temple entry, completion,
 replay, and New Game. Combat is isolated during the route traversal, which uses
 normal movement and fifteen jumps to reach the exit in about 52 simulated
 seconds. The scenery check sweeps the full route, verifies one continuous landscape

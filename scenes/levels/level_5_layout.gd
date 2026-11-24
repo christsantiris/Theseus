@@ -1,5 +1,7 @@
 extends RefCounted
 
+const TIME_LIMIT := 300.0
+
 const WIDTH := 4800
 const HEIGHT := 352
 const FLOOR_Y := 280
@@ -55,17 +57,13 @@ const FLASKS := [
 	{"name": "HealthFlaskHighLedge", "position": Vector2(3384, 112), "bonus": true},
 	{"name": "HealthFlaskSanctuary", "position": Vector2(4368, 280)},
 ]
-const CHECKPOINTS := [
-	{"name": "CausewayShrine", "position": Vector2(2016, 280), "spawn": Vector2(2040, 280)},
-	{"name": "HydraShrine", "position": Vector2(4256, 280), "spawn": Vector2(4280, 280)},
-]
 const EXIT := Vector2(4752, FLOOR_Y)
 const GATE_GUARD := "HydraTempleGuard"
 const TIPS := [
 	{"x": 160, "end": 352, "text": "Jump the bull's charge; it cannot turn mid-charge."},
 	{"x": 480, "end": 704, "text": "Airborne Duck + Sword staggers a bull's back."},
 	{"x": 800, "end": 1056, "text": "Pups run in pairs. Sword hits interrupt their leaps."},
-	{"x": 1920, "end": 2072, "text": "Light the shrine, then jump the causeway spikes."},
+	{"x": 1920, "end": 2072, "text": "Jump across the causeway spikes."},
 	{"x": 3104, "end": 3376, "text": "Ride the bull, then jump to the high flask ledge."},
 	{"x": 4320, "end": 4512, "text": "Cut all three Hydra heads. Jump for the high heads."},
 ]

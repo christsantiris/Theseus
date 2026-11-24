@@ -25,8 +25,6 @@ func _ready() -> void:
 func _build_enemies() -> void:
 	var packs := {}
 	for encounter: Dictionary in layout.ENEMIES:
-		if encounter.name in _defeated:
-			continue
 		var enemy := _create_enemy(encounter)
 		if not encounter.has("pack"):
 			add_child(enemy)
@@ -43,8 +41,7 @@ func _build_enemies() -> void:
 		enemy.position -= pack.position
 		enemy.attack_delay = encounter.delay
 		pack.add_child(enemy)
-	# Bind each pup's defeat separately before the pack enters the tree. Loading
-	# a shrine can then restore just one survivor, with its attack turns intact.
+	# Each pup awards its own score within the coordinated pack.
 	for pack: Node2D in packs.values():
 		add_child(pack)
 

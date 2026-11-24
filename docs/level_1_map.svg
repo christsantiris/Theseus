@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1152" height="1048" viewBox="0 0 1152 1048" role="img" aria-labelledby="title desc">
 <title id="title">Level 1: The Temple Road route map</title>
-<desc id="desc">Five consecutive 960-pixel areas showing all sixteen soldiers, fifteen stone terraces, five health flasks, two checkpoint shrines, and the temple exit.</desc>
+<desc id="desc">Five consecutive 960-pixel areas showing all sixteen soldiers, fifteen stone terraces, five health flasks, and the temple exit.</desc>
 <rect width="1152" height="1048" fill="#101827"/>
 <g font-family="Arial,sans-serif" fill="#e6d8b5">
 <text x="32" y="36" font-size="24">LEVEL 1 / THE TEMPLE ROAD</text>
 <text x="32" y="62" font-size="14" fill="#a9b9c9">Read each row left to right, then continue on the next row. Coordinates are world pixels.</text>
-<text x="32" y="88" font-size="14">R = Raider    P = Peltast    H = Hoplite    + = Health flask    CP = Checkpoint</text>
+<text x="32" y="88" font-size="14">R = Raider    P = Peltast    H = Hoplite    + = Health flask</text>
 <text x="32" y="126" font-size="18">01 / The King's Road</text>
 <rect x="96" y="238" width="960" height="20" fill="#bba77e"/>
 <path d="M96 238H1056" stroke="#f0deb2" stroke-width="3"/>
@@ -44,7 +44,6 @@
 <g><title>PeltastOlives at X=2400</title><circle cx="576" cy="548" r="11" fill="#478f89"/><text x="576" y="552" text-anchor="middle" fill="white" font-size="12">P</text></g>
 <g><title>RaiderTerraces at X=2704</title><circle cx="880" cy="580" r="11" fill="#ad4b42"/><text x="880" y="584" text-anchor="middle" fill="white" font-size="12">R</text></g>
 <g><title>Health +2 at X=2544</title><circle cx="720" cy="538" r="8" fill="#b4c7a0"/><text x="720" y="542" text-anchor="middle" fill="#17352b" font-size="13">+</text></g>
-<path d="M96 557l17 15-17 15-17-15z" fill="#f1d28c"/><text x="96" y="575" text-anchor="middle" fill="#233027" font-size="10">CP</text>
 <path d="M96 620v5" stroke="#a9b9c9"/><text x="96" y="642" text-anchor="middle" font-size="12" fill="#a9b9c9">1920</text>
 <path d="M416 620v5" stroke="#a9b9c9"/><text x="416" y="642" text-anchor="middle" font-size="12" fill="#a9b9c9">2240</text>
 <path d="M736 620v5" stroke="#a9b9c9"/><text x="736" y="642" text-anchor="middle" font-size="12" fill="#a9b9c9">2560</text>
@@ -75,7 +74,6 @@
 <g><title>HopliteTempleOuter at X=4496</title><circle cx="752" cy="940" r="11" fill="#c69e52"/><text x="752" y="944" text-anchor="middle" fill="white" font-size="12">H</text></g>
 <g><title>HopliteTempleGuard at X=4640</title><circle cx="896" cy="940" r="11" fill="#c69e52"/><text x="896" y="944" text-anchor="middle" fill="white" font-size="12">H</text></g>
 <g><title>Health +2 at X=4224</title><circle cx="480" cy="930" r="8" fill="#b4c7a0"/><text x="480" y="934" text-anchor="middle" fill="#17352b" font-size="13">+</text></g>
-<path d="M96 917l17 15-17 15-17-15z" fill="#f1d28c"/><text x="96" y="935" text-anchor="middle" fill="#233027" font-size="10">CP</text>
 <path d="M96 980v5" stroke="#a9b9c9"/><text x="96" y="1002" text-anchor="middle" font-size="12" fill="#a9b9c9">3840</text>
 <path d="M416 980v5" stroke="#a9b9c9"/><text x="416" y="1002" text-anchor="middle" font-size="12" fill="#a9b9c9">4160</text>
 <path d="M736 980v5" stroke="#a9b9c9"/><text x="736" y="1002" text-anchor="middle" font-size="12" fill="#a9b9c9">4480</text>

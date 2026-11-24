@@ -17,7 +17,6 @@ func _expect(value: bool, message: String) -> void:
 
 func _verify_level(number: int) -> void:
 	root.get_node("LevelRun").begin_level(number)
-	var layout = load("res://scenes/levels/level_%d_layout.gd" % number)
 	var level = load("res://scenes/levels/level_%d.tscn" % number).instantiate()
 	root.add_child(level)
 	current_scene = level
@@ -30,19 +29,7 @@ func _verify_level(number: int) -> void:
 	_expect(parent.get_child_count() == 1 and continuous.material == null and continuous.texture == world.PANORAMA_SHEETS[0], "Level %d uses one unblended painting" % number)
 	_expect(continuous.texture_repeat == CanvasItem.TEXTURE_REPEAT_DISABLED, "Level %d never wraps its landscape" % number)
 	_expect(world.midground.get_child_count() == [13, 14, 12, 13, 11, 13, 6][number - 1], "Level %d has complete independent scenery objects" % number)
-	for definition in layout.CHECKPOINTS:
-		var shrine := level.get_node(String(definition.name)) as Area2D
-		var collision := shrine.get_node("CollisionShape2D") as CollisionShape2D
-		_expect(collision.shape.size == Vector2(48, 56) and collision.position == Vector2(0, -24), "Cinematic shrine keeps its original activation area")
-		_expect(shrine.position == definition.position and shrine.spawn_position == definition.spawn, "Shrine and saved spawn stay in their authored positions")
-		_expect(shrine.ART.get_size() == Vector2(1024, 768), "Both detailed shrine states are available")
-		shrine.set_lit(false)
-		var activations := {"count": 0}
-		shrine.activated.connect(func(_checkpoint: Area2D) -> void: activations.count += 1)
-		shrine._on_body_entered(level.player)
-		shrine._on_body_entered(level.player)
-		_expect(shrine.lit and activations.count == 1, "Entering a shrine lights it and saves once")
-		_expect(root.get_node("LevelRun").checkpoint_index == shrine.checkpoint_index, "The lit shrine still saves the active checkpoint")
+	_expect(level.find_children("*Shrine", "Area2D", true, false).is_empty(), "Level %d has no checkpoint triggers" % number)
 	current_scene = null
 	level.free()
 
@@ -56,7 +43,7 @@ func _run() -> void:
 			child.stream = null
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: all seven continuous landscapes, complete scenery objects, both shrine states, all fourteen shrine triggers and checkpoint saves.")
+		print("PASS: all seven continuous landscapes, complete scenery objects, removed checkpoint triggers.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)

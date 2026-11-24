@@ -263,11 +263,11 @@ func _player_defenses() -> void:
 	_expect(not review.cyclops.alive, "Three actual sword strikes defeat the reloading brute")
 	var state := root.get_node("LevelRun")
 	var saved_level: int = state.level_number
-	var saved_checkpoint: int = state.checkpoint_index
+	var saved_score: int = state.level_start_score
 	review._on_reset()
 	await _frames()
 	_expect(current_scene.cyclops.hp == 3 and current_scene.player.health == 5, "Review Reset restores both actors")
-	_expect(state.level_number == saved_level and state.checkpoint_index == saved_checkpoint, "Enemy review leaves campaign progress untouched")
+	_expect(state.level_number == saved_level and state.level_start_score == saved_score, "Enemy review leaves campaign progress untouched")
 
 
 func _run() -> void:

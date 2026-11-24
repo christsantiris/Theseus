@@ -1,5 +1,7 @@
 extends RefCounted
 
+const TIME_LIMIT := 300.0
+
 const WIDTH := 4800
 const HEIGHT := 320
 const FLOOR_Y := 280
@@ -55,10 +57,6 @@ const FLASKS := [
 	{"name": "HealthFlaskAgora", "position": Vector2(2384, 248)},
 	{"name": "HealthFlaskTemple", "position": Vector2(3664, 184)},
 	{"name": "HealthFlaskAcropolis", "position": Vector2(4320, 264)},
-]
-const CHECKPOINTS := [
-	{"name": "AgoraShrine", "position": Vector2(1960, 280), "spawn": Vector2(1984, 280)},
-	{"name": "AcropolisShrine", "position": Vector2(4096, 280), "spawn": Vector2(4120, 280)},
 ]
 const EXIT := Vector2(4752, FLOOR_Y)
 const GATE_GUARD := "HopliteAcropolisGuard"

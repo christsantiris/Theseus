@@ -219,7 +219,7 @@ app was restored afterward. A stock-template Android artwork APK exported
 successfully with native ads excluded; production Gradle/AdMob integration and
 physical Android display quality were not validated. Desktop rendered checks
 also passed for all five camera profiles, protected texture imports, terrain
-mip sampling, painted ground contacts, and checkpoint shrines. Level 3–5 gameplay
+mip sampling, painted ground contacts, and removed checkpoint triggers. Level 3–5 gameplay
 regressions retained full-route traversal, spike escape/recovery, bull riding,
 and the Hydra's three-head gate requirement.
 
@@ -270,7 +270,7 @@ Desktop regressions confirm identical underwater movement and sword-frame
 histories at native, preview, 540p, and 720p settings. The tide suite verifies
 all 15 climbs and both canal jumps in both directions at maximum water,
 player-only drag, wine composition, unchanged jump height and sword timing,
-pause, replay, shrine loading, and isolation from earlier levels. The full
+pause, replay, entrance retries, and isolation from earlier levels. The full
 cycling-tide route clears in about 59.5 simulated seconds with 17 jumps and
 combat isolated. These checks do not measure human combat difficulty or
 sustained GPU performance.

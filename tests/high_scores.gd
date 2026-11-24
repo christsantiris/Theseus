@@ -82,11 +82,8 @@ func _run() -> void:
 	state.begin_run()
 	var level := await _open("res://scenes/levels/level_1.tscn")
 	level._on_enemy_defeated(100, "Raider")
-	var defeated: Array[String] = ["Raider"]
-	var collected: Array[String] = []
-	state.save_checkpoint(0, Vector2(1952, 152), 100, defeated, collected)
-	level._on_enemy_defeated(250, "UncheckpointedEnemy")
-	_expect(state.current_score == 350 and state.checkpoint_score == 100, "The death score includes points after the last checkpoint")
+	level._on_enemy_defeated(250, "SecondEnemy")
+	_expect(state.current_score == 350 and state.level_start_score == 0, "The death score includes all points earned during the attempt")
 	level.player._die()
 	for tick in 90:
 		await _frames(1)
@@ -103,7 +100,7 @@ func _run() -> void:
 	await scene_changed
 	await _frames()
 	level = current_scene
-	_expect(state.current_score == 100 and state.checkpoint_score == 100 and level._score == 100, "Loading a checkpoint restores its score without changing the recorded result")
+	_expect(state.current_score == 0 and state.level_start_score == 0 and level._score == 0, "Retry restores the level entrance score without changing the recorded result")
 	state.current_score = 350
 	hades = await _open("res://scenes/hades/hades.tscn")
 	_expect(_scores() == [350, 350] and hades.high_score_table.highlighted_rank == 2, "A new life may tie a previous score and highlights only its own row")
@@ -147,7 +144,7 @@ func _run() -> void:
 	_stop_audio(root)
 	restore_scores.call()
 	OS.delay_msec(150)
-	print("PASS: persistent top five, ties, file recovery, live death score, duplicate protection, checkpoint/replay behavior, final victory, highlighting, and result-screen bounds." if failures.is_empty() else str(failures))
+	print("PASS: persistent top five, ties, file recovery, live death score, duplicate protection, retry/replay behavior, final victory, highlighting, and result-screen bounds." if failures.is_empty() else str(failures))
 	quit(0 if failures.is_empty() else 1)
 
 

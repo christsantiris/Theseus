@@ -53,11 +53,10 @@ func _run() -> void:
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 7 and state.can_load() and state.checkpoint_index == -1, "Atlantis advances to a saved Level 7 entrance")
 	_expect(not level.has_node("AtlantisTide") and level.player.movement_speed() == 90, "Atlantis water does not affect the labyrinth")
 	_expect(level.player.position.distance_to(Layout.START) < 1, "Labyrinth entrance is safely grounded")
 	var picker := load("res://scenes/debug/level_select.tscn").instantiate() as Node
-	_expect(7 in picker._level_numbers() and picker._validate(7, 2).is_empty(), "CLI picker discovers Level 7 and both shrines")
+	_expect(7 in picker._level_numbers() and picker._validate(7).is_empty(), "CLI picker discovers Level 7 at its entrance")
 	picker.free()
 	var kinds := {"hoplite": 0, "peltast": 0, "raider": 0, "minotaur": 0}
 	for encounter: Dictionary in Layout.ENEMIES:
@@ -76,16 +75,14 @@ func _run() -> void:
 	level = current_scene
 	_isolate(level)
 	_expect(level.level_number == 7 and level.player.position.distance_to(Layout.START) < 1, "Title Load restarts the highest reached level")
-	level.player.position = Layout.CHECKPOINTS[1].position
-	await _frames()
-	_expect(state.checkpoint_index == 1, "Pre-boss shrine saves Level 7")
+	level.player.position = Vector2(4000, 280)
 	level._on_title_pressed()
 	await _frames()
 	current_scene._on_load_pressed()
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(level.player.position.distance_to(Layout.CHECKPOINTS[1].spawn) < 1 and level.get_node("Minotaur").alive, "Load restores the pre-boss shrine and live boss")
+	_expect(level.player.position.distance_to(Layout.START) < 1 and level.get_node("Minotaur").alive, "Load restores the level entrance and live boss")
 	var previous_id: int = level.get_instance_id()
 	level.player._die()
 	for tick in 100:
@@ -98,17 +95,17 @@ func _run() -> void:
 		await _frames(10)
 		level = current_scene
 		_isolate(level)
-		_expect(level.level_number == 7 and level.player.health == 5 and level.player.position.distance_to(Layout.CHECKPOINTS[1].spawn) < 1, "Death reload restores the safe pre-boss shrine at full health")
+		_expect(level.level_number == 7 and level.player.health == 5 and level.player.position.distance_to(Layout.START) < 1, "Death reload restores the safe level entrance at full health")
 	await _traverse()
 	level = current_scene
 	_expect(level._complete and level.pause_heading.text == "Theseus Victorious" and not level.next_button.visible and level.next_level.is_empty(), "Escaping after the boss ends the campaign with victory")
 	level._on_replay_pressed()
 	await _frames()
-	_expect(current_scene.level_number == 7 and state.checkpoint_index == -1 and current_scene.has_node("Minotaur"), "Replay restores the complete final level and boss")
+	_expect(current_scene.level_number == 7 and state.can_load() and current_scene.has_node("Minotaur"), "Replay restores the complete level and boss")
 	paused = false
 	_stop_audio(root)
 	OS.delay_msec(150)
-	print("PASS: Atlantis→labyrinth, Level 7 scaling, entrance and shrine Load, soldiers, boss gate, complete jump/corridor route, camera, final victory, and replay." if failures.is_empty() else str(failures))
+	print("PASS: Atlantis→labyrinth, Level 7 scaling, entrance retries, soldiers, boss gate, complete jump/corridor route, camera, final victory, and replay." if failures.is_empty() else str(failures))
 	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 
@@ -156,7 +153,6 @@ func _traverse() -> void:
 		Input.action_release(action)
 	_expect(level._complete, "Entire route reaches victory: player=" + str(player.position))
 	_expect(jumps >= 11 and corridor_frames > 200 and player.health == 5, "Traversal exercises every ascent and both low-roofed corridors without changing player physics")
-	_expect(state.checkpoint_index == 1, "Normal route activates both shrines")
 	print("Labyrinth traversal: %d jumps, %d corridor frames, %.1f seconds (combat isolated)." % [jumps, corridor_frames, state.elapsed_seconds])
 
 

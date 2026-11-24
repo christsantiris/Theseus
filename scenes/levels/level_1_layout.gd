@@ -1,5 +1,7 @@
 extends RefCounted
 
+const TIME_LIMIT := 300.0
+
 const WIDTH := 4800
 const HEIGHT := 256
 const FLOOR_Y := 152
@@ -60,10 +62,6 @@ const FLASKS := [
 	{"name": "HealthFlaskTemple", "position": Vector2(4224, 136)},
 ]
 
-const CHECKPOINTS := [
-	{"name": "OliveShrine", "position": Vector2(1920, 152), "spawn": Vector2(1952, 152)},
-	{"name": "TempleShrine", "position": Vector2(3840, 152), "spawn": Vector2(3872, 152)},
-]
 
 const EXIT := Vector2(4752, 152)
 const GATE_GUARD := "HopliteTempleGuard"

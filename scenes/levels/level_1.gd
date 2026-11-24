@@ -22,14 +22,13 @@ const ENEMY_SCENES := {
 }
 const Difficulty := preload("res://scenes/levels/difficulty.gd")
 const FLASK := preload("res://scenes/pickups/health_flask.tscn")
-const CHECKPOINT := preload("res://scenes/objects/checkpoint.tscn")
 const GATE := preload("res://scenes/objects/temple_gate.tscn")
 const ScoreTable := preload("res://scenes/ui/high_score_table.gd")
 
 var layout: Script = Layout
 var level_number := 1
 var next_level := "res://scenes/levels/level_2.tscn"
-var objective := "Reach the temple. Light shrines to save progress."
+var objective := "Reach the temple before time runs out."
 var completion_text := "The temple road is clear."
 
 @onready var pause_screen: Control = $PauseLayer/PauseScreen
@@ -61,15 +60,13 @@ func _ready() -> void:
 		LevelRun.begin_level(level_number)
 	get_tree().paused = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	_score = LevelRun.checkpoint_score
+	_score = LevelRun.level_start_score
 	LevelRun.begin_attempt(_score)
-	_defeated = LevelRun.checkpoint_defeated.duplicate()
-	_collected = LevelRun.checkpoint_collected.duplicate()
 	_build_encounters()
 	for child in get_children():
 		if child != $PauseLayer:
 			child.process_mode = Node.PROCESS_MODE_PAUSABLE
-	player.position = LevelRun.spawn_position
+	player.position = layout.START
 	var camera := $Player/Camera2D as Camera2D
 	camera.limit_enabled = true
 	camera.limit_left = 0
@@ -85,10 +82,9 @@ func _ready() -> void:
 	player.speed_boost_changed.connect(hud.set_speed_boost)
 	_on_health_changed(player.health, player.MAX_HEALTH)
 	hud.set_score(_score)
+	hud.set_level_time(layout.TIME_LIMIT)
 	_update_section()
 	hud.show_message(objective, 4.5)
-	if LevelRun.checkpoint_index >= 0:
-		hud.show_message("Restored at shrine — progress recovered.", 3.5)
 	if not next_level.is_empty():
 		LevelAds.prepare()
 
@@ -97,37 +93,22 @@ func _build_encounters() -> void:
 	_build_enemies()
 	for pickup: Dictionary in layout.FLASKS:
 		var pickup_id := String(pickup.name)
-		if pickup_id in _collected:
-			continue
 		var flask = FLASK.instantiate()
 		flask.name = pickup_id
 		flask.position = pickup.position
 		flask.collected.connect(_on_flask_collected.bind(pickup_id))
 		add_child(flask)
-	for index in layout.CHECKPOINTS.size():
-		var definition: Dictionary = layout.CHECKPOINTS[index]
-		var shrine = CHECKPOINT.instantiate()
-		shrine.name = definition.name
-		shrine.position = definition.position
-		shrine.checkpoint_index = index
-		shrine.spawn_position = definition.spawn
-		shrine.set_lit(index <= LevelRun.checkpoint_index)
-		shrine.activated.connect(_on_checkpoint_activated)
-		add_child(shrine)
 	_gate = GATE.instantiate()
 	_gate.name = "TempleGate"
 	_gate.position = layout.EXIT
 	_gate.entry_started.connect(_on_gate_entry_started)
 	_gate.entered.connect(_on_gate_entered)
 	add_child(_gate)
-	if layout.GATE_GUARD in _defeated:
-		_gate.unlock()
 
 
 func _build_enemies() -> void:
 	for encounter: Dictionary in layout.ENEMIES:
-		if encounter.name not in _defeated:
-			add_child(_create_enemy(encounter))
+		add_child(_create_enemy(encounter))
 
 
 func _create_enemy(encounter: Dictionary) -> Node2D:
@@ -171,7 +152,15 @@ func _process(delta: float) -> void:
 			_death_notice_shown = true
 			hud.show_message("Fallen.", 1.0, 4)
 		return
-	LevelRun.elapsed_seconds += delta
+	LevelRun.elapsed_seconds = minf(layout.TIME_LIMIT, LevelRun.elapsed_seconds + delta)
+	var remaining: float = layout.TIME_LIMIT - LevelRun.elapsed_seconds
+	hud.set_level_time(remaining)
+	if remaining <= 0.0:
+		_death_notice_shown = true
+		hud.show_message("Time up!", 1.0, 4)
+		player._die()
+		hud.set_health(0, player.MAX_HEALTH)
+		return
 	_update_section()
 	for index in layout.TIPS.size():
 		var tip: Dictionary = layout.TIPS[index]
@@ -259,13 +248,6 @@ func _on_enemy_defeated(points: int, enemy_id: String) -> void:
 func _on_flask_collected(pickup_id: String) -> void:
 	if pickup_id not in _collected:
 		_collected.append(pickup_id)
-
-
-func _on_checkpoint_activated(shrine: Area2D) -> void:
-	if shrine.checkpoint_index <= LevelRun.checkpoint_index:
-		return
-	LevelRun.save_checkpoint(shrine.checkpoint_index, shrine.spawn_position, _score, _defeated, _collected)
-	hud.show_message("Shrine lit — progress saved.", 4.0, 3)
 
 
 func _on_gate_entry_started(body: Node2D) -> void:

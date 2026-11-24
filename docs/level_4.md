@@ -1,7 +1,7 @@
 # Level 4 — The Mountain Sanctuary
 
 A 4,800×352-pixel mountain route with layered rocky ridges, cypress trees,
-terraced retaining walls, olive scrub, shrines, and a Greek sanctuary exit.
+terraced retaining walls, olive scrub and a Greek sanctuary exit.
 Twenty-seven main terraces climb 144 pixels above the foothill road before
 descending to the summit approach. Bright stone caps mark walkable terrain;
 muted slopes and smaller walls form the background.
@@ -20,8 +20,7 @@ wrapping, panel blending, or stretched ground extensions.
 
 All twenty-seven terraces, four recessed spike pits, hazard areas, and unsafe
 Satyr landing markers keep their original geometry and behavior. Scenery stays
-clear of pit openings. Rustic stone, existing broken columns, checkpoint
-shrines, and the matching temple entrance retain their gameplay roles.
+clear of pit openings. Rustic stone, existing broken columns, and the matching temple entrance retain their gameplay roles.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
 one world pixel of overlap at the ground. This closes transparent-padding gaps
@@ -34,9 +33,9 @@ and collision layout. See the [ground-contact regression](performance.md#scenery
 | --- | --- | --- |
 | Cypress Foothills | 0–959 | An empty approach teaches the first spike pit. A Satyr occupies a broad low terrace; the first Cyclops throws from an elevated ledge. |
 | Stone Switchbacks | 960–1919 | Raider and Satyr encounters lead to a wider pit. A flask follows the landing, then Telchine and Cyclops fights accompany the climb. |
-| Mountain Gardens | 1920–2879 | First shrine, followed by ascending 16-pixel steps with Raider, Satyr, and Telchine encounters. |
+| Mountain Gardens | 1920–2879 | Ascending 16-pixel steps with Raider, Satyr, and Telchine encounters. |
 | High Pass | 2880–3839 | A Cyclops guards the high wall. A recessed spike pit cuts the upper terrace, then the route climbs to y=136 before descending past Raider and Telchine guards. |
-| Summit Sanctuary | 3840–4799 | A Satyr on the descent, second shrine, final pit, Telchine and Cyclops encounters, then the Raider guarding the sanctuary. |
+| Summit Sanctuary | 3840–4799 | A Satyr on the descent, final pit, Telchine and Cyclops encounters, then the Raider guarding the sanctuary. |
 
 ## Spike pits
 
@@ -51,7 +50,7 @@ toward either side to clear the 24-pixel wall. The damage recoil is too small
 to escape on its own. Each pit gives 1.25 seconds between damaging contacts,
 in addition to Theseus's normal damage cooldown, leaving time to jump out.
 Remaining on the spikes eventually costs another bar. A fatal hit opens Hades.
-Load Game uses the same checkpoint recovery as any other death.
+Retry Level uses the same entrance restart as any other death.
 
 | Pit | Left edge | Rim Y | Width / depth |
 | --- | --- | --- | --- |
@@ -63,7 +62,7 @@ Load Game uses the same checkpoint recovery as any other death.
 The terrain's collision and drawing use the same cutout definitions. Pit beds
 are marked as unsafe destinations for Satyr hops. Player damage checks the
 current body position as well as the detection area, preventing stale overlap
-hits after exiting or loading past a pit. Pausing freezes the hazard timers.
+hits after exiting a pit. Pausing freezes the hazard timers.
 
 ## Enemies and recovery
 
@@ -89,23 +88,27 @@ which grants six seconds of 35% faster movement with a visible timer. Another
 pickup refreshes the duration without stacking speed. The level's required
 jumps all work without it. Six health flasks restore two bars each.
 
-Entering from Level 3 saves the foothill entrance at (48, 280). The Mountain
-Shrine at x=2048 saves a safe spawn at (2072, 280); the Summit Shrine at x=4096
-saves (4120, 280). Each snapshots score, defeated enemies,
-and collected flasks. Later defeats and score gains reset on death. Backtracking
-cannot replace a later shrine. Title Load resumes the highest level or shrine
-reached during the current session.
+Every attempt starts at the level entrance with full health and a **5:00 countdown**.
+The timer turns red for the final 30 seconds. It freezes during pause, app
+interruptions, temple entry, and completion. Running out of time opens Hades,
+just like a fatal hit. **Retry Level** there restarts the entire level, including
+all enemies and flasks, and restores the score carried in from earlier levels.
+There are no checkpoint shrines or mid-level saves.
+
+The title's **Restart Level** button restarts the current level from its entrance
+once Level 2 or later has been reached in this session. Replay also resets the
+level and countdown. New Game resets the campaign and score to Level 1.
+Session progress is held in memory; high scores are saved separately on disk.
 
 Defeat RaiderSummitGuard to unlock the sanctuary at (4752, 280). Theseus climbs
 the steps and disappears into its doorway before the completion menu. Continue
-opens [Level 5's rocky gorge](level_5.md) and saves its entrance. Replay Level
+opens [Level 5's rocky gorge](level_5.md) with a fresh countdown. Replay Level
 restarts Level 4, while New Game explicitly resets the campaign to Level 1.
 
 ## Play and validation
 
 ```sh
 tools/play_level.sh 4
-tools/play_level.sh 4 2
 godot --path . --scene res://scenes/levels/level_4.tscn
 godot --headless --path . --script res://tests/spike_pits.gd --fixed-fps 60
 godot --headless --path . --script res://tests/level_4_smoke.gd --fixed-fps 60
@@ -115,9 +118,8 @@ godot --headless --path . --script res://tests/level_4_scenery.gd --fixed-fps 60
 The pit suite tests all four jumps and escapes in both directions, actual fall
 damage, no automatic ejection, repeated-hit grace, pause, wine-assisted jumping,
 and unsafe Satyr landing rejection. The level suite checks Level 3→4, entrance
-and shrine loading, actual death/reload including fatal spike damage, enemy and
-pickup placement, Cyclops engagement, the debug launcher, both shrines, checkpoint
-rollback, camera scrolling, temple entry, replay, and New Game.
+retries, actual death/reload including fatal spike damage, enemy and
+pickup placement, Cyclops engagement, the debug launcher, level score rollback, camera scrolling, temple entry, replay, and New Game.
 
 A traversal with combat isolated clears the entire route at normal speed in
 about 52 simulated seconds, using 17 terrace jumps and four pit jumps, without

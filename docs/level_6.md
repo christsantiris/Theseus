@@ -44,8 +44,8 @@ once on top of the water multiplier.
 Higher ground gives partial relief during high tide. Players can press through
 with slower retreats, reposition toward a higher landing, or wait for drainage.
 Every required climb and both canal jumps remain possible even at maximum
-flood. Pause freezes the tide; Replay, Title Load, and death/reload begin a new
-low tide at the saved entrance or shrine. Water drag cannot persist into other
+flood. Pause freezes the tide; Replay, title Restart Level, and death/reload begin a new
+low tide at the level entrance. Water drag cannot persist into other
 levels.
 
 The movement design uses the existing 320×180 world coordinates, 90-unit dry run
@@ -67,9 +67,9 @@ moving platforms or timed jumps.
 | --- | --- | --- |
 | Drowned Harbor | 0–959 | A quiet arrival quay, a lone trident guard with room to duck or retreat, then two short climbs and another guard. Teach the new silhouette before combining it with difficult terrain. |
 | Ring Canals | 960–1919 | A broad upper landing introduces the blade fighter. Descend past a trident guard, cross the first shallow canal, then climb to another broad combat landing. |
-| Sunken Agora | 1920–2879 | A quiet shrine courtyard precedes a stair climb. A trident guard and a later blade fighter occupy separate landings; a flask follows the fight. |
+| Sunken Agora | 1920–2879 | A quiet courtyard precedes a stair climb. A trident guard and a later blade fighter occupy separate landings; a flask follows the fight. |
 | Palace Ascent | 2880–3839 | Climb to the highest palace terrace for an isolated blade fight. Descend through two trident-guard landings, with recovery space between them. |
-| Poseidon's Sanctuary | 3840–4799 | Descend to the second canal, then a safe shrine. Fight a blade fighter, a trident guard, and finally the elite Merfolk captain guarding the exit. |
+| Poseidon's Sanctuary | 3840–4799 | Descend to the second canal, then a broad causeway. Fight a blade fighter, a trident guard, and finally the elite Merfolk captain guarding the exit. |
 
 The raised terrain is listed below. All dimensions use world units;
 each terrace extends down to the main causeway at y=280. The lower route is
@@ -174,9 +174,9 @@ from depending on simultaneous attack juggling.
 ### Encounter positions
 
 These are play-test placements, with feet on the authored route. Patrol extents
-must remain inside the same safe landing, clear of canal beds and shrine spawns.
+must remain inside the same safe landing, clear of canal beds.
 The 256/320-unit upper landings provide room for the first three blade fights;
-the fourth uses the broad lower causeway after the final shrine.
+the fourth uses the broad lower causeway near the sanctuary.
 
 | Area | Encounters (X, Y) |
 | --- | --- |
@@ -188,21 +188,19 @@ the fourth uses the broad lower causeway after the final shrine.
 
 ## Recovery and progression
 
-Entering from Level 5 saves the Level 6 entrance immediately, replacing
-any gorge shrine as the latest load point. The Agora Shrine at (2064, 280)
-saves a spawn at (2088, 280); the Sanctuary Shrine at (4096, 280) saves
-(4120, 280). Each sits outside enemy patrols and gives a safe interval before
-the next engagement. The final blade fighter's patrol stays at x>=4240,
-at least 120 units from the second saved spawn.
+Two health flasks at (888, 248) and (2800, 200) restore two health each, up to five.
 
-Two health flasks sit at (888, 248) and (2800, 200), between the entrance and
-full-healing shrines. Each restores two health, up to five. Both shrines heal
-and snapshot score, defeated enemies, and collected flasks. Backtracking cannot
-replace a later checkpoint; death, Title Load, and manual Save retain the
-campaign's existing snapshot behavior. The two-flask balance keeps the existing
-difficulty heuristic's increase from Level 5 within its 10–40% bounds. That
-score is an estimate, not measured combat difficulty, and does not model tides
-or stun-lock opportunities. Combat pacing still needs human play testing.
+Every attempt starts at the level entrance with full health and a **5:00 countdown**.
+The timer turns red for the final 30 seconds. It freezes during pause, app
+interruptions, temple entry, and completion. Running out of time opens Hades,
+just like a fatal hit. **Retry Level** there restarts the entire level, including
+all enemies and flasks, and restores the score carried in from earlier levels.
+There are no checkpoint shrines or mid-level saves.
+
+The title's **Restart Level** button restarts the current level from its entrance
+once Level 2 or later has been reached in this session. Replay also resets the
+level and countdown. New Game resets the campaign and score to Level 1.
+Session progress is held in memory; high scores are saved separately on disk.
 
 The captain at (4672, 280) guards the exit at (4752, 280). Three sword hits
 defeat the captain. Theseus enters the doorway using the existing steps and
@@ -236,7 +234,6 @@ mipmaps. The 720p/540p phone profiles and simulator preview are unchanged.
 
 ```sh
 tools/play_level.sh 6
-tools/play_level.sh 6 2                  # second shrine
 tools/play_mobile.sh 6                  # desktop touch preview
 tools/play_mobile.sh 6 --mobile-render=540
 godot --path . res://scenes/reviews/merfolk_review.tscn
@@ -253,9 +250,8 @@ retreat counters, actual sword attacks, full touch jumps, one damage per attack,
 locked facing, focus, wall and edge safety, scores, captain health, and review
 controls. It independently inspects the imported painted tail contacts.
 
-The integration check covers Level 5→6, the saved entrance, Title Load,
-death/reload, supported enemy and flask placements, both shrines, checkpoint
-rollback, the captain-locked gate, entry, completion, replay, and New Game.
+The integration check covers Level 5→6, the entrance, title Restart Level,
+death/reload, supported enemy and flask placements, level score rollback, the captain-locked gate, entry, completion, replay, and New Game.
 With combat isolated and the tide cycling, the full course takes about 59.5
 simulated seconds and 17 jumps. Both canals are harmless and escapable in either direction; pause
 freezes their water animation. The scenery check sweeps the camera route and
@@ -271,7 +267,7 @@ The tide regression checks the actual spawned enemies' Level 6 tuning, full
 Merfolk speeds across all phases, continuous fill/drain, dry and wet player
 travel, higher-ground relief, wine composition, identical jump height and sword
 frames, all fifteen climbs and both canal jumps at maximum flood, pause,
-checkpoint reload, replay, and other-level isolation. Touch checks cover a
+entrance retry, replay, and other-level isolation. Touch checks cover a
 jump-to-sword thumb transition and indicator safe areas. The rendered profile
 check also compares underwater movement and sword histories at native, preview,
 540p, and 720p settings.

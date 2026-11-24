@@ -215,8 +215,7 @@ func _pause_and_reset() -> void:
 		await physics_frame
 	level = current_scene
 	_expect(level.level_number == 6 and level.tide.elapsed < 4 and level.player.movement_speed() == 90, "Replay starts a safe low tide and clears drag")
-	var none: Array[String] = []
-	root.get_node("LevelRun").save_checkpoint(1, Layout.CHECKPOINTS[1].spawn, 0, none, none)
+	level.player.position = Vector2(4120, 280)
 	level._on_title_pressed()
 	for tick in 5:
 		await physics_frame
@@ -224,7 +223,7 @@ func _pause_and_reset() -> void:
 	for tick in 8:
 		await physics_frame
 	level = current_scene
-	_expect(level.level_number == 6 and level.player.position.distance_to(Layout.CHECKPOINTS[1].spawn) < 1 and level.tide.elapsed < 4 and level.player.movement_speed() == 90, "Shrine loading keeps the checkpoint and starts at low tide")
+	_expect(level.level_number == 6 and level.player.position.distance_to(Layout.START) < 1 and level.tide.elapsed < 4 and level.player.movement_speed() == 90, "Retry returns to the entrance and starts at low tide")
 	await _open(1)
 	_expect(not level.has_node("AtlantisTide") and level.player.movement_speed() == 90, "Leaving Atlantis cannot carry water drag into earlier levels")
 
@@ -247,7 +246,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: cycling tides, actual Level 6 enemy scaling, full-speed Merfolk, player-only drag, higher ground, wine, unchanged jumps/attacks, all mandatory high-tide jumps, pause, replay, checkpoint load and other-level isolation.")
+		print("PASS: cycling tides, actual Level 6 enemy scaling, full-speed Merfolk, player-only drag, higher ground, wine, unchanged jumps/attacks, all mandatory high-tide jumps, pause, replay, entrance retry and other-level isolation.")
 	quit(0 if failures.is_empty() else 1)
 
 

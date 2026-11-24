@@ -6,6 +6,7 @@ const EMPTY := Color(0.16, 0.1, 0.12)
 
 var _pips: Array[ColorRect] = []
 var _root: Control
+var _level_time: Label
 var _score: Label
 var _area: Label
 var _message: Label
@@ -44,6 +45,17 @@ func _ready() -> void:
 	_score.add_theme_color_override("font_color", GOLD)
 	_score.text = "Score 0"
 	root.add_child(_score)
+	_level_time = Label.new()
+	_level_time.name = "LevelTime"
+	_level_time.anchor_left = 1.0
+	_level_time.anchor_right = 1.0
+	_level_time.offset_left = -80.0
+	_level_time.offset_right = -8.0
+	_level_time.offset_top = 20.0
+	_level_time.offset_bottom = 32.0
+	_level_time.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_level_time.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(_level_time)
 	_area = Label.new()
 	_area.position = Vector2(104, 4)
 	_area.size = Vector2(128, 12)
@@ -95,6 +107,9 @@ func _layout_mobile(safe := Rect2()) -> void:
 	_root.offset_bottom = safe.end.y - get_viewport().get_visible_rect().size.y
 	_area.size.x = maxf(0.0, safe.size.x - 192.0)
 	_area.clip_text = true
+	# Clear the pause button and Atlantis tide meter on touch screens.
+	_level_time.offset_top = 44.0
+	_level_time.offset_bottom = 56.0
 	# Above the thumb controls: the speed timer, and hints when the bottom
 	# strip is too narrow.
 	var above_controls := maxf(0.0, minf(116.0, safe.size.y - 64.0))
@@ -164,3 +179,9 @@ func set_score(value: int) -> void:
 func set_speed_boost(seconds_remaining: int) -> void:
 	_speed_status.text = "Swift %ds" % seconds_remaining
 	_speed_status.visible = seconds_remaining > 0
+
+
+func set_level_time(seconds_remaining: float) -> void:
+	var seconds := ceili(maxf(0.0, seconds_remaining))
+	_level_time.text = "Time %d:%02d" % [seconds / 60, seconds % 60]
+	_level_time.add_theme_color_override("font_color", Color(1.0, 0.35, 0.25) if seconds <= 30 else GOLD)

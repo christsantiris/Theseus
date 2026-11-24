@@ -20,7 +20,7 @@ or stretched ground extensions.
 
 All eighteen main terraces, both one-way bull ledges, both recessed spike pits,
 and their collision settings are unchanged. Scenery leaves the spike openings
-clear. Existing column fragments and checkpoint shrines remain, and the temple
+clear. Existing column fragments remain, and the temple
 stays closed until the Hydra's final head falls, including paused entry.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
@@ -33,10 +33,10 @@ and collision layout. See the [ground-contact regression](performance.md#scenery
 | Area | World X | Route and encounters |
 | --- | --- | --- |
 | Gorge Mouth | 0–959 | A broad, flat lane introduces the first Bronze Bull. Staggering it opens an optional route to a high flask ledge. Three low steps lead to the temple terraces. |
-| Temple Ledges | 960–1919 | The first pair of Cerberus Pups holds a broad landing. Descend into a second flat bull corridor before the first shrine. |
-| Broken Causeway | 1920–2879 | Light the shrine, cross a spike pit, and climb 16-pixel steps. A second pup pair guards a wide terrace halfway up. |
+| Temple Ledges | 960–1919 | The first pair of Cerberus Pups holds a broad landing. Descend into a second flat bull corridor before the causeway. |
+| Broken Causeway | 1920–2879 | Cross a spike pit, and climb 16-pixel steps. A second pup pair guards a wide terrace halfway up. |
 | High Colonnade | 2880–3839 | A third bull charges along a 512-pixel causeway. A second high flask ledge rewards riding it. Descending terraces lead toward the sanctuary. |
-| Hydra Sanctuary | 3840–4799 | The final pup pair guards the descent. Jump the last spike pit and light the second shrine, then defeat every Hydra head to open the exit temple. |
+| Hydra Sanctuary | 3840–4799 | The final pup pair guards the descent. Jump the last spike pit, then defeat every Hydra head to open the exit temple. |
 
 ## Encounters
 
@@ -91,40 +91,40 @@ Two spike recesses reuse Level 4's bronze spikes and damage-and-escape mechanic:
 Falling onto a pit bed costs one health bar. Hold Jump and move toward either
 rim to climb out; there is no automatic ejection. The 1.25-second interval
 between damaging contacts leaves time to escape. A fatal hit opens Hades.
-Load Game restores the latest level entrance or shrine.
+Retry Level restarts the level from its entrance.
 
 ## Progress and the exit
 
-Continuing from Level 4 saves the gorge entrance at (48, 280). The Causeway
-Shrine at x=2016 saves (2040, 280); the Hydra Shrine at x=4256 saves
-(4280, 280). Both snapshot score, defeated enemies, and
-collected flasks. Load resumes the highest level or shrine reached in the
-current session, and backtracking cannot replace a later shrine.
+Every attempt starts at the level entrance with full health and a **5:00 countdown**.
+The timer turns red for the final 30 seconds. It freezes during pause, app
+interruptions, temple entry, and completion. Running out of time opens Hades,
+just like a fatal hit. **Retry Level** there restarts the entire level, including
+all enemies and flasks, and restores the score carried in from earlier levels.
+There are no checkpoint shrines or mid-level saves.
 
-Pup defeats are saved individually. Saving after killing one pup restores
-only its surviving partner; the survivor can still pursue and attack. Damage
-to surviving enemies is reset on reload, as in earlier levels. Hydra heads
-must all be defeated to record the Hydra's kill and unlock the gate.
+The title's **Restart Level** button restarts the current level from its entrance
+once Level 2 or later has been reached in this session. Replay also resets the
+level and countdown. New Game resets the campaign and score to Level 1.
+Session progress is held in memory; high scores are saved separately on disk.
 
 HydraTempleGuard at (4608, 280) guards the temple at (4752, 280). Cutting
 one or two heads leaves the gate locked. The last head awards 450 points
 once and opens the gate. Theseus climbs the temple steps and disappears
 inside before the Level 5 completion menu. Replay restarts Level 5, and
 New Game resets the campaign to Level 1. **Continue to Level 6** enters
-[Atlantis](level_6.md) and saves its entrance as the new load point.
+[Atlantis](level_6.md) with a fresh countdown.
 
 ## Play and validation
 
 ```sh
 tools/play_level.sh 5
-tools/play_level.sh 5 2
 godot --path . res://scenes/levels/level_5.tscn
 godot --headless --path . --script res://tests/level_5_smoke.gd --fixed-fps 60
 godot --headless --path . --script res://tests/level_5_scenery.gd --fixed-fps 60
 ```
 
-The integration suite checks Level 4→5, entrance and shrine loading, actual
-death/reload, individual pup snapshots, survivor attacks, pickup and enemy
+The integration suite checks Level 4→5, entrance retries, actual
+death/reload, individual pup scoring, survivor attacks, pickup and enemy
 placement, fatal spike recovery, real sword-and-jump combat against the Hydra
 guard, the bull ride and high flask reward, camera scrolling, temple entry,
 replay, and New Game. With combat isolated, the complete main route takes

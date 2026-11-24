@@ -61,9 +61,6 @@ func _run() -> void:
 	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	state = root.get_node("LevelRun")
 	var level = await _fresh(5)
-	level.player.position = Gorge.CHECKPOINTS[1].position
-	await _frames()
-	_expect(state.level_number == 5 and state.checkpoint_index == 1, "Level 5 shrine is saved before entering Atlantis")
 	level._on_next_pressed()
 	_expect(state.level_number == 5, "Continue cannot skip an uncleared level")
 	level._on_gate_entered()
@@ -72,8 +69,7 @@ func _run() -> void:
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 6 and state.level_number == 6 and state.can_load(), "Level 5 advances to a saved Level 6 entrance")
-	_expect(state.checkpoint_index == -1 and state.checkpoint_defeated.is_empty(), "The new level replaces the old checkpoint and encounter snapshot")
+	_expect(level.level_number == 6 and state.level_number == 6 and state.can_load(), "Level 5 advances to a current Level 6 entrance")
 	_expect(level.player.position.distance_to(Atlantis.START) < 1.0, "Atlantis entry starts at the correct ground height")
 	level._on_title_pressed()
 	await _frames()
@@ -81,12 +77,12 @@ func _run() -> void:
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 6 and level.player.position.distance_to(Atlantis.START) < 1.0, "Title Load resumes Level 6 before an Atlantis shrine is lit")
+	_expect(level.level_number == 6 and level.player.position.distance_to(Atlantis.START) < 1.0, "Title Load resumes Level 6 at its entrance")
 	var previous_id: int = level.get_instance_id()
 	level.player._die()
 	await _reload(previous_id)
 	level = current_scene
-	_expect(level.level_number == 6 and level.player.health == 5 and level.player.position.distance_to(Atlantis.START) < 1.0, "Death before the first shrine restarts the Atlantis entrance")
+	_expect(level.level_number == 6 and level.player.health == 5 and level.player.position.distance_to(Atlantis.START) < 1.0, "Death from any point restarts the Atlantis entrance")
 	await _check_encounters(level)
 	level.player.position = Atlantis.FLASKS[0].position
 	await _frames()
@@ -96,30 +92,22 @@ func _run() -> void:
 	await _frames()
 	_expect(level.player.health == 5 and "HealthFlaskHarbor" in level._collected, "Atlantis flask restores two bars and records collection")
 	level.get_node("MerfolkHarbor").die()
-	level.player.position = Atlantis.CHECKPOINTS[0].position
-	await _frames()
-	_expect(state.checkpoint_index == 0 and state.checkpoint_score == 125, "Agora shrine saves Merfolk's defeat and score")
 	level.get_node("MerfolkRingQuay").die()
 	_expect(level._score == 250, "Later Merfolk defeat awards its score")
 	previous_id = level.get_instance_id()
 	level.player._die()
 	await _reload(previous_id)
 	level = current_scene
-	_expect(not level.has_node("MerfolkHarbor") and level.has_node("MerfolkRingQuay"), "Atlantis death restores the shrine's defeated-enemy snapshot")
-	_expect(not level.has_node("HealthFlaskHarbor") and level._score == 125, "Checkpoint restores collected flasks and rolls back later score")
-	_expect(level.player.position.distance_to(Atlantis.CHECKPOINTS[0].spawn) < 1.0, "Death restores the Agora's safe spawn")
-	level.player.position = Atlantis.CHECKPOINTS[1].position
-	await _frames()
-	level.player.position = Atlantis.CHECKPOINTS[0].position
-	await _frames()
-	_expect(state.checkpoint_index == 1, "Backtracking cannot replace the Acropolis shrine")
+	_expect(level.has_node("MerfolkHarbor") and level.has_node("MerfolkRingQuay"), "Atlantis death restores all encounters")
+	_expect(level.has_node("HealthFlaskHarbor") and level._score == 0, "Retry restores flasks and rolls back level score")
+	_expect(level.player.position.distance_to(Atlantis.START) < 1.0, "Death restores the level entrance")
 	level._on_title_pressed()
 	await _frames()
 	current_scene._on_load_pressed()
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 6 and level.player.position.distance_to(Atlantis.CHECKPOINTS[1].spawn) < 1.0, "Load resumes the highest Atlantis shrine")
+	_expect(level.level_number == 6 and level.player.position.distance_to(Atlantis.START) < 1.0, "Load resumes the Atlantis entrance")
 	var canal_level := await _fresh()
 	await _canals(canal_level)
 	await _traverse()
@@ -127,7 +115,7 @@ func _run() -> void:
 	_expect(level.pause_heading.text == "Level 6 Complete" and level.next_button.visible and level.next_level == "res://scenes/levels/level_7.tscn", "Atlantis continues into the final labyrinth")
 	level._on_replay_pressed()
 	await _frames()
-	_expect(current_scene.level_number == 6 and state.can_load() and state.checkpoint_index == -1, "Replay restarts Level 6 and keeps its entrance load point")
+	_expect(current_scene.level_number == 6 and state.can_load(), "Replay retains the current level")
 	_expect(current_scene.player.position.distance_to(Atlantis.START) < 1.0, "Replay begins at the harbor")
 	current_scene._on_title_pressed()
 	await _frames()
@@ -138,7 +126,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(125)
 	if failures.is_empty():
-		print("PASS: Level 5→6, entrance/Load/death, Merfolk roles, duckable tridents, safe canal escapes, pickups, both shrines, checkpoint rollback, full Atlantis traversal, camera, temple entry, completion, replay and New Game.")
+		print("PASS: Level 5→6, entrance/Load/death, Merfolk roles, duckable tridents, safe canal escapes, pickups, entrance retry, full Atlantis traversal, camera, temple entry, completion, replay and New Game.")
 	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 
@@ -147,7 +135,7 @@ func _check_encounters(level: Node) -> void:
 	var counts := {"merfolk": 0, "reefblade": 0}
 	var total := 0
 	var picker = load("res://scenes/debug/level_select.tscn").instantiate()
-	_expect(6 in picker._level_numbers() and picker._validate(6, 2).is_empty(), "Debug launcher discovers Atlantis and both shrines")
+	_expect(6 in picker._level_numbers() and picker._validate(6).is_empty(), "Debug launcher discovers Atlantis at its entrance")
 	picker.free()
 	for encounter: Dictionary in Atlantis.ENEMIES:
 		counts[encounter.kind] += 1
@@ -159,8 +147,6 @@ func _check_encounters(level: Node) -> void:
 	_expect(counts.merfolk == 9 and counts.reefblade == 4 and total == 1850, "Eight trident guards, four Reefblades and one captain award 1850 total")
 	for pickup: Dictionary in Atlantis.FLASKS:
 		_expect(pickup.position.y == Atlantis.surface_at(pickup.position.x), "Flask is supported")
-	for shrine: Dictionary in Atlantis.CHECKPOINTS:
-		_expect(shrine.spawn.y == Atlantis.surface_at(shrine.spawn.x), "Shrine spawn is supported")
 	var merfolk = level.get_node("MerfolkHarbor")
 	level.player.position = merfolk.position + Vector2(-32, 0)
 	merfolk.collision_layer = 4
@@ -271,7 +257,6 @@ func _traverse() -> void:
 	_expect(level._complete and saw_entry, "Entire Atlantis reaches its temple entry and completion; x=%.1f y=%.1f" % [player.position.x, player.position.y])
 	_expect(jumps >= 17 and highest < 135, "Route exercises fifteen climbs and the temple district's height")
 	_expect(camera_bottom - camera_top > 60.0, "Camera follows the Atlantis ascent and descent")
-	_expect(state.checkpoint_index == 1, "The normal route reaches both shrine triggers")
 	_expect(player.sprite.modulate.a < 0.01 and player.position.distance_to(Atlantis.EXIT + Vector2(2, -20)) < 0.1, "Theseus disappears into the temple doorway")
 	print("Atlantis traversal: %d jumps; peak feet y=%.1f; %.1f simulated seconds." % [jumps, highest, state.elapsed_seconds])
 

@@ -51,7 +51,6 @@ func _run() -> void:
 	_expect(not state.can_load(), "A new game has no saved progress")
 	level.player.position = Vector2(3840, 152)
 	await _frames()
-	_expect(state.checkpoint_index == 1 and state.level_number == 1, "Level 1 shrine saves normally")
 	level._score = 300
 	level._on_gate_entered()
 	_expect(level.next_button.visible, "Level 1 completion offers Level 2")
@@ -59,7 +58,6 @@ func _run() -> void:
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(state.level_number == 2 and state.checkpoint_index == -1 and state.can_load(), "Entering Level 2 replaces the old shrine with an entrance checkpoint")
 	_expect(level.player.position.distance_to(Coast.START) < 1.0, "Level 2 starts at its coastal entrance")
 	_expect(level._score == 300 and level.hud._score.text == "Score 300", "Level 1's score carries into Level 2")
 	level._on_title_pressed()
@@ -68,42 +66,35 @@ func _run() -> void:
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 2 and level.player.position.distance_to(Coast.START) < 1.0, "Load resumes the highest level before any new shrine is lit")
+	_expect(level.level_number == 2 and level.player.position.distance_to(Coast.START) < 1.0, "Load resumes the highest level at its entrance")
 	var old_id: int = level.get_instance_id()
 	level.player._die()
 	await _reload(old_id)
 	level = current_scene
-	_expect(level.level_number == 2 and level.player.health == 5 and level.player.position.distance_to(Coast.START) < 1.0 and level._score == 300, "Death before the first shrine restarts Level 2 with the carried score")
+	_expect(level.level_number == 2 and level.player.health == 5 and level.player.position.distance_to(Coast.START) < 1.0 and level._score == 300, "Death from any point restarts Level 2 with the carried score")
 	level.get_node("TelchineRoad").die()
-	level.player.position = Coast.CHECKPOINTS[0].position
-	await _frames()
-	_expect(state.checkpoint_index == 0 and state.checkpoint_score == 400, "Coastal shrine saves Level 2 progress on top of the carried score")
 	level.get_node("SpartoiQuay").die()
 	old_id = level.get_instance_id()
 	level.player._die()
 	await _reload(old_id)
 	level = current_scene
-	_expect(not level.has_node("TelchineRoad") and level.has_node("SpartoiQuay"), "Death restores this level's defeated-enemy snapshot")
-	_expect(level._score == 400 and level.player.position.distance_to(Coast.CHECKPOINTS[0].spawn) < 1.0, "Death restores the Level 2 shrine and score")
-	level.player.position = Coast.CHECKPOINTS[1].position
-	await _frames()
-	level.player.position = Coast.CHECKPOINTS[0].position
-	await _frames()
-	_expect(state.checkpoint_index == 1, "Backtracking preserves the highest shrine")
+	_expect(level.has_node("TelchineRoad") and level.has_node("SpartoiQuay"), "Death restores all enemies in this level")
+	_expect(level._score == 300 and level.player.position.distance_to(Coast.START) < 1.0, "Death restores the Level 2 entrance and carried score")
 	level._on_title_pressed()
 	await _frames()
 	current_scene._on_load_pressed()
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 2 and level.player.position.distance_to(Coast.CHECKPOINTS[1].spawn) < 1.0, "Title Load resumes the latest Level 2 shrine")
+	_expect(level.level_number == 2 and level.player.position.distance_to(Coast.START) < 1.0, "Title Load resumes the Level 2 entrance")
 	await _traverse()
 	level = current_scene
 	_expect(level.next_button.visible and level.next_button.text == "Continue to Level 3" and level.pause_heading.text == "Level 2 Complete", "Coastal temple completion offers Level 3")
 	level._score += 150
 	level._on_replay_pressed()
 	await _frames()
-	_expect(current_scene.level_number == 2 and state.can_load(), "Replay restarts the current level and retains its entrance checkpoint")
+	_expect(current_scene.level_number == 2 and state.can_load(), "Replay retains the current level")
+	_expect(current_scene.level_number == 2 and state.can_load(), "Replay restarts the current level and retains its entrance restart")
 	_expect(current_scene._score == 300, "Replay restores the score Theseus entered the level with")
 	current_scene._on_title_pressed()
 	await _frames()
@@ -114,7 +105,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: Level 1→2 progression, carried score, entrance checkpoint, Load, death, both coastal shrines, snapshot isolation, platform traversal, camera, completion, replay, and New Game.")
+		print("PASS: Level 1→2 progression, carried score, entrance restart, Load, death, entrance retries, platform traversal, camera, completion, replay, and New Game.")
 	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 
@@ -189,7 +180,6 @@ func _traverse() -> void:
 	_expect(level._complete, "Entire coast is traversable; final x=%.1f y=%.1f" % [player.position.x, player.position.y])
 	_expect(jumps >= 20 and highest < 110, "Route exercises the high terraces and at least twenty jumps")
 	_expect(camera_lowest - camera_highest > 80.0, "Camera scrolls vertically through the ascent and descent")
-	_expect(state.checkpoint_index == 1, "Route passes both shrine triggers")
 	print("Coastal traversal: %d jumps; peak feet y=%.1f; %.1f simulated seconds." % [jumps, highest, state.elapsed_seconds])
 
 

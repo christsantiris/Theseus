@@ -1,6 +1,6 @@
 # Mobile setup and testing
 
-The same Godot project targets Android and iOS. All seven levels use the existing movement, collision shapes, jump heights, sword timing, enemy behavior, and checkpoint rules. The mobile interface activates automatically on phones and tablets. Desktop play keeps its keyboard interface.
+The same Godot project targets Android and iOS. All seven levels use the existing movement, collision shapes, jump heights, sword timing, enemy behavior, level countdowns, and entrance retries. The mobile interface activates automatically on phones and tablets. Desktop play keeps its keyboard interface.
 
 ## Controls and display
 
@@ -8,7 +8,7 @@ Hold Left or Right to walk, or slide between the arrows to change direction. Hol
 
 The top-right button pauses and resumes. Gameplay controls hide in menus, during death, and when entering the exit temple. Returning from another app leaves gameplay paused and releases held touches. Android Back toggles pause in a level and closes the title's Controls screen.
 
-The game uses either landscape orientation and retains its 320×180 gameplay view. Fractional scaling fits the display; wider phones and tablets can have black bars. Touch targets stay inside the reported safe display area. The title, pause, and Hades menus use larger buttons, and Controls displays touch instructions. Checkpoint loading retains the existing **current-session** behavior; closing the process does not save progress to disk. High scores are saved separately on this device and survive process termination. Hades and final victory display the top five, with a gold **YOU** row for a qualifying current result.
+The game uses either landscape orientation and retains its 320×180 gameplay view. Fractional scaling fits the display; wider phones and tablets can have black bars. Touch targets stay inside the reported safe display area. The title, pause, and Hades menus use larger buttons, and Controls displays touch instructions. Each level has a five-minute countdown. Running out of time opens Hades; Retry Level restarts the entire level and its timer. Level progression retains **current-session** behavior; closing the process does not save progress to disk. High scores are saved separately on this device and survive process termination. Hades and final victory display the top five, with a gold **YOU** row for a qualifying current result.
 
 Character sheets keep their full-resolution artwork and transparency, with frames arranged into rows so every texture fits within 4096×4096. Frame sizes, animation timing, and collision shapes are unchanged. Display safe areas are converted from physical screen pixels to game coordinates, including letterboxing, so movement and action buttons remain separated on phones and tablets.
 
@@ -20,7 +20,7 @@ Level 2 now uses one continuous coast and fourteen complete landmarks anchored t
 
 ## Rendering profiles
 
-Physical Android/iOS devices and mobile web browsers default to a **1280×720 world render target**. The world still uses 320×180 coordinates, the same root camera and zoom, physics world, collisions, movement, and attack timing. Scenery, platforms, and characters render into a shared-world `SubViewport`; a presentation layer displays that texture behind the original UI. Scenes stay direct children of the root, preserving scene changes, reloads, checkpoints, and pause behavior.
+Physical Android/iOS devices and mobile web browsers default to a **1280×720 world render target**. The world still uses 320×180 coordinates, the same root camera and zoom, physics world, collisions, movement, and attack timing. Scenery, platforms, and characters render into a shared-world `SubViewport`; a presentation layer displays that texture behind the original UI. Scenes stay direct children of the root, preserving scene changes, reloads, countdowns, and pause behavior.
 
 HUD, menus, and touch controls render at display resolution on phone profiles. HUD content and touch buttons follow the reported safe display area in either landscape direction. A lower world resolution does not shrink or blur those controls. The root viewport still has a native-resolution composition pass; the budget caps world shading rather than every display pixel.
 
@@ -48,10 +48,10 @@ The wrapper also accepts engine flags, for example `tools/play_mobile.sh 1 --res
 
 ```sh
 tools/play_mobile.sh
-tools/play_mobile.sh 3 2
+tools/play_mobile.sh 3       # level entrance
 ```
 
-Click and hold the touch buttons with a mouse. A mouse tests one touch at a time; a device is needed for manual multitouch testing. Keyboard controls also work in the preview. Set `GODOT=/path/to/godot` if needed. Extra engine flags follow the level/shrine arguments, for example `tools/play_mobile.sh 2 --resolution 1280x720`.
+Click and hold the touch buttons with a mouse. A mouse tests one touch at a time; a device is needed for manual multitouch testing. Keyboard controls also work in the preview. Set `GODOT=/path/to/godot` if needed. Extra engine flags follow the level argument, for example `tools/play_mobile.sh 2 --resolution 1280x720`.
 
 Without the wrapper:
 
@@ -151,7 +151,7 @@ The artwork check verifies mobile-safe texture dimensions, complete atlas region
 
 The rendering check reads back the actual world targets, verifies screen markers through the world and final composition for all seven levels, compares identical movement/jump/sword-frame histories across profiles, checks left/right safe-area layouts and display resizes, and sends a real mouse click through the presentation layer to a title button. [Performance measurements](performance.md#mobile-rendering-budget) separate hardware browser results from software-rendered simulators.
 
-Before accepting a device build, play each level and check simultaneous touches, one-thumb Jump-then-Sword strikes against high birds, sword timing, ducking under birds, spike-pit recovery, temple entry, pause/resume, and checkpoint loading. Check both landscape directions, notched screens, interruption by another app, frame rate, audio, and heat. Desktop simulation and package validation do not establish device performance or battery use.
+Before accepting a device build, play each level and check simultaneous touches, one-thumb Jump-then-Sword strikes against high birds, sword timing, ducking under birds, spike-pit recovery, temple entry, pause/resume, and countdown expiry and entrance retries. Check both landscape directions, notched screens, interruption by another app, frame rate, audio, and heat. Desktop simulation and package validation do not establish device performance or battery use.
 
 Generated builds live in the ignored `builds/` directory. Export credentials and Godot's `.godot/` cache remain ignored.
 

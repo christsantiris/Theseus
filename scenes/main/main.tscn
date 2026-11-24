@@ -76,7 +76,7 @@ text = "New Game"
 [node name="Load" type="Button" parent="UI/TitleScreen/Menu/Content"]
 layout_mode = 2
 size_flags_horizontal = 4
-text = "Load"
+text = "Restart Level"
 
 [node name="Controls" type="Button" parent="UI/TitleScreen/Menu/Content"]
 layout_mode = 2

@@ -91,7 +91,7 @@ func _process(_delta: float) -> void:
 	intervals.append((now - previous) / 1000.0)
 	previous = now
 	# Repeat the same short walk, jump and sword exercise on every target. Keep
-	# the benchmark alive without changing game scripts or saved checkpoints.
+	# the benchmark alive without changing game scripts or campaign progress.
 	level.player.health = level.player.MAX_HEALTH
 	level.player._hurt_lock = 10000.0
 	var phase := fmod(elapsed, 8.0)

@@ -40,7 +40,7 @@ func _on_new_game_pressed() -> void:
 
 func _on_load_pressed() -> void:
 	if not LevelRun.can_load():
-		hint.text = "No shrine lit yet"
+		hint.text = "Reach Level 2 to continue"
 		return
 	get_tree().paused = false
 	get_tree().change_scene_to_file(LevelRun.scene_path())

@@ -29,9 +29,8 @@ the wider aqueduct retains its 2,172-pixel source width. All textures fit the
 project's 4,096-pixel mobile limit. No scenery texture generates mipmaps; the
 separate repeating stone terrain keeps its existing mipmaps.
 
-Detailed masonry, waystones, the limestone-and-bronze checkpoint shrines, and
-the temple facade complete the scenery. Ground and platform collision,
-movement, enemies, pickups, checkpoint spawns, and temple entry are unchanged.
+Detailed masonry, waystones, and the temple facade complete the scenery. Ground and platform collision,
+movement, enemies, pickups, and temple entry are unchanged.
 All six levels now use continuous landscapes with independent landmarks.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
@@ -44,14 +43,14 @@ and collision layout. See the [ground-contact regression](performance.md#scenery
 | Area | World X | Purpose | Encounters |
 | --- | --- | --- | --- |
 | The King's Road | 0–959 | Establish run, full-height jump, and attack timing using the original raider, two raised platforms, peltast, and hoplite sequence. Short prompts introduce the enemy openings. | 1 Raider, 1 Peltast, 1 Hoplite |
-| Broken Colonnade | 960–1919 | Climb a staircase of 16-pixel rises, then handle separate close-combat encounters after the drop. The first shrine follows the encounter stretch. | 1 Peltast, 1 Raider, 1 Hoplite |
+| Broken Colonnade | 960–1919 | Climb a staircase of 16-pixel rises, then handle separate close-combat encounters after the drop. | 1 Peltast, 1 Raider, 1 Hoplite |
 | Olive Terraces | 1920–2879 | Apply the learned timings around an elevated javelin fighter. A health flask on the upper terrace rewards climbing; the ground catches missed jumps. | 2 Raiders, 1 Peltast |
-| Ruined Aqueduct | 2880–3839 | Cross ascending and descending stone terraces, with two separated javelin fighters and a final spear guard. The second shrine follows. | 2 Peltasts, 1 Hoplite |
+| Ruined Aqueduct | 2880–3839 | Cross ascending and descending stone terraces, with two separated javelin fighters and a final spear guard. | 2 Peltasts, 1 Hoplite |
 | Temple Approach | 3840–4799 | Remix the three soldier types in sequence. Defeat the named temple guard to raise the gate, then enter to complete Level 1. | 1 Raider, 1 Peltast, 2 Hoplites |
 
-[Open the route map](level_1_map.svg) for exact enemy, pickup, shrine, and terrace positions.
+[Open the route map](level_1_map.svg) for exact enemy, pickup, and terrace positions.
 
-There are **16 soldiers**, **5 health flasks**, and **2 checkpoint shrines**. The
+There are **16 soldiers** and **5 health flasks**. The
 maximum combat score is **1,850**: five Hoplites at 150 points, six Peltasts at
 100, and five Raiders at 100. Earlier enemies can be bypassed; only the temple
 guard must be defeated to finish.
@@ -86,20 +85,25 @@ Sword damage occurs only while the blade is visibly extended during an attack.
 
 ## Recovery and completion
 
-- Health flasks restore two health and remain available when Theseus is already full.
-- Shrines at X=1920 and X=3840 snapshot score, defeated enemies, collected
-  flasks, and a safe spawn just beyond the shrine. They do not restore health.
-- Death opens Hades. Load Game reloads Level 1 at the latest shrine with full health. Everything after
-  that checkpoint resets, including its score gains, enemies, and pickups.
-- Backtracking to an earlier shrine cannot replace a later checkpoint.
-- Checkpoints last for the current run. New Game and Replay Level start fresh;
-  disk saving is a separate feature.
+Health flasks restore two health and remain available when Theseus is already full.
+
+Every attempt starts at the level entrance with full health and a **5:00 countdown**.
+The timer turns red for the final 30 seconds. It freezes during pause, app
+interruptions, temple entry, and completion. Running out of time opens Hades,
+just like a fatal hit. **Retry Level** there restarts the entire level, including
+all enemies and flasks, and restores the score carried in from earlier levels.
+There are no checkpoint shrines or mid-level saves.
+
+The title's **Restart Level** button restarts the current level from its entrance
+once Level 2 or later has been reached in this session. Replay also resets the
+level and countdown. New Game resets the campaign and score to Level 1.
+Session progress is held in memory; high scores are saved separately on disk.
+
 - The temple gate remains physically closed until its guard is defeated. Reaching
   the open temple pauses combat while Theseus walks up the steps and fades into
   the doorway. The level-clear screen appears after he has entered, showing
   score, defeated count, and time, with Continue to Level 2, Replay Level, and
-  Return to Title buttons. Entering [Level 2](level_2.md) replaces the old shrine
-  with a checkpoint at the coastal entrance; Load resumes that level from then on.
+  Return to Title buttons. Entering [Level 2](level_2.md) starts a fresh countdown.
 - The score carries into each next level. Replay Level restarts from the score
   Theseus entered the level with; only New Game resets it to 0.
 
@@ -108,7 +112,7 @@ Sword damage occurs only while the blade is visibly extended during an attack.
 ## Editing and validation
 
 `scenes/levels/level_1_layout.gd` contains the route, terraces, enemy patrols,
-pickup positions, shrine positions, and tutorial prompts. `level_1_geometry.gd`
+pickup positions, time limit, and tutorial prompts. `level_1_geometry.gd`
 inherits the original collision construction from `level_geometry.gd`, then
 renders the continuous landscape, independent scenery cutouts, and stone surfaces.
 `assets/art/backgrounds/level_1/attic_landscape.png` is the single opaque painting;
@@ -116,7 +120,7 @@ renders the continuous landscape, independent scenery cutouts, and stone surface
 leaving gate collision, unlocking, and entry logic on the existing temple.
 Each level owns its scenery renderer. Scenery is also visible in the editor.
 `level_1.gd` builds the encounters and manages
-checkpoints, camera limits, pause, and completion. Enemy and pickup instances are
+the countdown, camera limits, pause, and completion. Enemy and pickup instances are
 created from their existing reusable scenes at runtime.
 
 Play the level directly:
@@ -135,8 +139,8 @@ godot --headless --path . --script res://tests/player_combat.gd --fixed-fps 60
 ```
 
 The suite checks placement against terrain, full-health pickup retention,
-healing, enemy activation distance, both shrine triggers, actual death/reload,
-checkpoint rollback, gate collision and unlocking, completion, replay, and a
+healing, enemy activation distance, actual death/reload,
+entrance retry, gate collision and unlocking, completion, replay, and a
 physics-driven traversal of the full route. Enemies are held still for that
 traversal so it tests geometry independently of combat skill. Combat difficulty
 and first-clear pacing still need human playtesting.

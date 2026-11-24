@@ -182,12 +182,12 @@ func _review_scene() -> void:
 	await _frames()
 	var state := root.get_node("LevelRun")
 	var saved_level: int = state.level_number
-	var saved_checkpoint: int = state.checkpoint_index
+	var saved_score: int = state.level_start_score
 	review._toggle_gallery()
 	_expect(paused and review.gallery.visible, "Pose gallery pauses combat for artwork review")
 	review._toggle_gallery()
 	_expect(not paused and not review.gallery.visible, "Returning from the gallery resumes combat")
-	_expect(state.level_number == saved_level and state.checkpoint_index == saved_checkpoint, "Review scene does not change campaign progress")
+	_expect(state.level_number == saved_level and state.level_start_score == saved_score, "Review scene does not change campaign progress")
 	Input.action_press("move_right")
 	var jumped := false
 	for frame in 130:

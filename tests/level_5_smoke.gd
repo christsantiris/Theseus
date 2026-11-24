@@ -85,8 +85,6 @@ func _reload(previous_id: int) -> void:
 
 func _progress_and_saves() -> void:
 	var level = await _fresh(4)
-	level.player.position = Mountain.CHECKPOINTS[1].position
-	await _frames()
 	level._on_next_pressed()
 	_expect(state.level_number == 4, "Continue cannot skip an uncleared mountain level")
 	level._on_gate_entered()
@@ -95,19 +93,19 @@ func _progress_and_saves() -> void:
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 5 and state.can_load() and state.checkpoint_index == -1 and level.player.position.distance_to(Gorge.START) < 1, "Entering Level 5 replaces the previous shrine with the gorge entrance")
+	_expect(level.level_number == 5 and state.can_load(), "Level 5 remains available for entrance restart")
 	level._on_title_pressed()
 	await _frames()
 	current_scene._on_load_pressed()
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 5 and level.player.position.distance_to(Gorge.START) < 1, "Title Load resumes Level 5 before a shrine is lit")
+	_expect(level.level_number == 5 and level.player.position.distance_to(Gorge.START) < 1, "Title Load resumes Level 5 at its entrance")
 	var previous: int = level.get_instance_id()
 	level.player._die()
 	await _reload(previous)
 	level = current_scene
-	_expect(level.player.health == 5 and level.player.position.distance_to(Gorge.START) < 1, "Death before a shrine restores the gorge entrance")
+	_expect(level.player.health == 5 and level.player.position.distance_to(Gorge.START) < 1, "Death restores the gorge entrance")
 	_placements(level)
 	level.player.position = Gorge.FLASKS[2].position
 	await _frames()
@@ -118,12 +116,9 @@ func _progress_and_saves() -> void:
 	_expect(level.player.health == 5 and "HealthFlaskCauseway" in level._collected, "A gorge flask heals and records collection")
 	_enemy(level, "BullGorgeMouth").take_damage(4)
 	_enemy(level, "TemplePupA").take_damage(2)
-	level.player.position = Gorge.CHECKPOINTS[0].position
-	await _frames()
-	_expect(state.checkpoint_index == 0 and state.checkpoint_score == 350 and "TemplePupA" in state.checkpoint_defeated and "TemplePupB" not in state.checkpoint_defeated, "A shrine snapshots one pup's defeat independently of its partner")
 	_enemy(level, "TemplePupB").take_damage(2)
 	_enemy(level, "BullDryRiver").take_damage(4)
-	_expect(level._score == 700, "Each pup awards its own score and each bull awards 250")
+	_expect(level._score == 700, "Each pup awards 100 and each bull awards 250")
 	previous = level.get_instance_id()
 	level.player.health = 1
 	level.player._hurt_lock = 0
@@ -131,9 +126,11 @@ func _progress_and_saves() -> void:
 	level.player.velocity = Vector2.ZERO
 	await _reload(previous)
 	level = current_scene
-	_expect(level.player.health == 5 and level.player.position.distance_to(Gorge.CHECKPOINTS[0].spawn) < 1 and level._score == 350, "Fatal spikes restore full health and the saved shrine score")
-	_expect(_enemy(level, "TemplePupA") == null and _enemy(level, "TemplePupB") != null and level.get_node("TemplePack").get_child_count() == 1, "A partially defeated pack restores exactly its surviving pup")
-	_expect(_enemy(level, "BullGorgeMouth") == null and _enemy(level, "BullDryRiver") != null and not level.has_node("HealthFlaskCauseway"), "Defeated enemies and collected flasks restore from the snapshot")
+	_expect(level.player.health == 5 and level.player.position.distance_to(Gorge.START) < 1 and level._score == 0, "Fatal spikes restart at the entrance with the original score")
+	_expect(_enemy(level, "TemplePupA") != null and _enemy(level, "TemplePupB") != null and level.get_node("TemplePack").get_child_count() == 2, "Retry restores both pups")
+	_expect(_enemy(level, "BullGorgeMouth") != null and _enemy(level, "BullDryRiver") != null and level.has_node("HealthFlaskCauseway"), "Retry restores all enemies and flasks")
+	_enemy(level, "TemplePupA").take_damage(2)
+	await _frames()
 	var pup := _enemy(level, "TemplePupB")
 	pup.collision_layer = 4
 	pup.collision_mask = 1
@@ -148,25 +145,22 @@ func _progress_and_saves() -> void:
 		if pup._state == "pounce":
 			attacked = true
 			break
-	_expect(attacked and pup._has_focus, "The restored single pup can still pursue and take an attack turn")
+	_expect(attacked and pup._has_focus, "The surviving single pup can still pursue and take an attack turn")
 	_isolate(level)
-	level.player.position = Gorge.CHECKPOINTS[1].position
-	await _frames()
-	level.player.position = Gorge.CHECKPOINTS[0].position
-	await _frames()
-	_expect(state.checkpoint_index == 1, "Backtracking cannot replace the Hydra shrine")
+	_expect(level.level_number == 5 and state.can_load(), "Level 5 remains available for entrance restart")
 	level._on_title_pressed()
 	await _frames()
 	current_scene._on_load_pressed()
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 5 and level.player.position.distance_to(Gorge.CHECKPOINTS[1].spawn) < 1, "Load resumes the highest gorge shrine")
+	_expect(level.level_number == 5 and level.player.position.distance_to(Gorge.START) < 1, "Load resumes the gorge entrance")
 	await _guard_combat(level)
 	level._on_replay_pressed()
 	await _frames()
+	_expect(current_scene.level_number == 5 and state.can_load(), "Replay retains the current level")
 	_isolate(current_scene)
-	_expect(current_scene.level_number == 5 and state.checkpoint_index == -1 and current_scene.player.position.distance_to(Gorge.START) < 1 and current_scene.get_node("TemplePack").get_child_count() == 2, "Replay restores the level entrance and both members of each pack")
+	_expect(current_scene.level_number == 5 and state.can_load() and current_scene.player.position.distance_to(Gorge.START) < 1 and current_scene.get_node("TemplePack").get_child_count() == 2, "Replay restores the level entrance and both members of each pack")
 	current_scene._on_title_pressed()
 	await _frames()
 	current_scene._on_new_game_pressed()
@@ -176,7 +170,7 @@ func _progress_and_saves() -> void:
 
 func _placements(level: Node) -> void:
 	var picker = load("res://scenes/debug/level_select.tscn").instantiate()
-	_expect(5 in picker._level_numbers() and picker._validate(5, 2).is_empty(), "The play-test launcher discovers Level 5 and both shrines")
+	_expect(5 in picker._level_numbers() and picker._validate(5).is_empty(), "The play-test launcher discovers Level 5 at its entrance")
 	picker.free()
 	var counts := {"bronze_bull": 0, "cerberus_pup": 0, "hydra": 0}
 	for encounter: Dictionary in Gorge.ENEMIES:
@@ -191,8 +185,6 @@ func _placements(level: Node) -> void:
 		_expect(level.get_node(NodePath(pack_name)).get_child_count() == 2, "A fresh pack contains exactly two pups")
 	for pickup: Dictionary in Gorge.FLASKS:
 		_expect(pickup.position.y == Gorge.surface_at(pickup.position.x, pickup.get("bonus", false)), "Flask is supported: " + String(pickup.name))
-	for shrine: Dictionary in Gorge.CHECKPOINTS:
-		_expect(shrine.spawn.y == Gorge.surface_at(shrine.spawn.x), "Shrine spawn is safe")
 	for index in Gorge.BONUS_LEDGES.size():
 		var ledge: Rect2 = Gorge.BONUS_LEDGES[index]
 		var collision: CollisionShape2D = level.get_node("World/BullLedge%d" % index).get_child(0)
@@ -351,7 +343,7 @@ func _traverse() -> void:
 	Input.action_release("jump")
 	_expect(level._complete and saw_entry, "Normal movement traverses the complete gorge; x=%.1f y=%.1f" % [player.position.x, player.position.y])
 	_expect(pit_jumps == 2 and jumps >= 12 and player.health == 5 and highest < 145, "Main route clears ten climbs and both pits with normal jumps and no damage")
-	_expect(camera_bottom - camera_top > 80 and state.checkpoint_index == 1, "Traversal scrolls vertically and lights both shrines")
+	_expect(camera_bottom - camera_top > 80, "Traversal scrolls vertically")
 	_expect(player.sprite.modulate.a < 0.01 and player.position.distance_to(Gorge.EXIT + Vector2(2, -20)) < 0.1, "Theseus enters the sanctuary doorway before completion")
 	print("Gorge traversal: %d jumps (%d pits); peak feet y=%.1f; %.1f simulated seconds." % [jumps, pit_jumps, highest, state.elapsed_seconds])
 
@@ -362,7 +354,7 @@ func _pit_escape() -> void:
 			var level = await _fresh()
 			# Nearby flasks normally heal an escaped player. Remove
 			# them here so the check can detect any extra spike damage directly.
-			for definition: Dictionary in Gorge.FLASKS + Gorge.CHECKPOINTS:
+			for definition: Dictionary in Gorge.FLASKS:
 				level.get_node(NodePath(definition.name)).free()
 			var player = level.player
 			player.position = pit.position + Vector2(pit.width * 0.5, 0)
@@ -393,7 +385,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: Level 4→5, entrance/Load/death, placements, per-pup checkpoints and survivor attacks, spike recovery, both shrines, actual Hydra gate combat, bull ride and bonus reward, full normal-speed traversal, camera, temple entry, replay and New Game.")
+		print("PASS: Level 4→5, entrance/Load/death, placements, per-pup scoring and survivor attacks, spike recovery, actual Hydra gate combat, bull ride and bonus reward, full normal-speed traversal, camera, temple entry, replay and New Game.")
 	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 

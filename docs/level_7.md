@@ -18,14 +18,23 @@ Ducking still holds position, as it does elsewhere in the game.
 | --- | --- | --- |
 | Gates of Knossos | 0–959 | Arrival corridor, Raider, two short climbs, Hoplite. |
 | Twisting Galleries | 960–1919 | Peltast, raised Raider gallery, descent past a Peltast, first low lintel. |
-| Hall of the Bull | 1920–2879 | First shrine, Hoplite, four climbs, Raider/Peltast pair and recovery flask. |
+| Hall of the Bull | 1920–2879 | Hoplite, four climbs, Raider/Peltast pair and recovery flask. |
 | Ariadne's Passage | 2880–3839 | Hoplite, low-roofed passage, raised Raider/Peltast pair, final Hoplite. |
-| The Minotaur's Lair | 3840–4799 | Safe pre-boss shrine, broad flat charge arena, locked exit. |
+| The Minotaur's Lair | 3840–4799 | Broad flat charge arena, locked exit. |
 
-There are four of each soldier, one Minotaur, three two-health flasks, and two
-full-healing shrines. The shrines stand at x=2032 and x=3976. Reaching Level 7
-saves its entrance immediately; Load subsequently restores the highest shrine
-reached. Replay restores the complete level, including the boss.
+There are four of each soldier, one Minotaur, and three two-health flasks.
+
+Every attempt starts at the level entrance with full health and a **5:00 countdown**.
+The timer turns red for the final 30 seconds. It freezes during pause, app
+interruptions, temple entry, and completion. Running out of time opens Hades,
+just like a fatal hit. **Retry Level** there restarts the entire level, including
+all enemies and flasks, and restores the score carried in from earlier levels.
+There are no checkpoint shrines or mid-level saves.
+
+The title's **Restart Level** button restarts the current level from its entrance
+once Level 2 or later has been reached in this session. Replay also resets the
+level and countdown. New Game resets the campaign and score to Level 1.
+Session progress is held in memory; high scores are saved separately on disk.
 
 ## Minotaur
 
@@ -82,11 +91,10 @@ the existing 720p/540p budgets and separate simulator preview.
 
 ```bash
 tools/play_level.sh 7
-tools/play_level.sh 7 2
-tools/play_mobile.sh 7 2
+tools/play_mobile.sh 7
 ```
 
-The second shrine is just outside the arena. Use the ordinary jump and sword
+Use the ordinary jump and sword
 buttons; no new input is required.
 
 ```bash
@@ -97,7 +105,7 @@ godot --path . --script res://tests/mobile_rendering.gd --fixed-fps 60 -- --mobi
 ```
 
 The route test isolates combat to check all eleven jumps, both corridors,
-checkpoint progression, gate locking, final victory, and replay. The boss test
+entrance progression, gate locking, final victory, and replay. The boss test
 separately uses actual player movement and sword attacks to check charge
 clearance and damage, plus attack ordering, focus, retreat, pause, and defeat.
 

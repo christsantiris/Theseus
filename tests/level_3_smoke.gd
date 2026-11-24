@@ -49,9 +49,6 @@ func _run() -> void:
 	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	state = root.get_node("LevelRun")
 	var level = await _fresh(2)
-	level.player.position = Coast.CHECKPOINTS[1].position
-	await _frames()
-	_expect(state.level_number == 2 and state.checkpoint_index == 1, "Level 2 shrine is saved before entering town")
 	level._on_next_pressed()
 	_expect(state.level_number == 2, "Continue cannot skip an uncleared level")
 	level._on_gate_entered()
@@ -60,8 +57,7 @@ func _run() -> void:
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 3 and state.level_number == 3 and state.can_load(), "Level 2 advances to a saved Level 3 entrance")
-	_expect(state.checkpoint_index == -1 and state.checkpoint_defeated.is_empty(), "The new level replaces the old checkpoint and encounter snapshot")
+	_expect(level.level_number == 3 and state.level_number == 3 and state.can_load(), "Level 2 advances to a current Level 3 entrance")
 	_expect(level.player.position.distance_to(Town.START) < 1.0, "Town entry starts at the correct ground height")
 	level._on_title_pressed()
 	await _frames()
@@ -69,12 +65,12 @@ func _run() -> void:
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 3 and level.player.position.distance_to(Town.START) < 1.0, "Title Load resumes Level 3 before a town shrine is lit")
+	_expect(level.level_number == 3 and level.player.position.distance_to(Town.START) < 1.0, "Title Load resumes Level 3 at its entrance")
 	var previous_id: int = level.get_instance_id()
 	level.player._die()
 	await _reload(previous_id)
 	level = current_scene
-	_expect(level.level_number == 3 and level.player.health == 5 and level.player.position.distance_to(Town.START) < 1.0, "Death before the first shrine restarts the town entrance")
+	_expect(level.level_number == 3 and level.player.health == 5 and level.player.position.distance_to(Town.START) < 1.0, "Death from any point restarts the town entrance")
 	await _check_encounters(level)
 	level.player.position = Town.FLASKS[0].position
 	await _frames()
@@ -84,37 +80,29 @@ func _run() -> void:
 	await _frames()
 	_expect(level.player.health == 5 and "HealthFlaskGate" in level._collected, "Town flask restores two bars and records collection")
 	level.get_node("LamiaWorkshop").die()
-	level.player.position = Town.CHECKPOINTS[0].position
-	await _frames()
-	_expect(state.checkpoint_index == 0 and state.checkpoint_score == 150, "Agora shrine saves Lamia's defeat and score")
 	level.get_node("LamiaAgora").die()
 	_expect(level._score == 300, "Later Lamia defeat awards its score")
 	previous_id = level.get_instance_id()
 	level.player._die()
 	await _reload(previous_id)
 	level = current_scene
-	_expect(not level.has_node("LamiaWorkshop") and level.has_node("LamiaAgora"), "Town death restores the shrine's defeated-enemy snapshot")
-	_expect(not level.has_node("HealthFlaskGate") and level._score == 150, "Checkpoint restores collected flasks and rolls back later score")
-	_expect(level.player.position.distance_to(Town.CHECKPOINTS[0].spawn) < 1.0, "Death restores the Agora's safe spawn")
-	level.player.position = Town.CHECKPOINTS[1].position
-	await _frames()
-	level.player.position = Town.CHECKPOINTS[0].position
-	await _frames()
-	_expect(state.checkpoint_index == 1, "Backtracking cannot replace the Acropolis shrine")
+	_expect(level.has_node("LamiaWorkshop") and level.has_node("LamiaAgora"), "Town death restores all encounters")
+	_expect(level.has_node("HealthFlaskGate") and level._score == 0, "Retry restores flasks and rolls back level score")
+	_expect(level.player.position.distance_to(Town.START) < 1.0, "Death restores the level entrance")
 	level._on_title_pressed()
 	await _frames()
 	current_scene._on_load_pressed()
 	await _frames()
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 3 and level.player.position.distance_to(Town.CHECKPOINTS[1].spawn) < 1.0, "Load resumes the highest town shrine")
+	_expect(level.level_number == 3 and level.player.position.distance_to(Town.START) < 1.0, "Load resumes the town entrance")
 	await _traverse()
 	level = current_scene
 	_expect(level.pause_heading.text == "Level 3 Complete" and level.next_button.visible and level.next_button.text == "Continue to Level 4", "Town completion offers the mountain level")
 	_expect(ResourceLoader.exists(level.next_level), "Town continuation points to a real level scene")
 	level._on_replay_pressed()
 	await _frames()
-	_expect(current_scene.level_number == 3 and state.can_load() and state.checkpoint_index == -1, "Replay restarts Level 3 and keeps its entrance load point")
+	_expect(current_scene.level_number == 3 and state.can_load(), "Replay retains the current level")
 	_expect(current_scene.player.position.distance_to(Town.START) < 1.0, "Replay begins at the city gate")
 	current_scene._on_title_pressed()
 	await _frames()
@@ -125,7 +113,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: Level 2→3, entrance/Load/death, four enemy types, Lamia activation, pickups, both shrines, checkpoint rollback, full town traversal, camera, temple entry, completion, replay and New Game.")
+		print("PASS: Level 2→3, entrance/Load/death, four enemy types, Lamia activation, pickups, entrance retry, full town traversal, camera, temple entry, completion, replay and New Game.")
 	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 
@@ -141,8 +129,6 @@ func _check_encounters(level: Node) -> void:
 		_expect(counts[kind] == 4, "Town contains four " + kind + " enemies")
 	for pickup: Dictionary in Town.FLASKS:
 		_expect(pickup.position.y == Town.surface_at(pickup.position.x), "Flask is on terrain: " + String(pickup.name))
-	for shrine: Dictionary in Town.CHECKPOINTS:
-		_expect(shrine.spawn.y == Town.surface_at(shrine.spawn.x), "Shrine spawn is supported")
 	var lamia = level.get_node("LamiaWorkshop")
 	# Activate the real controller on its actual platform; the rest of the scene
 	# remains isolated so this checks placement independently of other fights.
@@ -224,7 +210,6 @@ func _traverse() -> void:
 	_expect(level._complete and saw_entry, "Entire town reaches its temple entry and completion; x=%.1f y=%.1f" % [player.position.x, player.position.y])
 	_expect(jumps >= 15 and highest < 135, "Route exercises fifteen climbs and the temple district's height")
 	_expect(camera_bottom - camera_top > 60.0, "Camera follows the town ascent and descent")
-	_expect(state.checkpoint_index == 1, "The normal route reaches both shrine triggers")
 	_expect(player.sprite.modulate.a < 0.01 and player.position.distance_to(Town.EXIT + Vector2(2, -20)) < 0.1, "Theseus disappears into the temple doorway")
 	print("Town traversal: %d jumps; peak feet y=%.1f; %.1f simulated seconds." % [jumps, highest, state.elapsed_seconds])
 

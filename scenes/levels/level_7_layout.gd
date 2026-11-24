@@ -1,5 +1,7 @@
 extends RefCounted
 
+const TIME_LIMIT := 300.0
+
 const WIDTH := 4800
 const HEIGHT := 352
 const FLOOR_Y := 280
@@ -45,16 +47,12 @@ const FLASKS := [
 	{"name": "BullHallFlask", "position": Vector2(2800, 248)},
 	{"name": "PassageFlask", "position": Vector2(3648, 264)},
 ]
-const CHECKPOINTS := [
-	{"name": "BullHallShrine", "position": Vector2(2032, 280), "spawn": Vector2(2052, 280)},
-	{"name": "AriadneShrine", "position": Vector2(3976, 280), "spawn": Vector2(4000, 280)},
-]
 const EXIT := Vector2(4752, 280)
 const GATE_GUARD := "Minotaur"
 const TIPS := [
 	{"x": 168, "end": 320, "text": "Follow the bronze thread through the labyrinth."},
 	{"x": 1776, "end": 1896, "text": "Low stone lintel ahead. Keep to the ground."},
-	{"x": 3896, "end": 4080, "text": "Light the shrine before facing the Minotaur."},
+	{"x": 3896, "end": 4080, "text": "Prepare to jump the Minotaur’s charge."},
 	{"x": 4120, "end": 4320, "text": "Jump his low charge. Counter after the headbutt."},
 ]
 

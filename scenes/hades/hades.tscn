@@ -68,7 +68,7 @@ text = "New Game"
 [node name="LoadGame" type="Button" parent="UI/Menu/Content"]
 layout_mode = 2
 size_flags_horizontal = 4
-text = "Load Game"
+text = "Retry Level"
 
 [connection signal="pressed" from="UI/Menu/Content/NewGame" to="." method="_on_new_game_pressed"]
 [connection signal="pressed" from="UI/Menu/Content/LoadGame" to="." method="_on_load_game_pressed"]

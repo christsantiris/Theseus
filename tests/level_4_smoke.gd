@@ -70,9 +70,6 @@ func _run() -> void:
 	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	state = root.get_node("LevelRun")
 	var level = await _fresh(3)
-	level.player.position = Town.CHECKPOINTS[1].position
-	await _frames()
-	_expect(state.checkpoint_index == 1, "The town shrine is saved before moving to Level 4")
 	level._on_next_pressed()
 	_expect(state.level_number == 3, "Continue cannot skip an uncleared town")
 	level._on_gate_entered()
@@ -81,7 +78,6 @@ func _run() -> void:
 	await _frames()
 	level = current_scene
 	_isolate()
-	_expect(level.level_number == 4 and state.can_load() and state.checkpoint_index == -1, "Entering the mountains saves a new entrance checkpoint")
 	_expect(level.player.position.distance_to(Mountain.START) < 1, "Mountain entrance has the correct spawn")
 	level._on_title_pressed()
 	await _frames()
@@ -89,12 +85,12 @@ func _run() -> void:
 	await _frames()
 	level = current_scene
 	_isolate()
-	_expect(level.level_number == 4 and level.player.position.distance_to(Mountain.START) < 1, "Title Load resumes the highest level before its first shrine")
+	_expect(level.level_number == 4 and level.player.position.distance_to(Mountain.START) < 1, "Title Load resumes the highest level at its entrance")
 	var previous: int = level.get_instance_id()
 	level.player._die()
 	await _reload(previous)
 	level = current_scene
-	_expect(level.player.health == 5 and level.player.position.distance_to(Mountain.START) < 1, "Death before a shrine restores the mountain entrance")
+	_expect(level.player.health == 5 and level.player.position.distance_to(Mountain.START) < 1, "Death from any point restores the mountain entrance")
 	await _placements(level)
 	level.player.position = Mountain.FLASKS[0].position
 	await _frames()
@@ -104,12 +100,9 @@ func _run() -> void:
 	await _frames()
 	_expect(level.player.health == 5 and "HealthFlaskFoothill" in level._collected, "Mountain flask heals and records collection")
 	level.get_node("CyclopsFoothills").die()
-	level.player.position = Mountain.CHECKPOINTS[0].position
-	await _frames()
-	_expect(state.checkpoint_index == 0 and state.checkpoint_score == 200, "First mountain shrine snapshots Cyclops score")
 	level.get_node("SatyrGarden").die()
 	_expect(level._score == 325, "Satyr awards its score in the real level")
-	# A final-health spike fall must use the same checkpoint recovery as combat.
+	# A final-health spike fall must use the same entrance recovery as combat.
 	previous = level.get_instance_id()
 	level.player.health = 1
 	level.player._hurt_lock = 0
@@ -117,28 +110,23 @@ func _run() -> void:
 	level.player.velocity = Vector2.ZERO
 	await _reload(previous)
 	level = current_scene
-	_expect(level.player.health == 5 and level.player.position.distance_to(Mountain.CHECKPOINTS[0].spawn) < 1, "Fatal spike damage restores the latest mountain shrine")
-	_expect(not level.has_node("CyclopsFoothills") and level.has_node("SatyrGarden") and level._score == 200, "Spike death restores the correct enemy and score snapshot")
-	_expect(not level.has_node("HealthFlaskFoothill"), "Checkpoint retains earlier flask collection")
-	level.player.position = Mountain.CHECKPOINTS[1].position
-	await _frames()
-	level.player.position = Mountain.CHECKPOINTS[0].position
-	await _frames()
-	_expect(state.checkpoint_index == 1, "Backtracking does not replace the summit shrine")
+	_expect(level.player.health == 5 and level.player.position.distance_to(Mountain.START) < 1, "Fatal spike damage restores the mountain entrance")
+	_expect(level.has_node("CyclopsFoothills") and level.has_node("SatyrGarden") and level._score == 0, "Spike death restores the correct enemy and score snapshot")
+	_expect(level.has_node("HealthFlaskFoothill"), "Retry restores the collected flask")
 	level._on_title_pressed()
 	await _frames()
 	current_scene._on_load_pressed()
 	await _frames()
 	level = current_scene
 	_isolate()
-	_expect(level.level_number == 4 and level.player.position.distance_to(Mountain.CHECKPOINTS[1].spawn) < 1, "Load resumes the highest mountain shrine")
+	_expect(level.level_number == 4 and level.player.position.distance_to(Mountain.START) < 1, "Load resumes the mountain entrance")
 	await _traverse()
 	level = current_scene
 	_expect(level.pause_heading.text == "Level 4 Complete" and level.next_button.visible and level.next_button.text == "Continue to Level 5", "Mountain temple offers the gorge level")
 	_expect(ResourceLoader.exists(level.next_level), "Mountain continuation points to a real level scene")
 	level._on_replay_pressed()
 	await _frames()
-	_expect(current_scene.level_number == 4 and state.checkpoint_index == -1 and state.can_load(), "Replay restarts Level 4 while retaining its entrance load point")
+	_expect(current_scene.level_number == 4 and state.can_load(), "Replay retains the current level")
 	_expect(current_scene.player.position.distance_to(Mountain.START) < 1, "Replay starts in the foothills")
 	current_scene._on_title_pressed()
 	await _frames()
@@ -148,14 +136,14 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: Level 3→4, entrance/Load/death, all enemies, Cyclops placement, flasks, both shrines, fatal spike recovery, full mountain traversal with four pit jumps, camera, temple entry, replay and New Game.")
+		print("PASS: Level 3→4, entrance/Load/death, all enemies, Cyclops placement, flasks, fatal spike recovery, full mountain traversal with four pit jumps, camera, temple entry, replay and New Game.")
 	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 
 
 func _placements(level: Node) -> void:
 	var picker = load("res://scenes/debug/level_select.tscn").instantiate()
-	_expect(4 in picker._level_numbers() and picker._validate(4, 2).is_empty(), "Play-test launcher discovers Level 4 and both shrines")
+	_expect(4 in picker._level_numbers() and picker._validate(4).is_empty(), "Play-test launcher discovers Level 4 at its entrance")
 	picker.free()
 	var counts := {"cyclops": 0, "satyr": 0, "raider": 0, "telchine": 0}
 	for encounter: Dictionary in Mountain.ENEMIES:
@@ -167,8 +155,6 @@ func _placements(level: Node) -> void:
 		_expect(counts[kind] == 4, "Four " + kind + " enemies are present")
 	for pickup: Dictionary in Mountain.FLASKS:
 		_expect(pickup.position.y == Mountain.surface_at(pickup.position.x), "Flask rests on safe terrain")
-	for shrine: Dictionary in Mountain.CHECKPOINTS:
-		_expect(shrine.spawn.y == Mountain.surface_at(shrine.spawn.x), "Shrine spawn is supported")
 	_expect(get_nodes_in_group("spike_pits").size() == 4, "All four pits have active hazards")
 	var cyclops = level.get_node("CyclopsFoothills")
 	level.player.position = Vector2(756, 248)
@@ -234,7 +220,6 @@ func _traverse() -> void:
 	_expect(level._complete and saw_entry, "Normal movement traverses the whole mountain route; x=%.1f y=%.1f" % [player.position.x, player.position.y])
 	_expect(pit_jumps.size() == 4 and jumps >= 21 and player.health == 5, "Route clears four pits and seventeen climbs without damage or a speed boost")
 	_expect(highest < 125 and camera_bottom - camera_top > 90, "Route reaches the high pass with vertical camera scrolling")
-	_expect(state.checkpoint_index == 1, "Traversal lights both mountain shrines")
 	_expect(player.sprite.modulate.a < 0.01 and player.position.distance_to(Mountain.EXIT + Vector2(2, -20)) < 0.1, "Theseus enters the sanctuary doorway before completion")
 	print("Mountain traversal: %d jumps (%d pits); peak feet y=%.1f; %.1f simulated seconds." % [jumps, pit_jumps.size(), highest, state.elapsed_seconds])
 

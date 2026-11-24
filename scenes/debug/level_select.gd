@@ -1,15 +1,7 @@
 extends Control
 
-## Debug launcher for play-testing any level, from its start or from a lit shrine.
-##
-## With arguments it jumps straight in:
-##   godot --path . res://scenes/debug/level_select.tscn -- --level=3 --shrine=2
-## Without arguments (or opened with F6 in the editor) it shows a picker.
-##
-## --level=N   level number, matching res://scenes/levels/level_N.tscn
-## --shrine=K  optional, 1-based shrine to start from; 0 or omitted starts at the entrance.
-##
-## Starting at a shrine marks it lit, so earlier enemies are still alive and score starts at 0.
+## Debug launcher: --level=N starts that level at its entrance.
+## Without arguments (or with F6) it shows a picker.
 ## This scene is excluded from the Web export.
 
 const LEVELS_DIR := "res://scenes/levels"
@@ -21,9 +13,9 @@ var _first_button: Button
 func _ready() -> void:
 	var args := _parse_args(OS.get_cmdline_user_args())
 	if args.has("level"):
-		var error := _validate(args.level, args.get("shrine", 0))
+		var error := _validate(args.level)
 		if error.is_empty():
-			_start.call_deferred(args.level, args.get("shrine", 0))
+			_start.call_deferred(args.level)
 			return
 		push_error("Level select: " + error)
 		_build_picker(error)
@@ -39,7 +31,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _parse_args(raw: PackedStringArray) -> Dictionary:
 	var parsed := {}
 	for arg in raw:
-		for key in ["level", "shrine"]:
+		for key in ["level"]:
 			var prefix: String = "--%s=" % key
 			if arg.begins_with(prefix) and arg.trim_prefix(prefix).is_valid_int():
 				parsed[key] = arg.trim_prefix(prefix).to_int()
@@ -59,28 +51,15 @@ func _level_numbers() -> Array[int]:
 	return numbers
 
 
-func _layout(level: int) -> Script:
-	return load("%s/level_%d_layout.gd" % [LEVELS_DIR, level])
-
-
-func _validate(level: int, shrine: int) -> String:
+func _validate(level: int) -> String:
 	if level not in _level_numbers():
 		return "no level %d (found %s)" % [level, _level_numbers()]
-	var shrines: int = _layout(level).CHECKPOINTS.size()
-	if shrine < 0 or shrine > shrines:
-		return "level %d has shrines 1-%d, not %d" % [level, shrines, shrine]
 	return ""
 
 
-func _start(level: int, shrine: int) -> void:
-	var layout := _layout(level)
+func _start(level: int) -> void:
 	LevelRun.begin_level(level)
-	LevelRun.spawn_position = layout.START
-	if shrine > 0:
-		var checkpoint: Dictionary = layout.CHECKPOINTS[shrine - 1]
-		var none: Array[String] = []
-		LevelRun.save_checkpoint(shrine - 1, checkpoint.spawn, 0, none, none)
-	print("Level select: starting level %d %s" % [level, "at shrine %d" % shrine if shrine > 0 else "at the entrance"])
+	print("Level select: starting level %d at the entrance" % level)
 	get_tree().paused = false
 	get_tree().change_scene_to_file("%s/level_%d.tscn" % [LEVELS_DIR, level])
 
@@ -118,9 +97,7 @@ func _build_picker(error: String) -> void:
 		name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		name_label.theme_type_variation = &"CarvedLabel"
 		row.add_child(name_label)
-		row.add_child(_button("Start", level, 0))
-		for shrine in range(1, _layout(level).CHECKPOINTS.size() + 1):
-			row.add_child(_button("Shrine %d" % shrine, level, shrine))
+		row.add_child(_button("Start", level))
 
 	var hint := Label.new()
 	hint.text = error if not error.is_empty() else "Esc quits"
@@ -132,11 +109,11 @@ func _build_picker(error: String) -> void:
 		_first_button.grab_focus()
 
 
-func _button(text: String, level: int, shrine: int) -> Button:
+func _button(text: String, level: int) -> Button:
 	var button := Button.new()
 	button.text = text
 	button.custom_minimum_size = Vector2(52, 16)
-	button.pressed.connect(_start.bind(level, shrine))
+	button.pressed.connect(_start.bind(level))
 	if _first_button == null:
 		_first_button = button
 	return button
