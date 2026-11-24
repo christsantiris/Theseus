@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
 # Export an iOS Xcode project with standard device and simulator architectures.
+# Usage: tools/export_ios.sh [--release]
+#   default    debug export: Google's test ads, for simulator and device testing
+#   --release  release export for App Store/TestFlight archives: live ad units
 # Set GODOT=/path/to/godot if the editor is not on PATH.
 set -euo pipefail
+
+MODE=debug
+case "${1:-}" in
+  "") ;;
+  --release) MODE=release ;;
+  *) echo "Usage: $0 [--release]" >&2; exit 2 ;;
+esac
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 GODOT="${GODOT:-godot}"
@@ -10,7 +20,7 @@ GODOT="${GODOT:-godot}"
 command -v python3 >/dev/null
 command -v xcrun >/dev/null
 mkdir -p "$ROOT/builds/ios"
-"$GODOT" --headless --path "$ROOT" --export-debug iOS "$ROOT/builds/ios/Theseus.zip"
+"$GODOT" --headless --path "$ROOT" --export-$MODE iOS "$ROOT/builds/ios/Theseus.zip"
 
 # Godot writes ARM64-only project settings. Its simulator framework metadata can
 # also list architectures absent from the binary. Use standard device settings

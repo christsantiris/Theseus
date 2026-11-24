@@ -15,7 +15,7 @@ general/ios/app_id="ca-app-pub-9323307074562151~5989083331"
 
 [advertising]
 
-production_enabled=false
+production_enabled=true
 
 [animation]
 

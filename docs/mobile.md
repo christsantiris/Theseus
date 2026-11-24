@@ -102,12 +102,13 @@ Once Android's home screen appears, rebuild the APK using the export command abo
 
 ## iOS
 
-The `iOS` preset targets ARM64 iPhones and iPads running iOS 15 or later. It exports an Xcode project, with bundle identifier `com.theseus.adventure` and version `0.1.0`. Its app icon is `assets/art/ui/app_icon.png`, a 1024×1024 painting of Theseus that is also the project icon. The Android preset uses the same art, with `app_icon_adaptive.png` padding it for adaptive launcher masks so circular icons keep his crest.
+The `iOS` preset targets ARM64 iPhones and iPads running iOS 15 or later. It exports an Xcode project, with bundle identifier `com.theseus.adventure`, version `1.0.0`, and build `1`. It declares `ITSAppUsesNonExemptEncryption` as false, so uploads skip App Store Connect's encryption question. Its app icon is `assets/art/ui/app_icon.png`, a 1024×1024 painting of Theseus that is also the project icon. The Android preset uses the same art, with `app_icon_adaptive.png` padding it for adaptive launcher masks so circular icons keep his crest.
 
 Install matching Godot export templates and Xcode on macOS. Open **Project → Export → iOS** to review the configured 10-character **App Store Team ID**. Godot requires a valid Team ID and bundle identifier even for a project-only export; use a Team ID belonging to your development team. See [Godot's iOS export instructions](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_ios.html).
 
 ```sh
-tools/export_ios.sh
+tools/export_ios.sh            # debug: Google's test ads
+tools/export_ios.sh --release  # release: registered ad units, for App Store archives
 ```
 
 The helper requires Python 3 and Xcode's command-line tools, and uses `GODOT` if set. It exports the game, then sets **Architectures** to `$(ARCHS_STANDARD)` in every generated Xcode build configuration. It also inspects the actual simulator library and adds an iOS Simulator architecture override matching its available slices. The installed template contains x86_64 simulator code, so simulator builds use x86_64 while physical iPhone/iPad builds retain ARM64. Use the helper for subsequent exports: exporting directly through Godot's UI or CLI writes the template's ARM64-only settings again. The generated Xcode project remains in the ignored `builds/ios/` directory.
@@ -132,15 +133,30 @@ Theseus's iOS AdMob app ID is configured under `admob/general/ios/app_id` in `pr
 
 Android's AdMob app ID is configured under `admob/general/android/app_id`: `ca-app-pub-9323307074562151~4923413670`. Its registered between-level interstitial unit is `ca-app-pub-9323307074562151/3770627453` in `scenes/ui/level_ads.gd`. The Android package name remains `com.theseus.adventure`.
 
-Debug mobile exports use Google's demo interstitial units, even with the registered app IDs. Desktop touch previews do not request ads. `advertising/production_enabled` is explicitly `false`: release builds skip SDK initialization and ad requests, and Continue proceeds normally. Do not enable it until consent handling, privacy disclosures, placement, and physical-device validation are complete on the platform being released.
+Debug mobile exports use Google's demo interstitial units, even with the registered app IDs. Desktop touch previews do not request ads. `advertising/production_enabled` is `true`, so release exports request the registered units. Setting it to `false` makes release builds skip SDK initialization and ad requests while Continue proceeds normally.
 
-Every interstitial request sets `npa=1`, and SDK initialization disables publisher first-party ID. The game does not request App Tracking Transparency permission. These settings implement the non-personalized request preference; they do not establish that all SDK processing is consent-free or prove the finished integration performs no tracking. Before live serving, integrate and validate UMP on iOS, publish the applicable AdMob privacy messages, add accessible privacy choices, and confirm ads are skipped when required permission is unavailable. Complete the App Store privacy disclosures against the actual SDK configuration. See [Google's consent setup](https://developers.google.com/admob/ios/privacy) and [non-personalized ads guidance](https://support.google.com/admob/answer/7676680).
+### Consent
+
+At launch, `LevelAds` asks Google's User Messaging Platform (UMP, bundled in the AdMob plugin's native libraries) for the player's consent status. When a published AdMob message applies, such as the European regulations message, UMP shows it before any ad is requested. The Mobile Ads SDK starts only when the status is `OBTAINED` or `NOT_REQUIRED`; while consent is required or unknown, Continue proceeds without an ad. A choice saved in an earlier session lets ads start immediately, and a failed refresh, for example offline, keeps that saved choice.
+
+Where UMP reports that privacy options are required, the title menu shows **Privacy Choices**, which reopens Google's privacy options form. Elsewhere the button stays hidden.
+
+The messages themselves are configured in AdMob under **Privacy & messaging**. To see the European message from outside Europe on a debug build, run once on the device and copy the hashed device ID that the UMP SDK prints to the Xcode console. Then add it temporarily to `project.godot` and export again:
+
+```ini
+[advertising]
+consent_test_device_id="<hashed device id>"
+```
+
+Remove it before committing; `tests/level_ads.gd` fails while it is set. Debug builds with that setting force the European geography for that device only. Release builds ignore it.
+
+Every interstitial request sets `npa=1`, and SDK initialization disables publisher first-party ID. The game does not request App Tracking Transparency permission. These settings implement the non-personalized request preference; they do not prove the finished integration performs no tracking. Validate the consent flow and ads on a physical iPhone, and complete the App Store privacy disclosures against the actual SDK configuration. See [Google's consent setup](https://developers.google.com/admob/ios/privacy) and [non-personalized ads guidance](https://support.google.com/admob/answer/7676680).
 
 Once the app is publicly listed, link the existing iOS entry to its App Store listing and complete `app-ads.txt` verification and AdMob's readiness review. Registration alone does not enable full ad serving.
 
 The first iOS export adds the Google Mobile Ads package to the Xcode project. Xcode downloads it on the first build, which needs a network connection.
 
-Check identifier selection, non-personalized request parameters, and continuation while live ads are disabled:
+Check identifier selection, consent gating, non-personalized request parameters, and continuation when no ad is available:
 
 ```sh
 godot --headless --path . --script res://tests/level_ads.gd --fixed-fps 60

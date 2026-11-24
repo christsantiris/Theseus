@@ -36,7 +36,13 @@ func _run() -> void:
 	_expect(not ads.requests_ads(), "Desktop and web do not request an interstitial")
 	_expect(ProjectSettings.get_setting("admob/general/android/app_id") == "ca-app-pub-9323307074562151~4923413670", "Android export uses Theseus's registered AdMob app ID")
 	_expect(ProjectSettings.get_setting("admob/general/ios/app_id") == "ca-app-pub-9323307074562151~5989083331", "iOS export uses Theseus's registered AdMob app ID")
-	_expect(not ProjectSettings.get_setting("advertising/production_enabled", true), "Live serving stays off while privacy setup is incomplete")
+	_expect(ProjectSettings.get_setting("advertising/production_enabled", false), "Release builds serve the registered ad units")
+	_expect(str(ProjectSettings.get_setting(ads.CONSENT_TEST_DEVICE_SETTING, "")).is_empty(), "No consent test device is committed")
+	_expect(not ads.can_request_ads() and not ads.privacy_options_required(), "Desktop and web skip consent and privacy options")
+	_expect(not ads.ads_allowed_for(ConsentInformation.ConsentStatus.UNKNOWN), "Ads wait for Google's consent status")
+	_expect(not ads.ads_allowed_for(ConsentInformation.ConsentStatus.REQUIRED), "Ads wait while a required consent message is unanswered")
+	_expect(ads.ads_allowed_for(ConsentInformation.ConsentStatus.OBTAINED), "Ads load after the player answers the consent message")
+	_expect(ads.ads_allowed_for(ConsentInformation.ConsentStatus.NOT_REQUIRED), "Ads load where no consent message applies")
 	for platform in ["iOS", "Android"]:
 		var expected_test: String = ads.IOS_TEST_UNIT if platform == "iOS" else ads.ANDROID_TEST_UNIT
 		_expect(ads.unit_id_for(platform, true, true) == expected_test, "Debug builds always use test ads on " + platform)
@@ -67,7 +73,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: Android/iOS registration, debug test ads, production disabled, non-personalized request parameters, desktop bypass and level continuation.")
+		print("PASS: Android/iOS registration, debug test ads, production units, consent gating, non-personalized request parameters, desktop bypass and level continuation.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)
