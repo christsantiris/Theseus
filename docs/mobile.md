@@ -154,3 +154,10 @@ The rendering check reads back the actual world targets, verifies screen markers
 Before accepting a device build, play each level and check simultaneous touches, one-thumb Jump-then-Sword strikes against high birds, sword timing, ducking under birds, spike-pit recovery, temple entry, pause/resume, and checkpoint loading. Check both landscape directions, notched screens, interruption by another app, frame rate, audio, and heat. Desktop simulation and package validation do not establish device performance or battery use.
 
 Generated builds live in the ignored `builds/` directory. Export credentials and Godot's `.godot/` cache remain ignored.
+
+Atlantis adds a repeating fill/drain tide. Water reduces Theseus's horizontal
+speed by up to 30% and slows his walk cadence; Merfolk retain their Level 6
+speeds. Jump height, touch-jump release behavior, attack timing, and controls
+are unchanged. The tide indicator stays inside the HUD safe area. The render
+profile regression compares underwater physics and sword-frame histories at
+native, simulator preview, 540p, and 720p budgets.

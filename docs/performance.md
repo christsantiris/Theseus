@@ -227,13 +227,14 @@ and the Hydra's three-head gate requirement.
 
 [Level 6](level_6.md) uses the same continuous scenery and render budgets as
 the previous levels. Five wave walls and four bronze statues join four reused
-arches/colonnades; all bases are grounded. The two local canal surfaces draw
-small translucent rectangles and short wave lines, with no extra viewport,
-full-screen shader, reflection pass, image readback, or background seam work.
+arches/colonnades; all bases are grounded. Low-tide canal puddles draw small translucent rectangles and short wave lines.
+The cycling tide adds water strips clipped to visible open terrain, ripples,
+and sparse bubbles. It uses no extra viewport, full-screen refraction shader,
+reflection pass, image readback, or background seam work.
 The existing city masonry supplies the mipmapped terrain. Both Merfolk sheets
 remain lossless and fit within the mobile GPU size limit.
 
-The native iOS Level 6 probe rendered the harbor guard, Reefblade landing, and
+Before the cycling-tide change, the native iOS Level 6 probe rendered the harbor guard, Reefblade landing, and
 shallow canal at the 1280×720 world budget, with a 2,144×1,206 UI framebuffer
 and visible touch controls. Both distinct Merfolk atlases loaded correctly.
 The Intel Simulator used Apple Software Renderer; this is an artwork/path
@@ -245,3 +246,31 @@ not validated. Desktop checks cover all six render-profile camera views and
 protected texture imports; route and combat checks cover real duck/sword and
 full touch-jump counters. No sustained performance benchmark was run for this
 level.
+
+## Cycling Atlantis tides
+
+The tide uses one 26-second physics-clock cycle: 4 seconds low, 8 filling,
+6 high, and 8 draining. Water is drawn only in visible open terrain with
+translucent strips, surface ripples, and sparse bubbles. The phase meter lives
+in the existing HUD safe area. There are no new textures, render targets,
+full-screen refraction shaders, or image readbacks in gameplay.
+
+The native iOS probe confirmed the 1280×720 world budget with a 2,144×1,206 UI
+framebuffer and visible touch controls. At the lower causeway, Theseus's speed
+was 90 dry and 63 submerged. At the high palace terrace it was 72, reflecting
+shallower immersion. Merfolk stayed at their Level 6 speeds throughout:
+27.55 for trident guards and 31.79 for Reefblades. The phase meter remained
+inside its HUD area. This used the Intel Simulator's Apple Software Renderer;
+it is not a physical-phone performance measurement. The normal campaign app
+was restored afterward. The Android stock-template play-test APK exported
+successfully with native ads excluded; production Gradle/AdMob integration
+and physical Android display quality remain untested.
+
+Desktop regressions confirm identical underwater movement and sword-frame
+histories at native, preview, 540p, and 720p settings. The tide suite verifies
+all 15 climbs and both canal jumps in both directions at maximum water,
+player-only drag, wine composition, unchanged jump height and sword timing,
+pause, replay, shrine loading, and isolation from earlier levels. The full
+cycling-tide route clears in about 59.5 simulated seconds with 17 jumps and
+combat isolated. These checks do not measure human combat difficulty or
+sustained GPU performance.

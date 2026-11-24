@@ -68,7 +68,7 @@ const GATE_GUARD := "MerfolkGateCaptain"
 const TIPS := [
 	{"x": 240, "end": 480, "text": "Duck high tridents. Stand and counter after."},
 	{"x": 976, "end": 1184, "text": "Low blades: jump or retreat, then counter."},
-	{"x": 1424, "end": 1552, "text": "Shallow canals are safe. Jump to climb out."},
+	{"x": 1424, "end": 1552, "text": "Tides slow Theseus. Climb higher or wait for low tide."},
 	{"x": 4560, "end": 4720, "text": "Defeat the captain to open Poseidon's sanctuary."},
 ]
 

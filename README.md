@@ -36,7 +36,7 @@ All six levels use continuous landscapes with independent scenery objects and la
 
 ## The journey
 
-Each level is a little harder than the last: enemies telegraph faster, recover sooner, and attack more often, while healing is balanced against each level's enemies. Light a shrine to keep your place. Entering a new level also saves its entrance. Death opens Hades, where Theseus stands as an opaque shade. Load Game there returns to the last entrance or shrine with full health. Load resumes the highest level or shrine reached in the current session. New Game starts the road over.
+Enemy windups, recovery windows, cooldowns, and pursuit speed scale with each level. Encounter layouts, counters, healing, and environmental mechanics also determine how difficult a level feels. Light a shrine to keep your place. Entering a new level also saves its entrance. Death opens Hades, where Theseus stands as an opaque shade. Load Game there returns to the last entrance or shrine with full health. Load resumes the highest level or shrine reached in the current session. New Game starts the road over.
 
 ### The Temple Road
 
@@ -84,7 +84,10 @@ Atlantis is a partially flooded city with dry marble causeways, ring canals,
 a palace climb, and Poseidon's sanctuary. Merfolk trident guards make high
 thrusts that can be ducked; Reefblades make low lunges that can be jumped.
 Thirteen Merfolk encounters include the elite captain guarding the exit.
-Two shallow canals are safe to fall into and can be climbed out of with Jump.
+A repeating tide floods and drains the causeways. Water slows Theseus by up to
+30% while Merfolk keep their full Level 6-scaled speed. Higher platforms reduce
+the drag; a tide meter shows the phase and remaining time. The shallow canals
+remain safe to fall into and can be climbed out of with Jump.
 
 One continuous landscape and grounded wave-carved walls, bronze Poseidon
 statues, and ruined arches frame twenty-three terraces. Two flasks and two

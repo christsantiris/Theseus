@@ -8,20 +8,47 @@ route uses the existing movement and combat controls on desktop and mobile.
 
 ## Setting and play
 
-Theseus enters a partially flooded Atlantean city and fights through its dry
+Theseus enters a partially flooded Atlantean city and fights through its tidal
 causeways to Poseidon's sanctuary. Turquoise canals, pale marble, oxidized bronze,
 wave carvings, submerged colonnades, and a distant ringed palace distinguish
 Atlantis from the earlier rocky coast. The art keeps the detailed cinematic
 style and side view established by Theseus and the rebuilt scenery.
 
-The setting is flooded ruins with dry walkways. Theseus keeps his
-current running, jumping, ducking, sword attacks, gravity, and five health bars.
-Deep water remains behind the playable causeways. Two shallow canal recesses
-have solid bottoms and can be jumped across or climbed out of; entering them
-causes no damage. Their depth does not submerge Theseus's head. Swimming,
-oxygen, currents, and rising tides are outside this first implementation.
+The causeways repeatedly flood and drain. Theseus keeps his existing jump,
+duck, sword timing, gravity, and five health bars, but water reduces horizontal
+movement and walk-animation cadence by up to 30%. Merfolk keep their full
+Level 6-scaled movement and attack speeds. Water causes no damage; there is
+no oxygen timer, swimming input, buoyancy, or current. The two recessed canal
+beds are still harmless and escapable in either direction.
 
-The movement design uses the existing 320×180 world coordinates, 90-unit run
+## Atlantis tide
+
+| Phase | Duration | Water behavior |
+| --- | ---: | --- |
+| Low tide | 4 seconds | Surface rests at y=304; the causeways are dry and the canal puddles remain. |
+| Filling | 8 seconds | Water smoothly rises to y=128, progressively covering the low route. |
+| High tide | 6 seconds | The lower causeways are submerged. The highest palace landing has shallower water and less drag. |
+| Draining | 8 seconds | Water smoothly falls back to the canal beds, restoring normal movement. |
+
+The 26-second cycle repeats. A meter below the area title shows the tide phase,
+remaining seconds, and water height. An animated surface, ripples, and sparse
+bubbles make filling and draining visible. Water is clipped to open space above
+the authored terrain so stone lips and canal openings stay clear.
+
+Drag starts after eight units of immersion and reaches its maximum at 32 units.
+Theseus moves at 90 units/second on dry ground and 63 in deep water. Jumping
+out of the water restores speed immediately. Jump height, gravity, sword hit
+frames, and attack duration stay unchanged. Wine's 35% speed bonus still applies
+once on top of the water multiplier.
+
+Higher ground gives partial relief during high tide. Players can press through
+with slower retreats, reposition toward a higher landing, or wait for drainage.
+Every required climb and both canal jumps remain possible even at maximum
+flood. Pause freezes the tide; Replay, Title Load, and death/reload begin a new
+low tide at the saved entrance or shrine. Water drag cannot persist into other
+levels.
+
+The movement design uses the existing 320×180 world coordinates, 90-unit dry run
 speed, -260 jump velocity, and 900 gravity. A full jump rises about 37.6 world
 units before collision and frame-step effects. Required upward steps are 16
 units; the two canal recesses are 24 units deep and 32/40 units wide, matching
@@ -42,7 +69,7 @@ moving platforms or timed jumps.
 | Ring Canals | 960–1919 | A broad upper landing introduces the blade fighter. Descend past a trident guard, cross the first shallow canal, then climb to another broad combat landing. |
 | Sunken Agora | 1920–2879 | A quiet shrine courtyard precedes a stair climb. A trident guard and a later blade fighter occupy separate landings; a flask follows the fight. |
 | Palace Ascent | 2880–3839 | Climb to the highest palace terrace for an isolated blade fight. Descend through two trident-guard landings, with recovery space between them. |
-| Poseidon's Sanctuary | 3840–4799 | Descend to a flask and the second canal, then a safe shrine. Fight a blade fighter, a trident guard, and finally the elite Merfolk captain guarding the exit. |
+| Poseidon's Sanctuary | 3840–4799 | Descend to the second canal, then a safe shrine. Fight a blade fighter, a trident guard, and finally the elite Merfolk captain guarding the exit. |
 
 The raised terrain is listed below. All dimensions use world units;
 each terrace extends down to the main causeway at y=280. The lower route is
@@ -79,9 +106,8 @@ solid except for the two explicitly recessed canal beds.
 | Ring Canal | 1472 | 280 | 32 / 24 | 304 |
 | Sanctuary Canal | 4016 | 280 | 40 / 24 | 304 |
 
-The recesses have real terrain cuts and visible bright rims. Water is a shallow
-visual layer over their beds, with neither a damage trigger nor an invisible
-bridge. Both allow jumping out in either direction. Scenery bases leave the openings
+The recesses have real terrain cuts and visible bright rims. At low tide, shallow water remains over the beds; there is neither a damage
+trigger nor an invisible bridge. Both allow jumping out in either direction. Scenery bases leave the openings
 clear. Pause freezes any water animation.
 
 ## Merfolk
@@ -174,8 +200,9 @@ full-healing shrines. Each restores two health, up to five. Both shrines heal
 and snapshot score, defeated enemies, and collected flasks. Backtracking cannot
 replace a later checkpoint; death, Title Load, and manual Save retain the
 campaign's existing snapshot behavior. The two-flask balance keeps the existing
-difficulty heuristic's increase from Level 5 within its 10–40% bounds; combat
-pacing still needs human play testing.
+difficulty heuristic's increase from Level 5 within its 10–40% bounds. That
+score is an estimate, not measured combat difficulty, and does not model tides
+or stun-lock opportunities. Combat pacing still needs human play testing.
 
 The captain at (4672, 280) guards the exit at (4752, 280). Three sword hits
 defeat the captain. Theseus enters the doorway using the existing steps and
@@ -196,8 +223,9 @@ landings clear of canals. Warm stone caps mark walkable terrain against cooler
 turquoise water and distant ruins. The exit retains a distinct, functional
 temple doorway.
 
-Water is a local animated 2D surface seven units deep over each canal bed.
-Pause freezes it. There is no full-screen refraction or real-time reflection.
+Low-tide puddles are seven units deep over each canal bed. The cycling tide
+adds visible water strips, surface lines, and sparse bubbles over open terrain,
+without a new viewport, full-screen refraction shader, or real-time reflection.
 Opaque scenery uses supported S3TC/ETC2 imports; the two 1,881×836 Merfolk
 atlases, transparent props, fonts, and UI stay lossless. New scenery cutouts
 have a 1,024-pixel import cap. Terrain reuses the existing city masonry and its
@@ -212,6 +240,7 @@ tools/play_mobile.sh 6                  # desktop touch preview
 tools/play_mobile.sh 6 --mobile-render=540
 godot --path . res://scenes/reviews/merfolk_review.tscn
 godot --headless --path . --script res://tests/merfolk_behavior.gd --fixed-fps 60 -- --mobile-controls
+godot --headless --path . --script res://tests/atlantis_tides.gd --fixed-fps 60 -- --mobile-controls
 godot --headless --path . --script res://tests/level_6_smoke.gd --fixed-fps 60
 godot --headless --path . --script res://tests/level_6_scenery.gd --fixed-fps 60
 ```
@@ -226,8 +255,8 @@ controls. It independently inspects the imported painted tail contacts.
 The integration check covers Level 5→6, the saved entrance, Title Load,
 death/reload, supported enemy and flask placements, both shrines, checkpoint
 rollback, the captain-locked gate, entry, completion, replay, and New Game.
-With combat isolated, the full course takes 51.8 simulated seconds and 17
-jumps. Both canals are harmless and escapable in either direction; pause
+With combat isolated and the tide cycling, the full course takes about 59.5
+simulated seconds and 17 jumps. Both canals are harmless and escapable in either direction; pause
 freezes their water animation. The scenery check sweeps the camera route and
 extremes, checks every terrace and canal cut, and leaves openings unobscured.
 Shared scenery, texture, and mobile checks include all six levels.
@@ -236,3 +265,12 @@ Human play testing should assess whether the first trident clearly teaches
 Duck, the blade telegraph gives enough time to jump, and the two-flask pacing
 feels fair. Keep Intel Simulator software-rendering results separate from
 physical-phone performance.
+
+The tide regression checks the actual spawned enemies' Level 6 tuning, full
+Merfolk speeds across all phases, continuous fill/drain, dry and wet player
+travel, higher-ground relief, wine composition, identical jump height and sword
+frames, all fifteen climbs and both canal jumps at maximum flood, pause,
+checkpoint reload, replay, and other-level isolation. Touch checks cover a
+jump-to-sword thumb transition and indicator safe areas. The rendered profile
+check also compares underwater movement and sword histories at native, preview,
+540p, and 720p settings.

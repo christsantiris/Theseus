@@ -46,6 +46,8 @@ var _swing_hits := {}
 var _body_hits := {}
 var _ducked := false
 var _speed_boost_left := 0.0
+# Local environment drag; other levels keep the default 1.0.
+var _environment_speed_multiplier := 1.0
 
 
 func _ready() -> void:
@@ -162,7 +164,11 @@ func heal(amount: int) -> bool:
 
 
 func movement_speed() -> float:
-	return SPEED * (SPEED_BOOST_MULTIPLIER if _speed_boost_left > 0.0 else 1.0)
+	return SPEED * (SPEED_BOOST_MULTIPLIER if _speed_boost_left > 0.0 else 1.0) * _environment_speed_multiplier
+
+
+func set_environment_speed_multiplier(value: float) -> void:
+	_environment_speed_multiplier = clampf(value, 0.1, 1.0)
 
 
 func grant_speed_boost(seconds: float = 6.0) -> bool:
@@ -434,7 +440,7 @@ func _play_land() -> void:
 
 func _play(animation_name: String) -> void:
 	Art.anchor(sprite, animation_name)
-	sprite.speed_scale = SPEED_BOOST_MULTIPLIER if animation_name == "walk" and _speed_boost_left > 0.0 else 1.0
+	sprite.speed_scale = (SPEED_BOOST_MULTIPLIER if _speed_boost_left > 0.0 else 1.0) * _environment_speed_multiplier if animation_name == "walk" else 1.0
 	if sprite.animation != animation_name:
 		sprite.play(animation_name)
 

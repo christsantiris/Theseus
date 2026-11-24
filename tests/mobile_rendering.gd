@@ -46,9 +46,14 @@ func _open(number: int) -> Node:
 	return current_scene
 
 
-func _trajectory(profile: String) -> Array:
+func _trajectory(profile: String, number := 1) -> Array:
 	manager.set_profile(profile)
-	var level := await _open(1)
+	var level := await _open(number)
+	if number == 6:
+		level.tide.set_physics_process(false)
+		level.tide.elapsed = 15.0
+		level.tide._sync_tide()
+		_expect(is_equal_approx(level.player.movement_speed(), 63.0), "Water drag is active for the profile comparison")
 	var player = level.player
 	var history := []
 	Input.action_press("move_right")
@@ -135,9 +140,12 @@ func _run() -> void:
 	_expect(manager.simulator_for_platform("Android", "x86_64", "sdk_gphone64_x86_64", ""), "Android emulator has a separate preview")
 	_expect(not manager.simulator_for_platform("Android", "arm64", "Pixel 8", ""), "Physical Android uses the phone profile")
 	var native := await _trajectory("native")
+	var wet_native := await _trajectory("native", 6)
 	for profile in ["720", "540", "preview"]:
 		var actual := await _trajectory(profile)
 		_expect(actual == native, "Movement, jumps, collisions and sword frames match native rendering: " + profile)
+		var wet := await _trajectory(profile, 6)
+		_expect(wet == wet_native, "Underwater movement and sword frames match native rendering: " + profile)
 		for number in range(1, 7):
 			var level := await _open(number)
 			_expect(current_scene.get_parent() == root, "Scene ownership and reload behavior remain unchanged")
