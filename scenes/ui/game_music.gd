@@ -8,6 +8,8 @@ const LEVEL_TRACKS := {
 	# The intro fades out by 20.5 s; the first drum hit lands at about 20.6 s.
 	3: {"path": "res://assets/audio/music/alex-morgan-ancient-temple-mysterious-ethnic-music-587426.mp3", "start": 20.5},
 	4: {"path": "res://assets/audio/music/vadim_makes_sound-atlas-egypt-559404.mp3", "start": 0.0},
+	# Skip the opening; the melody plays without a break, so start at 21 s.
+	5: {"path": "res://assets/audio/music/sounovamusic-ancient-persian-music-460551.mp3", "start": 21.0},
 }
 var _music: AudioStreamPlayer
 var _active_path := ""
