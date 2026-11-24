@@ -102,7 +102,7 @@ Once Android's home screen appears, rebuild the APK using the export command abo
 
 ## iOS
 
-The `iOS` preset targets ARM64 iPhones and iPads running iOS 15 or later. It exports an Xcode project, with bundle identifier `com.theseus.adventure` and version `0.1.0`. The existing title backdrop supplies a development app icon; choose final square icon artwork before distribution.
+The `iOS` preset targets ARM64 iPhones and iPads running iOS 15 or later. It exports an Xcode project, with bundle identifier `com.theseus.adventure` and version `0.1.0`. Its app icon is `assets/art/ui/app_icon.png`, a 1024×1024 painting of Theseus that is also the project icon. The Android preset uses the same art, with `app_icon_adaptive.png` padding it for adaptive launcher masks so circular icons keep his crest.
 
 Install matching Godot export templates and Xcode on macOS. Open **Project → Export → iOS** to review the configured 10-character **App Store Team ID**. Godot requires a valid Team ID and bundle identifier even for a project-only export; use a Team ID belonging to your development team. See [Godot's iOS export instructions](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_ios.html).
 
