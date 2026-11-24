@@ -1,8 +1,8 @@
 # Theseus
 
-A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, across a rocky gorge lined with ancient temples, and through the flooded causeways of Atlantis. All characters, including Theseus and all fourteen enemy types, and the scenery in all six levels use detailed cinematic 3D-style artwork.
+A left-to-right side scroller. Theseus travels from Athens through a rocky coast, sacred city, mountain terraces, a temple-lined gorge, and Atlantis, before confronting the Minotaur in the labyrinth of Knossos. Theseus, all fifteen enemy types, and the scenery in all seven levels use detailed cinematic artwork.
 
-All six levels use continuous landscapes with independent scenery objects and layered parallax. Checkpoint shrines use matching cinematic limestone and bronze, with lit and unlit brazier states.
+All seven levels use continuous backgrounds with independent scenery objects and layered parallax. Checkpoint shrines use matching cinematic limestone and bronze, with lit and unlit brazier states.
 
 ## Contents
 
@@ -14,6 +14,7 @@ All six levels use continuous landscapes with independent scenery objects and la
   - [The Mountain Sanctuary](#the-mountain-sanctuary)
   - [The Gorge Sanctuary](#the-gorge-sanctuary)
   - [Atlantis](#atlantis)
+  - [The Labyrinth](#the-labyrinth)
 - [How to play](#how-to-play)
 - [Mobile version](#mobile-version)
 - [Credits](#credits)
@@ -100,6 +101,22 @@ Play-test with `tools/play_level.sh 6`, or `tools/play_mobile.sh 6` for touch
 controls. Review both Merfolk roles and the captain with
 `godot --path . res://scenes/reviews/merfolk_review.tscn`.
 
+### The Labyrinth
+
+Level 7 ends the journey in a dim, torch-lit labyrinth. Raised galleries and
+low-roofed passages lead past four Hoplites, four Peltasts, and four Raiders.
+Three flasks and two healing checkpoint shrines support the approach.
+
+The eight-health Minotaur winds up, charges with lowered horns, headbutts,
+recovers, and backs away before attacking again. Time a full jump over his
+charge, then counter during recovery. Defeat him and enter the exit to finish
+the campaign. Existing keyboard and touch controls apply throughout.
+
+[Level 7 guide](docs/level_7.md)
+
+Play-test with `tools/play_level.sh 7`, or `tools/play_mobile.sh 7`.
+Use `tools/play_level.sh 7 2` to start at the shrine before the boss.
+
 ## How to play
 
 Theseus runs, jumps, ducks, and fights. Grounded sword attacks alternate between a stab and a diagonal slash, with the same timing, reach, and one-health damage. Regular airborne attacks always slash, including when Jump and Sword are pressed together. Taking off during a stab changes it to a slash without restarting the attack. Airborne attacks leave the grounded sequence unchanged; Duck + Sword in the air still performs a downward thrust. With a keyboard, releasing Jump early makes a short jump; touch jumps are always full height, so one thumb can jump and then reach Sword. Sword hits and a jump into an enemy each cost that enemy one health; landing on a Satyr bounces Theseus safely. Theseus has five health. Flasks restore two, and they never fill him past five. Stolen wine grants six seconds of extra speed. Spike pits cost one health bar per damaging contact and have enough room to jump out.
@@ -120,7 +137,7 @@ The Bronze Bull is available in a separate review arena. Jump its committed char
 
 ## Mobile version
 
-Android and iOS share the six levels, artwork, combat, and checkpoints. Landscape touch controls support movement, ducking, jumping, sword attacks, and pause, including simultaneous presses for airborne attacks. Menus have larger touch targets. Tutorial messages sit at the bottom, between the left and right buttons, and gameplay pauses when the app loses focus. After a level is cleared, Continue plays a short full-screen ad and then opens the next level. Desktop and the web build skip that ad.
+Android and iOS share the seven levels, artwork, combat, and checkpoints. Landscape touch controls support movement, ducking, jumping, sword attacks, and pause, including simultaneous presses for airborne attacks. Menus have larger touch targets. Tutorial messages sit at the bottom, between the left and right buttons, and gameplay pauses when the app loses focus. After a level is cleared, Continue plays a short full-screen ad and then opens the next level. Desktop and the web build skip that ad.
 
 Phones render the world at 1280×720 while keeping HUD, menus, and touch controls at display resolution. A 960×540 option reduces world rendering further; simulators use a separate 320×180 preview. All profiles retain the same 320×180 game coordinates. Desktop keeps native rendering. Compare the phone budgets with `tools/play_mobile.sh 1 --mobile-render=720` and `tools/play_mobile.sh 1 --mobile-render=540`; see the [rendering profiles](docs/mobile.md#rendering-profiles).
 
@@ -164,6 +181,8 @@ Level 3 — Ancient Temple. Music by <a href="https://pixabay.com/users/alex-mor
 Level 4 — Atlas Egypt. Music by <a href="https://pixabay.com/users/vadim_makes_sound-54823268/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=559404">Vadim</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=559404">Pixabay</a>
 
 Level 5 — Ancient Persian Music. Music by <a href="https://pixabay.com/users/sounovamusic-51943437/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=460551">Sounova Music</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=460551">Pixabay</a>
+
+Level 6 — Ancient Egypt Historical Epic. Music by <a href="https://pixabay.com/users/openmindaudio-53602733/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">OpenMindAudio</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">Pixabay</a>
 
 Sound effect by <a href="https://pixabay.com/users/daviddumaisaudio-41768500/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=185432">David Dumais</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=185432">Pixabay</a>
 
