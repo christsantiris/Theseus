@@ -7,6 +7,7 @@ const LEVEL_TRACKS := {
 	2: {"path": "res://assets/audio/music/u_98673jp944-santorini-breeze-470783.mp3", "start": 0.0},
 	# The intro fades out by 20.5 s; the first drum hit lands at about 20.6 s.
 	3: {"path": "res://assets/audio/music/alex-morgan-ancient-temple-mysterious-ethnic-music-587426.mp3", "start": 20.5},
+	4: {"path": "res://assets/audio/music/vadim_makes_sound-atlas-egypt-559404.mp3", "start": 0.0},
 }
 var _music: AudioStreamPlayer
 var _active_path := ""
