@@ -10,24 +10,18 @@ muted slopes and smaller walls form the background.
 
 ## Cinematic scenery
 
-Each area has west and east cinematic 3D-style panoramas matching the sunlit
-materials and lighting in Levels 1–3. Detailed cypress groves, pale rocky
-ridges, terraced switchbacks, olive gardens, and Doric sanctuary temples fill
-ten overlapping panels. The ridgeline glides over changes in route height,
-keeping the mountains visible above the highest landings. Rustic retaining
-stone covers the original terrain pieces, with weathered column fragments
-at the existing prop positions and a matching temple entrance.
+One continuous mountain landscape shows dry rocky ridges, cypress slopes,
+terraced hillsides, and a distant sanctuary. Thirteen complete transparent
+landmarks stand on the route: five olive/cypress groves, five low retaining
+walls, and three rocky outcrops. They stay fixed to authored landings while
+the distant landscape scrolls at 13% of horizontal camera travel and 25% of
+vertical travel. Its 2,172×724 painting fills 912×304 world units without
+wrapping, panel blending, or stretched ground extensions.
 
 All twenty-seven terraces, four recessed spike pits, hazard areas, and unsafe
-Satyr landing markers keep their original geometry and behavior. Bright stone
-caps still identify the walkable lips. Each pit bed is a row of cinematic
-bronze spikes set in the same limestone as the terraces.
-
-Panorama joins follow matching scenery within their 96-pixel overlap. Smooth
-sky fades broadly; detailed stone and foliage use a narrow transition, avoiding
-patchy cutouts and hard vertical edges. Checkpoint shrines use matching
-cinematic limestone-and-bronze artwork, with cold and burning brazier states;
-their trigger areas and saved spawn positions are unchanged.
+Satyr landing markers keep their original geometry and behavior. Scenery stays
+clear of pit openings. Rustic stone, existing broken columns, checkpoint
+shrines, and the matching temple entrance retain their gameplay roles.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
 one world pixel of overlap at the ground. This closes transparent-padding gaps
@@ -58,8 +52,6 @@ to escape on its own. Each pit gives 1.25 seconds between damaging contacts,
 in addition to Theseus's normal damage cooldown, leaving time to jump out.
 Remaining on the spikes eventually costs another bar. A fatal hit opens Hades.
 Load Game uses the same checkpoint recovery as any other death.
-
-![Theseus falls into a pit, loses one bar, then jumps out](spike_pit_escape.gif)
 
 | Pit | Left edge | Rim Y | Width / depth |
 | --- | --- | --- | --- |
@@ -134,11 +126,12 @@ still benefits from a human playthrough.
 
 `scenes/levels/level_4_geometry.gd` keeps the original terrain construction,
 including `terrain_pieces` and spike-floor metadata, and renders the cinematic
-mountains in the game and editor. Each section PNG in
-`assets/art/backgrounds/level_4/` stores west and east panoramas stacked
-vertically; the directory also contains the retaining stone and column cutout.
+mountains in the game and editor. `assets/art/backgrounds/level_4/` contains
+`mountain_landscape.png`, the complete `terrace_wall.png` cutout, retaining
+stone, and the existing column cutout. Groves and outcrops reuse Levels 1–2 art.
 The stone caps and temple facade reuse Level 1's art.
 
-The scenery check verifies all ten panoramas, route coverage from the foothills
+The scenery check verifies one continuous landscape, thirteen complete landmarks,
+clear pit openings, and full camera coverage from the foothills
 to the high pass and pit bottoms, every terrain collision and cutout, spike-floor
 metadata, hazard dimensions, paused gate updates, and isolation from other levels.

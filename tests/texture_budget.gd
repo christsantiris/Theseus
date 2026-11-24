@@ -1,7 +1,7 @@
 extends SceneTree
 
 # Requires a renderer. Guards platform variants, protected alpha/data textures,
-# atlas isolation and the selective mip policy; compares minified stone sampling.
+# the selective mip policy; compares minified stone sampling.
 const TERRAIN := ["limestone_wall", "coastal_limestone", "city_masonry", "mountain_stone", "gorge_masonry"]
 var failures: Array[String] = []
 var captures := ""
@@ -116,11 +116,6 @@ func _run() -> void:
 	exports.load("res://export_presets.cfg")
 	_expect(exports.get_value("preset.0.options", "vram_texture_compression/for_desktop") and exports.get_value("preset.0.options", "vram_texture_compression/for_mobile"), "Web ships both platform compression variants")
 	for number in range(1, 6):
-		if number > 2:
-			var joins = load("res://assets/art/backgrounds/level_%d/_seams/joins.tres" % number)
-			for rectangle in joins.overlap_rects:
-				_expect(int(rectangle.position.x) % 4 == 0 and int(rectangle.position.y) % 4 == 0, "Overlap origins align to compression blocks")
-				_expect(rectangle.position.x >= 4 and rectangle.position.y >= 4, "Overlap retains a full block of padding")
 		await _terrain(number)
 	print("PASS: texture budgets, protected textures, variants and minified terrain." if failures.is_empty() else "FAIL: " + str(failures))
 	quit(0 if failures.is_empty() else 1)

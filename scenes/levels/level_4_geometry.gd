@@ -2,23 +2,22 @@
 extends "res://scenes/levels/level_geometry.gd"
 
 const Mountain := preload("res://scenes/levels/level_4_layout.gd")
-const PANORAMA_SHEETS := [
-	preload("res://assets/art/backgrounds/level_4/cypress_foothills.png"),
-	preload("res://assets/art/backgrounds/level_4/stone_switchbacks.png"),
-	preload("res://assets/art/backgrounds/level_4/mountain_gardens.png"),
-	preload("res://assets/art/backgrounds/level_4/high_pass.png"),
-	preload("res://assets/art/backgrounds/level_4/summit_sanctuary.png"),
-]
+const CONTINUOUS_LANDSCAPE := true
+const PANORAMA_SHEETS := [preload("res://assets/art/backgrounds/level_4/mountain_landscape.png")]
+const TERRACE_WALL := preload("res://assets/art/backgrounds/level_4/terrace_wall.png")
+const GROVE := preload("res://assets/art/backgrounds/level_1/olive_grove.png")
+const OUTCROP := preload("res://assets/art/backgrounds/level_2/coastal_outcrop.png")
 const MASONRY := preload("res://assets/art/backgrounds/level_4/mountain_stone.png")
 const CAP_STONE := preload("res://assets/art/backgrounds/level_1/limestone_wall.png")
 const COLUMN := preload("res://assets/art/backgrounds/level_4/broken_column.png")
 const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
-const PANELS := preload("res://scenes/levels/landscape_panels.gd")
-const PANEL_WIDTH := 480.0
-const OVERLAP := 48.0
+const LANDSCAPE_HEIGHT := 304.0
+const FAR_SCROLL := 0.13
+const FAR_VERTICAL_SCROLL := 0.25
 const MATERIAL_DENSITY := 16.0
 var backdrop: Node2D
+var midground: Node2D
 
 
 func _ready() -> void:
@@ -53,71 +52,55 @@ func _process(_delta: float) -> void:
 
 
 func _build_landscape() -> void:
-	var sky := ColorRect.new()
-	sky.name = "DistantSky"
-	sky.size = Vector2(Mountain.WIDTH, Mountain.HEIGHT)
-	sky.color = Color("a6c4dc")
-	sky.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	sky.z_index = -2
-	add_child(sky)
 	backdrop = Node2D.new()
 	backdrop.name = "MountainBackdrop"
-	backdrop.z_index = -1
+	backdrop.z_index = -3
 	add_child(backdrop)
-	# Continue the dusty mountainside below the panoramas where descending
-	# terraces reveal the distance behind them.
-	var road := ColorRect.new()
-	road.name = "SlopeContinuation"
-	road.position.y = 180.0
-	road.size = Vector2(Mountain.WIDTH, Mountain.HEIGHT)
-	road.color = Color("d4c1a3")
-	road.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	backdrop.add_child(road)
-	var overlap_width := OVERLAP * 2.0 / (PANEL_WIDTH + OVERLAP * 2.0)
-	var previous: Texture2D
-	for index in PANORAMA_SHEETS.size() * 2:
-		var sheet: Texture2D = PANORAMA_SHEETS[index / 2]
-		var image := AtlasTexture.new()
-		image.atlas = sheet
-		image.region = Rect2(0, (index % 2) * sheet.get_height() / 2, sheet.get_width(), sheet.get_height() / 2)
-		var panorama := Sprite2D.new()
-		panorama.name = "Landscape%d" % index
-		panorama.texture = image
-		panorama.centered = false
-		panorama.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
-		var factor := (PANEL_WIDTH + OVERLAP * 2.0) / image.get_width()
-		panorama.scale = Vector2.ONE * factor
-		panorama.position = Vector2(index * PANEL_WIDTH - OVERLAP, 180.0 - image.get_height() * factor)
-		PANELS.prepare(panorama, index > 0, overlap_width, previous)
-		PANELS.extend_downward(panorama, Mountain.HEIGHT)
-		backdrop.add_child(panorama)
-		previous = image
+	var landscape := Sprite2D.new()
+	landscape.name = "ContinuousLandscape"
+	landscape.texture = PANORAMA_SHEETS[0]
+	landscape.centered = false
+	landscape.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	landscape.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
+	landscape.scale = Vector2.ONE * LANDSCAPE_HEIGHT / landscape.texture.get_height()
+	backdrop.add_child(landscape)
+
+	midground = Node2D.new()
+	midground.name = "MountainLandmarks"
+	midground.z_index = -2
+	add_child(midground)
+	# Complete objects stay on authored landings; only the distant landscape
+	# uses parallax. Painted bases overlap the terrain through GROUNDING.
+	for point in [Vector2(144, 104), Vector2(608, 104), Vector2(2104, 104), Vector2(3440, 96), Vector2(4136, 84)]:
+		_landmark(GROVE, point.x, point.y, "CypressGrove")
+	for point in [Vector2(1784, 64), Vector2(2512, 64), Vector2(4504, 64)]:
+		_landmark(OUTCROP, point.x, point.y, "RockyOutcrop")
+	for point in [Vector2(1008, 44), Vector2(1528, 34), Vector2(2760, 32), Vector2(2992, 40), Vector2(4376, 32)]:
+		_landmark(TERRACE_WALL, point.x, point.y, "TerraceWall")
+	_sync_backdrop()
+
+
+func _landmark(texture: Texture2D, route_x: float, height: float, label: String) -> void:
+	var sprite := Sprite2D.new()
+	sprite.name = label + str(int(route_x))
+	sprite.texture = texture
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
+	GROUNDING.place(sprite, route_x, Mountain.surface_at(route_x), height)
+	midground.add_child(sprite)
 
 
 func _sync_backdrop() -> void:
 	if not is_instance_valid(backdrop):
 		return
 	var camera := get_viewport().get_camera_2d()
-	if camera == null or Engine.is_editor_hint():
-		backdrop.position.y = Mountain.FLOOR_Y - 152.0
-		return
-	# Keep the slopes and distant ridges visible above the local landing
-	# through the climb. Every terrain and spike collision stays in world space.
-	var logical_height := float(get_window().content_scale_size.y)
-	if logical_height <= 0.0:
-		logical_height = 180.0
-	var center := camera.get_screen_center_position()
-	var view_top := center.y - logical_height * 0.5 / camera.zoom.y
-	backdrop.position.y = minf(view_top, _ridge_surface(center.x) - 160.0)
-
-
-func _ridge_surface(x: float) -> float:
-	# Average the nearby route height so the skyline glides over step edges.
-	var height := float(Mountain.FLOOR_Y)
-	for terrace: Rect2 in Mountain.PLATFORMS:
-		var overlap := maxf(0.0, minf(x + 64.0, terrace.end.x) - maxf(x - 64.0, terrace.position.x))
-		height -= overlap / 128.0 * (Mountain.FLOOR_Y - terrace.position.y)
-	return height
+	var corner := Vector2.ZERO
+	if camera != null and not Engine.is_editor_hint():
+		var view := Vector2(get_window().content_scale_size) / camera.zoom
+		corner = camera.get_screen_center_position() - view * 0.5
+	# Overscan covers the full camera range, including pit bottoms and jumps.
+	backdrop.position = Vector2(corner.x * (1.0 - FAR_SCROLL),
+		corner.y * (1.0 - FAR_VERTICAL_SCROLL) - 48.0)
 
 
 func _decorate_temple() -> void:

@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dqlwmwgaiska0"
-path.s3tc="res://.godot/imported/overlaps.png-e7ff25387400f11a6ca525d07ceba647.s3tc.ctex"
-path.etc2="res://.godot/imported/overlaps.png-e7ff25387400f11a6ca525d07ceba647.etc2.ctex"
+uid="uid://beqi14pts2sr1"
+path.s3tc="res://.godot/imported/city_landscape.png-5203aa7f361a26ad7181d61ac7d34fd2.s3tc.ctex"
+path.etc2="res://.godot/imported/city_landscape.png-5203aa7f361a26ad7181d61ac7d34fd2.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/art/backgrounds/level_4/_seams/overlaps.png"
-dest_files=["res://.godot/imported/overlaps.png-e7ff25387400f11a6ca525d07ceba647.s3tc.ctex", "res://.godot/imported/overlaps.png-e7ff25387400f11a6ca525d07ceba647.etc2.ctex"]
+source_file="res://assets/art/backgrounds/level_3/city_landscape.png"
+dest_files=["res://.godot/imported/city_landscape.png-5203aa7f361a26ad7181d61ac7d34fd2.s3tc.ctex", "res://.godot/imported/city_landscape.png-5203aa7f361a26ad7181d61ac7d34fd2.etc2.ctex"]
 
 [params]
 

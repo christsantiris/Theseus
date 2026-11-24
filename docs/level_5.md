@@ -10,23 +10,18 @@ the playable path.
 
 ## Cinematic scenery
 
-Each area has west and east cinematic 3D-style panoramas matching the detailed
-stone and warm Mediterranean lighting in Levels 1–4. Pale stratified cliff
-walls, dark dry clefts, ruined Doric temples, and elevated colonnades fill ten
-overlapping panels. The cliff shelves follow the route height smoothly so the
-ruins stay visible above the causeways. Weathered masonry covers the original
-terrain; column fragments and the cinematic temple facade reuse the earlier
-levels' art.
+One continuous gorge landscape shows dry stratified cliffs, distant ruins,
+and a deep rocky valley. Eleven complete transparent landmarks frame the
+causeways: four ruined cliff temples, five rocky outcrops, and two colonnades.
+Their painted bases stay on authored landings while the distant landscape
+scrolls at 13% of horizontal camera travel and 25% of vertical travel. Its
+2,172×724 painting fills 912×304 world units without wrapping, panel blending,
+or stretched ground extensions.
 
 All eighteen main terraces, both one-way bull ledges, both recessed spike pits,
-and their collision settings are unchanged. The temple remains closed until
-the Hydra's final head falls, and the facade updates during paused entry.
-
-Panorama joins follow matching scenery within their 96-pixel overlap. Smooth
-sky fades broadly; detailed stone and foliage use a narrow transition, avoiding
-patchy cutouts and hard vertical edges. Checkpoint shrines use matching
-cinematic limestone-and-bronze artwork, with cold and burning brazier states;
-their trigger areas and saved spawn positions are unchanged.
+and their collision settings are unchanged. Scenery leaves the spike openings
+clear. Existing column fragments and checkpoint shrines remain, and the temple
+stays closed until the Hydra's final head falls, including paused entry.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
 one world pixel of overlap at the ground. This closes transparent-padding gaps
@@ -136,12 +131,13 @@ about 52 simulated seconds and twelve jumps without damage or a speed boost.
 
 `scenes/levels/level_5_geometry.gd` keeps the original terrain cuts, spike-floor
 metadata, and one-way ledge construction while rendering the gorge in the game
-and editor. Each section PNG in `assets/art/backgrounds/level_5/` stores west
-and east panoramas stacked vertically; the directory also contains the causeway
-masonry. Column fragments reuse Level 4's cutout; stone caps and the temple
+and editor. `assets/art/backgrounds/level_5/` contains `gorge_landscape.png`,
+the complete `cliff_temple.png` cutout, and causeway masonry. Rocky outcrops
+and colonnades reuse Levels 1–2 art. Column fragments reuse Level 4's cutout; stone caps and the temple
 facade reuse Level 1's art.
 
-The scenery check verifies all ten panoramas, coverage at street level, both
+The scenery check verifies one continuous landscape, eleven complete landmarks,
+clear pit openings, and full camera coverage at street level, both
 bonus ledges and pit bottoms, original terrain collisions, one-way settings,
 spike metadata, the Hydra's three-head gate requirement, paused facade updates,
 and isolation from the other levels.

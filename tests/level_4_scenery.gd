@@ -39,16 +39,12 @@ func _run() -> void:
 	await _load_level(4)
 	var world := level.get_node("World")
 	var backdrop := world.get_node("MountainBackdrop") as Node2D
-	var road := backdrop.get_node("SlopeContinuation") as ColorRect
-	var landscapes: Array[Sprite2D] = []
-	for child in backdrop.get_children():
-		if child is Sprite2D:
-			landscapes.append(child)
-	_expect(landscapes.size() == 10, "Five mountain areas each have west/east panoramas")
-	_expect(backdrop.z_index < 0, "Mountain scenery stays behind walkable terrain")
-	for panorama in landscapes:
-		_expect(panorama.texture.get_width() >= 2000, "Mountain panorama retains source detail")
-		_expect(is_equal_approx(panorama.texture.get_width() / float(panorama.texture.get_height()), 3.0), "Mountain panorama keeps its natural 3:1 aspect ratio")
+	_expect(backdrop.get_child_count() == 1, "One continuous mountain painting replaces ten separate panoramas")
+	_expect(backdrop.z_index < 0, "Scenery stays behind terrain")
+	var painting := backdrop.get_node("ContinuousLandscape") as Sprite2D
+	_expect(painting.texture.get_width() >= 2000, "Landscape retains source detail")
+	_expect(painting.material == null and painting.texture_repeat == CanvasItem.TEXTURE_REPEAT_DISABLED, "Landscape never blends or wraps")
+	_expect(is_equal_approx(painting.texture.get_width() / float(painting.texture.get_height()), 3.0), "Landscape keeps its natural 3:1 aspect ratio")
 	var terrain := {"Ground": Rect2(0, Mountain.FLOOR_Y, Mountain.WIDTH, 72)}
 	for index in Mountain.PLATFORMS.size():
 		terrain["MountainTerrace%d" % index] = Mountain.PLATFORMS[index]
@@ -79,23 +75,35 @@ func _run() -> void:
 		var expected := Rect2(-16, -128, 16, 512) if body_name == "LeftBoundary" else Rect2(Mountain.WIDTH, -128, 16, 512)
 		_expect(rectangle == expected, "%s keeps its original collision rectangle" % body_name)
 	var camera := level.player.get_node("Camera2D") as Camera2D
-	for point: Vector2 in [Vector2(48, 280), Vector2(1040, 232), Vector2(2480, 232), Vector2(3440, 136), Vector2(3720, 200), Vector2(4720, 280), Vector2(320, 304), Vector2(1364, 304), Vector2(3108, 192), Vector2(4244, 304)]:
+	var previous_sample := -INF
+	for x in range(160, Mountain.WIDTH - 160 + 1, 32):
+		level.player.position = Vector2(x, Mountain.surface_at(x))
+		camera.reset_smoothing()
+		camera.force_update_scroll()
+		await _frames(1)
+		var corner := camera.get_screen_center_position() - Vector2(160, 90)
+		var rectangle := Rect2(painting.global_position, painting.texture.get_size() * painting.global_scale)
+		_expect(rectangle.grow(0.001).encloses(Rect2(corner, Vector2(320, 180))), "Landscape covers the full camera at x=%d" % x)
+		var sample := (corner.x - rectangle.position.x) / painting.scale.x
+		_expect(sample >= previous_sample, "Landscape UV advances without resetting")
+		previous_sample = sample
+	for point: Vector2 in [Vector2(48, 280), Vector2(1040, 232), Vector2(2480, 232), Vector2(3440, 136), Vector2(3720, 200), Vector2(4720, 280), Vector2(320, 304), Vector2(1364, 304), Vector2(3108, 192), Vector2(4244, 304), Vector2(3440, 64), Vector2(4640, 352)]:
 		level.player.position = point
 		camera.reset_smoothing()
 		camera.force_update_scroll()
 		await _frames()
-		var top := camera.get_screen_center_position().y - 90.0
-		_expect(backdrop.position.y <= top and backdrop.position.y + 160.0 <= Mountain.surface_at(camera.get_screen_center_position().x) + 32.0, "Mountain ridges stay visible above the landing at %s" % point)
-		for x in range(0, Mountain.WIDTH, 32):
-			for y in [top + 1.0, top + 90.0, top + 179.0]:
-				var covered := false
-				for panorama in landscapes:
-					var rectangle := Rect2(panorama.global_position, panorama.texture.get_size() * panorama.global_scale)
-					if rectangle.has_point(Vector2(x, y)):
-						covered = true
-						break
-				covered = covered or Rect2(road.global_position, road.size).has_point(Vector2(x, y))
-				_expect(covered, "Mountain panoramas cover world %d, %d" % [x, y])
+		var corner := camera.get_screen_center_position() - Vector2(160, 90)
+		var rectangle := Rect2(painting.global_position, painting.texture.get_size() * painting.global_scale)
+		_expect(rectangle.grow(0.001).encloses(Rect2(corner, Vector2(320, 180))), "Landscape covers all camera edges at %s" % point)
+	_expect(world.midground.get_child_count() == 13, "13 complete landmarks frame the route")
+	for sprite: Sprite2D in world.midground.get_children():
+		_expect(sprite.material == null and sprite.get_child_count() == 0, "Landmarks need no fades or aprons")
+		_expect(sprite.texture.get_width() <= 4096 and sprite.texture.get_height() <= 4096, "Landmarks fit mobile texture limits")
+		_expect(sprite.position == sprite.global_position, "Landmarks stay anchored in world space")
+		var bounds := Rect2(sprite.position, sprite.texture.get_size() * sprite.scale)
+		for pit: Dictionary in Mountain.PITS:
+			var opening := Rect2(pit.position, Vector2(pit.width, pit.depth))
+			_expect(not bounds.intersects(opening), "Scenery does not bridge spike opening: " + str(sprite.name))
 	var gate := level.get_node("TempleGate") as Node2D
 	var facade := gate.get_node_or_null("CinematicFacade")
 	_expect(facade != null and gate.self_modulate.a == 0, "Mountain exit uses the cinematic facade")
@@ -110,7 +118,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: ten mountain panoramas, full-route coverage through the high pass and pit bottoms, natural proportions, unchanged terrain cuts and spike metadata, cinematic gate state, and other-level isolation.")
+		print("PASS: one continuous mountain landscape and 13 complete landmarks, full-route coverage through the high pass and pit bottoms, natural proportions, unchanged terrain cuts and spike metadata, cinematic gate state, and other-level isolation.")
 	quit(0 if failures.is_empty() else 1)
 
 

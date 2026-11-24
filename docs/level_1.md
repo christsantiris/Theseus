@@ -32,8 +32,7 @@ separate repeating stone terrain keeps its existing mipmaps.
 Detailed masonry, waystones, the limestone-and-bronze checkpoint shrines, and
 the temple facade complete the scenery. Ground and platform collision,
 movement, enemies, pickups, checkpoint spawns, and temple entry are unchanged.
-Level 2 now uses a continuous rocky coastline. Levels 3–5 retain their previous
-panorama renderers pending subsequent milestones.
+All five levels now use continuous landscapes with independent landmarks.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
 one world pixel of overlap at the ground. This closes transparent-padding gaps

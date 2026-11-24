@@ -9,21 +9,17 @@ foreground streets and terraces identify the walkable surfaces.
 
 ## Cinematic scenery
 
-Each area has two cinematic 3D-style panoramas matching the sunlit materials
-and lighting in Levels 1 and 2. Plaster workshops, faded blue doors, terracotta
-roofs, pottery courtyards, shaded stoas, and Doric temples give the five city
-districts distinct silhouettes. The overlapping panels retain their natural
-proportions, and the skyline follows the height of the route so the buildings
-stay visible above the temple landings. The skyline glides over changes in
-route height. Cut-stone masonry covers the original twenty-three terraces,
-with terracotta amphorae at the existing prop positions and a matching temple exit.
-Terrain collisions, encounter positions, and movement remain unchanged.
+One continuous city landscape supplies the distant roofs, temples, and hills.
+Twelve complete transparent landmarks establish the route: five plaster
+workshops, four shaded stoas, two olive/cypress groves, and one ruined colonnade.
+They remain fixed to the original landings while the distant city scrolls at
+12% of horizontal camera travel and 25% of vertical travel. The 2,172×724
+painting is displayed at 864×288 world units, preserving its natural proportions
+and covering the full camera range without wrapping or blending.
 
-Panorama joins follow matching scenery within their 96-pixel overlap. Smooth
-sky fades broadly; detailed stone and foliage use a narrow transition, avoiding
-patchy cutouts and hard vertical edges. Checkpoint shrines use matching
-cinematic limestone-and-bronze artwork, with cold and burning brazier states;
-their trigger areas and saved spawn positions are unchanged.
+Cut-stone masonry covers the original twenty-three terraces. Existing amphorae,
+checkpoint shrines, and the temple exit retain their positions and behavior.
+No collision shapes, movement, encounters, or attack timing change.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
 one world pixel of overlap at the ground. This closes transparent-padding gaps
@@ -92,15 +88,13 @@ keeps the latest checkpoint; New Game explicitly clears the run and starts Level
 Completion also offers **Continue to Level 4**, entering the
 [mountain sanctuary](level_4.md) and saving its entrance as the new load point.
 
-![Level 3 completion screen](level_3_complete.png)
-
 ## Editing and validation
 
 `scenes/levels/level_3_layout.gd` owns the route, patrols, shrines, flasks, and tips.
 `level_3_geometry.gd` creates the original terrain collisions and renders the
-cinematic city, including editor previews. Each section PNG in
-`assets/art/backgrounds/level_3/` stores its west and east panoramas stacked
-vertically; the directory also contains the city masonry and amphora cutout.
+cinematic city, including editor previews. `assets/art/backgrounds/level_3/`
+contains `city_landscape.png`, complete `workshop.png` and `stoa.png` cutouts,
+city masonry, and the existing amphora. Groves and colonnades reuse Level 1 art.
 The stone caps and temple facade reuse Level 1's art. The facade keeps its
 bronze bars synchronized with unlocking, including paused temple entry. The scene
 inherits the existing HUD, pause menu, checkpoint system, and temple entry flow.
@@ -119,8 +113,8 @@ Lamia activation on her platform, flask healing, both shrines, rollback of
 post-checkpoint defeats and score, camera scrolling, temple entry, completion,
 replay, and New Game. Combat is isolated during the route traversal, which uses
 normal movement and fifteen jumps to reach the exit in about 52 simulated
-seconds. The scenery check verifies all ten panoramas, full-route coverage at
-street level and the highest landing, unchanged terrace collisions, visible
-facades above the landings, paused gate updates, and isolation from the other
-levels.
+seconds. The scenery check sweeps the full route, verifies one continuous landscape
+and twelve complete landmarks, covers street level and the highest landing,
+and checks unchanged terrace collisions, paused gate updates, and isolation
+from the other levels.
 Combat difficulty and first-clear pacing still need a human playthrough.

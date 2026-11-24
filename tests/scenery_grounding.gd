@@ -10,6 +10,8 @@ const SAMPLES := [
 	["level_1/aqueduct", 152.0], ["level_1/waystone", 21.0],
 	["level_2/coastal_outcrop", 108.0], ["level_2/ruined_quay", 48.0],
 	["level_2/cyclopean_gate", 88.0], ["level_3/amphora", 24.0],
+	["level_3/workshop", 100.0], ["level_3/stoa", 68.0],
+	["level_4/terrace_wall", 44.0], ["level_5/cliff_temple", 104.0],
 	["level_4/broken_column", 41.0], ["level_4/broken_column", 44.0],
 ]
 
@@ -117,7 +119,7 @@ func _run() -> void:
 		_expect(painted_base >= 140.5 and painted_base <= 141.5, "Imported painted pixels overlap the floor: " + sample[0])
 		for scale in [1, 3, 4, 5]: # Preview, 540p, 720p, and desktop sampling.
 			await _render_contact(texture, sample[1], scale)
-	await _actual_landmarks(1)
-	await _actual_landmarks(2)
+	for number in range(1, 6):
+		await _actual_landmarks(number)
 	print("PASS: painted scenery contacts, floating-tree negative control, preview/540p/720p/desktop pixels, and moving-camera landmark bases." if failures.is_empty() else "FAIL: " + str(failures))
 	quit(0 if failures.is_empty() else 1)

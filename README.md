@@ -2,7 +2,7 @@
 
 A left-to-right side scroller. Theseus runs the road from Athens to a guarded temple, along a rocky coast, through a sacred city, into cypress-covered mountain terraces, and across a rocky gorge lined with ancient temples. All characters, including Theseus and all twelve enemy types, and the scenery in all five levels use detailed cinematic 3D-style artwork.
 
-Levels 1–2 use continuous landscapes with independent scenery objects and layered parallax. Levels 3–5 currently retain their panorama blends. Checkpoint shrines use matching cinematic limestone and bronze, with lit and unlit brazier states.
+All five levels use continuous landscapes with independent scenery objects and layered parallax. Checkpoint shrines use matching cinematic limestone and bronze, with lit and unlit brazier states.
 
 ## Contents
 
@@ -57,7 +57,7 @@ One continuous Aegean coastline shows blue sea, dry islands, rocky coves, and a 
 
 The third level is a Greek town: houses, tiled roofs, an agora, and the climb to the acropolis. Lamia share the streets with hoplites, peltasts, and spartoi. The temple at the top opens the way into the mountains.
 
-Ten cinematic city panoramas show plaster workshops, blue doors, terracotta roofs, shaded stoas, and Doric temples. Detailed cut-stone terraces and terracotta amphorae frame the original route, with the skyline following the climb through the temple district.
+One continuous sacred-city landscape sits behind complete plaster workshops, blue doors, terracotta roofs, shaded stoas, and ruined colonnades. Grounded buildings and amphorae frame the original cut-stone terraces through the temple climb.
 
 [Level 3 guide](docs/level_3.md)
 
@@ -65,7 +65,7 @@ Ten cinematic city panoramas show plaster workshops, blue doors, terracotta roof
 
 Cypress trees rise above Greek mountain slopes and terraced stone walls. Cyclops Slingers hurl breakable boulders, Satyrs hop between ledges and charge with their horns, and Raiders and Telchines return. Four spike pits interrupt the road: jump across, or climb out after losing a health bar. Satyrs can be bounced on and sometimes drop stolen wine for a brief speed boost.
 
-Ten cinematic mountain panoramas show cypress foothills, stone switchbacks, olive gardens, rugged high passes, and a summit sanctuary. Detailed retaining stone, weathered column fragments, and a matching temple entrance frame the original terraces and four recessed pits.
+One continuous mountain landscape shows rocky ridges, cypress slopes, terraced walls, and a distant sanctuary. Complete groves, low retaining walls, rocky outcrops, and weathered column fragments stand on the original terraces, leaving all four spike pits open.
 
 [Level 4 guide](docs/level_4.md)
 
@@ -73,7 +73,7 @@ Ten cinematic mountain panoramas show cypress foothills, stone switchbacks, oliv
 
 Pale limestone cliffs, dark clefts, ruined temples, and stone causeways frame the fifth level. Bronze Bulls charge along flat corridors, Cerberus Pups pursue in pairs, and a three-headed Hydra guards the exit. Two optional high flask ledges reward riding a staggered bull. The main route uses normal jumps, with two spike pits and two checkpoint shrines.
 
-Ten cinematic gorge panoramas show stratified limestone walls, dry ravines, ruined cliffside temples, and the Hydra sanctuary. Weathered causeway masonry and column fragments match the other levels, while both bull ledges and pit openings keep their original geometry.
+One continuous dry gorge landscape shows stratified limestone walls and distant cliffside temples. Complete ruined shrines, colonnades, and rocky outcrops stand on the original causeways, while both bull ledges and pit openings keep their original geometry.
 
 [Level 5 guide](docs/level_5.md)
 
@@ -148,7 +148,7 @@ To review Cerberus Pups, run `godot --path . res://scenes/reviews/cerberus_pup_r
 
 To review the Hydra, run `godot --path . res://scenes/reviews/hydra_review.tscn`, or open that scene and press **F6**. Each of its three heads has two health and a separate hit area. Cut down every head to defeat it; hitting the coiled body does no damage. Jump to reach the higher heads, or counter their telegraphed bites as they dip toward Theseus. Severed heads stay gone, and the survivors continue taking turns attacking.
 
-To check Levels 1–2’s continuous scenery, the remaining panorama blends, and shrine activation, run `godot --path . --script res://tests/scenery_art.gd`. This check uses the renderer.
+To check all five continuous landscapes, complete scenery objects, and shrine activation, run `godot --path . --script res://tests/scenery_art.gd`. This check uses the renderer.
 
 Start any level at its entrance or at one of its shrines:
 
@@ -162,12 +162,13 @@ To skip the wrapper script, run `godot --path . res://scenes/debug/level_select.
 
 ## Background builds and performance
 
-Levels 1–2 each have one continuous landscape and no panorama joins. The 27 remaining joins in Levels 3–5 load baked overlap strips and lossless seam masks. Opaque backgrounds use GPU compression; terrain tiles also use mipmaps. Character art, fonts, UI, and transparent props remain lossless. The game does not search seams or read background images back from the GPU when loading a level. After changing panorama artwork, panel order, overlap width, or the baker, regenerate and import the assets:
+Each level loads one continuous landscape and complete transparent scenery objects. No panorama joins, seam assets, repeated aprons, or image-processing step are needed. Opaque backgrounds use GPU compression; terrain tiles also use mipmaps. Character art, fonts, UI, and transparent props remain lossless. After changing artwork, import it and check camera coverage and painted ground contacts:
 
 ```sh
-tools/bake_landscapes.sh
 godot --headless --path . --editor --import
-tools/bake_landscapes.sh --check
+godot --path . --script res://tests/scenery_art.gd
+godot --path . --script res://tests/scenery_grounding.gd
+godot --path . --script res://tests/texture_budget.gd
 ```
 
-Commit the generated `_seams/` assets with the source change. `--check` detects stale source hashes, masks, overlap pixels, panel order, and atlas coordinates. Run `godot --path . --script res://tests/landscape_bake.gd` to check compressed atlas sampling at every rendered join and its downward extension. The baker’s `--check` verifies the original lossless seam search. Run `godot --path . --script res://tests/texture_budget.gd` to check compression variants and minified terrain. See [performance measurements and benchmark instructions](docs/performance.md).
+Run each affected level's `tests/level_N_scenery.gd` for full-route coverage and collision checks. See [performance measurements and benchmark instructions](docs/performance.md).

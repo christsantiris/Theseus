@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0o3wl0nx7scl"
-path.s3tc="res://.godot/imported/mountain_gardens.png-d1aecabf4fe3cc9939b5e25c2516dee4.s3tc.ctex"
-path.etc2="res://.godot/imported/mountain_gardens.png-d1aecabf4fe3cc9939b5e25c2516dee4.etc2.ctex"
+uid="uid://cxksdpv43jjns"
+path.s3tc="res://.godot/imported/mountain_landscape.png-b2cdc9f12b52a188748d43d4d9626c69.s3tc.ctex"
+path.etc2="res://.godot/imported/mountain_landscape.png-b2cdc9f12b52a188748d43d4d9626c69.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/art/backgrounds/level_4/mountain_gardens.png"
-dest_files=["res://.godot/imported/mountain_gardens.png-d1aecabf4fe3cc9939b5e25c2516dee4.s3tc.ctex", "res://.godot/imported/mountain_gardens.png-d1aecabf4fe3cc9939b5e25c2516dee4.etc2.ctex"]
+source_file="res://assets/art/backgrounds/level_4/mountain_landscape.png"
+dest_files=["res://.godot/imported/mountain_landscape.png-b2cdc9f12b52a188748d43d4d9626c69.s3tc.ctex", "res://.godot/imported/mountain_landscape.png-b2cdc9f12b52a188748d43d4d9626c69.etc2.ctex"]
 
 [params]
 

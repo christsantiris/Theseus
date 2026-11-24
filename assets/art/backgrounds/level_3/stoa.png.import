@@ -2,22 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://btc0phgu8q8ju"
-path.s3tc="res://.godot/imported/high_pass.png-75950189a5337323773f745072ad1f11.s3tc.ctex"
-path.etc2="res://.godot/imported/high_pass.png-75950189a5337323773f745072ad1f11.etc2.ctex"
+uid="uid://doxhmpnqc4ngl"
+path="res://.godot/imported/stoa.png-33eb0d391cde0be18086f1f60b90e545.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/backgrounds/level_4/high_pass.png"
-dest_files=["res://.godot/imported/high_pass.png-75950189a5337323773f745072ad1f11.s3tc.ctex", "res://.godot/imported/high_pass.png-75950189a5337323773f745072ad1f11.etc2.ctex"]
+source_file="res://assets/art/backgrounds/level_3/stoa.png"
+dest_files=["res://.godot/imported/stoa.png-33eb0d391cde0be18086f1f60b90e545.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -38,5 +36,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
+process/size_limit=1024
 detect_3d/compress_to=1

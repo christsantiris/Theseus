@@ -2,22 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dq410thxu6n18"
-path.s3tc="res://.godot/imported/acropolis_approach.png-475eba7fb0b3c1ac500feabdfa304b14.s3tc.ctex"
-path.etc2="res://.godot/imported/acropolis_approach.png-475eba7fb0b3c1ac500feabdfa304b14.etc2.ctex"
+uid="uid://bqv5ehm582inm"
+path="res://.godot/imported/workshop.png-36eb64a30bddedb296b0efbe50ee34df.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/backgrounds/level_3/acropolis_approach.png"
-dest_files=["res://.godot/imported/acropolis_approach.png-475eba7fb0b3c1ac500feabdfa304b14.s3tc.ctex", "res://.godot/imported/acropolis_approach.png-475eba7fb0b3c1ac500feabdfa304b14.etc2.ctex"]
+source_file="res://assets/art/backgrounds/level_3/workshop.png"
+dest_files=["res://.godot/imported/workshop.png-36eb64a30bddedb296b0efbe50ee34df.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -38,5 +36,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
+process/size_limit=1024
 detect_3d/compress_to=1

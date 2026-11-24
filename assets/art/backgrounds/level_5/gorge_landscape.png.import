@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxqeanvxteh03"
-path.s3tc="res://.godot/imported/summit_sanctuary.png-9f5616415e9836b73f62edf312f0d49a.s3tc.ctex"
-path.etc2="res://.godot/imported/summit_sanctuary.png-9f5616415e9836b73f62edf312f0d49a.etc2.ctex"
+uid="uid://cdyvmhoi274dq"
+path.s3tc="res://.godot/imported/gorge_landscape.png-12d55e02b8010f9eb956671d903b6a8d.s3tc.ctex"
+path.etc2="res://.godot/imported/gorge_landscape.png-12d55e02b8010f9eb956671d903b6a8d.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/art/backgrounds/level_4/summit_sanctuary.png"
-dest_files=["res://.godot/imported/summit_sanctuary.png-9f5616415e9836b73f62edf312f0d49a.s3tc.ctex", "res://.godot/imported/summit_sanctuary.png-9f5616415e9836b73f62edf312f0d49a.etc2.ctex"]
+source_file="res://assets/art/backgrounds/level_5/gorge_landscape.png"
+dest_files=["res://.godot/imported/gorge_landscape.png-12d55e02b8010f9eb956671d903b6a8d.s3tc.ctex", "res://.godot/imported/gorge_landscape.png-12d55e02b8010f9eb956671d903b6a8d.etc2.ctex"]
 
 [params]
 

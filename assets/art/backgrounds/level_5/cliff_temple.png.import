@@ -2,22 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dw1mnlu0ft3b6"
-path.s3tc="res://.godot/imported/high_colonnade.png-e0fd104ec363cd251025ec6204556072.s3tc.ctex"
-path.etc2="res://.godot/imported/high_colonnade.png-e0fd104ec363cd251025ec6204556072.etc2.ctex"
+uid="uid://dg3e8276oxm5a"
+path="res://.godot/imported/cliff_temple.png-0e185f266b36a371d28f588c391fa73b.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/backgrounds/level_5/high_colonnade.png"
-dest_files=["res://.godot/imported/high_colonnade.png-e0fd104ec363cd251025ec6204556072.s3tc.ctex", "res://.godot/imported/high_colonnade.png-e0fd104ec363cd251025ec6204556072.etc2.ctex"]
+source_file="res://assets/art/backgrounds/level_5/cliff_temple.png"
+dest_files=["res://.godot/imported/cliff_temple.png-0e185f266b36a371d28f588c391fa73b.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -38,5 +36,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
+process/size_limit=1024
 detect_3d/compress_to=1
