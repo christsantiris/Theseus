@@ -4,6 +4,7 @@ const Layout := preload("res://scenes/levels/level_1_layout.gd")
 const LEVEL_WIDTH := Layout.WIDTH
 const LEVEL_HEIGHT := Layout.HEIGHT
 const ENEMY_SCENES := {
+	"minotaur": "res://scenes/enemies/minotaur.tscn",
 	"merfolk": "res://scenes/enemies/merfolk_trident.tscn",
 	"reefblade": "res://scenes/enemies/merfolk_reefblade.tscn",
 	"raider": "res://scenes/enemies/raider.tscn",
@@ -23,6 +24,7 @@ const Difficulty := preload("res://scenes/levels/difficulty.gd")
 const FLASK := preload("res://scenes/pickups/health_flask.tscn")
 const CHECKPOINT := preload("res://scenes/objects/checkpoint.tscn")
 const GATE := preload("res://scenes/objects/temple_gate.tscn")
+const ScoreTable := preload("res://scenes/ui/high_score_table.gd")
 
 var layout: Script = Layout
 var level_number := 1
@@ -51,6 +53,7 @@ var _gate_hint_shown := false
 var _death_notice_shown := false
 var _shown_tips: Array[int] = []
 var _gate: Node2D
+var high_score_table: VBoxContainer
 
 
 func _ready() -> void:
@@ -59,6 +62,7 @@ func _ready() -> void:
 	get_tree().paused = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_score = LevelRun.checkpoint_score
+	LevelRun.begin_attempt(_score)
 	_defeated = LevelRun.checkpoint_defeated.duplicate()
 	_collected = LevelRun.checkpoint_collected.duplicate()
 	_build_encounters()
@@ -155,6 +159,11 @@ func _style_pause_screen() -> void:
 
 
 func _process(delta: float) -> void:
+	if _complete and high_score_table != null:
+		var center := pause_panel.get_parent() as Control
+		var safe := MobileControls._safe_rect() if MobileControls.enabled else get_viewport().get_visible_rect()
+		center.position = safe.position
+		center.size = safe.size
 	if get_tree().paused or _complete:
 		return
 	if player.health <= 0:
@@ -240,6 +249,7 @@ func _on_enemy_defeated(points: int, enemy_id: String) -> void:
 		return
 	_defeated.append(enemy_id)
 	_score += points
+	LevelRun.current_score = _score
 	hud.set_score(_score)
 	if enemy_id == layout.GATE_GUARD:
 		_gate.unlock()
@@ -283,4 +293,24 @@ func _on_gate_entered() -> void:
 	if next_button.visible:
 		next_button.grab_focus()
 	else:
+		_show_final_scores()
 		replay_button.grab_focus()
+
+
+func _show_final_scores() -> void:
+	var stack := pause_heading.get_parent() as VBoxContainer
+	var columns := HBoxContainer.new()
+	columns.name = "ResultsColumns"
+	columns.add_theme_constant_override("separation", 8)
+	pause_panel.remove_child(stack)
+	pause_panel.add_child(columns)
+	columns.add_child(stack)
+	stack.custom_minimum_size.x = 144
+	stack.add_theme_constant_override("separation", 3)
+	# Wrap the victory description so both columns fit the 320x180 view.
+	details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	pause_heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	high_score_table = ScoreTable.new()
+	high_score_table.name = "HighScores"
+	columns.add_child(high_score_table)
+	high_score_table.show_result(LevelRun.record_result())

@@ -67,6 +67,7 @@ func _reload(previous_id: int) -> void:
 
 
 func _run() -> void:
+	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	state = root.get_node("LevelRun")
 	var level = await _fresh(3)
 	level.player.position = Town.CHECKPOINTS[1].position
@@ -148,6 +149,7 @@ func _run() -> void:
 	OS.delay_msec(150)
 	if failures.is_empty():
 		print("PASS: Level 3→4, entrance/Load/death, all enemies, Cyclops placement, flasks, both shrines, fatal spike recovery, full mountain traversal with four pit jumps, camera, temple entry, replay and New Game.")
+	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 
 

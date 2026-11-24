@@ -206,8 +206,9 @@ or stun-lock opportunities. Combat pacing still needs human play testing.
 
 The captain at (4672, 280) guards the exit at (4752, 280). Three sword hits
 defeat the captain. Theseus enters the doorway using the existing steps and
-fade sequence. Level 5 offers **Continue to Level 6**. Atlantis is the current
-campaign endpoint; its completion offers Replay and Return to Title.
+fade sequence. Level 5 offers **Continue to Level 6**. Atlantis completion offers
+**Continue to Level 7**, entering the final [labyrinth](level_7.md), alongside
+Replay and Return to Title.
 
 ## Scenery and platform budgets
 

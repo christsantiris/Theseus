@@ -45,6 +45,7 @@ func _fresh(number: int = 2, carried_score := 0) -> Node:
 
 
 func _run() -> void:
+	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	state = root.get_node("LevelRun")
 	var level = await _fresh(1)
 	_expect(not state.can_load(), "A new game has no saved progress")
@@ -114,6 +115,7 @@ func _run() -> void:
 	OS.delay_msec(150)
 	if failures.is_empty():
 		print("PASS: Level 1→2 progression, carried score, entrance checkpoint, Load, death, both coastal shrines, snapshot isolation, platform traversal, camera, completion, replay, and New Game.")
+	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 
 

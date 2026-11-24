@@ -40,6 +40,8 @@ const WEIGHTS := {
 	"bronze_bull": 1.6,
 	# Three heads with two health each.
 	"hydra": 4.0,
+	# Eight-health final boss, committed jumpable charge and long recovery.
+	"minotaur": 3.0,
 }
 const GROUP_RANGE := 128.0
 const PIT_COST := 0.5

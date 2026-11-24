@@ -46,6 +46,7 @@ func _fresh(number: int = 3) -> Node:
 
 
 func _run() -> void:
+	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	state = root.get_node("LevelRun")
 	var level = await _fresh(2)
 	level.player.position = Coast.CHECKPOINTS[1].position
@@ -125,6 +126,7 @@ func _run() -> void:
 	OS.delay_msec(150)
 	if failures.is_empty():
 		print("PASS: Level 2→3, entrance/Load/death, four enemy types, Lamia activation, pickups, both shrines, checkpoint rollback, full town traversal, camera, temple entry, completion, replay and New Game.")
+	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 
 

@@ -76,6 +76,9 @@ func _verify_markers(level: Node, profile: String) -> void:
 	var markers: Array[Node] = []
 	for index in points.size():
 		var marker := Marker.new()
+		var unlit := CanvasItemMaterial.new()
+		unlit.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+		marker.material = unlit
 		marker.color = colors[index]
 		marker.z_index = 500
 		level.add_child(marker)
@@ -146,7 +149,7 @@ func _run() -> void:
 		_expect(actual == native, "Movement, jumps, collisions and sword frames match native rendering: " + profile)
 		var wet := await _trajectory(profile, 6)
 		_expect(wet == wet_native, "Underwater movement and sword frames match native rendering: " + profile)
-		for number in range(1, 7):
+		for number in range(1, 8):
 			var level := await _open(number)
 			_expect(current_scene.get_parent() == root, "Scene ownership and reload behavior remain unchanged")
 			_expect(root.get_visible_rect().size == Vector2(320, 180), "Logical view remains 320x180")
@@ -185,5 +188,5 @@ func _run() -> void:
 			child.stop()
 			child.stream = null
 	OS.delay_msec(150)
-	print("PASS: render sizes, all six camera views, identical physics/attacks, HUD and touch safe areas, resizing, menus and desktop restoration." if failures.is_empty() else str(failures))
+	print("PASS: render sizes, all seven camera views, identical physics/attacks, HUD and touch safe areas, resizing, menus and desktop restoration." if failures.is_empty() else str(failures))
 	quit(0 if failures.is_empty() else 1)

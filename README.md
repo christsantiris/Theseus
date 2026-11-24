@@ -17,6 +17,7 @@ All seven levels use continuous backgrounds with independent scenery objects and
   - [The Labyrinth](#the-labyrinth)
 - [How to play](#how-to-play)
 - [Mobile version](#mobile-version)
+- [Roadmap](#roadmap)
 - [Credits](#credits)
 - [Play-test any level](#play-test-any-level)
 - [Background builds and performance](docs/performance.md)
@@ -119,6 +120,13 @@ Use `tools/play_level.sh 7 2` to start at the shrine before the boss.
 
 ## How to play
 
+Hades and the final victory screen show the five highest scores saved on this
+device. A qualifying current result is highlighted in gold and marked **YOU**.
+Scores survive app restarts; they are not an online leaderboard. Each death or
+final victory records one result, including points earned after the last shrine.
+Reopening the same result screen does not add it again. New lives and replays
+can qualify separately, and earlier entries keep their place when scores tie.
+
 Theseus runs, jumps, ducks, and fights. Grounded sword attacks alternate between a stab and a diagonal slash, with the same timing, reach, and one-health damage. Regular airborne attacks always slash, including when Jump and Sword are pressed together. Taking off during a stab changes it to a slash without restarting the attack. Airborne attacks leave the grounded sequence unchanged; Duck + Sword in the air still performs a downward thrust. With a keyboard, releasing Jump early makes a short jump; touch jumps are always full height, so one thumb can jump and then reach Sword. Sword hits and a jump into an enemy each cost that enemy one health; landing on a Satyr bounces Theseus safely. Theseus has five health. Flasks restore two, and they never fill him past five. Stolen wine grants six seconds of extra speed. Spike pits cost one health bar per damaging contact and have enough room to jump out.
 
 | Action | Keys |
@@ -170,9 +178,30 @@ To run Theseus, open `builds/ios/Theseus.xcodeproj` in Xcode, select an iPhone S
 
 [Mobile setup and device testing](docs/mobile.md) covers the Android APK and iOS Xcode export. iOS requires your Apple Developer Team ID before Godot can export it.
 
+## Roadmap
+
+### Production ads
+
+The [level-complete interstitial](docs/mobile.md#ads) currently uses Google's sample ids and test ads. Before release:
+
+- Replace the sample AdMob app and interstitial unit ids with production ids for iOS and Android.
+- Ask for ad consent where required: Google's consent message (UMP) for GDPR regions, and Apple's App Tracking Transparency prompt on iOS.
+- Finish the production Android Gradle build with AdMob included, and test real ad delivery on physical iPhone and Android devices.
+
+### Remove Ads for $0.99
+
+A one-time $0.99 purchase permanently turns off ads.
+
+- Sell a single non-consumable "Remove Ads" product through the App Store (StoreKit) and Google Play Billing.
+- After purchase, never request or show an interstitial again; Continue goes straight to the next level.
+- Store the purchase locally so ads stay off offline, and confirm it with the store on launch.
+- Add **Restore Purchases**, which App Store review requires, so the purchase carries over to a reinstall or a new device.
+- Offer **Remove Ads** on the title screen and the level-complete screen, touch-friendly on phones and still usable with a keyboard.
+- Test purchase, cancel, failure, and restore with App Store sandbox and Google Play test accounts.
+
 ## Credits
 
-Music by <a href="https://pixabay.com/users/moonpub-15209240/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Johnny Hoeve</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Pixabay</a>
+Menus, Level 1 and Level 7 — Ancient Greek Inspired Folk. Music by <a href="https://pixabay.com/users/moonpub-15209240/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Johnny Hoeve</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Pixabay</a>
 
 Level 2 — Santorini Breeze. Music by <a href="https://pixabay.com/users/u_98673jp944-48995615/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=470783">u_98673jp944</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=470783">Pixabay</a>
 

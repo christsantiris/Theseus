@@ -36,6 +36,7 @@ func _stop_audio(node: Node) -> void:
 
 
 func _run() -> void:
+	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	var state: Node = root.get_node("LevelRun")
 	state.begin_level(1)
 	var defeated: Array[String] = ["Raider"]
@@ -73,4 +74,5 @@ func _run() -> void:
 		print("PASS: death opens Hades, the shade is opaque, Load Game restores the checkpoint, and New Game starts over.")
 	else:
 		print("FAILURES: ", failures)
+	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)

@@ -53,6 +53,7 @@ func _fresh_level() -> Node:
 
 
 func _run() -> void:
+	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	_run_state = root.get_node("LevelRun")
 	var level = await _fresh_level()
 	var player = level.player
@@ -169,6 +170,7 @@ func _run() -> void:
 		print("PASS: layout placement, health pickup, both checkpoints, actual death/reload, state rollback, gate, completion, replay, and full physics traversal.")
 	else:
 		print("FAILURES: ", failures)
+	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 
 

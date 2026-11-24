@@ -2,7 +2,7 @@
 
 ## Continuous scenery
 
-All six levels now load one continuous distant landscape plus complete
+All seven levels now load one continuous distant landscape plus complete
 transparent landmarks. Landmarks stay fixed to authored ground; the distant
 painting scrolls with the camera. Each source landscape is 2,172×724 pixels.
 No runtime seam searches, GPU readbacks, blend shaders, overlap atlases, masks,
@@ -274,3 +274,12 @@ pause, replay, shrine loading, and isolation from earlier levels. The full
 cycling-tide route clears in about 59.5 simulated seconds with 17 jumps and
 combat isolated. These checks do not measure human combat difficulty or
 sustained GPU performance.
+
+## Final labyrinth lighting
+
+[Level 7](level_7.md) adds one continuous GPU-compressed interior painting, a
+lossless eight-pose Minotaur atlas, and a lossless four-frame torch atlas. Nearby
+torches share one 128×128 radial light texture and disable shadows; distant
+torches hide their lights. Cool ambient modulation affects the world, leaving
+HUD and touch controls readable. The existing mobile render budgets and desktop
+quality settings apply. No runtime image readbacks or seam processing are used.

@@ -1,6 +1,6 @@
 # Mobile setup and testing
 
-The same Godot project targets Android and iOS. All six levels use the existing movement, collision shapes, jump heights, sword timing, enemy behavior, and checkpoint rules. The mobile interface activates automatically on phones and tablets. Desktop play keeps its keyboard interface.
+The same Godot project targets Android and iOS. All seven levels use the existing movement, collision shapes, jump heights, sword timing, enemy behavior, and checkpoint rules. The mobile interface activates automatically on phones and tablets. Desktop play keeps its keyboard interface.
 
 ## Controls and display
 
@@ -8,7 +8,7 @@ Hold Left or Right to walk, or slide between the arrows to change direction. Hol
 
 The top-right button pauses and resumes. Gameplay controls hide in menus, during death, and when entering the exit temple. Returning from another app leaves gameplay paused and releases held touches. Android Back toggles pause in a level and closes the title's Controls screen.
 
-The game uses either landscape orientation and retains its 320×180 gameplay view. Fractional scaling fits the display; wider phones and tablets can have black bars. Touch targets stay inside the reported safe display area. The title, pause, and Hades menus use larger buttons, and Controls displays touch instructions. Checkpoint loading retains the existing **current-session** behavior; closing the process does not save progress to disk.
+The game uses either landscape orientation and retains its 320×180 gameplay view. Fractional scaling fits the display; wider phones and tablets can have black bars. Touch targets stay inside the reported safe display area. The title, pause, and Hades menus use larger buttons, and Controls displays touch instructions. Checkpoint loading retains the existing **current-session** behavior; closing the process does not save progress to disk. High scores are saved separately on this device and survive process termination. Hades and final victory display the top five, with a gold **YOU** row for a qualifying current result.
 
 Character sheets keep their full-resolution artwork and transparency, with frames arranged into rows so every texture fits within 4096×4096. Frame sizes, animation timing, and collision shapes are unchanged. Display safe areas are converted from physical screen pixels to game coordinates, including letterboxing, so movement and action buttons remain separated on phones and tablets.
 
@@ -145,11 +145,11 @@ godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60
 godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60 -- --mobile-controls --mobile-render=540
 ```
 
-The second command checks desktop controls and integer scaling. The existing combat, animation, Hades, and six level smoke tests also run without mobile controls.
+The second command checks desktop controls and integer scaling. The existing combat, animation, Hades, and seven level smoke tests also run without mobile controls.
 
 The artwork check verifies mobile-safe texture dimensions, complete atlas regions, and visible pixels for Theseus and every enemy type. The touch checks include physical display insets on an iPhone, an Android phone, and a tablet.
 
-The rendering check reads back the actual world targets, verifies screen markers through the world and final composition for all six levels, compares identical movement/jump/sword-frame histories across profiles, checks left/right safe-area layouts and display resizes, and sends a real mouse click through the presentation layer to a title button. [Performance measurements](performance.md#mobile-rendering-budget) separate hardware browser results from software-rendered simulators.
+The rendering check reads back the actual world targets, verifies screen markers through the world and final composition for all seven levels, compares identical movement/jump/sword-frame histories across profiles, checks left/right safe-area layouts and display resizes, and sends a real mouse click through the presentation layer to a title button. [Performance measurements](performance.md#mobile-rendering-budget) separate hardware browser results from software-rendered simulators.
 
 Before accepting a device build, play each level and check simultaneous touches, one-thumb Jump-then-Sword strikes against high birds, sword timing, ducking under birds, spike-pit recovery, temple entry, pause/resume, and checkpoint loading. Check both landscape directions, notched screens, interruption by another app, frame rate, audio, and heat. Desktop simulation and package validation do not establish device performance or battery use.
 

@@ -4,6 +4,7 @@ extends SceneTree
 # the flag, verify that desktop input and integer scaling remain untouched.
 var failures: Array[String] = []
 var controls: Node
+var restore_scores: Callable
 
 
 func _initialize() -> void:
@@ -74,6 +75,7 @@ func _check_button_bounds(node: Node) -> void:
 
 
 func _run() -> void:
+	restore_scores = preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	controls = root.get_node("MobileControls")
 	var logical := Rect2(0, 0, 320, 180)
 	var iphone: Rect2 = controls.safe_rect_for_display(Rect2(186, 0, 2250, 1146), Vector2(2622, 1206), logical)
@@ -280,6 +282,7 @@ func _finish() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	print("PASS: mobile controls and layout" if failures.is_empty() else str(failures))
+	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 
 

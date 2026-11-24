@@ -383,6 +383,7 @@ func _pit_escape() -> void:
 
 
 func _run() -> void:
+	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	state = root.get_node("LevelRun")
 	await _progress_and_saves()
 	await _bull_reward()
@@ -393,6 +394,7 @@ func _run() -> void:
 	OS.delay_msec(150)
 	if failures.is_empty():
 		print("PASS: Level 4→5, entrance/Load/death, placements, per-pup checkpoints and survivor attacks, spike recovery, both shrines, actual Hydra gate combat, bull ride and bonus reward, full normal-speed traversal, camera, temple entry, replay and New Game.")
+	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 
 

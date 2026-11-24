@@ -58,6 +58,7 @@ func _fresh(number: int = 6) -> Node:
 
 
 func _run() -> void:
+	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	state = root.get_node("LevelRun")
 	var level = await _fresh(5)
 	level.player.position = Gorge.CHECKPOINTS[1].position
@@ -123,7 +124,7 @@ func _run() -> void:
 	await _canals(canal_level)
 	await _traverse()
 	level = current_scene
-	_expect(level.pause_heading.text == "Level 6 Complete" and not level.next_button.visible and level.next_level.is_empty(), "Atlantis is the campaign endpoint")
+	_expect(level.pause_heading.text == "Level 6 Complete" and level.next_button.visible and level.next_level == "res://scenes/levels/level_7.tscn", "Atlantis continues into the final labyrinth")
 	level._on_replay_pressed()
 	await _frames()
 	_expect(current_scene.level_number == 6 and state.can_load() and state.checkpoint_index == -1, "Replay restarts Level 6 and keeps its entrance load point")
@@ -138,6 +139,7 @@ func _run() -> void:
 	OS.delay_msec(125)
 	if failures.is_empty():
 		print("PASS: Level 5→6, entrance/Load/death, Merfolk roles, duckable tridents, safe canal escapes, pickups, both shrines, checkpoint rollback, full Atlantis traversal, camera, temple entry, completion, replay and New Game.")
+	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 
 

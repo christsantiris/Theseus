@@ -8,7 +8,7 @@ var tide: Node2D
 func _ready() -> void:
 	layout = preload("res://scenes/levels/level_6_layout.gd")
 	level_number = 6
-	next_level = ""
+	next_level = "res://scenes/levels/level_7.tscn"
 	objective = "Tides slow you, not Merfolk. Watch the waterline."
 	completion_text = "Poseidon's sanctuary is free of the Merfolk captain."
 	$Player/Camera2D.position.y = -24

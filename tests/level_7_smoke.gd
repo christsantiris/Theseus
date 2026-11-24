@@ -44,6 +44,7 @@ func _fresh(number := 7) -> Node:
 
 
 func _run() -> void:
+	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	state = root.get_node("LevelRun")
 	var level := await _fresh(6)
 	level._on_gate_entered()
@@ -108,6 +109,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	print("PASS: Atlantis→labyrinth, Level 7 scaling, entrance and shrine Load, soldiers, boss gate, complete jump/corridor route, camera, final victory, and replay." if failures.is_empty() else str(failures))
+	restore_scores.call()
 	quit(0 if failures.is_empty() else 1)
 
 
