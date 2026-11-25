@@ -9,6 +9,7 @@ const IOS_TEST_UNIT := "ca-app-pub-3940256099942544/4411468910"
 const ANDROID_UNIT := "ca-app-pub-9323307074562151/3770627453"
 const IOS_UNIT := "ca-app-pub-9323307074562151/2070019624"
 const MAX_LOAD_ATTEMPTS := 3
+const TRANSITION_SECONDS := 0.35
 # Debug builds only: a hashed device ID from the UMP log forces the European
 # consent message on that test device.
 const CONSENT_TEST_DEVICE_SETTING := "advertising/consent_test_device_id"
@@ -140,6 +141,11 @@ func show_then(on_finished: Callable) -> void:
 		return
 	_showing = true
 	_pending = on_finished
+	# Let gameplay taps settle before a ready ad appears. Never wait for a load.
+	await get_tree().create_timer(TRANSITION_SECONDS, true, false, true).timeout
+	if not can_request_ads():
+		_finish()
+		return
 	_content_callback = FullScreenContentCallback.new()
 	_content_callback.on_ad_dismissed_full_screen_content = _finish
 	_content_callback.on_ad_failed_to_show_full_screen_content = _on_show_failed

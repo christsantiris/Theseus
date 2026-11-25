@@ -127,17 +127,17 @@ On this Intel Mac, profiling showed the iOS Simulator's OpenGL renderer rasteriz
 
 ## Ads
 
-The current mobile test flow shows one interstitial when Continue is pressed on the level-complete screen. The score stays visible until that press. The next level loads after the ad closes. If no ad is ready, Continue opens the next level immediately. Replay, Title, death, Hades, and the final Level 7 victory do not show an ad. Before production, move presentation ahead of the results screen's Continue button, following [Google's placement guidance](https://support.google.com/admob/answer/6201350).
+After the temple-entry animation finishes, a ready interstitial appears following a 0.35-second pause for gameplay taps to settle. Results and Continue stay hidden until the ad closes or fails to show. Gameplay and the countdown remain paused throughout. If no ad is ready or consent does not permit ads, results appear immediately without waiting for a load; a late-loading ad cannot interrupt them. Continue opens the next level directly. Replay, Title, death, Hades, and the final Level 7 victory do not show an ad. This places the ad before the results screen's Continue button, following [Google's placement guidance](https://support.google.com/admob/answer/6201350).
 
 Theseus's iOS AdMob app ID is configured under `admob/general/ios/app_id` in `project.godot`: `ca-app-pub-9323307074562151~5989083331`. Its registered interstitial unit is `ca-app-pub-9323307074562151/2070019624` in `scenes/ui/level_ads.gd`. These identifiers are distinct from the Apple bundle identifier, `com.theseus.adventure`.
 
 Android's AdMob app ID is configured under `admob/general/android/app_id`: `ca-app-pub-9323307074562151~4923413670`. Its registered between-level interstitial unit is `ca-app-pub-9323307074562151/3770627453` in `scenes/ui/level_ads.gd`. The Android package name remains `com.theseus.adventure`.
 
-Debug mobile exports use Google's demo interstitial units, even with the registered app IDs. Desktop touch previews do not request ads. `advertising/production_enabled` is `true`, so release exports request the registered units. Setting it to `false` makes release builds skip SDK initialization and ad requests while Continue proceeds normally.
+Debug mobile exports use Google's demo interstitial units, even with the registered app IDs. Desktop touch previews do not request ads. `advertising/production_enabled` is `true`, so release exports request the registered units. Setting it to `false` makes release builds skip SDK initialization and ad requests while results and Continue proceed normally.
 
 ### Consent
 
-At launch, `LevelAds` asks Google's User Messaging Platform (UMP, bundled in the AdMob plugin's native libraries) for the player's consent status. When a published AdMob message applies, such as the European regulations message, UMP shows it before any ad is requested. The Mobile Ads SDK starts only when the status is `OBTAINED` or `NOT_REQUIRED`; while consent is required or unknown, Continue proceeds without an ad. A choice saved in an earlier session lets ads start immediately, and a failed refresh, for example offline, keeps that saved choice.
+At launch, `LevelAds` asks Google's User Messaging Platform (UMP, bundled in the AdMob plugin's native libraries) for the player's consent status. When a published AdMob message applies, such as the European regulations message, UMP shows it before any ad is requested. The Mobile Ads SDK starts only when the status is `OBTAINED` or `NOT_REQUIRED`; while consent is required or unknown, results appear without an ad. A choice saved in an earlier session lets ads start immediately, and a failed refresh, for example offline, keeps that saved choice.
 
 Where UMP reports that privacy options are required, the title menu shows **Privacy Choices**, which reopens Google's privacy options form. Elsewhere the button stays hidden.
 
@@ -156,10 +156,11 @@ Once the app is publicly listed, link the existing iOS entry to its App Store li
 
 The first iOS export adds the Google Mobile Ads package to the Xcode project. Xcode downloads it on the first build, which needs a network connection.
 
-Check identifier selection, consent gating, non-personalized request parameters, and continuation when no ad is available:
+Check identifier selection, consent gating, non-personalized request parameters, ad-before-results ordering, paused gameplay, dismissal and failure recovery, late-loading ads, and direct continuation:
 
 ```sh
 godot --headless --path . --script res://tests/level_ads.gd --fixed-fps 60
+godot --headless --path . --script res://tests/level_ads.gd --fixed-fps 60 -- --mobile-controls
 ```
 
 ## Verification

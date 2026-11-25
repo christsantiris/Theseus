@@ -154,7 +154,7 @@ The Bronze Bull is available in a separate review arena. Jump its committed char
 
 ## Mobile version
 
-Android and iOS share the seven levels, artwork, combat, and level countdowns. Landscape touch controls support movement, ducking, jumping, sword attacks, and pause, including simultaneous presses for airborne attacks. Menus have larger touch targets. Tutorial messages sit at the bottom, between the left and right buttons, and gameplay pauses when the app loses focus. After a level is cleared, Continue plays a short full-screen ad and then opens the next level. Desktop and the web build skip that ad.
+Android and iOS share the seven levels, artwork, combat, and level countdowns. Landscape touch controls support movement, ducking, jumping, sword attacks, and pause, including simultaneous presses for airborne attacks. Menus have larger touch targets. Tutorial messages sit at the bottom, between the left and right buttons, and gameplay pauses when the app loses focus. After a level is cleared, a ready full-screen ad appears after a brief transition and before the results screen. Continue then opens the next level directly. If no ad is ready, results appear immediately. Desktop and the web build skip ads.
 
 Phones render the world at 1280×720 while keeping HUD, menus, and touch controls at display resolution. A 960×540 option reduces world rendering further; simulators use a separate 320×180 preview. All profiles retain the same 320×180 game coordinates. Desktop keeps native rendering. Compare the phone budgets with `tools/play_mobile.sh 1 --mobile-render=720` and `tools/play_mobile.sh 1 --mobile-render=540`; see the [rendering profiles](docs/mobile.md#rendering-profiles).
 
@@ -194,7 +194,7 @@ To run Theseus, open `builds/ios/Theseus.xcodeproj` in Xcode, select an iPhone S
 The [level-complete interstitial](docs/mobile.md#ads) has Theseus's registered iOS and Android app and ad-unit IDs. Debug mobile builds use Google's test ads; release builds request the registered units. Google's consent message (UMP) runs at launch, ads wait until any required consent is answered, and the title offers **Privacy Choices** where Google requires it. Requests are non-personalized, with no cross-app tracking. Remaining before full serving:
 
 - Validate the consent message and test ads on a physical iPhone, and complete the App Store privacy disclosures. ATT is needed if tracking is introduced.
-- Move the interstitial ahead of the results screen's Continue button, verify `app-ads.txt`, link the public App Store listing, and complete AdMob's readiness review.
+- Verify `app-ads.txt`, link the public App Store listing, and complete AdMob's readiness review.
 - Finish Android's Gradle build and Play privacy disclosures, and validate the Android consent and ad integration separately.
 
 ### Remove Ads for $0.99

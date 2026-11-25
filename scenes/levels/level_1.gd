@@ -47,6 +47,7 @@ var _defeated: Array[String] = []
 var _collected: Array[String] = []
 var _section := -1
 var _complete := false
+var _results_ready := false
 var _entering_temple := false
 var _gate_hint_shown := false
 var _death_notice_shown := false
@@ -211,17 +212,12 @@ func _on_replay_pressed() -> void:
 
 
 func _on_next_pressed() -> void:
-	if not _complete or next_level.is_empty():
+	if not _results_ready or next_level.is_empty():
 		return
-	var destination := next_level
-	var number := level_number
-	var score := _score
-	var tree := get_tree()
-	LevelAds.show_then(func() -> void:
-		LevelRun.begin_level(number + 1, score)
-		tree.paused = false
-		tree.change_scene_to_file(destination)
-	)
+	_results_ready = false
+	LevelRun.begin_level(level_number + 1, _score)
+	get_tree().paused = false
+	get_tree().change_scene_to_file(next_level)
 
 
 func _on_title_pressed() -> void:
@@ -263,6 +259,15 @@ func _on_gate_entered() -> void:
 	_complete = true
 	_entering_temple = false
 	get_tree().paused = true
+	pause_screen.hide()
+	if next_level.is_empty():
+		_show_completion_results()
+	else:
+		LevelAds.show_then(_show_completion_results)
+
+
+func _show_completion_results() -> void:
+	_results_ready = true
 	pause_heading.text = "Level %d Complete" % level_number
 	var seconds := int(LevelRun.elapsed_seconds)
 	details.text = "%s\nScore %d  |  Defeated %d/%d\nTime %d:%02d" % [completion_text, _score, _defeated.size(), layout.ENEMIES.size(), seconds / 60, seconds % 60]
