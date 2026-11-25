@@ -1,7 +1,7 @@
 # Level 7 — Atlantis
 
 Level 7 is playable. Cross a partially flooded Atlantean city, fight Merfolk,
-and defeat their captain to enter Poseidon's sanctuary. The 4,800×352-unit
+and defeat their captain to enter Poseidon's sanctuary. The 5,760×352-unit
 route uses the existing movement and combat controls on desktop and mobile.
 
 ![Atlantis route and Merfolk encounters](level_7_preview.png)
@@ -57,8 +57,8 @@ jumps in the combat regression.
 
 ## Route
 
-The world is 4,800×352 units, starting at (48, 280) and ending at
-(4752, 280). It has twenty-three connected raised terraces, fifteen upward
+The world is 5,760×352 units, starting at (48, 280) and ending at
+(5712, 280). It has twenty-seven connected raised terraces, eighteen upward
 steps, two shallow canal jumps, and a summit at y=152. Descending steps drop
 16–32 units. The lower causeway catches missed jumps. There are no required
 moving platforms or timed jumps.
@@ -69,7 +69,8 @@ moving platforms or timed jumps.
 | Ring Canals | 960–1919 | A broad upper landing introduces the blade fighter. Descend past a trident guard, cross the first shallow canal, then climb to another broad combat landing. |
 | Sunken Agora | 1920–2879 | A quiet courtyard precedes a stair climb. A trident guard and a later blade fighter occupy separate landings; a flask follows the fight. |
 | Palace Ascent | 2880–3839 | Climb to the highest palace terrace for an isolated blade fight. Descend through two trident-guard landings, with recovery space between them. |
-| Poseidon's Sanctuary | 3840–4799 | Descend to the second canal, then a broad causeway. Fight a blade fighter, a trident guard, and finally the elite Merfolk captain guarding the exit. |
+| Outer Ring Causeway | 3840–4799 | A trident landing, a raised Reefblade and a lower trident quay extend the outer ring. |
+| Poseidon's Sanctuary | 4800–5759 | Descend to the second canal, then a broad causeway. Fight a blade fighter, a trident guard, and finally the elite Merfolk captain guarding the exit. |
 
 The raised terrain is listed below. All dimensions use world units;
 each terrace extends down to the main causeway at y=280. The lower route is
@@ -97,14 +98,18 @@ solid except for the two explicitly recessed canal beds.
 | 3552–3680 | 216 | 128 |
 | 3680–3840 | 248 | 160 |
 | 3840–3968 | 264 | 128 |
-| 4320–4432 | 264 | 112 |
-| 4432–4576 | 248 | 144 |
-| 4576–4624 | 264 | 48 |
+| 4160–4272 | 264 | 112 |
+| 4272–4496 | 248 | 224 |
+| 4496–4608 | 264 | 112 |
+| 4800–4928 | 264 | 128 |
+| 5280–5392 | 264 | 112 |
+| 5392–5536 | 248 | 144 |
+| 5536–5584 | 264 | 48 |
 
 | Shallow canal | Left X | Rim Y | Width / depth | Bed Y |
 | --- | ---: | ---: | --- | ---: |
 | Ring Canal | 1472 | 280 | 32 / 24 | 304 |
-| Sanctuary Canal | 4016 | 280 | 40 / 24 | 304 |
+| Sanctuary Canal | 4976 | 280 | 40 / 24 | 304 |
 
 The recesses have real terrain cuts and visible bright rims. At low tide, shallow water remains over the beds; there is neither a damage
 trigger nor an invisible bridge. Both allow jumping out in either direction. Scenery bases leave the openings
@@ -126,11 +131,11 @@ trade for both characters. These are not safe-bounce enemies.
 
 | Role | Count | Score each | Read and counter |
 | --- | ---: | ---: | --- |
-| Merfolk Trident Guard | 8 | 125 | Raises a held trident, then makes one stationary high thrust. Duck underneath or back away; stand and counter during recovery. |
-| Merfolk Reefblade | 4 | 150 | Lowers a short bronze blade and coils its tail before a short, committed ground lunge. Jump over the weapon or retreat, then counter. Ducking does not avoid this low attack. |
+| Merfolk Trident Guard | 10 | 125 | Raises a held trident, then makes one stationary high thrust. Duck underneath or back away; stand and counter during recovery. |
+| Merfolk Reefblade | 5 | 150 | Lowers a short bronze blade and coils its tail before a short, committed ground lunge. Jump over the weapon or retreat, then counter. Ducking does not avoid this low attack. |
 | Merfolk Gate Captain | 1 | 250 | Reuses the trident guard's readable attack, with an additional bronze fin crest and three health. Defeating it opens the sanctuary. |
 
-The maximum combat score is **1,850**. The captain must be defeated to finish the level. No Merfolk throws
+The maximum combat score is **2,250**. The captain must be defeated to finish the level. No Merfolk throws
 its weapon, fires a projectile, or requires a new block/dodge input.
 
 ### Attack timing and pursuit
@@ -176,7 +181,7 @@ from depending on simultaneous attack juggling.
 These are play-test placements, with feet on the authored route. Patrol extents
 must remain inside the same safe landing, clear of canal beds.
 The 256/320-unit upper landings provide room for the first three blade fights;
-the fourth uses the broad lower causeway near the sanctuary.
+the fourth occupies the new outer ring, and the fifth uses the broad lower causeway near the sanctuary.
 
 | Area | Encounters (X, Y) |
 | --- | --- |
@@ -184,7 +189,8 @@ the fourth uses the broad lower causeway near the sanctuary.
 | Ring Canals | Reefblade (1088, 232), Trident (1368, 264), Trident (1760, 248) |
 | Sunken Agora | Trident (2328, 248), Reefblade (2512, 232) |
 | Palace Ascent | Reefblade (3264, 152), Trident (3600, 216), Trident (3744, 248) |
-| Poseidon's Sanctuary | Reefblade (4256, 280), Trident (4496, 248), Captain (4672, 280) |
+| Outer Ring Causeway | Trident (3896, 264), Reefblade (4368, 248), Trident (4712, 280) |
+| Poseidon's Sanctuary | Reefblade (5216, 280), Trident (5456, 248), Captain (5632, 280) |
 
 ## Recovery and progression
 
@@ -202,7 +208,7 @@ once Level 2 or later has been reached in this session. Replay also resets the
 level and countdown. New Game resets the campaign and score to Level 1.
 Session progress is held in memory; high scores are saved separately on disk.
 
-The captain at (4672, 280) guards the exit at (4752, 280). Three sword hits
+The captain at (5632, 280) guards the exit at (5712, 280). Three sword hits
 defeat the captain. Theseus enters the doorway using the existing steps and
 fade sequence. Egypt (Level 6) offers **Continue to Level 7**. Atlantis completion offers
 **Continue to Level 8**, entering the final [labyrinth](level_8.md), alongside
@@ -211,11 +217,11 @@ Replay and Return to Title.
 ## Scenery and platform budgets
 
 One continuous 2,172×724 painting shows the ringed city, sea, palace, and
-submerged ruins. It fills 912×304 world units with 13% horizontal and 25%
+submerged ruins. It fills 912×304 world units with 10.5% horizontal and 25%
 vertical camera travel. Overscan covers the full route, summit jumps, and canal
 bottoms without panel joins, wrapping, or reflected strips.
 
-Thirteen complete transparent landmarks include five wave-carved walls, four
+Fifteen complete transparent landmarks include six wave-carved walls, five
 bronze Poseidon statues, two reused coastal arches, and two ruined colonnades.
 Their measured painted bases use `scenery_grounding.gd` and sit on wide, flat
 landings clear of canals. Warm stone caps mark walkable terrain against cooler
@@ -252,11 +258,11 @@ controls. It independently inspects the imported painted tail contacts.
 
 The integration check covers Level 6→7, the entrance, title Load,
 death/reload, supported enemy and flask placements, level score rollback, the captain-locked gate, entry, completion, replay, and New Game.
-With combat isolated and the tide cycling, the full course takes about 59.5
-simulated seconds and 17 jumps. Both canals are harmless and escapable in either direction; pause
+With combat isolated and the tide cycling, the full course takes about 74.7
+simulated seconds and 20 jumps. Both canals are harmless and escapable in either direction; pause
 freezes their water animation. The scenery check sweeps the camera route and
 extremes, checks every terrace and canal cut, and leaves openings unobscured.
-Shared scenery, texture, and mobile checks include all six levels.
+Shared scenery, texture, and mobile checks include all eight levels.
 
 Human play testing should assess whether the first trident clearly teaches
 Duck, the blade telegraph gives enough time to jump, and the two-flask pacing
@@ -266,8 +272,15 @@ physical-phone performance.
 The tide regression checks the actual spawned enemies' Level 7 tuning, full
 Merfolk speeds across all phases, continuous fill/drain, dry and wet player
 travel, higher-ground relief, wine composition, identical jump height and sword
-frames, all fifteen climbs and both canal jumps at maximum flood, pause,
+frames, all eighteen climbs and both canal jumps at maximum flood, pause,
 entrance retry, replay, and other-level isolation. Touch checks cover a
 jump-to-sword thumb transition and indicator safe areas. The rendered profile
 check also compares underwater movement and sword histories at native, preview,
 540p, and 720p settings.
+
+## Extended approach
+
+The route is 20% longer: 5,760 world units with a new Outer Ring Causeway section
+at X=3840–4799 before the final area. Three additional enemies occupy that
+space. The countdown remains 3:00, and existing music keeps looping at its
+configured offset. Background camera coverage includes the full extended route.

@@ -41,6 +41,9 @@ All eight levels use continuous backgrounds with independent scenery objects and
 
 Enemy windups, recovery windows, cooldowns, and pursuit speed scale with each level. Encounter layouts, counters, healing, and environmental mechanics also determine how difficult a level feels.
 
+Each level is 5,760 world units long, with six areas and three additional
+enemies along its extended approach. Soundtracks continue looping throughout.
+
 Every attempt starts at the level entrance with full health and a **3:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
 interruptions, temple entry, and completion. Running out of time opens Hades,
@@ -55,9 +58,9 @@ Session progress is held in memory; high scores are saved separately on disk.
 
 ### The Temple Road
 
-The opening level is a 4,800-pixel road in five stretches: the King's Road, the Broken Colonnade, the Olive Terraces, the Ruined Aqueduct, and the Temple Approach. Sixteen soldiers wait along it — raiders, peltasts, and hoplites — with health flasks. The temple gate stays shut until its guard falls.
+The opening level is a 5,760-pixel road in six stretches: the King's Road, the Broken Colonnade, the Olive Terraces, the Ruined Aqueduct, Sacred Grove, and the Temple Approach. Nineteen soldiers wait along it — raiders, peltasts, and hoplites — with health flasks. The temple gate stays shut until its guard falls.
 
-One continuous Attic landscape covers the full road behind complete olive groves, ruined colonnades, and a three-arch aqueduct. Slower background parallax adds depth, with detailed limestone surfaces, carved waystones, and a matching temple entrance. The platform layout, encounters, and movement are unchanged.
+One continuous Attic landscape covers the full road behind complete olive groves, ruined colonnades, and a three-arch aqueduct. Slower background parallax adds depth, with detailed limestone surfaces, carved waystones, and a matching temple entrance. The longer Sacred Grove approach adds terraces and encounters using the existing movement rules.
 
 [Level 1 guide](docs/level_1.md)
 
@@ -65,7 +68,7 @@ One continuous Attic landscape covers the full road behind complete olive groves
 
 Clear the temple and the road continues onto limestone cliffs above the sea. Birds cross the sky, telchines jab from the ledges, and spartoi hold the landings. The coast is taller than the road, so the view follows Theseus up and down. A sanctuary closes the level.
 
-One continuous Aegean coastline shows blue sea, dry islands, rocky coves, and a distant sanctuary. Complete outcrops, ruined quays, and Cyclopean gateways stay anchored to the original ledges, while slower sea parallax adds depth through both climbs.
+One continuous Aegean coastline shows blue sea, dry islands, rocky coves, and a distant sanctuary. Complete outcrops, ruined quays, and Cyclopean gateways stay anchored to the authored ledges, while slower sea parallax adds depth through both climbs.
 
 [Level 2 guide](docs/level_2.md)
 
@@ -96,12 +99,12 @@ One continuous dry gorge landscape shows stratified limestone walls and distant 
 ### The Pyramid Road
 
 Level 6 crosses an Egyptian desert beneath pyramids, with dunes, carved
-obelisks and sandstone temple gateways. Twenty-two terraces lead through five
-areas to the Temple of the Sun. Four each of the existing Hoplites, Peltasts,
+obelisks and sandstone temple gateways. Twenty-five terraces lead through six
+areas to the Temple of the Sun. Four Hoplites and five each of the existing Peltasts,
 Raiders and Spartoi defend the road; an elite Hoplite captain guards the exit.
 Four flasks support the route, and every climb uses normal jumps.
 
-One continuous desert landscape scrolls behind six grounded obelisks and four
+One continuous desert landscape scrolls behind seven grounded obelisks and five
 pylon gateways. The sun temple continues into Atlantis, now Level 7.
 
 [Level 6 guide](docs/level_6.md)
@@ -114,14 +117,14 @@ controls.
 Atlantis is a partially flooded city with dry marble causeways, ring canals,
 a palace climb, and Poseidon's sanctuary. Merfolk trident guards make high
 thrusts that can be ducked; Reefblades make low lunges that can be jumped.
-Thirteen Merfolk encounters include the elite captain guarding the exit.
+Sixteen Merfolk encounters include the elite captain guarding the exit.
 A repeating tide floods and drains the causeways. Water slows Theseus by up to
 30% while Merfolk keep their full Level 7-scaled speed. Higher platforms reduce
 the drag; a tide meter shows the phase and remaining time. The shallow canals
 remain safe to fall into and can be climbed out of with Jump.
 
 One continuous landscape and grounded wave-carved walls, bronze Poseidon
-statues, and ruined arches frame twenty-three terraces. Two flasks support the route. Level 6 continues into Atlantis.
+statues, and ruined arches frame twenty-seven terraces. Two flasks support the route. Level 6 continues into Atlantis.
 
 [Level 7 guide](docs/level_7.md)
 
@@ -132,7 +135,7 @@ controls. Review both Merfolk roles and the captain with
 ### The Labyrinth
 
 Level 8 ends the journey in a dim, torch-lit labyrinth. Raised galleries and
-low-roofed passages lead past four Hoplites, four Peltasts, and four Raiders.
+low-roofed passages lead past five Hoplites, five Peltasts, and five Raiders.
 Three flasks support the approach.
 
 The eight-health Minotaur winds up, charges with lowered horns, headbutts,
@@ -255,7 +258,7 @@ To review Cerberus Pups, run `godot --path . res://scenes/reviews/cerberus_pup_r
 
 To review the Hydra, run `godot --path . res://scenes/reviews/hydra_review.tscn`, or open that scene and press **F6**. Each of its three heads has two health and a separate hit area. Cut down every head to defeat it; hitting the coiled body does no damage. Jump to reach the higher heads, or counter their telegraphed bites as they dip toward Theseus. Severed heads stay gone, and the survivors continue taking turns attacking.
 
-To check all eight continuous landscapes, complete scenery objects, and the absence of checkpoint triggers, run `godot --path . --script res://tests/scenery_art.gd`. This check uses the renderer.
+To check all eight extended landscapes, full-route camera coverage, complete scenery objects, and the absence of checkpoint triggers, run `godot --path . --script res://tests/scenery_art.gd`. This check uses the renderer.
 
 Start any level at its entrance:
 
@@ -271,6 +274,12 @@ Check all eight countdowns, expiry to Hades, and entrance retries:
 ```sh
 godot --headless --path . --script res://tests/level_timers.gd --fixed-fps 60
 godot --headless --path . --script res://tests/level_timers.gd --fixed-fps 60 -- --mobile-controls
+```
+
+Check every soundtrack decoding across its file ending and returning to its selected loop offset:
+
+```sh
+godot --headless --path . --script res://tests/music_loops.gd
 ```
 
 ## Background builds and performance

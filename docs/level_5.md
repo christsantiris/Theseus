@@ -1,25 +1,25 @@
 # Level 5 — The Gorge Sanctuary
 
-A 4,800×352-pixel rocky gorge with pale limestone faces, deep dry clefts,
+A 5,760×352-pixel rocky gorge with pale limestone faces, deep dry clefts,
 weathered Greek temples, broken columns, and bright stone causeways. Eighteen
 main terraces climb from y=280 to the high colonnade at y=168, then descend
 to the Hydra's sanctuary. Background ruins use muted stone; bright caps mark
 the playable path.
 
-![Five areas of the rocky gorge](level_5.png)
+![Views from the route](level_5.png)
 
 ## Cinematic scenery
 
 One continuous gorge landscape shows dry stratified cliffs, distant ruins,
-and a deep rocky valley. Eleven complete transparent landmarks frame the
-causeways: four ruined cliff temples, five rocky outcrops, and two colonnades.
+and a deep rocky valley. Thirteen complete transparent landmarks frame the
+causeways: five ruined cliff temples, six rocky outcrops, and two colonnades.
 Their painted bases stay on authored landings while the distant landscape
-scrolls at 13% of horizontal camera travel and 25% of vertical travel. Its
+scrolls at 10.5% of horizontal camera travel and 25% of vertical travel. Its
 2,172×724 painting fills 912×304 world units without wrapping, panel blending,
 or stretched ground extensions.
 
-All eighteen main terraces, both one-way bull ledges, both recessed spike pits,
-and their collision settings are unchanged. Scenery leaves the spike openings
+All twenty-four main terraces, both one-way bull ledges and both recessed spike pits
+use the authored collision rectangles. Scenery leaves the spike openings
 clear. Existing column fragments remain, and the temple
 stays closed until the Hydra's final head falls, including paused entry.
 
@@ -36,7 +36,8 @@ and collision layout. See the [ground-contact regression](performance.md#scenery
 | Temple Ledges | 960–1919 | The first pair of Cerberus Pups holds a broad landing. Descend into a second flat bull corridor before the causeway. |
 | Broken Causeway | 1920–2879 | Cross a spike pit, and climb 16-pixel steps. A second pup pair guards a wide terrace halfway up. |
 | High Colonnade | 2880–3839 | A third bull charges along a 512-pixel causeway. A second high flask ledge rewards riding it. Descending terraces lead toward the sanctuary. |
-| Hydra Sanctuary | 3840–4799 | The final pup pair guards the descent. Jump the last spike pit, then defeat every Hydra head to open the exit temple. |
+| Western Temple Court | 3840–4799 | A long bull lane and a coordinated pup pair lead back up to the sanctuary causeway. |
+| Hydra Sanctuary | 4800–5759 | The final pup pair guards the descent. Jump the last spike pit, then defeat every Hydra head to open the exit temple. |
 
 ## Encounters
 
@@ -55,18 +56,18 @@ boss with `godot --path . res://scenes/reviews/hydra_review.tscn`.
 
 | Enemy | Count | Health / score | Counter |
 | --- | --- | --- | --- |
-| Bronze Bull | 3 | 4 / 250 | Jump the committed charge. While airborne, hold Duck and press Sword to thrust onto its back, deal one damage, and stagger it into a temporary moving platform. |
-| Cerberus Pup | 6, in three pairs | 2 / 100 each | The pair shares pursuit and takes turns making a telegraphed leap. Jump over the attack or interrupt it with a sword hit. Killing one pup leaves its partner active. |
+| Bronze Bull | 4 | 4 / 250 | Jump the committed charge. While airborne, hold Duck and press Sword to thrust onto its back, deal one damage, and stagger it into a temporary moving platform. |
+| Cerberus Pup | 8, in four pairs | 2 / 100 each | The pair shares pursuit and takes turns making a telegraphed leap. Jump over the attack or interrupt it with a sword hit. Killing one pup leaves its partner active. |
 | Hydra | 1, with three heads | 2 per head / 450 total | Each mouth has independent health. Use jumping sword attacks to reach higher heads, or counter a head as it dips into a bite. Body hits do no damage. All three heads must be defeated; severed heads stay gone. |
 
-The maximum combat score is **1,800** across ten encounters. Each pup counts
+The maximum combat score is **2,250** across thirteen encounters. Each pup counts
 separately; the Hydra counts once after its final head falls. Ordinary airborne
 collisions with enemies or Hydra mouths still cost both Theseus and the target
 one health. There is no automatic stomp kill.
 
 ## Optional bull ledges and spike pits
 
-The main route needs ten terrace climbs and two pit jumps, all possible at the
+The main route needs thirteen terrace climbs and two pit jumps, all possible at the
 normal movement speed. It does not require riding a bull. Two extra ledges
 stand 56 pixels above the bull lanes, beyond a normal jump from the ground:
 
@@ -107,7 +108,7 @@ once Level 2 or later has been reached in this session. Replay also resets the
 level and countdown. New Game resets the campaign and score to Level 1.
 Session progress is held in memory; high scores are saved separately on disk.
 
-HydraTempleGuard at (4608, 280) guards the temple at (4752, 280). Cutting
+HydraTempleGuard at (5568, 280) guards the temple at (5712, 280). Cutting
 one or two heads leaves the gate locked. The last head awards 450 points
 once and opens the gate. Theseus climbs the temple steps and disappears
 inside before the Level 5 completion menu. Replay restarts Level 5, and
@@ -128,7 +129,7 @@ death/reload, individual pup scoring, survivor attacks, pickup and enemy
 placement, fatal spike recovery, real sword-and-jump combat against the Hydra
 guard, the bull ride and high flask reward, camera scrolling, temple entry,
 replay, and New Game. With combat isolated, the complete main route takes
-about 52 simulated seconds and twelve jumps without damage or a speed boost.
+about 63 simulated seconds and fifteen jumps without damage or a speed boost.
 
 `scenes/levels/level_5_geometry.gd` keeps the original terrain cuts, spike-floor
 metadata, and one-way ledge construction while rendering the gorge in the game
@@ -137,8 +138,15 @@ the complete `cliff_temple.png` cutout, and causeway masonry. Rocky outcrops
 and colonnades reuse Levels 1–2 art. Column fragments reuse Level 4's cutout; stone caps and the temple
 facade reuse Level 1's art.
 
-The scenery check verifies one continuous landscape, eleven complete landmarks,
+The scenery check verifies one continuous landscape, thirteen complete landmarks,
 clear pit openings, and full camera coverage at street level, both
 bonus ledges and pit bottoms, original terrain collisions, one-way settings,
 spike metadata, the Hydra's three-head gate requirement, paused facade updates,
 and isolation from the other levels.
+
+## Extended approach
+
+The route is 20% longer: 5,760 world units with a new Western Temple Court section
+at X=3840–4799 before the final area. Three additional enemies occupy that
+space. The countdown remains 3:00, and existing music keeps looping at its
+configured offset. Background camera coverage includes the full extended route.

@@ -13,7 +13,7 @@ const COLUMN := preload("res://assets/art/backgrounds/level_4/broken_column.png"
 const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
 const LANDSCAPE_HEIGHT := 304.0
-const FAR_SCROLL := 0.13
+const FAR_SCROLL := 0.105
 const FAR_VERTICAL_SCROLL := 0.25
 const MATERIAL_DENSITY := 16.0
 var backdrop: Node2D
@@ -71,12 +71,14 @@ func _build_landscape() -> void:
 	add_child(midground)
 	# Complete objects stay on authored landings; only the distant landscape
 	# uses parallax. Painted bases overlap the terrain through GROUNDING.
-	for point in [Vector2(144, 104), Vector2(608, 104), Vector2(2104, 104), Vector2(3440, 96), Vector2(4136, 84)]:
+	for point in [Vector2(144, 104), Vector2(608, 104), Vector2(2104, 104), Vector2(3440, 96), Vector2(5096, 84)]:
 		_landmark(GROVE, point.x, point.y, "CypressGrove")
-	for point in [Vector2(1784, 64), Vector2(2512, 64), Vector2(4504, 64)]:
+	for point in [Vector2(1784, 64), Vector2(2512, 64), Vector2(5464, 64)]:
 		_landmark(OUTCROP, point.x, point.y, "RockyOutcrop")
-	for point in [Vector2(1008, 44), Vector2(1528, 34), Vector2(2760, 32), Vector2(2992, 40), Vector2(4376, 32)]:
+	for point in [Vector2(1008, 44), Vector2(1528, 34), Vector2(2760, 32), Vector2(2992, 40), Vector2(5336, 32)]:
 		_landmark(TERRACE_WALL, point.x, point.y, "TerraceWall")
+	_landmark(GROVE, 4144, 88, "CypressGrove")
+	_landmark(OUTCROP, 4576, 60, "RockyOutcrop")
 	_sync_backdrop()
 
 
@@ -118,7 +120,7 @@ func _draw() -> void:
 	_draw_terrain(Rect2(0, Mountain.FLOOR_Y, Mountain.WIDTH, 72))
 	for platform: Rect2 in Mountain.PLATFORMS:
 		_draw_terrain(platform)
-	for x in [1984, 4048, 4632]:
+	for x in [1984, 5008, 5592]:
 		var height := 41.0
 		draw_texture_rect(COLUMN, GROUNDING.rect(COLUMN, x, Mountain.surface_at(x), height), false)
 

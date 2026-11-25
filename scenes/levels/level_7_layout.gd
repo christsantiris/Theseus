@@ -2,7 +2,7 @@ extends RefCounted
 
 const TIME_LIMIT := 180.0
 
-const WIDTH := 4800
+const WIDTH := 5760
 const HEIGHT := 352
 const FLOOR_Y := 280
 const START := Vector2(48, FLOOR_Y)
@@ -11,7 +11,8 @@ const SECTIONS := [
 	{"x": 960, "name": "Ring Canals"},
 	{"x": 1920, "name": "Sunken Agora"},
 	{"x": 2880, "name": "Palace Ascent"},
-	{"x": 3840, "name": "Poseidon's Sanctuary"},
+	{"x": 3840, "name": "Outer Ring Causeway"},
+	{"x": 4800, "name": "Poseidon's Sanctuary"},
 ]
 const PLATFORMS := [
 	Rect2(640, 264, 112, 16),
@@ -34,13 +35,17 @@ const PLATFORMS := [
 	Rect2(3552, 216, 128, 64),
 	Rect2(3680, 248, 160, 32),
 	Rect2(3840, 264, 128, 16),
-	Rect2(4320, 264, 112, 16),
-	Rect2(4432, 248, 144, 32),
-	Rect2(4576, 264, 48, 16),
+	Rect2(4160, 264, 112, 16),
+	Rect2(4272, 248, 224, 32),
+	Rect2(4496, 264, 112, 16),
+	Rect2(4800, 264, 128, 16),
+	Rect2(5280, 264, 112, 16),
+	Rect2(5392, 248, 144, 32),
+	Rect2(5536, 264, 48, 16),
 	]
 const CANALS := [
 	{"name": "RingCanal", "position": Vector2(1472, 280), "width": 32.0, "depth": 24.0},
-	{"name": "SanctuaryCanal", "position": Vector2(4016, 280), "width": 40.0, "depth": 24.0},
+	{"name": "SanctuaryCanal", "position": Vector2(4976, 280), "width": 40.0, "depth": 24.0},
 ]
 const ENEMIES := [
 	{"name": "MerfolkHarbor", "kind": "merfolk", "position": Vector2(384, 280), "patrol": Vector2(320, 448)},
@@ -53,21 +58,24 @@ const ENEMIES := [
 	{"name": "ReefbladePalace", "kind": "reefblade", "position": Vector2(3264, 152), "patrol": Vector2(3160, 3368)},
 	{"name": "MerfolkPalaceDescent", "kind": "merfolk", "position": Vector2(3600, 216), "patrol": Vector2(3576, 3648)},
 	{"name": "MerfolkLowerPalace", "kind": "merfolk", "position": Vector2(3744, 248), "patrol": Vector2(3712, 3808)},
-	{"name": "ReefbladeSanctuary", "kind": "reefblade", "position": Vector2(4256, 280), "patrol": Vector2(4240, 4304)},
-	{"name": "MerfolkSanctuary", "kind": "merfolk", "position": Vector2(4496, 248), "patrol": Vector2(4456, 4544)},
-	{"name": "MerfolkGateCaptain", "kind": "merfolk", "position": Vector2(4672, 280), "patrol": Vector2(4640, 4704)},
+	{"name": "MerfolkOuterRing", "kind": "merfolk", "position": Vector2(3896, 264), "patrol": Vector2(3864, 3936)},
+	{"name": "ReefbladeOuterRing", "kind": "reefblade", "position": Vector2(4368, 248), "patrol": Vector2(4304, 4464)},
+	{"name": "MerfolkOuterQuay", "kind": "merfolk", "position": Vector2(4712, 280), "patrol": Vector2(4656, 4768)},
+	{"name": "ReefbladeSanctuary", "kind": "reefblade", "position": Vector2(5216, 280), "patrol": Vector2(5200, 5264)},
+	{"name": "MerfolkSanctuary", "kind": "merfolk", "position": Vector2(5456, 248), "patrol": Vector2(5416, 5504)},
+	{"name": "MerfolkGateCaptain", "kind": "merfolk", "position": Vector2(5632, 280), "patrol": Vector2(5600, 5664)},
 	]
 const FLASKS := [
 	{"name": "HealthFlaskHarbor", "position": Vector2(888, 248)},
 	{"name": "HealthFlaskAgora", "position": Vector2(2800, 200)},
 ]
-const EXIT := Vector2(4752, FLOOR_Y)
+const EXIT := Vector2(5712, FLOOR_Y)
 const GATE_GUARD := "MerfolkGateCaptain"
 const TIPS := [
 	{"x": 240, "end": 480, "text": "Duck high tridents. Stand and counter after."},
 	{"x": 976, "end": 1184, "text": "Low blades: jump or retreat, then counter."},
 	{"x": 1424, "end": 1552, "text": "Tides slow Theseus. Climb higher or wait for low tide."},
-	{"x": 4560, "end": 4720, "text": "Defeat the captain to open Poseidon's sanctuary."},
+	{"x": 5520, "end": 5680, "text": "Defeat the captain to open Poseidon's sanctuary."},
 ]
 
 

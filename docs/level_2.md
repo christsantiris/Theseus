@@ -1,25 +1,25 @@
 # Level 2 — The Rocky Coast
 
-A 4,800×320-pixel ancient Greek coastline: blue sea, distant dry islands,
+A 5,760×320-pixel ancient Greek coastline: blue sea, distant dry islands,
 limestone outcrops, cypress trees, broken columns, and a sanctuary temple.
-Thirty broad stone ledges form two climbs and a long descent. Contiguous
+Thirty-seven broad stone ledges form two climbs and a long descent. Contiguous
 landings prevent narrow gaps from trapping Theseus below the high terraces.
 Uphill steps rise 16 pixels, within the existing jump; descending terraces
 drop 16–48 pixels. The camera follows both axes within the taller world.
 
-![Five areas of the rocky coast](level_2_preview.png)
+![Views from the route](level_2_preview.png)
 
 ## Cinematic scenery
 
 Level 2 uses **one continuous Aegean coastline**: connected blue sea, a single
 horizon, dry offshore islands, limestone coves, and a distant sanctuary. Its
-2,172×724 painting renders at 864×288 world units. It scrolls at 12% of horizontal
+2,172×724 painting renders at 864×288 world units. It scrolls at 10% of horizontal
 camera travel and 25% of vertical travel, with overscan covering the full
 320-pixel-tall world through low shore, summit jumps, and descent. It never
 switches paintings, wraps, blends architecture, or repeats road aprons.
 
-Fourteen complete transparent landmarks establish the five areas: seven rocky
-outcrops with coastal vegetation, four ruined quay fragments, and three
+Sixteen complete transparent landmarks establish the six areas: eight rocky
+outcrops with coastal vegetation, four ruined quay fragments, and four
 Cyclopean gateways. They stay fixed at their authored landings so their feet
 cannot drift off narrow ledges as the camera moves. Cutout footing offsets
 account for the transparent margins around each painting. The distant sea's
@@ -32,12 +32,11 @@ remain lossless and import at a 1,024-pixel maximum dimension. All textures stay
 below the project's 4,096-pixel mobile limit. Scenery has no mipmaps; the
 separate repeating limestone terrain retains its existing mip chain.
 
-Textured limestone covers all thirty original ledges. Stone caps, carved
+Textured limestone covers all thirty-seven ledges. Stone caps, carved
 waystones and the temple facade retain their existing art.
 `level_1_temple.gd` keeps its bronze bars synchronized with unlocking, including
-paused temple entry. Collision rectangles, birds and their flight lanes,
-encounters, movement and camera framing are unchanged.
-All six levels use continuous landscapes with grounded landmarks.
+paused temple entry. The longer causeway adds seven collision pieces and three encounters; movement, bird flight heights and camera framing retain their existing rules.
+All eight levels use continuous landscapes with grounded landmarks.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
 one world pixel of overlap at the ground. This closes transparent-padding gaps
@@ -52,15 +51,16 @@ and collision layout. See the [ground-contact regression](performance.md#scenery
 | Broken Quays | 960–1919 | Terraces climb to y=168. Telchine jabs and Spartoi lunges share broad landings; high and low birds occupy separate lanes. |
 | Sea Cliffs | 1920–2879 | A second climb with melee fights and a high bird. |
 | Cyclopean Ruins | 2880–3839 | Low bird, Telchine, and Spartoi summit guard. Highest landing is y=104, followed by descending ledges. |
-| Rocky Sanctuary | 3840–4799 | Final low terraces and melee fights, then the Spartoi temple guard. |
+| Saltwind Causeway | 3840–4799 | Descend to a Telchine, pass a high bird, then climb to a Spartoi landing. |
+| Rocky Sanctuary | 4800–5759 | Final low terraces and melee fights, then the Spartoi temple guard. |
 
 ## Enemies
 
 | Enemy | Count | Health / score | Behavior and defense |
 | --- | --- | --- | --- |
-| Stymphalian Bird | 6 | 1 / 75 | Flies horizontally at 48 pixels/second, roughly half Theseus's running speed. High lanes are 44 pixels above a landing: duck in place and let the bird pass, or jump and time a sword strike. Low lanes are 8 pixels above a landing: jump forward over the approaching bird, or time a standing sword strike. |
-| Telchine | 5 | 2 / 100 | Dog-headed sea daemon in Greek soldier armor, carrying a held bronze trident. Uses Peltast's stationary melee jab, tuned for this level: a 0.55-second windup, 0.18-second strike, and 0.87-second recovery. Retreat, jump, or pass the committed windup, then counter. |
-| Spartoi | 5 | 2 / 100 | Exposed skull, ribs, and bone limbs under Greek helmet and armor. Uses Raider's committed sword lunge, tuned for this level: a 0.5-second windup, 0.22-second lunge, and 0.92-second recovery. Bait the lunge and counter. |
+| Stymphalian Bird | 7 | 1 / 75 | Flies horizontally at 48 pixels/second, roughly half Theseus's running speed. High lanes are 44 pixels above a landing: duck in place and let the bird pass, or jump and time a sword strike. Low lanes are 8 pixels above a landing: jump forward over the approaching bird, or time a standing sword strike. |
+| Telchine | 6 | 2 / 100 | Dog-headed sea daemon in Greek soldier armor, carrying a held bronze trident. Uses Peltast's stationary melee jab, tuned for this level: a 0.55-second windup, 0.18-second strike, and 0.87-second recovery. Retreat, jump, or pass the committed windup, then counter. |
+| Spartoi | 6 | 2 / 100 | Exposed skull, ribs, and bone limbs under Greek helmet and armor. Uses Raider's committed sword lunge, tuned for this level: a 0.5-second windup, 0.22-second lunge, and 0.92-second recovery. Bait the lunge and counter. |
 
 Birds stay at their assigned height and reverse at their patrol endpoints.
 Every high-bird wing frame clears the visible ducking helmet by four pixels.
@@ -96,7 +96,7 @@ once Level 2 or later has been reached in this session. Replay also resets the
 level and countdown. New Game resets the campaign and score to Level 1.
 Session progress is held in memory; high scores are saved separately on disk.
 
-Defeat SpartoiSanctuaryGuard to open the temple at (4752, 280). Theseus climbs
+Defeat SpartoiSanctuaryGuard to open the temple at (5712, 280). Theseus climbs
 the temple steps and disappears into the doorway before the completion menu.
 Replay Level restarts Level 2; New Game on the title starts Level 1 and clears
 the run. Level 2 completion also offers **Continue to Level 3**, leading to
@@ -120,11 +120,18 @@ also checks Telchine jabs, Spartoi lunges, recovery, and damage.
 The level test covers Level 1→2 progression, entrance retry point, title restart,
 actual death/reload, defeated-enemy rollback, camera limits,
 completion, replay, and New Game. A route traversal with combat disabled
-reaches the doorway using normal movement and 20 jumps, in about 52 simulated
+reaches the doorway using normal movement and 23 jumps, in about 62 simulated
 seconds. Combat pacing still benefits from a human playthrough.
 
 The scenery check sweeps the full camera route and checks viewport coverage at
 the low shore, both climbs, summit jumps, and descent. It verifies one unblended,
-non-repeating painting, monotonic texture sampling, fourteen complete landmarks
-anchored to the world, original ledge collisions, paused gate updates, and
+non-repeating painting, monotonic texture sampling, sixteen complete landmarks
+anchored to the world, authored ledge collisions, paused gate updates, and
 isolation from the other levels.
+
+## Extended approach
+
+The route is 20% longer: 5,760 world units with a new Saltwind Causeway section
+at X=3840–4799 before the final area. Three additional enemies occupy that
+space. The countdown remains 3:00, and existing music keeps looping at its
+configured offset. Background camera coverage includes the full extended route.

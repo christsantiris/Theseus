@@ -65,7 +65,7 @@ func _run() -> void:
 		_expect(encounter.position.y == Layout.surface_at(encounter.position.x), "Enemy starts on terrain: " + encounter.name)
 		_expect(enemy.tuning == load("res://scenes/levels/difficulty.gd").for_level(8, encounter.kind == "minotaur"), "All enemies receive Level 8 difficulty exactly once")
 		_expect(Layout.surface_at(encounter.patrol.x) == encounter.position.y and Layout.surface_at(encounter.patrol.y) == encounter.position.y, "Enemy patrol stays on its landing")
-	_expect(kinds == {"hoplite": 4, "peltast": 4, "raider": 4, "minotaur": 1}, "Four of each soldier precede one final boss")
+	_expect(kinds == {"hoplite": 5, "peltast": 5, "raider": 5, "minotaur": 1}, "Five of each soldier precede one final boss")
 	_expect(level.get_node("Minotaur").hp == 8 and not level._gate.unlocked, "Eight-health boss locks the final exit")
 	await _scenery(level)
 	level._on_title_pressed()
@@ -142,7 +142,7 @@ func _traverse() -> void:
 					jumping = true
 					jumps += 1
 					break
-		if player.position.x > 4668 and not level._gate.unlocked:
+		if player.position.x > Layout.EXIT.x - 84 and not level._gate.unlocked:
 			var boss: Node = level.get_node("Minotaur")
 			for hit in 7:
 				boss.sword_hit()
@@ -165,7 +165,7 @@ func _scenery(level: Node) -> void:
 		mounts[torch.name] = painting.to_local(torch.global_position)
 	level.player.set_physics_process(false)
 	level.player.collision_layer = 0
-	for x in range(160, 4641, 64):
+	for x in range(160, Layout.WIDTH - 159, 64):
 		level.player.position = Vector2(x, Layout.surface_at(x))
 		camera.reset_smoothing()
 		camera.force_update_scroll()

@@ -8,8 +8,8 @@ Hoplites, Peltasts, and Raiders, and defeats the Minotaur to escape. The existin
 
 ## Route
 
-The 4,800×352-unit route starts at (48, 280) and ends at (4752, 280).
-Seventeen terraces create eleven upward jumps, with rises of sixteen units.
+The 5,760×352-unit route starts at (48, 280) and ends at (5712, 280).
+Twenty terraces create thirteen upward jumps, with rises of sixteen units.
 The continuous lower floor catches missed jumps. Two low-roofed corridors have
 56 units of clearance; Theseus walks through using his existing standing body.
 Ducking still holds position, as it does elsewhere in the game.
@@ -20,9 +20,10 @@ Ducking still holds position, as it does elsewhere in the game.
 | Twisting Galleries | 960–1919 | Peltast, raised Raider gallery, descent past a Peltast, first low lintel. |
 | Hall of the Bull | 1920–2879 | Hoplite, four climbs, Raider/Peltast pair and recovery flask. |
 | Ariadne's Passage | 2880–3839 | Hoplite, low-roofed passage, raised Raider/Peltast pair, final Hoplite. |
-| The Minotaur's Lair | 3840–4799 | Broad flat charge arena, locked exit. |
+| The Silent Gallery | 3840–4799 | A Raider approach, raised Peltast gallery and Hoplite guard precede the original boss arena. |
+| The Minotaur's Lair | 4800–5759 | Broad flat charge arena, locked exit. |
 
-There are four of each soldier, one Minotaur, and three two-health flasks.
+There are five of each soldier, one Minotaur, and three two-health flasks.
 
 Every attempt starts at the level entrance with full health and a **3:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
@@ -53,8 +54,8 @@ also cost Theseus one health; landing on the boss is not a free stomp kill.
 All soldiers and the boss receive the existing Level 8 difficulty curve. Boss
 wind-up uses the authored 1.15 seconds, recovery 1.45 seconds, and backstep/rest
 the existing timing helpers, which preserve minimum warning and counter windows.
-The campaign heuristic scores Level 8 at approximately 45.8 versus Atlantis's
-36.6, a 25% increase. This is a content estimate; combat pacing needs human play
+The campaign heuristic scores Level 8 at approximately 54.8 versus Atlantis's
+44.8, a 22% increase. This is a content estimate; combat pacing needs human play
 testing. Jump as the charge approaches, cross over the lowered body, and counter
 after the headbutt. A sword hit does not interrupt the committed charge.
 
@@ -104,7 +105,7 @@ godot --headless --path . --script res://tests/difficulty_curve.gd
 godot --path . --script res://tests/mobile_rendering.gd --fixed-fps 60 -- --mobile-controls
 ```
 
-The route test isolates combat to check all eleven jumps, both corridors,
+The route test isolates combat to check all thirteen jumps, both corridors,
 entrance progression, gate locking, final victory, and replay. The boss test
 separately uses actual player movement and sword attacks to check charge
 clearance and damage, plus attack ordering, focus, retreat, pause, and defeat.
@@ -118,3 +119,10 @@ was Apple Software Renderer, so these checks do not establish phone performance.
 An isolated stock-template Android debug APK also exported successfully; native
 Android gameplay, production Gradle/ads, and physical phone performance remain
 unverified. The normal iOS campaign app was restored after the probe.
+
+## Extended approach
+
+The route is 20% longer: 5,760 world units with a new The Silent Gallery section
+at X=3840–4799 before the final area. Three additional enemies occupy that
+space. The countdown remains 3:00, and existing music keeps looping at its
+configured offset. Background camera coverage includes the full extended route.

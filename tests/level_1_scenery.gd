@@ -51,7 +51,7 @@ func _run() -> void:
 	var lowest_camera := -INF
 	var highest_backdrop := INF
 	var lowest_backdrop := -INF
-	for point: Vector2 in [Vector2(48, 152), Vector2(280, 120), Vector2(400, 104), Vector2(400, 68), Vector2(3440, 120), Vector2(4640, 152)]:
+	for point: Vector2 in [Vector2(48, 152), Vector2(280, 120), Vector2(400, 104), Vector2(400, 68), Vector2(3440, 120), Vector2(5600, 152)]:
 		level.player.position = point
 		camera.reset_smoothing()
 		camera.force_update_scroll()
@@ -88,14 +88,14 @@ func _run() -> void:
 		var sample := (left.x - rectangle.position.x) / painting.scale.x
 		_expect(sample >= previous_sample, "Landscape UV never wraps or changes source along the route")
 		previous_sample = sample
-	_expect(world.midground.get_child_count() == 13, "All thirteen scenery objects remain whole")
+	_expect(world.midground.get_child_count() == 15, "All fifteen scenery objects remain whole")
 	for sprite: Sprite2D in world.midground.get_children():
 		_expect(sprite.material == null and sprite.get_child_count() == 0, "Landmarks need no fade masks or repeated aprons")
 		_expect(sprite.texture.get_width() <= 4096 and sprite.texture.get_height() <= 4096, "Scenery textures fit mobile limits")
 	# The visual frame can travel farther without changing any solid surfaces.
 	var ground := world.get_node("Ground") as StaticBody2D
 	var ground_shape := ground.get_child(0) as CollisionShape2D
-	_expect(Rect2(ground.position - ground_shape.shape.size * 0.5, ground_shape.shape.size) == Rect2(0, 152, 4800, 64), "The original ground collision stays unchanged")
+	_expect(Rect2(ground.position - ground_shape.shape.size * 0.5, ground_shape.shape.size) == Rect2(0, 152, 5760, 64), "Ground collision spans the longer road")
 	for panorama in landscapes:
 		_expect(backdrop.z_index < 0, "Background is behind the solid walkable surfaces")
 		_expect(panorama.texture.get_width() >= 2000, "Panorama retains cinematic source detail")

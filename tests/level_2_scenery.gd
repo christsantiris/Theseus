@@ -65,7 +65,7 @@ func _run() -> void:
 		_expect(sample >= previous_sample, "Sea UV advances continuously without switching paintings")
 		previous_sample = sample
 	for point: Vector2 in [Vector2(48, 280), Vector2(1320, 168), Vector2(2472, 216),
-		Vector2(3460, 104), Vector2(3460, 66), Vector2(3760, 200), Vector2(4688, 280), Vector2(4640, 320)]:
+		Vector2(3460, 104), Vector2(3460, 66), Vector2(3760, 200), Vector2(5648, 280), Vector2(4640, 320)]:
 		level.player.position = point
 		camera.reset_smoothing()
 		camera.force_update_scroll()
@@ -74,7 +74,7 @@ func _run() -> void:
 		var painting := backdrop.get_child(0) as Sprite2D
 		var rectangle := Rect2(painting.global_position, painting.texture.get_size() * painting.global_scale)
 		_expect(rectangle.grow(0.001).encloses(Rect2(corner, Vector2(320, 180))), "Sea and sky cover low shore, both climbs, summit jumps and descent")
-	_expect(world.midground.get_child_count() == 14, "Fourteen coastal landmarks remain complete")
+	_expect(world.midground.get_child_count() == 16, "Fourteen coastal landmarks remain complete")
 	for sprite: Sprite2D in world.midground.get_children():
 		_expect(sprite.material == null and sprite.get_child_count() == 0, "Scenery objects need no fades or repeated aprons")
 		_expect(sprite.texture.get_width() <= 4096 and sprite.texture.get_height() <= 4096, "Landmarks fit mobile texture limits")
@@ -93,7 +93,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: one continuous coastline, fourteen complete landmarks, full-route coverage through both climbs, natural proportions, original ledge collisions, cinematic gate state, and other-level isolation.")
+		print("PASS: one continuous coastline, sixteen complete landmarks, full-route coverage through both climbs, natural proportions, original ledge collisions, cinematic gate state, and other-level isolation.")
 	quit(0 if failures.is_empty() else 1)
 
 

@@ -143,7 +143,7 @@ func _check_encounters(level: Node) -> void:
 		_expect(enemy != null and encounter.position.y == Atlantis.surface_at(encounter.position.x), "Enemy is on its landing: " + String(encounter.name))
 		_expect(Atlantis.surface_at(encounter.patrol.x) == encounter.position.y and Atlantis.surface_at(encounter.patrol.y) == encounter.position.y, "Patrol stays level: " + String(encounter.name))
 		_expect(enemy.hp == (3 if encounter.name == Atlantis.GATE_GUARD else 2), "Only the captain receives one elite health bonus")
-	_expect(counts.merfolk == 9 and counts.reefblade == 4 and total == 1850, "Eight trident guards, four Reefblades and one captain award 1850 total")
+	_expect(counts.merfolk == 11 and counts.reefblade == 5 and total == 2250, "Ten trident guards, five Reefblades and one captain award 2250 total")
 	for pickup: Dictionary in Atlantis.FLASKS:
 		_expect(pickup.position.y == Atlantis.surface_at(pickup.position.x), "Flask is supported")
 	var merfolk = level.get_node("MerfolkHarbor")
@@ -249,7 +249,7 @@ func _traverse() -> void:
 					jumping = true
 					jumps += 1
 					break
-		if player.position.x > 4700 and not level._gate.unlocked:
+		if player.position.x > Atlantis.EXIT.x - 52 and not level._gate.unlocked:
 			level.get_node(Atlantis.GATE_GUARD).die()
 	Input.action_release("move_right")
 	Input.action_release("jump")

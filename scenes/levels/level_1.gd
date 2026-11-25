@@ -168,7 +168,7 @@ func _process(delta: float) -> void:
 		if index not in _shown_tips and player.position.x >= tip.x and player.position.x < tip.end:
 			if hud.show_message(tip.text, 4.0):
 				_shown_tips.append(index)
-	if player.position.x > 4512 and not _gate_hint_shown and not _gate.unlocked:
+	if player.position.x > layout.WIDTH - 288 and not _gate_hint_shown and not _gate.unlocked:
 		_gate_hint_shown = true
 		hud.show_message("Defeat the temple guard to open the gate.", 4.0, 2)
 

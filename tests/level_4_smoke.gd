@@ -152,7 +152,7 @@ func _placements(level: Node) -> void:
 		_expect(encounter.position.y == Mountain.surface_at(encounter.position.x), String(encounter.name) + " stands on safe terrain")
 		_expect(Mountain.surface_at(encounter.patrol.x) == encounter.position.y and Mountain.surface_at(encounter.patrol.y) == encounter.position.y, String(encounter.name) + " starts with a supported patrol")
 	for kind in counts:
-		_expect(counts[kind] == 4, "Four " + kind + " enemies are present")
+		_expect(counts[kind] == {"cyclops": 5, "satyr": 5, "raider": 4, "telchine": 5}[kind], "Mountain encounter roster includes the new ridge: " + kind)
 	for pickup: Dictionary in Mountain.FLASKS:
 		_expect(pickup.position.y == Mountain.surface_at(pickup.position.x), "Flask rests on safe terrain")
 	_expect(get_nodes_in_group("spike_pits").size() == 4, "All four pits have active hazards")
@@ -213,7 +213,7 @@ func _traverse() -> void:
 						jumping = true
 						jumps += 1
 						break
-		if player.position.x > 4700 and not level._gate.unlocked:
+		if player.position.x > Mountain.EXIT.x - 52 and not level._gate.unlocked:
 			level.get_node(Mountain.GATE_GUARD).die()
 	Input.action_release("move_right")
 	Input.action_release("jump")

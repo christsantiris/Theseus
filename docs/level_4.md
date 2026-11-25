@@ -1,24 +1,24 @@
 # Level 4 — The Mountain Sanctuary
 
-A 4,800×352-pixel mountain route with layered rocky ridges, cypress trees,
+A 5,760×352-pixel mountain route with layered rocky ridges, cypress trees,
 terraced retaining walls, olive scrub and a Greek sanctuary exit.
-Twenty-seven main terraces climb 144 pixels above the foothill road before
+Thirty-four main terraces climb 144 pixels above the foothill road before
 descending to the summit approach. Bright stone caps mark walkable terrain;
 muted slopes and smaller walls form the background.
 
-![Five areas of the mountain route](level_4.png)
+![Views from the route](level_4.png)
 
 ## Cinematic scenery
 
 One continuous mountain landscape shows dry rocky ridges, cypress slopes,
-terraced hillsides, and a distant sanctuary. Thirteen complete transparent
-landmarks stand on the route: five olive/cypress groves, five low retaining
-walls, and three rocky outcrops. They stay fixed to authored landings while
-the distant landscape scrolls at 13% of horizontal camera travel and 25% of
+terraced hillsides, and a distant sanctuary. Fifteen complete transparent
+landmarks stand on the route: six olive/cypress groves, five low retaining
+walls, and four rocky outcrops. They stay fixed to authored landings while
+the distant landscape scrolls at 10.5% of horizontal camera travel and 25% of
 vertical travel. Its 2,172×724 painting fills 912×304 world units without
 wrapping, panel blending, or stretched ground extensions.
 
-All twenty-seven terraces, four recessed spike pits, hazard areas, and unsafe
+All thirty-four terraces, four recessed spike pits, hazard areas, and unsafe
 Satyr landing markers keep their original geometry and behavior. Scenery stays
 clear of pit openings. Rustic stone, existing broken columns, and the matching temple entrance retain their gameplay roles.
 
@@ -35,7 +35,8 @@ and collision layout. See the [ground-contact regression](performance.md#scenery
 | Stone Switchbacks | 960–1919 | Raider and Satyr encounters lead to a wider pit. A flask follows the landing, then Telchine and Cyclops fights accompany the climb. |
 | Mountain Gardens | 1920–2879 | Ascending 16-pixel steps with Raider, Satyr, and Telchine encounters. |
 | High Pass | 2880–3839 | A Cyclops guards the high wall. A recessed spike pit cuts the upper terrace, then the route climbs to y=136 before descending past Raider and Telchine guards. |
-| Summit Sanctuary | 3840–4799 | A Satyr on the descent, final pit, Telchine and Cyclops encounters, then the Raider guarding the sanctuary. |
+| Cypress Ridge | 3840–4799 | A Telchine descent leads to a Satyr lane and a broad Cyclops landing. |
+| Summit Sanctuary | 4800–5759 | A Satyr on the descent, final pit, Telchine and Cyclops encounters, then the Raider guarding the sanctuary. |
 
 ## Spike pits
 
@@ -100,7 +101,7 @@ once Level 2 or later has been reached in this session. Replay also resets the
 level and countdown. New Game resets the campaign and score to Level 1.
 Session progress is held in memory; high scores are saved separately on disk.
 
-Defeat RaiderSummitGuard to unlock the sanctuary at (4752, 280). Theseus climbs
+Defeat RaiderSummitGuard to unlock the sanctuary at (5712, 280). Theseus climbs
 the steps and disappears into its doorway before the completion menu. Continue
 opens [Level 5's rocky gorge](level_5.md) with a fresh countdown. Replay Level
 restarts Level 4, while New Game explicitly resets the campaign to Level 1.
@@ -122,7 +123,7 @@ retries, actual death/reload including fatal spike damage, enemy and
 pickup placement, Cyclops engagement, the debug launcher, level score rollback, camera scrolling, temple entry, replay, and New Game.
 
 A traversal with combat isolated clears the entire route at normal speed in
-about 52 simulated seconds, using 17 terrace jumps and four pit jumps, without
+about 62 simulated seconds, using 20 terrace jumps and four pit jumps, without
 losing health. Existing level and combat regressions also pass. Combat pacing
 still benefits from a human playthrough.
 
@@ -133,7 +134,14 @@ mountains in the game and editor. `assets/art/backgrounds/level_4/` contains
 stone, and the existing column cutout. Groves and outcrops reuse Levels 1–2 art.
 The stone caps and temple facade reuse Level 1's art.
 
-The scenery check verifies one continuous landscape, thirteen complete landmarks,
+The scenery check verifies one continuous landscape, fifteen complete landmarks,
 clear pit openings, and full camera coverage from the foothills
 to the high pass and pit bottoms, every terrain collision and cutout, spike-floor
 metadata, hazard dimensions, paused gate updates, and isolation from other levels.
+
+## Extended approach
+
+The route is 20% longer: 5,760 world units with a new Cypress Ridge section
+at X=3840–4799 before the final area. Three additional enemies occupy that
+space. The countdown remains 3:00, and existing music keeps looping at its
+configured offset. Background camera coverage includes the full extended route.

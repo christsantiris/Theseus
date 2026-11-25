@@ -87,7 +87,7 @@ func _run() -> void:
 		var sample := (corner.x - rectangle.position.x) / painting.scale.x
 		_expect(sample >= previous_sample, "Landscape UV advances without resetting")
 		previous_sample = sample
-	for point: Vector2 in [Vector2(48, 280), Vector2(1040, 232), Vector2(2480, 232), Vector2(3440, 136), Vector2(3720, 200), Vector2(4720, 280), Vector2(320, 304), Vector2(1364, 304), Vector2(3108, 192), Vector2(4244, 304), Vector2(3440, 64), Vector2(4640, 352)]:
+	for point: Vector2 in [Vector2(48, 280), Vector2(1040, 232), Vector2(2480, 232), Vector2(3440, 136), Vector2(3720, 200), Vector2(5680, 280), Vector2(320, 304), Vector2(1364, 304), Vector2(3108, 192), Vector2(4244, 304), Vector2(3440, 64), Vector2(4640, 352)]:
 		level.player.position = point
 		camera.reset_smoothing()
 		camera.force_update_scroll()
@@ -95,7 +95,7 @@ func _run() -> void:
 		var corner := camera.get_screen_center_position() - Vector2(160, 90)
 		var rectangle := Rect2(painting.global_position, painting.texture.get_size() * painting.global_scale)
 		_expect(rectangle.grow(0.001).encloses(Rect2(corner, Vector2(320, 180))), "Landscape covers all camera edges at %s" % point)
-	_expect(world.midground.get_child_count() == 13, "13 complete landmarks frame the route")
+	_expect(world.midground.get_child_count() == 15, "15 complete landmarks frame the route")
 	for sprite: Sprite2D in world.midground.get_children():
 		_expect(sprite.material == null and sprite.get_child_count() == 0, "Landmarks need no fades or aprons")
 		_expect(sprite.texture.get_width() <= 4096 and sprite.texture.get_height() <= 4096, "Landmarks fit mobile texture limits")
@@ -118,7 +118,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: one continuous mountain landscape and 13 complete landmarks, full-route coverage through the high pass and pit bottoms, natural proportions, unchanged terrain cuts and spike metadata, cinematic gate state, and other-level isolation.")
+		print("PASS: one continuous mountain landscape and 15 complete landmarks, full-route coverage through the high pass and pit bottoms, natural proportions, unchanged terrain cuts and spike metadata, cinematic gate state, and other-level isolation.")
 	quit(0 if failures.is_empty() else 1)
 
 

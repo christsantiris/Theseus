@@ -2,7 +2,7 @@ extends RefCounted
 
 const TIME_LIMIT := 180.0
 
-const WIDTH := 4800
+const WIDTH := 5760
 const HEIGHT := 256
 const FLOOR_Y := 152
 const START := Vector2(48, FLOOR_Y)
@@ -12,7 +12,8 @@ const SECTIONS := [
 	{"x": 960, "name": "Broken Colonnade"},
 	{"x": 1920, "name": "Olive Terraces"},
 	{"x": 2880, "name": "Ruined Aqueduct"},
-	{"x": 3840, "name": "Temple Approach"},
+	{"x": 3840, "name": "Sacred Grove"},
+	{"x": 4800, "name": "Temple Approach"},
 ]
 
 # Each platform is a solid stone terrace extending down to the ground.
@@ -31,8 +32,11 @@ const PLATFORMS := [
 	Rect2(3216, 104, 96, 48),
 	Rect2(3344, 120, 128, 32),
 	Rect2(3504, 136, 80, 16),
-	Rect2(4176, 136, 96, 16),
-	Rect2(4288, 120, 128, 32),
+	Rect2(4000, 136, 112, 16),
+	Rect2(4112, 120, 224, 32),
+	Rect2(4336, 136, 112, 16),
+	Rect2(5136, 136, 96, 16),
+	Rect2(5248, 120, 128, 32),
 ]
 
 const ENEMIES := [
@@ -48,10 +52,13 @@ const ENEMIES := [
 	{"name": "PeltastAqueductWest", "kind": "peltast", "position": Vector2(3136, 120), "patrol": Vector2(3088, 3184)},
 	{"name": "PeltastAqueductEast", "kind": "peltast", "position": Vector2(3408, 120), "patrol": Vector2(3360, 3456)},
 	{"name": "HopliteAqueduct", "kind": "hoplite", "position": Vector2(3648, 152), "patrol": Vector2(3616, 3696)},
-	{"name": "RaiderTemple", "kind": "raider", "position": Vector2(4048, 152), "patrol": Vector2(3984, 4128)},
-	{"name": "PeltastTemple", "kind": "peltast", "position": Vector2(4352, 120), "patrol": Vector2(4304, 4400)},
-	{"name": "HopliteTempleOuter", "kind": "hoplite", "position": Vector2(4496, 152), "patrol": Vector2(4464, 4528)},
-	{"name": "HopliteTempleGuard", "kind": "hoplite", "position": Vector2(4640, 152), "patrol": Vector2(4608, 4688)},
+	{"name": "RaiderGrove", "kind": "raider", "position": Vector2(3896, 152), "patrol": Vector2(3856, 3952)},
+	{"name": "PeltastGrove", "kind": "peltast", "position": Vector2(4224, 120), "patrol": Vector2(4144, 4304)},
+	{"name": "HopliteGrove", "kind": "hoplite", "position": Vector2(4624, 152), "patrol": Vector2(4528, 4704)},
+	{"name": "RaiderTemple", "kind": "raider", "position": Vector2(5008, 152), "patrol": Vector2(4944, 5088)},
+	{"name": "PeltastTemple", "kind": "peltast", "position": Vector2(5312, 120), "patrol": Vector2(5264, 5360)},
+	{"name": "HopliteTempleOuter", "kind": "hoplite", "position": Vector2(5456, 152), "patrol": Vector2(5424, 5488)},
+	{"name": "HopliteTempleGuard", "kind": "hoplite", "position": Vector2(5600, 152), "patrol": Vector2(5568, 5648)},
 ]
 
 const FLASKS := [
@@ -59,11 +66,11 @@ const FLASKS := [
 	{"name": "HealthFlaskColonnade", "position": Vector2(1424, 152)},
 	{"name": "HealthFlaskTerrace", "position": Vector2(2544, 104)},
 	{"name": "HealthFlaskAqueduct", "position": Vector2(3312, 152)},
-	{"name": "HealthFlaskTemple", "position": Vector2(4224, 136)},
+	{"name": "HealthFlaskTemple", "position": Vector2(5184, 136)},
 ]
 
 
-const EXIT := Vector2(4752, 152)
+const EXIT := Vector2(5712, 152)
 const GATE_GUARD := "HopliteTempleGuard"
 
 const TIPS := [

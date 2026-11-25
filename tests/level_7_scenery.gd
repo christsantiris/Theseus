@@ -51,12 +51,12 @@ func _run() -> void:
 		var rectangle := Rect2(body.position - collision.shape.size * 0.5, collision.shape.size)
 		_expect(rectangle == Atlantis.PLATFORMS[index], "Atlantis terrace %d keeps its original collision rectangle" % index)
 	var solids: Array[Rect2] = []
-	for index in Atlantis.terrain_pieces(Rect2(0, 280, 4800, 72)).size():
+	for index in Atlantis.terrain_pieces(Rect2(0, 280, 5760, 72)).size():
 		var body := world.get_node("GroundPart%d" % index) as StaticBody2D
 		var shape := body.get_child(0) as CollisionShape2D
 		var rectangle := Rect2(body.position - shape.shape.size * 0.5, shape.shape.size)
 		solids.append(rectangle)
-		_expect(rectangle == Atlantis.terrain_pieces(Rect2(0, 280, 4800, 72))[index], "Canal bed and causeway retain their exact cuts")
+		_expect(rectangle == Atlantis.terrain_pieces(Rect2(0, 280, 5760, 72))[index], "Canal bed and causeway retain their exact cuts")
 	for canal: Dictionary in Atlantis.CANALS:
 		var opening := Rect2(canal.position, Vector2(canal.width, canal.depth - 1))
 		for rectangle in solids:
@@ -85,7 +85,7 @@ func _run() -> void:
 		var sample := (corner.x - rectangle.position.x) / painting.scale.x
 		_expect(sample >= previous_sample, "Landscape UV advances without resetting")
 		previous_sample = sample
-	for point: Vector2 in [Vector2(48, 280), Vector2(1000, 232), Vector2(2400, 248), Vector2(3500, 152), Vector2(3780, 216), Vector2(4720, 280), Vector2(3264, 80), Vector2(4640, 352), Vector2(1488, 304), Vector2(4036, 304)]:
+	for point: Vector2 in [Vector2(48, 280), Vector2(1000, 232), Vector2(2400, 248), Vector2(3500, 152), Vector2(3780, 216), Vector2(5680, 280), Vector2(3264, 80), Vector2(4640, 352), Vector2(1488, 304), Vector2(4036, 304)]:
 		level.player.position = point
 		camera.reset_smoothing()
 		camera.force_update_scroll()
@@ -93,7 +93,7 @@ func _run() -> void:
 		var corner := camera.get_screen_center_position() - Vector2(160, 90)
 		var rectangle := Rect2(painting.global_position, painting.texture.get_size() * painting.global_scale)
 		_expect(rectangle.grow(0.001).encloses(Rect2(corner, Vector2(320, 180))), "Landscape covers all camera edges at %s" % point)
-	_expect(world.midground.get_child_count() == 13, "13 complete landmarks frame the route")
+	_expect(world.midground.get_child_count() == 15, "15 complete landmarks frame the route")
 	for sprite: Sprite2D in world.midground.get_children():
 		_expect(sprite.material == null and sprite.get_child_count() == 0, "Landmarks need no fades or aprons")
 		_expect(sprite.texture.get_width() <= 4096 and sprite.texture.get_height() <= 4096, "Landmarks fit mobile texture limits")
@@ -112,7 +112,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: one continuous Atlantis landscape and 13 complete landmarks, full-route coverage through the temple climb, natural proportions, original terrace collisions, cinematic gate state, and other-level isolation.")
+		print("PASS: one continuous Atlantis landscape and 15 complete landmarks, full-route coverage through the temple climb, natural proportions, original terrace collisions, cinematic gate state, and other-level isolation.")
 	quit(0 if failures.is_empty() else 1)
 
 

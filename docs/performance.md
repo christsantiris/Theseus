@@ -11,14 +11,14 @@ have been removed.
 
 | Level | Landscape in world units | Horizontal / vertical camera travel | Landmarks |
 | --- | --- | --- | --- |
-| 1, Attic road | 768×256 | 10% / 30% | 13 |
-| 2, Aegean coast | 864×288 | 12% / 25% | 14 |
-| 3, sacred city | 864×288 | 12% / 25% | 12 |
-| 4, mountain terraces | 912×304 | 13% / 25% | 13 |
-| 5, temple gorge | 912×304 | 13% / 25% | 11 |
-| 6, Egyptian desert | 912×304 | 13% / 25% | 10 |
-| 7, Atlantis | 912×304 | 13% / 25% | 13 |
-| 8, labyrinth | 912×304 | 13% / 25% | 6 torches |
+| 1, Attic road | 768×256 | 8% / 30% | 15 |
+| 2, Aegean coast | 864×288 | 10% / 25% | 16 |
+| 3, sacred city | 864×288 | 10% / 25% | 14 |
+| 4, mountain terraces | 912×304 | 10.5% / 25% | 15 |
+| 5, temple gorge | 912×304 | 10.5% / 25% | 13 |
+| 6, Egyptian desert | 912×304 | 10.5% / 25% | 12 |
+| 7, Atlantis | 912×304 | 10.5% / 25% | 15 |
+| 8, labyrinth | 912×304 | 10.5% / 25% | 6 torches |
 
 Opaque landscapes retain GPU compression (S3TC desktop, ETC2 mobile). New
 transparent landmarks use lossless imports within the 4,096-pixel mobile texture
@@ -301,3 +301,17 @@ and used Level 6 enemy tuning. Atlantis now receives the shared Level 7 curve.
 No new native iOS/Android performance measurements are claimed for Egypt or
 the renumbered campaign. Campaign-wide renderer, grounding and countdown checks
 include the eighth level.
+
+## Longer level approaches
+
+All eight routes are now 5,760 world units long, a 20% extension. A new
+960-unit section precedes each original final area, adding three encounters per
+level. Existing final arenas and their encounters move together. Horizontal
+background parallax slows to keep each original, unstretched painting over the
+full camera range. Levels 1–7 add two reused complete scenery objects each.
+
+`tests/scenery_art.gd` checks every route from entrance to exit at floor height,
+jump headroom and the bottom camera limit. `tests/music_loops.gd` decodes each
+MP3 through its ending and verifies playback continues at the configured loop
+offset. The 3:00 countdown and render budgets are unchanged. Earlier traversal
+and performance measurements in this document describe the shorter routes.

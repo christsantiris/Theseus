@@ -14,7 +14,7 @@ const AMPHORA := preload("res://assets/art/backgrounds/level_3/amphora.png")
 const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
 const LANDSCAPE_HEIGHT := 288.0
-const FAR_SCROLL := 0.12
+const FAR_SCROLL := 0.10
 const FAR_VERTICAL_SCROLL := 0.25
 const MATERIAL_DENSITY := 16.0
 var backdrop: Node2D
@@ -62,14 +62,16 @@ func _build_landscape() -> void:
 	add_child(midground)
 	# Complete objects stay on authored landings; only the distant landscape
 	# uses parallax. Painted bases overlap the terrain through GROUNDING.
-	for point in [Vector2(240, 100), Vector2(1008, 100), Vector2(1680, 90), Vector2(2544, 94), Vector2(4448, 100)]:
+	for point in [Vector2(240, 100), Vector2(1008, 100), Vector2(1680, 90), Vector2(2544, 94), Vector2(5408, 100)]:
 		_landmark(WORKSHOP, point.x, point.y, "Workshop")
-	for point in [Vector2(608, 56), Vector2(2784, 60), Vector2(3488, 68), Vector2(4152, 56)]:
+	for point in [Vector2(608, 56), Vector2(2784, 60), Vector2(3488, 68), Vector2(5112, 56)]:
 		_landmark(STOA, point.x, point.y, "Stoa")
 	for point in [Vector2(2048, 104), Vector2(3784, 60)]:
 		_landmark(GROVE, point.x, point.y, "OliveGrove")
 	for point in [Vector2(3264, 68)]:
 		_landmark(COLONNADE, point.x, point.y, "Colonnade")
+	_landmark(WORKSHOP, 3896, 90, "Workshop")
+	_landmark(STOA, 4408, 56, "Stoa")
 	_sync_backdrop()
 
 
@@ -111,7 +113,7 @@ func _draw() -> void:
 	_draw_paving(Rect2(0, Town.FLOOR_Y, Town.WIDTH, 64))
 	for platform: Rect2 in Town.PLATFORMS:
 		_draw_paving(platform)
-	for x in [1184, 1808, 2944, 3712, 4400]:
+	for x in [1184, 1808, 2944, 3712, 5360]:
 		var height := 24.0
 		draw_texture_rect(AMPHORA, GROUNDING.rect(AMPHORA, x, Town.surface_at(x), height), false)
 

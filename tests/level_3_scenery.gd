@@ -73,7 +73,7 @@ func _run() -> void:
 		var sample := (corner.x - rectangle.position.x) / painting.scale.x
 		_expect(sample >= previous_sample, "Landscape UV advances without resetting")
 		previous_sample = sample
-	for point: Vector2 in [Vector2(48, 280), Vector2(1000, 232), Vector2(2400, 248), Vector2(3500, 152), Vector2(3780, 216), Vector2(4720, 280), Vector2(3500, 80), Vector2(4640, 320)]:
+	for point: Vector2 in [Vector2(48, 280), Vector2(1000, 232), Vector2(2400, 248), Vector2(3500, 152), Vector2(3780, 216), Vector2(5680, 280), Vector2(3500, 80), Vector2(4640, 320)]:
 		level.player.position = point
 		camera.reset_smoothing()
 		camera.force_update_scroll()
@@ -81,7 +81,7 @@ func _run() -> void:
 		var corner := camera.get_screen_center_position() - Vector2(160, 90)
 		var rectangle := Rect2(painting.global_position, painting.texture.get_size() * painting.global_scale)
 		_expect(rectangle.grow(0.001).encloses(Rect2(corner, Vector2(320, 180))), "Landscape covers all camera edges at %s" % point)
-	_expect(world.midground.get_child_count() == 12, "12 complete landmarks frame the route")
+	_expect(world.midground.get_child_count() == 14, "12 complete landmarks frame the route")
 	for sprite: Sprite2D in world.midground.get_children():
 		_expect(sprite.material == null and sprite.get_child_count() == 0, "Landmarks need no fades or aprons")
 		_expect(sprite.texture.get_width() <= 4096 and sprite.texture.get_height() <= 4096, "Landmarks fit mobile texture limits")

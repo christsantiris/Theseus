@@ -8,7 +8,7 @@ const MASONRY := preload("res://assets/art/backgrounds/level_3/city_masonry.png"
 const TORCH := preload("res://scenes/objects/labyrinth_torch.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
 const LANDSCAPE_HEIGHT := 304.0
-const FAR_SCROLL := 0.13
+const FAR_SCROLL := 0.105
 const FAR_VERTICAL_SCROLL := 0.25
 # Mounts are painted-wall pixel coordinates, independent of the gameplay route.
 const TORCH_MOUNTS := [

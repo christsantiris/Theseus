@@ -146,7 +146,7 @@ func _all_jumps() -> void:
 		_release()
 		_expect(level.player.position.x > platform.position.x and absf(level.player.position.y - platform.position.y) < 0.5, "Every required upward step remains reachable at maximum tide")
 		count += 1
-	_expect(count == 15, "All fifteen climbs are exercised at high tide")
+	_expect(count == 18, "All eighteen climbs are exercised at high tide")
 	for canal: Dictionary in Layout.CANALS:
 		for facing in [-1, 1]:
 			var start_x: float = canal.position.x - 1 if facing == 1 else canal.position.x + canal.width + 1

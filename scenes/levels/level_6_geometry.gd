@@ -9,7 +9,7 @@ const PYLON := preload("res://assets/art/backgrounds/egypt/pylon_gate.png")
 const MASONRY := preload("res://assets/art/backgrounds/level_3/city_masonry.png")
 const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 const LANDSCAPE_HEIGHT := 304.0
-const FAR_SCROLL := 0.13
+const FAR_SCROLL := 0.105
 const FAR_VERTICAL_SCROLL := 0.25
 var backdrop: Node2D
 var midground: Node2D
@@ -40,10 +40,12 @@ func _ready() -> void:
 	midground.name = "DesertLandmarks"
 	midground.z_index = -2
 	add_child(midground)
-	for point in [Vector2(208, 110), Vector2(800, 90), Vector2(1984, 100), Vector2(3136, 136), Vector2(3860, 112), Vector2(4352, 90)]:
+	for point in [Vector2(208, 110), Vector2(800, 90), Vector2(1984, 100), Vector2(3136, 136), Vector2(4820, 112), Vector2(5312, 90)]:
 		_landmark(OBELISK, point, "Obelisk")
-	for point in [Vector2(1024, 92), Vector2(2176, 76), Vector2(3136, 82), Vector2(4640, 120)]:
+	for point in [Vector2(1024, 92), Vector2(2176, 76), Vector2(3136, 82), Vector2(5600, 120)]:
 		_landmark(PYLON, point, "Pylon")
+	_landmark(OBELISK, Vector2(3896, 102), "Obelisk")
+	_landmark(PYLON, Vector2(4224, 76), "Pylon")
 	_sync_backdrop()
 	if not Engine.is_editor_hint():
 		call_deferred("_decorate_exit")

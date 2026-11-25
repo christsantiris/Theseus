@@ -2,7 +2,7 @@ extends RefCounted
 
 const TIME_LIMIT := 180.0
 
-const WIDTH := 4800
+const WIDTH := 5760
 const HEIGHT := 352
 const FLOOR_Y := 280
 const START := Vector2(48, FLOOR_Y)
@@ -11,20 +11,35 @@ const SECTIONS := [
 	{"x": 960, "name": "Temple Ledges"},
 	{"x": 1920, "name": "Broken Causeway"},
 	{"x": 2880, "name": "High Colonnade"},
-	{"x": 3840, "name": "Hydra Sanctuary"},
+	{"x": 3840, "name": "Western Temple Court"},
+	{"x": 4800, "name": "Hydra Sanctuary"},
 ]
 
 const PLATFORMS := [
-	Rect2(736, 264, 96, 16), Rect2(832, 248, 96, 32),
-	Rect2(928, 232, 256, 48), Rect2(1184, 248, 80, 32),
+	Rect2(736, 264, 96, 16),
+	Rect2(832, 248, 96, 32),
+	Rect2(928, 232, 256, 48),
+	Rect2(1184, 248, 80, 32),
 	Rect2(1264, 264, 80, 16),
-	Rect2(2144, 264, 112, 16), Rect2(2256, 248, 112, 32),
-	Rect2(2368, 232, 256, 48), Rect2(2624, 216, 112, 64),
-	Rect2(2736, 200, 112, 80), Rect2(2848, 184, 112, 96),
+	Rect2(2144, 264, 112, 16),
+	Rect2(2256, 248, 112, 32),
+	Rect2(2368, 232, 256, 48),
+	Rect2(2624, 216, 112, 64),
+	Rect2(2736, 200, 112, 80),
+	Rect2(2848, 184, 112, 96),
 	Rect2(2960, 168, 512, 112),
-	Rect2(3472, 184, 112, 96), Rect2(3584, 200, 112, 80),
-	Rect2(3696, 216, 112, 64), Rect2(3808, 232, 256, 48),
-	Rect2(4064, 248, 64, 32), Rect2(4128, 264, 32, 16),
+	Rect2(3472, 184, 112, 96),
+	Rect2(3584, 200, 112, 80),
+	Rect2(3696, 216, 112, 64),
+	Rect2(3808, 232, 32, 48),
+	Rect2(3840, 248, 96, 32),
+	Rect2(3936, 264, 96, 16),
+	Rect2(4448, 264, 64, 16),
+	Rect2(4512, 248, 64, 32),
+	Rect2(4576, 232, 224, 48),
+	Rect2(4800, 232, 224, 48),
+	Rect2(5024, 248, 64, 32),
+	Rect2(5088, 264, 32, 16),
 ]
 
 # These ledges can be reached from a staggered bull. The main route never
@@ -34,7 +49,7 @@ const BONUS_LEDGES := [Rect2(544, 224, 112, 8), Rect2(3328, 112, 112, 8)]
 # recess. Placing one inside a raised step leaves its far wall standing proud.
 const PITS := [
 	{"name": "CausewayPit", "position": Vector2(2080, 280), "width": 32.0, "depth": 24.0},
-	{"name": "SanctuaryPit", "position": Vector2(4192, 280), "width": 32.0, "depth": 24.0},
+	{"name": "SanctuaryPit", "position": Vector2(5152, 280), "width": 32.0, "depth": 24.0},
 ]
 
 const ENEMIES := [
@@ -45,9 +60,12 @@ const ENEMIES := [
 	{"name": "CausewayPupA", "kind": "cerberus_pup", "position": Vector2(2448, 232), "patrol": Vector2(2400, 2592), "pack": "CausewayPack", "delay": 0.3},
 	{"name": "CausewayPupB", "kind": "cerberus_pup", "position": Vector2(2496, 232), "patrol": Vector2(2400, 2592), "pack": "CausewayPack", "delay": 0.9},
 	{"name": "BullColonnade", "kind": "bronze_bull", "position": Vector2(3264, 168), "patrol": Vector2(3008, 3440)},
-	{"name": "SanctuaryPupA", "kind": "cerberus_pup", "position": Vector2(3904, 232), "patrol": Vector2(3840, 4032), "pack": "SanctuaryPack", "delay": 0.3},
-	{"name": "SanctuaryPupB", "kind": "cerberus_pup", "position": Vector2(3952, 232), "patrol": Vector2(3840, 4032), "pack": "SanctuaryPack", "delay": 0.9},
-	{"name": "HydraTempleGuard", "kind": "hydra", "position": Vector2(4608, 280), "patrol": Vector2(4480, 4688)},
+	{"name": "BullWesternCourt", "kind": "bronze_bull", "position": Vector2(4264, 280), "patrol": Vector2(4080, 4384)},
+	{"name": "WesternPupA", "kind": "cerberus_pup", "position": Vector2(4632, 232), "patrol": Vector2(4608, 4752), "pack": "WesternPack", "delay": 0.3},
+	{"name": "WesternPupB", "kind": "cerberus_pup", "position": Vector2(4680, 232), "patrol": Vector2(4608, 4752), "pack": "WesternPack", "delay": 0.9},
+	{"name": "SanctuaryPupA", "kind": "cerberus_pup", "position": Vector2(4864, 232), "patrol": Vector2(4800, 4992), "pack": "SanctuaryPack", "delay": 0.3},
+	{"name": "SanctuaryPupB", "kind": "cerberus_pup", "position": Vector2(4912, 232), "patrol": Vector2(4800, 4992), "pack": "SanctuaryPack", "delay": 0.9},
+	{"name": "HydraTempleGuard", "kind": "hydra", "position": Vector2(5568, 280), "patrol": Vector2(5440, 5648)},
 ]
 
 const FLASKS := [
@@ -55,9 +73,9 @@ const FLASKS := [
 	{"name": "HealthFlaskTemple", "position": Vector2(1216, 248)},
 	{"name": "HealthFlaskCauseway", "position": Vector2(2120, 280)},
 	{"name": "HealthFlaskHighLedge", "position": Vector2(3384, 112), "bonus": true},
-	{"name": "HealthFlaskSanctuary", "position": Vector2(4368, 280)},
+	{"name": "HealthFlaskSanctuary", "position": Vector2(5328, 280)},
 ]
-const EXIT := Vector2(4752, FLOOR_Y)
+const EXIT := Vector2(5712, FLOOR_Y)
 const GATE_GUARD := "HydraTempleGuard"
 const TIPS := [
 	{"x": 160, "end": 352, "text": "Jump the bull's charge; it cannot turn mid-charge."},
@@ -65,7 +83,7 @@ const TIPS := [
 	{"x": 800, "end": 1056, "text": "Pups run in pairs. Sword hits interrupt their leaps."},
 	{"x": 1920, "end": 2072, "text": "Jump across the causeway spikes."},
 	{"x": 3104, "end": 3376, "text": "Ride the bull, then jump to the high flask ledge."},
-	{"x": 4320, "end": 4512, "text": "Cut all three Hydra heads. Jump for the high heads."},
+	{"x": 5280, "end": 5472, "text": "Cut all three Hydra heads. Jump for the high heads."},
 ]
 
 

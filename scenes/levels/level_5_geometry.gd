@@ -13,7 +13,7 @@ const COLUMN := preload("res://assets/art/backgrounds/level_4/broken_column.png"
 const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
 const LANDSCAPE_HEIGHT := 304.0
-const FAR_SCROLL := 0.13
+const FAR_SCROLL := 0.105
 const FAR_VERTICAL_SCROLL := 0.25
 const MATERIAL_DENSITY := 16.0
 var backdrop: Node2D
@@ -77,12 +77,14 @@ func _build_landscape() -> void:
 	add_child(midground)
 	# Complete objects stay on authored landings; only the distant landscape
 	# uses parallax. Painted bases overlap the terrain through GROUNDING.
-	for point in [Vector2(1056, 100), Vector2(3152, 104), Vector2(3920, 96), Vector2(4464, 90)]:
+	for point in [Vector2(1056, 100), Vector2(3152, 104), Vector2(4880, 96), Vector2(5424, 90)]:
 		_landmark(CLIFF_TEMPLE, point.x, point.y, "CliffTemple")
 	for point in [Vector2(160, 104), Vector2(1432, 72), Vector2(1960, 72), Vector2(2520, 72), Vector2(3640, 44)]:
 		_landmark(OUTCROP, point.x, point.y, "RockyOutcrop")
-	for point in [Vector2(2904, 48), Vector2(4296, 56)]:
+	for point in [Vector2(2904, 48), Vector2(5256, 56)]:
 		_landmark(COLONNADE, point.x, point.y, "Colonnade")
+	_landmark(OUTCROP, 4220, 64, "RockyOutcrop")
+	_landmark(CLIFF_TEMPLE, 4688, 96, "CliffTemple")
 	_sync_backdrop()
 
 
@@ -126,7 +128,7 @@ func _draw() -> void:
 		_draw_terrain(platform)
 	for ledge: Rect2 in Gorge.BONUS_LEDGES:
 		_retaining_stone(ledge)
-	for x in [96, 688, 1392, 1936, 2704, 3552, 4312]:
+	for x in [96, 688, 1392, 1936, 2704, 3552, 5272]:
 		var height := 44.0
 		draw_texture_rect(COLUMN, GROUNDING.rect(COLUMN, x, Gorge.surface_at(x), height), false)
 

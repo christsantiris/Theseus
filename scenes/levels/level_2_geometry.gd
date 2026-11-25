@@ -13,7 +13,7 @@ const WAYSTONE := preload("res://assets/art/backgrounds/level_1/waystone.png")
 const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
 const LANDSCAPE_HEIGHT := 288.0
-const FAR_SCROLL := 0.12
+const FAR_SCROLL := 0.10
 const FAR_VERTICAL_SCROLL := 0.25
 const MATERIAL_DENSITY := 16.0
 var backdrop: Node2D
@@ -62,12 +62,14 @@ func _build_landscape() -> void:
 	# These complete objects stand on authored landings. Keep them in world
 	# space so their feet never drift off the narrow ledges during a climb.
 	for point in [Vector2(260, 108), Vector2(616, 52), Vector2(2016, 56),
-		Vector2(2360, 48), Vector2(2760, 64), Vector2(3872, 40), Vector2(4100, 80)]:
+		Vector2(2360, 48), Vector2(2760, 64), Vector2(4832, 40), Vector2(5060, 80)]:
 		_landmark(OUTCROP, point.x, point.y, "CoastalOutcrop")
-	for point in [Vector2(1080, 42), Vector2(1496, 48), Vector2(1776, 40), Vector2(4280, 34)]:
+	for point in [Vector2(1080, 42), Vector2(1496, 48), Vector2(1776, 40), Vector2(5240, 34)]:
 		_landmark(QUAY, point.x, point.y, "RuinedQuay")
-	for point in [Vector2(3032, 88), Vector2(3464, 88), Vector2(4408, 84)]:
+	for point in [Vector2(3032, 88), Vector2(3464, 88), Vector2(5368, 84)]:
 		_landmark(CYCLOPEAN_GATE, point.x, point.y, "CyclopeanGate")
+	_landmark(OUTCROP, 4120, 80, "CoastalOutcrop")
+	_landmark(CYCLOPEAN_GATE, 4576, 80, "CyclopeanGate")
 	_sync_backdrop()
 
 
@@ -111,7 +113,7 @@ func _draw() -> void:
 	_draw_cliff(Rect2(0, Coast.FLOOR_Y, Coast.WIDTH, 64))
 	for platform: Rect2 in Coast.PLATFORMS:
 		_draw_cliff(platform)
-	for x in [520, 1960, 4024]:
+	for x in [520, 1960, 4984]:
 		draw_texture_rect(WAYSTONE, GROUNDING.rect(WAYSTONE, x, Coast.surface_at(x), 21.0, 18.0), false)
 
 

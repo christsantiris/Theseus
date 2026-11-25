@@ -42,7 +42,7 @@ func _isolate(level: Node) -> void:
 		var enemy := _enemy(level, encounter.name)
 		if is_instance_valid(enemy):
 			_freeze(enemy)
-	for pack_name in ["TemplePack", "CausewayPack", "SanctuaryPack"]:
+	for pack_name in ["TemplePack", "CausewayPack", "WesternPack", "SanctuaryPack"]:
 		var pack := level.get_node_or_null(NodePath(pack_name))
 		if pack != null:
 			pack.set_physics_process(false)
@@ -180,8 +180,8 @@ func _placements(level: Node) -> void:
 		_expect(encounter.position.y == Gorge.surface_at(encounter.position.x) and Gorge.surface_at(encounter.patrol.x) == encounter.position.y and Gorge.surface_at(encounter.patrol.y) == encounter.position.y, String(encounter.name) + " has a supported, flat encounter lane")
 		if encounter.has("pack"):
 			_expect(enemy.get_parent().name == encounter.pack and enemy.pack == enemy.get_parent(), "Pup belongs to its coordinated pair")
-	_expect(counts.bronze_bull == 3 and counts.cerberus_pup == 6 and counts.hydra == 1, "Gorge contains three bulls, three pairs and one Hydra")
-	for pack_name in ["TemplePack", "CausewayPack", "SanctuaryPack"]:
+	_expect(counts.bronze_bull == 4 and counts.cerberus_pup == 8 and counts.hydra == 1, "Gorge contains four bulls, four pairs and one Hydra")
+	for pack_name in ["TemplePack", "CausewayPack", "WesternPack", "SanctuaryPack"]:
 		_expect(level.get_node(NodePath(pack_name)).get_child_count() == 2, "A fresh pack contains exactly two pups")
 	for pickup: Dictionary in Gorge.FLASKS:
 		_expect(pickup.position.y == Gorge.surface_at(pickup.position.x, pickup.get("bonus", false)), "Flask is supported: " + String(pickup.name))
@@ -336,7 +336,7 @@ func _traverse() -> void:
 						jumping = true
 						jumps += 1
 						break
-		if player.position.x > 4700 and not level._gate.unlocked:
+		if player.position.x > Gorge.EXIT.x - 52 and not level._gate.unlocked:
 			for head in _enemy(level, Gorge.GATE_GUARD).heads:
 				head.take_damage(2)
 	Input.action_release("move_right")

@@ -14,7 +14,7 @@ const CAP_STONE := preload("res://assets/art/backgrounds/level_1/limestone_wall.
 const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
 const LANDSCAPE_HEIGHT := 304.0
-const FAR_SCROLL := 0.13
+const FAR_SCROLL := 0.105
 const FAR_VERTICAL_SCROLL := 0.25
 const MATERIAL_DENSITY := 16.0
 var backdrop: Node2D
@@ -77,14 +77,16 @@ func _build_landscape() -> void:
 	add_child(midground)
 	# Complete objects stay on authored landings; only the distant landscape
 	# uses parallax. Painted bases overlap the terrain through GROUNDING.
-	for point in [Vector2(848, 52), Vector2(1760, 64), Vector2(2512, 64), Vector2(3264, 72), Vector2(4496, 40)]:
+	for point in [Vector2(848, 52), Vector2(1760, 64), Vector2(2512, 64), Vector2(3264, 72), Vector2(5456, 40)]:
 		_landmark(WAVE_WALL, point.x, point.y, "WaveWall")
-	for point in [Vector2(192, 118), Vector2(1152, 100), Vector2(2128, 72), Vector2(4216, 110)]:
+	for point in [Vector2(192, 118), Vector2(1152, 100), Vector2(2128, 72), Vector2(5176, 110)]:
 		_landmark(STATUE, point.x, point.y, "PoseidonStatue")
 	for point in [Vector2(512, 88), Vector2(2816, 80)]:
 		_landmark(ARCH, point.x, point.y, "HarborArch")
-	for point in [Vector2(3616, 56), Vector2(3896, 56)]:
+	for point in [Vector2(3616, 56), Vector2(4856, 56)]:
 		_landmark(COLONNADE, point.x, point.y, "Colonnade")
+	_landmark(STATUE, 4048, 100, "PoseidonStatue")
+	_landmark(WAVE_WALL, 4368, 52, "WaveWall")
 	_sync_backdrop()
 
 
