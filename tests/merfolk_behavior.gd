@@ -82,7 +82,7 @@ func _role(blade: bool) -> void:
 	enemy.position = Vector2(200, 152)
 	enemy.patrol_left = 48
 	enemy.patrol_right = 400
-	enemy.tuning = load("res://scenes/levels/difficulty.gd").for_level(6)
+	enemy.tuning = load("res://scenes/levels/difficulty.gd").for_level(7)
 	root.add_child(enemy)
 	await _frames(4)
 	_art_anchors()

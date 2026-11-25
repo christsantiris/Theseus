@@ -28,14 +28,14 @@ func _verify_level(number: int) -> void:
 	var continuous := parent.get_node("ContinuousLandscape") as Sprite2D
 	_expect(parent.get_child_count() == 1 and continuous.material == null and continuous.texture == world.PANORAMA_SHEETS[0], "Level %d uses one unblended painting" % number)
 	_expect(continuous.texture_repeat == CanvasItem.TEXTURE_REPEAT_DISABLED, "Level %d never wraps its landscape" % number)
-	_expect(world.midground.get_child_count() == [13, 14, 12, 13, 11, 13, 6][number - 1], "Level %d has complete independent scenery objects" % number)
+	_expect(world.midground.get_child_count() == [13, 14, 12, 13, 11, 10, 13, 6][number - 1], "Level %d has complete independent scenery objects" % number)
 	_expect(level.find_children("*Shrine", "Area2D", true, false).is_empty(), "Level %d has no checkpoint triggers" % number)
 	current_scene = null
 	level.free()
 
 
 func _run() -> void:
-	for number in range(1, 8):
+	for number in range(1, 9):
 		_verify_level(number)
 	for child in root.get_node("GameMusic").get_children():
 		if child is AudioStreamPlayer:
@@ -43,7 +43,7 @@ func _run() -> void:
 			child.stream = null
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: all seven continuous landscapes, complete scenery objects, removed checkpoint triggers.")
+		print("PASS: all eight continuous landscapes, complete scenery objects, removed checkpoint triggers.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)

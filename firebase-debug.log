@@ -1,0 +1,13 @@
+[debug] [2026-11-24T21:15:15.250Z] ----------------------------------------------------------------------
+[debug] [2026-11-24T21:15:15.258Z] Command:       /Users/christsantiris/.nvm/versions/node/v22.23.2/bin/node /Users/christsantiris/.nvm/versions/node/v22.23.2/bin/firebase login:list
+[debug] [2026-11-24T21:15:15.259Z] CLI Version:   15.26.0
+[debug] [2026-11-24T21:15:15.259Z] Platform:      darwin
+[debug] [2026-11-24T21:15:15.259Z] Node Version:  v22.23.2
+[debug] [2026-11-24T21:15:15.260Z] Detected Agent: codex_cli
+[debug] [2026-11-24T21:15:15.260Z] Time:          Tue Nov 24 2026 16:15:15 GMT-0500 (Eastern Standard Time)
+[debug] [2026-11-24T21:15:15.260Z] ----------------------------------------------------------------------
+[debug] 
+[info] Logged in as chris.tsantiris@millennialhelp.com
+[info] 
+[info] Other available accounts (switch with "firebase login:use")
+[info]  - chris.tsantiris@gmail.com

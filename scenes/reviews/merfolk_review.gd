@@ -2,7 +2,7 @@ extends "res://scenes/levels/level_geometry.gd"
 
 const TheseusArt := preload("res://scenes/player/theseus_art.gd")
 const Difficulty := preload("res://scenes/levels/difficulty.gd")
-const LANDSCAPE := preload("res://assets/art/backgrounds/level_6/atlantis_landscape.png")
+const LANDSCAPE := preload("res://assets/art/backgrounds/level_7/atlantis_landscape.png")
 @onready var player = $Player
 @onready var hud = $HUD
 var merfolk: Node
@@ -52,7 +52,7 @@ func _choose(selected: int) -> void:
 	merfolk.direction = -1
 	merfolk.patrol_left = 176
 	merfolk.patrol_right = 288
-	merfolk.tuning = Difficulty.for_level(6, role == 2)
+	merfolk.tuning = Difficulty.for_level(7, role == 2)
 	merfolk.process_mode = Node.PROCESS_MODE_PAUSABLE
 	add_child(merfolk)
 	merfolk.defeated.connect(_on_defeated)

@@ -11,6 +11,7 @@ const LEVEL_TRACKS := {
 	# Skip the opening; the melody plays without a break, so start at 21 s.
 	5: {"path": "res://assets/audio/music/sounovamusic-ancient-persian-music-460551.mp3", "start": 21.0},
 	6: {"path": "res://assets/audio/music/openmindaudio-ancient-egypt-historical-epic-632173.mp3", "start": 0.0},
+	7: {"path": "res://assets/audio/music/openmindaudio-ancient-egypt-historical-epic-632173.mp3", "start": 0.0},
 }
 var _music: AudioStreamPlayer
 var _active_path := ""

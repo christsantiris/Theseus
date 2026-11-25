@@ -6,7 +6,8 @@ const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 var failures: Array[String] = []
 var feet := {}
 const SAMPLES := [
-	["level_6/wave_wall", 72.0], ["level_6/poseidon_statue", 118.0],
+	["egypt/obelisk", 110.0], ["egypt/pylon_gate", 120.0],
+	["level_7/wave_wall", 72.0], ["level_7/poseidon_statue", 118.0],
 	["level_1/olive_grove", 116.0], ["level_1/colonnade", 106.0],
 	["level_1/aqueduct", 152.0], ["level_1/waystone", 21.0],
 	["level_2/coastal_outcrop", 108.0], ["level_2/ruined_quay", 48.0],
@@ -120,7 +121,7 @@ func _run() -> void:
 		_expect(painted_base >= 140.5 and painted_base <= 141.5, "Imported painted pixels overlap the floor: " + sample[0])
 		for scale in [1, 3, 4, 5]: # Preview, 540p, 720p, and desktop sampling.
 			await _render_contact(texture, sample[1], scale)
-	for number in range(1, 7):
+	for number in range(1, 8):
 		await _actual_landmarks(number)
 	print("PASS: painted scenery contacts, floating-tree negative control, preview/540p/720p/desktop pixels, and moving-camera landmark bases." if failures.is_empty() else "FAIL: " + str(failures))
 	quit(0 if failures.is_empty() else 1)

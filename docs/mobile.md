@@ -1,6 +1,6 @@
 # Mobile setup and testing
 
-The same Godot project targets Android and iOS. All seven levels use the existing movement, collision shapes, jump heights, sword timing, enemy behavior, level countdowns, and entrance retries. The mobile interface activates automatically on phones and tablets. Desktop play keeps its keyboard interface.
+The same Godot project targets Android and iOS. All eight levels use the existing movement, collision shapes, jump heights, sword timing, enemy behavior, level countdowns, and entrance retries. The mobile interface activates automatically on phones and tablets. Desktop play keeps its keyboard interface.
 
 ## Controls and display
 
@@ -127,7 +127,7 @@ On this Intel Mac, profiling showed the iOS Simulator's OpenGL renderer rasteriz
 
 ## Ads
 
-After the temple-entry animation finishes, a ready interstitial appears following a 0.35-second pause for gameplay taps to settle. Results and Continue stay hidden until the ad closes or fails to show. Gameplay and the countdown remain paused throughout. If no ad is ready or consent does not permit ads, results appear immediately without waiting for a load; a late-loading ad cannot interrupt them. Continue opens the next level directly. Replay, Title, death, Hades, and the final Level 7 victory do not show an ad. This places the ad before the results screen's Continue button, following [Google's placement guidance](https://support.google.com/admob/answer/6201350).
+After the temple-entry animation finishes, a ready interstitial appears following a 0.35-second pause for gameplay taps to settle. Results and Continue stay hidden until the ad closes or fails to show. Gameplay and the countdown remain paused throughout. If no ad is ready or consent does not permit ads, results appear immediately without waiting for a load; a late-loading ad cannot interrupt them. Continue opens the next level directly. Replay, Title, death, Hades, and the final Level 8 victory do not show an ad. This places the ad before the results screen's Continue button, following [Google's placement guidance](https://support.google.com/admob/answer/6201350).
 
 Theseus's iOS AdMob app ID is configured under `admob/general/ios/app_id` in `project.godot`: `ca-app-pub-9323307074562151~5989083331`. Its registered interstitial unit is `ca-app-pub-9323307074562151/2070019624` in `scenes/ui/level_ads.gd`. These identifiers are distinct from the Apple bundle identifier, `com.theseus.adventure`.
 
@@ -176,18 +176,18 @@ godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60
 godot --headless --path . --script res://tests/mobile_controls.gd --fixed-fps 60 -- --mobile-controls --mobile-render=540
 ```
 
-The second command checks desktop controls and integer scaling. The existing combat, animation, Hades, and seven level smoke tests also run without mobile controls.
+The second command checks desktop controls and integer scaling. The existing combat, animation, Hades, and eight level smoke tests also run without mobile controls.
 
 The artwork check verifies mobile-safe texture dimensions, complete atlas regions, and visible pixels for Theseus and every enemy type. The touch checks include physical display insets on an iPhone, an Android phone, and a tablet.
 
-The rendering check reads back the actual world targets, verifies screen markers through the world and final composition for all seven levels, compares identical movement/jump/sword-frame histories across profiles, checks left/right safe-area layouts and display resizes, and sends a real mouse click through the presentation layer to a title button. [Performance measurements](performance.md#mobile-rendering-budget) separate hardware browser results from software-rendered simulators.
+The rendering check reads back the actual world targets, verifies screen markers through the world and final composition for all eight levels, compares identical movement/jump/sword-frame histories across profiles, checks left/right safe-area layouts and display resizes, and sends a real mouse click through the presentation layer to a title button. [Performance measurements](performance.md#mobile-rendering-budget) separate hardware browser results from software-rendered simulators.
 
 Before accepting a device build, play each level and check simultaneous touches, one-thumb Jump-then-Sword strikes against high birds, sword timing, ducking under birds, spike-pit recovery, temple entry, pause/resume, and countdown expiry and entrance retries. Check both landscape directions, notched screens, interruption by another app, frame rate, audio, and heat. Desktop simulation and package validation do not establish device performance or battery use.
 
 Generated builds live in the ignored `builds/` directory. Export credentials and Godot's `.godot/` cache remain ignored.
 
 Atlantis adds a repeating fill/drain tide. Water reduces Theseus's horizontal
-speed by up to 30% and slows his walk cadence; Merfolk retain their Level 6
+speed by up to 30% and slows his walk cadence; Merfolk retain their Level 7
 speeds. Jump height, touch-jump release behavior, attack timing, and controls
 are unchanged. The tide indicator stays inside the HUD safe area. The render
 profile regression compares underwater physics and sword-frame histories at

@@ -87,10 +87,16 @@ func _build_picker(error: String) -> void:
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rows.add_child(heading)
 
+	# Eight levels fit the short landscape viewport in two columns.
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 12)
+	grid.add_theme_constant_override("v_separation", 3)
+	rows.add_child(grid)
 	for level in _level_numbers():
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 3)
-		rows.add_child(row)
+		grid.add_child(row)
 		var name_label := Label.new()
 		name_label.text = "Level %d" % level
 		name_label.custom_minimum_size = Vector2(44, 0)

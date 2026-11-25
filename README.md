@@ -1,8 +1,8 @@
 # Theseus
 
-A left-to-right side scroller. Theseus travels from Athens through a rocky coast, sacred city, mountain terraces, a temple-lined gorge, and Atlantis, before confronting the Minotaur in the labyrinth of Knossos. Theseus, all fifteen enemy types, and the scenery in all seven levels use detailed cinematic artwork.
+A left-to-right side scroller. Theseus travels from Athens through a rocky coast, sacred city, mountain terraces, a temple-lined gorge, an Egyptian desert, and Atlantis, before confronting the Minotaur in the labyrinth of Knossos. Theseus, all fifteen enemy types, and the scenery in all eight levels use detailed cinematic artwork.
 
-All seven levels use continuous backgrounds with independent scenery objects and layered parallax.
+All eight levels use continuous backgrounds with independent scenery objects and layered parallax.
 
 ## Contents
 
@@ -13,6 +13,7 @@ All seven levels use continuous backgrounds with independent scenery objects and
   - [The Sacred City](#the-sacred-city)
   - [The Mountain Sanctuary](#the-mountain-sanctuary)
   - [The Gorge Sanctuary](#the-gorge-sanctuary)
+  - [The Pyramid Road](#the-pyramid-road)
   - [Atlantis](#atlantis)
   - [The Labyrinth](#the-labyrinth)
 - [How to play](#how-to-play)
@@ -92,6 +93,22 @@ One continuous dry gorge landscape shows stratified limestone walls and distant 
 
 [Level 5 guide](docs/level_5.md)
 
+### The Pyramid Road
+
+Level 6 crosses an Egyptian desert beneath pyramids, with dunes, carved
+obelisks and sandstone temple gateways. Twenty-two terraces lead through five
+areas to the Temple of the Sun. Four each of the existing Hoplites, Peltasts,
+Raiders and Spartoi defend the road; an elite Hoplite captain guards the exit.
+Four flasks support the route, and every climb uses normal jumps.
+
+One continuous desert landscape scrolls behind six grounded obelisks and four
+pylon gateways. The sun temple continues into Atlantis, now Level 7.
+
+[Level 6 guide](docs/level_6.md)
+
+Play-test with `tools/play_level.sh 6`, or `tools/play_mobile.sh 6` for touch
+controls.
+
 ### Atlantis
 
 Atlantis is a partially flooded city with dry marble causeways, ring canals,
@@ -99,22 +116,22 @@ a palace climb, and Poseidon's sanctuary. Merfolk trident guards make high
 thrusts that can be ducked; Reefblades make low lunges that can be jumped.
 Thirteen Merfolk encounters include the elite captain guarding the exit.
 A repeating tide floods and drains the causeways. Water slows Theseus by up to
-30% while Merfolk keep their full Level 6-scaled speed. Higher platforms reduce
+30% while Merfolk keep their full Level 7-scaled speed. Higher platforms reduce
 the drag; a tide meter shows the phase and remaining time. The shallow canals
 remain safe to fall into and can be climbed out of with Jump.
 
 One continuous landscape and grounded wave-carved walls, bronze Poseidon
-statues, and ruined arches frame twenty-three terraces. Two flasks support the route. Level 5 continues into Atlantis.
+statues, and ruined arches frame twenty-three terraces. Two flasks support the route. Level 6 continues into Atlantis.
 
-[Level 6 guide](docs/level_6.md)
+[Level 7 guide](docs/level_7.md)
 
-Play-test with `tools/play_level.sh 6`, or `tools/play_mobile.sh 6` for touch
+Play-test Atlantis with `tools/play_level.sh 7`, or `tools/play_mobile.sh 7` for touch
 controls. Review both Merfolk roles and the captain with
 `godot --path . res://scenes/reviews/merfolk_review.tscn`.
 
 ### The Labyrinth
 
-Level 7 ends the journey in a dim, torch-lit labyrinth. Raised galleries and
+Level 8 ends the journey in a dim, torch-lit labyrinth. Raised galleries and
 low-roofed passages lead past four Hoplites, four Peltasts, and four Raiders.
 Three flasks support the approach.
 
@@ -123,9 +140,9 @@ recovers, and backs away before attacking again. Time a full jump over his
 charge, then counter during recovery. Defeat him and enter the exit to finish
 the campaign. Existing keyboard and touch controls apply throughout.
 
-[Level 7 guide](docs/level_7.md)
+[Level 8 guide](docs/level_8.md)
 
-Play-test with `tools/play_level.sh 7`, or `tools/play_mobile.sh 7`.
+Play-test with `tools/play_level.sh 8`, or `tools/play_mobile.sh 8`.
 
 ## How to play
 
@@ -154,7 +171,7 @@ The Bronze Bull is available in a separate review arena. Jump its committed char
 
 ## Mobile version
 
-Android and iOS share the seven levels, artwork, combat, and level countdowns. Landscape touch controls support movement, ducking, jumping, sword attacks, and pause, including simultaneous presses for airborne attacks. Menus have larger touch targets. Tutorial messages sit at the bottom, between the left and right buttons, and gameplay pauses when the app loses focus. After a level is cleared, a ready full-screen ad appears after a brief transition and before the results screen. Continue then opens the next level directly. If no ad is ready, results appear immediately. Desktop and the web build skip ads.
+Android and iOS share the eight levels, artwork, combat, and level countdowns. Landscape touch controls support movement, ducking, jumping, sword attacks, and pause, including simultaneous presses for airborne attacks. Menus have larger touch targets. Tutorial messages sit at the bottom, between the left and right buttons, and gameplay pauses when the app loses focus. After a level is cleared, a ready full-screen ad appears after a brief transition and before the results screen. Continue then opens the next level directly. If no ad is ready, results appear immediately. Desktop and the web build skip ads.
 
 Phones render the world at 1280×720 while keeping HUD, menus, and touch controls at display resolution. A 960×540 option reduces world rendering further; simulators use a separate 320×180 preview. All profiles retain the same 320×180 game coordinates. Desktop keeps native rendering. Compare the phone budgets with `tools/play_mobile.sh 1 --mobile-render=720` and `tools/play_mobile.sh 1 --mobile-render=540`; see the [rendering profiles](docs/mobile.md#rendering-profiles).
 
@@ -210,7 +227,7 @@ A one-time $0.99 purchase permanently turns off ads.
 
 ## Credits
 
-Menus, Level 1 and Level 7 — Ancient Greek Inspired Folk. Music by <a href="https://pixabay.com/users/moonpub-15209240/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Johnny Hoeve</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Pixabay</a>
+Menus, Level 1 and Level 8 — Ancient Greek Inspired Folk. Music by <a href="https://pixabay.com/users/moonpub-15209240/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Johnny Hoeve</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Pixabay</a>
 
 Level 2 — Santorini Breeze. Music by <a href="https://pixabay.com/users/u_98673jp944-48995615/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=470783">u_98673jp944</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=470783">Pixabay</a>
 
@@ -220,7 +237,7 @@ Level 4 — Atlas Egypt. Music by <a href="https://pixabay.com/users/vadim_makes
 
 Level 5 — Ancient Persian Music. Music by <a href="https://pixabay.com/users/sounovamusic-51943437/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=460551">Sounova Music</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=460551">Pixabay</a>
 
-Level 6 — Ancient Egypt Historical Epic. Music by <a href="https://pixabay.com/users/openmindaudio-53602733/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">OpenMindAudio</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">Pixabay</a>
+Levels 6 and 7 — Ancient Egypt Historical Epic. Music by <a href="https://pixabay.com/users/openmindaudio-53602733/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">OpenMindAudio</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">Pixabay</a>
 
 Sound effect by <a href="https://pixabay.com/users/daviddumaisaudio-41768500/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=185432">David Dumais</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=185432">Pixabay</a>
 
@@ -236,7 +253,7 @@ To review Cerberus Pups, run `godot --path . res://scenes/reviews/cerberus_pup_r
 
 To review the Hydra, run `godot --path . res://scenes/reviews/hydra_review.tscn`, or open that scene and press **F6**. Each of its three heads has two health and a separate hit area. Cut down every head to defeat it; hitting the coiled body does no damage. Jump to reach the higher heads, or counter their telegraphed bites as they dip toward Theseus. Severed heads stay gone, and the survivors continue taking turns attacking.
 
-To check all seven continuous landscapes, complete scenery objects, and the absence of checkpoint triggers, run `godot --path . --script res://tests/scenery_art.gd`. This check uses the renderer.
+To check all eight continuous landscapes, complete scenery objects, and the absence of checkpoint triggers, run `godot --path . --script res://tests/scenery_art.gd`. This check uses the renderer.
 
 Start any level at its entrance:
 
@@ -247,7 +264,7 @@ tools/play_level.sh 3      # Level 3 from the entrance
 
 To skip the wrapper script, run `godot --path . res://scenes/debug/level_select.tscn -- --level=3`, or open `scenes/debug/level_select.tscn` in the editor and press **F6**.
 
-Check all seven countdowns, expiry to Hades, and entrance retries:
+Check all eight countdowns, expiry to Hades, and entrance retries:
 
 ```sh
 godot --headless --path . --script res://tests/level_timers.gd --fixed-fps 60

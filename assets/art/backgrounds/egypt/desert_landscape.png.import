@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dptgbixlekter"
-path.s3tc="res://.godot/imported/atlantis_landscape.png-77fb04cb314876e9be866a47fc97cd28.s3tc.ctex"
-path.etc2="res://.godot/imported/atlantis_landscape.png-77fb04cb314876e9be866a47fc97cd28.etc2.ctex"
+uid="uid://dmmgj3qv4p8x3"
+path.s3tc="res://.godot/imported/desert_landscape.png-c0825863524703d2f2ee5e61709f7e09.s3tc.ctex"
+path.etc2="res://.godot/imported/desert_landscape.png-c0825863524703d2f2ee5e61709f7e09.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/art/backgrounds/level_6/atlantis_landscape.png"
-dest_files=["res://.godot/imported/atlantis_landscape.png-77fb04cb314876e9be866a47fc97cd28.s3tc.ctex", "res://.godot/imported/atlantis_landscape.png-77fb04cb314876e9be866a47fc97cd28.etc2.ctex"]
+source_file="res://assets/art/backgrounds/egypt/desert_landscape.png"
+dest_files=["res://.godot/imported/desert_landscape.png-c0825863524703d2f2ee5e61709f7e09.s3tc.ctex", "res://.godot/imported/desert_landscape.png-c0825863524703d2f2ee5e61709f7e09.etc2.ctex"]
 
 [params]
 

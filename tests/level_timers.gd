@@ -35,7 +35,7 @@ func _run() -> void:
 	state = root.get_node("LevelRun")
 	var controls := root.get_node("MobileControls")
 	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
-	for number in range(1, 8):
+	for number in range(1, 9):
 		state.begin_level(number, 700)
 		change_scene_to_file(state.scene_path())
 		await scene_changed
@@ -105,7 +105,7 @@ func _run() -> void:
 	_stop_audio(root)
 	restore_scores.call()
 	OS.delay_msec(150)
-	print("PASS: all seven countdowns, pause, completion, timeout/Hades, score and entrance retries, and mobile safe areas." if failures.is_empty() else str(failures))
+	print("PASS: all eight countdowns, pause, completion, timeout/Hades, score and entrance retries, and mobile safe areas." if failures.is_empty() else str(failures))
 	quit(0 if failures.is_empty() else 1)
 
 

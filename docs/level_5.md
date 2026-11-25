@@ -112,7 +112,7 @@ one or two heads leaves the gate locked. The last head awards 450 points
 once and opens the gate. Theseus climbs the temple steps and disappears
 inside before the Level 5 completion menu. Replay restarts Level 5, and
 New Game resets the campaign to Level 1. **Continue to Level 6** enters
-[Atlantis](level_6.md) with a fresh countdown.
+[the Egyptian Pyramid Road](level_6.md) with a fresh countdown.
 
 ## Play and validation
 

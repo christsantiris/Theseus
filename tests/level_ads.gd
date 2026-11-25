@@ -158,8 +158,8 @@ func _run() -> void:
 	ads._discard_loaded_ad()
 
 	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
-	state.begin_level(7)
-	change_scene_to_file("res://scenes/levels/level_7.tscn")
+	state.begin_level(8)
+	change_scene_to_file("res://scenes/levels/level_8.tscn")
 	await scene_changed
 	var final_level := current_scene
 	var final_ad := TestAd.new()

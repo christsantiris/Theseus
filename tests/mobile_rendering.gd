@@ -49,7 +49,7 @@ func _open(number: int) -> Node:
 func _trajectory(profile: String, number := 1) -> Array:
 	manager.set_profile(profile)
 	var level := await _open(number)
-	if number == 6:
+	if number == 7:
 		level.tide.set_physics_process(false)
 		level.tide.elapsed = 15.0
 		level.tide._sync_tide()
@@ -143,13 +143,13 @@ func _run() -> void:
 	_expect(manager.simulator_for_platform("Android", "x86_64", "sdk_gphone64_x86_64", ""), "Android emulator has a separate preview")
 	_expect(not manager.simulator_for_platform("Android", "arm64", "Pixel 8", ""), "Physical Android uses the phone profile")
 	var native := await _trajectory("native")
-	var wet_native := await _trajectory("native", 6)
+	var wet_native := await _trajectory("native", 7)
 	for profile in ["720", "540", "preview"]:
 		var actual := await _trajectory(profile)
 		_expect(actual == native, "Movement, jumps, collisions and sword frames match native rendering: " + profile)
-		var wet := await _trajectory(profile, 6)
+		var wet := await _trajectory(profile, 7)
 		_expect(wet == wet_native, "Underwater movement and sword frames match native rendering: " + profile)
-		for number in range(1, 8):
+		for number in range(1, 9):
 			var level := await _open(number)
 			_expect(current_scene.get_parent() == root, "Scene ownership and reload behavior remain unchanged")
 			_expect(root.get_visible_rect().size == Vector2(320, 180), "Logical view remains 320x180")
@@ -188,5 +188,5 @@ func _run() -> void:
 			child.stop()
 			child.stream = null
 	OS.delay_msec(150)
-	print("PASS: render sizes, all seven camera views, identical physics/attacks, HUD and touch safe areas, resizing, menus and desktop restoration." if failures.is_empty() else str(failures))
+	print("PASS: render sizes, all eight camera views, identical physics/attacks, HUD and touch safe areas, resizing, menus and desktop restoration." if failures.is_empty() else str(failures))
 	quit(0 if failures.is_empty() else 1)
