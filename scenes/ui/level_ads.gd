@@ -201,7 +201,10 @@ static func unit_id_for(platform: String, debug_build: bool, production_enabled:
 	return ""
 
 
+# Every request is non-personalized (npa) and uses Google's restricted data
+# processing (rdp), so no player's data is used for interest-based ads or sold
+# or shared, whatever they answer in a consent message.
 static func _new_request() -> AdRequest:
 	var request := AdRequest.new()
-	request.extras = {"npa": "1"}
+	request.extras = {"npa": "1", "rdp": "1"}
 	return request

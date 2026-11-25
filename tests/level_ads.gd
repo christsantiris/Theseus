@@ -85,6 +85,7 @@ func _run() -> void:
 		_expect(ads.unit_id_for(platform, true, true).is_empty(), "Mobile ads are unavailable on " + platform)
 	var request: AdRequest = ads._new_request()
 	_expect(request.convert_to_dictionary().extras.get("npa") == "1", "Ad requests pass non-personalized treatment to the native plugin")
+	_expect(request.convert_to_dictionary().extras.get("rdp") == "1", "Ad requests pass restricted data processing, so data is never sold or shared")
 	var continued := [false]
 	ads.show_then(func() -> void:
 		continued[0] = true

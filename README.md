@@ -208,7 +208,7 @@ To run Theseus, open `builds/ios/Theseus.xcodeproj` in Xcode, select an iPhone S
 
 ### Production ads
 
-The [level-complete interstitial](docs/mobile.md#ads) has Theseus's registered iOS and Android app and ad-unit IDs. Debug mobile builds use Google's test ads; release builds request the registered units. Google's consent message (UMP) runs at launch, ads wait until any required consent is answered, and the title offers **Privacy Choices** where Google requires it. Requests are non-personalized, with no cross-app tracking. Remaining before full serving:
+The [level-complete interstitial](docs/mobile.md#ads) has Theseus's registered iOS and Android app and ad-unit IDs. Debug mobile builds use Google's test ads; release builds request the registered units. Google's consent message (UMP) runs at launch, ads wait until any required consent is answered, and the title offers **Privacy Choices** where Google requires it. Requests are non-personalized and use restricted data processing, with no cross-app tracking and no sale or sharing of data. Remaining before full serving:
 
 - Validate the consent message and test ads on a physical iPhone, and complete the App Store privacy disclosures. ATT is needed if tracking is introduced.
 - Verify `app-ads.txt`, link the public App Store listing, and complete AdMob's readiness review.
