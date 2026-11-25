@@ -62,8 +62,9 @@ Greek facade while retaining the shared gate collision and doorway animation.
 The opaque landscape uses desktop and mobile GPU compression. Transparent props
 remain lossless, with measured painted-base anchors and textures below the
 4,096-pixel mobile limit. Existing native, 720p, 540p and preview rendering
-profiles are shared with the rest of the campaign. The existing Ancient Egypt
-Historical Epic track is reused; music credits are in the README.
+profiles are shared with the rest of the campaign. Ancient Persia Epic
+Soundtrack 03 by Alejandro Piñero Amerio starts and loops from 1:02; music
+credits are in the README.
 
 ## Play testing
 

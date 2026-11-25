@@ -237,7 +237,9 @@ Level 4 — Atlas Egypt. Music by <a href="https://pixabay.com/users/vadim_makes
 
 Level 5 — Ancient Persian Music. Music by <a href="https://pixabay.com/users/sounovamusic-51943437/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=460551">Sounova Music</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=460551">Pixabay</a>
 
-Levels 6 and 7 — Ancient Egypt Historical Epic. Music by <a href="https://pixabay.com/users/openmindaudio-53602733/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">OpenMindAudio</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">Pixabay</a>
+Level 6 — Ancient Persia Epic Soundtrack 03 (starts and loops from 1:02). Music by <a href="https://pixabay.com/users/vjgalaxy-8110364/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=532242">Alejandro Piñero Amerio</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=532242">Pixabay</a>
+
+Level 7 — Ancient Egypt Historical Epic. Music by <a href="https://pixabay.com/users/openmindaudio-53602733/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">OpenMindAudio</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">Pixabay</a>
 
 Sound effect by <a href="https://pixabay.com/users/daviddumaisaudio-41768500/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=185432">David Dumais</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=185432">Pixabay</a>
 
