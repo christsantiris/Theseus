@@ -91,7 +91,7 @@ just like a fatal hit. **Retry Level** there restarts the entire level, includin
 all enemies and flasks, and restores the score carried in from earlier levels.
 There are no checkpoint shrines or mid-level saves.
 
-The title's **Restart Level** button restarts the current level from its entrance
+The title's **Load** button restarts the current level from its entrance
 once Level 2 or later has been reached in this session. Replay also resets the
 level and countdown. New Game resets the campaign and score to Level 1.
 Session progress is held in memory; high scores are saved separately on disk.

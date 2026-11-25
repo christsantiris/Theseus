@@ -44,7 +44,7 @@ once on top of the water multiplier.
 Higher ground gives partial relief during high tide. Players can press through
 with slower retreats, reposition toward a higher landing, or wait for drainage.
 Every required climb and both canal jumps remain possible even at maximum
-flood. Pause freezes the tide; Replay, title Restart Level, and death/reload begin a new
+flood. Pause freezes the tide; Replay, title Load, and death/reload begin a new
 low tide at the level entrance. Water drag cannot persist into other
 levels.
 
@@ -197,7 +197,7 @@ just like a fatal hit. **Retry Level** there restarts the entire level, includin
 all enemies and flasks, and restores the score carried in from earlier levels.
 There are no checkpoint shrines or mid-level saves.
 
-The title's **Restart Level** button restarts the current level from its entrance
+The title's **Load** button restarts the current level from its entrance
 once Level 2 or later has been reached in this session. Replay also resets the
 level and countdown. New Game resets the campaign and score to Level 1.
 Session progress is held in memory; high scores are saved separately on disk.
@@ -250,7 +250,7 @@ retreat counters, actual sword attacks, full touch jumps, one damage per attack,
 locked facing, focus, wall and edge safety, scores, captain health, and review
 controls. It independently inspects the imported painted tail contacts.
 
-The integration check covers Level 6→7, the entrance, title Restart Level,
+The integration check covers Level 6→7, the entrance, title Load,
 death/reload, supported enemy and flask placements, level score rollback, the captain-locked gate, entry, completion, replay, and New Game.
 With combat isolated and the tide cycling, the full course takes about 59.5
 simulated seconds and 17 jumps. Both canals are harmless and escapable in either direction; pause

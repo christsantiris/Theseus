@@ -46,8 +46,7 @@ The [Minotaur finale](level_8.md) is Level 8.
 Each attempt starts with full health and a 3:00 countdown. Pause, app
 interruptions, temple entry, the ad and results freeze the clock. Death or time
 expiry opens Hades; Retry Level restores the Egyptian entrance, enemies,
-flasks and score carried from earlier levels. Replay and the title's Restart
-Level also restart the attempt. There are no checkpoints.
+flasks and score carried from earlier levels. Replay and the title's Load also restart the attempt. There are no checkpoints.
 
 Desktop keyboard/mouse controls and simultaneous mobile touch controls use the
 shared player and UI. The camera follows the climbs within the existing bounds.
