@@ -117,7 +117,7 @@ pickup positions, time limit, and tutorial prompts. `level_1_geometry.gd`
 inherits the original collision construction from `level_geometry.gd`, then
 renders the continuous landscape, independent scenery cutouts, and stone surfaces.
 `assets/art/backgrounds/level_1/attic_landscape.png` is the single opaque painting;
-`olive_grove.png`, `colonnade.png`, and `aqueduct.png` are transparent landmarks. `level_1_temple.gd` renders the cinematic facade shared by all eight levels,
+`olive_grove.png`, `colonnade.png`, and `aqueduct.png` are transparent landmarks. `level_1_temple.gd` renders the cinematic facade used by the Greek sanctuary exits,
 leaving gate collision, unlocking, and entry logic on the existing temple.
 Each level owns its scenery renderer. Scenery is also visible in the editor.
 `level_1.gd` builds the encounters and manages

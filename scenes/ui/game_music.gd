@@ -7,11 +7,12 @@ const LEVEL_TRACKS := {
 	2: {"path": "res://assets/audio/music/u_98673jp944-santorini-breeze-470783.mp3", "start": 0.0},
 	# The intro fades out by 20.5 s; the first drum hit lands at about 20.6 s.
 	3: {"path": "res://assets/audio/music/alex-morgan-ancient-temple-mysterious-ethnic-music-587426.mp3", "start": 20.5},
-	4: {"path": "res://assets/audio/music/vadim_makes_sound-atlas-egypt-559404.mp3", "start": 0.0},
+	4: {"path": "res://assets/audio/music/IbnAl-Noor.mp3", "start": 0.0},
+	5: {"path": "res://assets/audio/music/vadim_makes_sound-atlas-egypt-559404.mp3", "start": 0.0},
 	# Skip the opening; the melody plays without a break, so start at 21 s.
-	5: {"path": "res://assets/audio/music/sounovamusic-ancient-persian-music-460551.mp3", "start": 21.0},
-	6: {"path": "res://assets/audio/music/vjgalaxy-ancient-persia-epic-soundtrack-03-532242.mp3", "start": 62.0},
-	7: {"path": "res://assets/audio/music/openmindaudio-ancient-egypt-historical-epic-632173.mp3", "start": 0.0},
+	6: {"path": "res://assets/audio/music/sounovamusic-ancient-persian-music-460551.mp3", "start": 21.0},
+	7: {"path": "res://assets/audio/music/vjgalaxy-ancient-persia-epic-soundtrack-03-532242.mp3", "start": 62.0},
+	8: {"path": "res://assets/audio/music/openmindaudio-ancient-egypt-historical-epic-632173.mp3", "start": 0.0},
 }
 var _music: AudioStreamPlayer
 var _active_path := ""

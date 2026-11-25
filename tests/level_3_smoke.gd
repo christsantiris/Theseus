@@ -98,7 +98,7 @@ func _run() -> void:
 	_expect(level.level_number == 3 and level.player.position.distance_to(Town.START) < 1.0, "Load resumes the town entrance")
 	await _traverse()
 	level = current_scene
-	_expect(level.pause_heading.text == "Level 3 Complete" and level.next_button.visible and level.next_button.text == "Continue to Level 4", "Town completion offers the mountain level")
+	_expect(level.pause_heading.text == "Level 3 Complete" and level.next_button.visible and level.next_button.text == "Continue to Level 4", "Town completion offers Troy")
 	_expect(ResourceLoader.exists(level.next_level), "Town continuation points to a real level scene")
 	level._on_replay_pressed()
 	await _frames()

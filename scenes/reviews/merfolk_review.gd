@@ -52,7 +52,7 @@ func _choose(selected: int) -> void:
 	merfolk.direction = -1
 	merfolk.patrol_left = 176
 	merfolk.patrol_right = 288
-	merfolk.tuning = Difficulty.for_level(7, role == 2)
+	merfolk.tuning = Difficulty.for_level(8, role == 2)
 	merfolk.process_mode = Node.PROCESS_MODE_PAUSABLE
 	add_child(merfolk)
 	merfolk.defeated.connect(_on_defeated)

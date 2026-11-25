@@ -31,10 +31,10 @@ func _verify_level(number: int) -> void:
 	var continuous := parent.get_node("ContinuousLandscape") as Sprite2D
 	_expect(parent.get_child_count() == 1 and continuous.material == null and continuous.texture == world.PANORAMA_SHEETS[0], "Level %d uses one unblended painting" % number)
 	_expect(continuous.texture_repeat == CanvasItem.TEXTURE_REPEAT_DISABLED, "Level %d never wraps its landscape" % number)
-	_expect(world.midground.get_child_count() == [15, 16, 14, 15, 13, 12, 15, 6][number - 1], "Level %d has complete independent scenery objects" % number)
+	_expect(world.midground.get_child_count() == [15, 16, 14, 16, 15, 13, 12, 15, 6][number - 1], "Level %d has complete independent scenery objects" % number)
 	_expect(level.find_children("*Shrine", "Area2D", true, false).is_empty(), "Level %d has no checkpoint triggers" % number)
 	_expect(level.layout.WIDTH == 5760 and level.layout.TIME_LIMIT == 180.0, "Level %d is 20%% longer with the same countdown" % number)
-	_expect(level.layout.ENEMIES.size() == [19, 19, 19, 19, 13, 19, 16, 16][number - 1], "Level %d fills its extension with three more enemies" % number)
+	_expect(level.layout.ENEMIES.size() == [19, 19, 19, 19, 19, 13, 19, 16, 16][number - 1], "Level %d fills its extension with three more enemies" % number)
 	var camera: Camera2D = level.player.get_node("Camera2D")
 	for x in range(160, level.layout.WIDTH - 159, 64):
 		# Check floor, jump headroom and the bottom camera clamp on the full route.
@@ -52,7 +52,7 @@ func _verify_level(number: int) -> void:
 
 
 func _run() -> void:
-	for number in range(1, 9):
+	for number in range(1, 10):
 		await _verify_level(number)
 	for child in root.get_node("GameMusic").get_children():
 		if child is AudioStreamPlayer:
@@ -60,7 +60,7 @@ func _run() -> void:
 			child.stream = null
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: all eight continuous landscapes, complete scenery objects, removed checkpoint triggers.")
+		print("PASS: all nine continuous landscapes, complete scenery objects, removed checkpoint triggers.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)

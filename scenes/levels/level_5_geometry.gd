@@ -1,13 +1,13 @@
 @tool
 extends "res://scenes/levels/level_geometry.gd"
 
-const Gorge := preload("res://scenes/levels/level_5_layout.gd")
+const Mountain := preload("res://scenes/levels/level_5_layout.gd")
 const CONTINUOUS_LANDSCAPE := true
-const PANORAMA_SHEETS := [preload("res://assets/art/backgrounds/level_5/gorge_landscape.png")]
-const CLIFF_TEMPLE := preload("res://assets/art/backgrounds/level_5/cliff_temple.png")
+const PANORAMA_SHEETS := [preload("res://assets/art/backgrounds/level_4/mountain_landscape.png")]
+const TERRACE_WALL := preload("res://assets/art/backgrounds/level_4/terrace_wall.png")
+const GROVE := preload("res://assets/art/backgrounds/level_1/olive_grove.png")
 const OUTCROP := preload("res://assets/art/backgrounds/level_2/coastal_outcrop.png")
-const COLONNADE := preload("res://assets/art/backgrounds/level_1/colonnade.png")
-const MASONRY := preload("res://assets/art/backgrounds/level_5/gorge_masonry.png")
+const MASONRY := preload("res://assets/art/backgrounds/level_4/mountain_stone.png")
 const CAP_STONE := preload("res://assets/art/backgrounds/level_1/limestone_wall.png")
 const COLUMN := preload("res://assets/art/backgrounds/level_4/broken_column.png")
 const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
@@ -21,17 +21,11 @@ var midground: Node2D
 
 
 func _ready() -> void:
-	_add_terrain("Ground", Rect2(0, Gorge.FLOOR_Y, Gorge.WIDTH, 72))
+	_add_terrain("Ground", Rect2(0, Mountain.FLOOR_Y, Mountain.WIDTH, 72))
 	_make_solid("LeftBoundary", Rect2(-16, -128, 16, 512))
-	_make_solid("RightBoundary", Rect2(Gorge.WIDTH, -128, 16, 512))
-	for index in Gorge.PLATFORMS.size():
-		_add_terrain("GorgeTerrace%d" % index, Gorge.PLATFORMS[index])
-	for index in Gorge.BONUS_LEDGES.size():
-		var body_name := "BullLedge%d" % index
-		_make_solid(body_name, Gorge.BONUS_LEDGES[index])
-		var collision := get_node(body_name).get_child(0) as CollisionShape2D
-		collision.one_way_collision = true
-		collision.one_way_collision_margin = 2
+	_make_solid("RightBoundary", Rect2(Mountain.WIDTH, -128, 16, 512))
+	for index in Mountain.PLATFORMS.size():
+		_add_terrain("MountainTerrace%d" % index, Mountain.PLATFORMS[index])
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	process_priority = 10
@@ -44,10 +38,10 @@ func _ready() -> void:
 
 func _add_terrain(prefix: String, rectangle: Rect2) -> void:
 	var index := 0
-	for piece in Gorge.terrain_pieces(rectangle):
+	for piece in Mountain.terrain_pieces(rectangle):
 		var body_name := "%sPart%d" % [prefix, index]
 		_make_solid(body_name, piece)
-		if Gorge.is_spike_floor(piece):
+		if Mountain.is_spike_floor(piece):
 			get_node(body_name).set_meta("spike_pit", true)
 		index += 1
 
@@ -59,7 +53,7 @@ func _process(_delta: float) -> void:
 
 func _build_landscape() -> void:
 	backdrop = Node2D.new()
-	backdrop.name = "GorgeBackdrop"
+	backdrop.name = "MountainBackdrop"
 	backdrop.z_index = -3
 	add_child(backdrop)
 	var landscape := Sprite2D.new()
@@ -72,19 +66,19 @@ func _build_landscape() -> void:
 	backdrop.add_child(landscape)
 
 	midground = Node2D.new()
-	midground.name = "GorgeLandmarks"
+	midground.name = "MountainLandmarks"
 	midground.z_index = -2
 	add_child(midground)
 	# Complete objects stay on authored landings; only the distant landscape
 	# uses parallax. Painted bases overlap the terrain through GROUNDING.
-	for point in [Vector2(1056, 100), Vector2(3152, 104), Vector2(4880, 96), Vector2(5424, 90)]:
-		_landmark(CLIFF_TEMPLE, point.x, point.y, "CliffTemple")
-	for point in [Vector2(160, 104), Vector2(1432, 72), Vector2(1960, 72), Vector2(2520, 72), Vector2(3640, 44)]:
+	for point in [Vector2(144, 104), Vector2(608, 104), Vector2(2104, 104), Vector2(3440, 96), Vector2(5096, 84)]:
+		_landmark(GROVE, point.x, point.y, "CypressGrove")
+	for point in [Vector2(1784, 64), Vector2(2512, 64), Vector2(5464, 64)]:
 		_landmark(OUTCROP, point.x, point.y, "RockyOutcrop")
-	for point in [Vector2(2904, 48), Vector2(5256, 56)]:
-		_landmark(COLONNADE, point.x, point.y, "Colonnade")
-	_landmark(OUTCROP, 4220, 64, "RockyOutcrop")
-	_landmark(CLIFF_TEMPLE, 4688, 96, "CliffTemple")
+	for point in [Vector2(1008, 44), Vector2(1528, 34), Vector2(2760, 32), Vector2(2992, 40), Vector2(5336, 32)]:
+		_landmark(TERRACE_WALL, point.x, point.y, "TerraceWall")
+	_landmark(GROVE, 4144, 88, "CypressGrove")
+	_landmark(OUTCROP, 4576, 60, "RockyOutcrop")
 	_sync_backdrop()
 
 
@@ -94,7 +88,7 @@ func _landmark(texture: Texture2D, route_x: float, height: float, label: String)
 	sprite.texture = texture
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
-	GROUNDING.place(sprite, route_x, Gorge.surface_at(route_x), height)
+	GROUNDING.place(sprite, route_x, Mountain.surface_at(route_x), height)
 	midground.add_child(sprite)
 
 
@@ -123,18 +117,16 @@ func _decorate_temple() -> void:
 
 
 func _draw() -> void:
-	_draw_terrain(Rect2(0, Gorge.FLOOR_Y, Gorge.WIDTH, 72))
-	for platform: Rect2 in Gorge.PLATFORMS:
+	_draw_terrain(Rect2(0, Mountain.FLOOR_Y, Mountain.WIDTH, 72))
+	for platform: Rect2 in Mountain.PLATFORMS:
 		_draw_terrain(platform)
-	for ledge: Rect2 in Gorge.BONUS_LEDGES:
-		_retaining_stone(ledge)
-	for x in [96, 688, 1392, 1936, 2704, 3552, 5272]:
-		var height := 44.0
-		draw_texture_rect(COLUMN, GROUNDING.rect(COLUMN, x, Gorge.surface_at(x), height), false)
+	for x in [1984, 5008, 5592]:
+		var height := 41.0
+		draw_texture_rect(COLUMN, GROUNDING.rect(COLUMN, x, Mountain.surface_at(x), height), false)
 
 
 func _draw_terrain(rectangle: Rect2) -> void:
-	for piece in Gorge.terrain_pieces(rectangle):
+	for piece in Mountain.terrain_pieces(rectangle):
 		_retaining_stone(piece)
 
 

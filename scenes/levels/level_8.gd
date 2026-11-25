@@ -1,16 +1,20 @@
 extends "res://scenes/levels/level_1.gd"
 
 
+const Tide := preload("res://scenes/objects/atlantis_tide.gd")
+var tide: Node2D
+
+
 func _ready() -> void:
 	layout = preload("res://scenes/levels/level_8_layout.gd")
 	level_number = 8
-	next_level = ""
-	objective = "Follow the torchlight. Defeat the Minotaur to escape."
-	completion_text = "The Minotaur has fallen. Theseus escapes the labyrinth!"
+	next_level = "res://scenes/levels/level_9.tscn"
+	objective = "Tides slow you, not Merfolk. Watch the waterline."
+	completion_text = "Poseidon's sanctuary is free of the Merfolk captain."
 	$Player/Camera2D.position.y = -24
 	super()
-
-
-func _on_gate_entered() -> void:
-	super()
-	pause_heading.text = "Theseus Victorious"
+	tide = Tide.new()
+	tide.name = "AtlantisTide"
+	tide.player = player
+	tide.hud = hud
+	add_child(tide)

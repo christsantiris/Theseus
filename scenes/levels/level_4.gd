@@ -1,25 +1,17 @@
 extends "res://scenes/levels/level_1.gd"
 
-const SPIKE_PIT := preload("res://scenes/objects/spike_pit.tscn")
-
 
 func _ready() -> void:
 	layout = preload("res://scenes/levels/level_4_layout.gd")
 	level_number = 4
 	next_level = "res://scenes/levels/level_5.tscn"
-	objective = "Climb the mountain. Jump pits; jump out if you fall."
-	completion_text = "The mountain sanctuary is clear."
+	objective = "Cross Troy's fortifications. Defeat the citadel captain."
+	completion_text = "Troy's gates are open. The mountain road awaits.\n\"Ibn Al-Noor\" Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 4.0 License\nhttp://creativecommons.org/licenses/by/4.0/"
 	$Player/Camera2D.position.y = -24
 	super()
-	for definition: Dictionary in layout.PITS:
-		var pit = SPIKE_PIT.instantiate()
-		pit.name = definition.name
-		pit.position = definition.position
-		pit.pit_width = definition.width
-		pit.pit_depth = definition.depth
-		pit.damaged.connect(_on_spike_damage)
-		add_child(pit)
-
-
-func _on_spike_damage(_body: CharacterBody2D) -> void:
-	hud.show_message("Spikes! Hold jump and move to climb out.", 2.5, 3)
+	# Keep the supplied music credit inside the existing results panel.
+	var credit_font := details.get_theme_font("font").duplicate() as FontFile
+	credit_font.fixed_size_scale_mode = TextServer.FIXED_SIZE_SCALE_ENABLED
+	details.add_theme_font_override("font", credit_font)
+	details.add_theme_font_size_override("font_size", 6)
+	details.add_theme_constant_override("line_spacing", 0)

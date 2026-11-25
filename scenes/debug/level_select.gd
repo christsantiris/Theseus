@@ -87,10 +87,10 @@ func _build_picker(error: String) -> void:
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rows.add_child(heading)
 
-	# Eight levels fit the short landscape viewport in two columns.
+	# Nine levels fit the short landscape viewport in three columns.
 	var grid := GridContainer.new()
-	grid.columns = 2
-	grid.add_theme_constant_override("h_separation", 12)
+	grid.columns = 3
+	grid.add_theme_constant_override("h_separation", 6)
 	grid.add_theme_constant_override("v_separation", 3)
 	rows.add_child(grid)
 	for level in _level_numbers():
@@ -99,7 +99,7 @@ func _build_picker(error: String) -> void:
 		grid.add_child(row)
 		var name_label := Label.new()
 		name_label.text = "Level %d" % level
-		name_label.custom_minimum_size = Vector2(44, 0)
+		name_label.custom_minimum_size = Vector2(32, 0)
 		name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		name_label.theme_type_variation = &"CarvedLabel"
 		row.add_child(name_label)

@@ -2,13 +2,13 @@
 
 [ext_resource type="PackedScene" path="res://scenes/levels/level_1.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scenes/levels/level_4.gd" id="2_level"]
-[ext_resource type="Script" path="res://scenes/levels/level_4_geometry.gd" id="3_mountains"]
+[ext_resource type="Script" path="res://scenes/levels/level_4_geometry.gd" id="3_troy"]
 
 [node name="Level4" instance=ExtResource("1_base")]
 script = ExtResource("2_level")
 
 [node name="World" parent="." index="0"]
-script = ExtResource("3_mountains")
+script = ExtResource("3_troy")
 
 [node name="Player" parent="." index="1"]
 position = Vector2(48, 280)

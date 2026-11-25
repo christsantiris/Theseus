@@ -1,7 +1,7 @@
 extends SceneTree
 
 const Tide := preload("res://scenes/objects/atlantis_tide.gd")
-const Layout := preload("res://scenes/levels/level_7_layout.gd")
+const Layout := preload("res://scenes/levels/level_8_layout.gd")
 const Difficulty := preload("res://scenes/levels/difficulty.gd")
 var failures: Array[String] = []
 var level: Node
@@ -29,7 +29,7 @@ func _release() -> void:
 		Input.action_release(action)
 
 
-func _open(number := 7) -> void:
+func _open(number := 8) -> void:
 	_release()
 	paused = false
 	if is_instance_valid(level):
@@ -68,16 +68,16 @@ func _cycle_and_scaling() -> void:
 		_expect(Tide.height_at(t + 0.1) <= Tide.height_at(t), "Filling is continuous and rises monotonically")
 		_expect(Tide.height_at(t + 14.1) >= Tide.height_at(t + 14.0), "Draining is continuous and falls monotonically")
 		_expect(is_equal_approx(Tide.height_at(t), Tide.height_at(t + 26)), "Every cycle repeats the same waterline")
-	var tuning := Difficulty.for_level(7)
+	var tuning := Difficulty.for_level(8)
 	for definition: Dictionary in Layout.ENEMIES:
 		var enemy := level.get_node(String(definition.name))
 		var blade: bool = enemy.reefblade
 		var speed: float = 30.0 if blade else 26.0
 		for time in [0, 8, 15, 22, 26]:
 			_set_time(time)
-			_expect(enemy.tuning.level == 7 and is_equal_approx(enemy.walk_speed, speed * tuning.speed), "Every Merfolk retains full Level 7 pursuit speed throughout the tide")
-			_expect(is_equal_approx(enemy._telegraph(0.65 if blade else 0.7), Difficulty.telegraph(0.65 if blade else 0.7, tuning)), "Level 7 windup scaling is applied to the actual spawned fighter")
-			_expect(is_equal_approx(enemy._punish(1.05 if blade else 1.1), Difficulty.punish(1.05 if blade else 1.1, tuning)) and is_equal_approx(enemy._rest(1.25), Difficulty.rest(1.25, tuning)), "Level 7 recovery and cooldown scaling remain applied")
+			_expect(enemy.tuning.level == 8 and is_equal_approx(enemy.walk_speed, speed * tuning.speed), "Every Merfolk retains full Level 8 pursuit speed throughout the tide")
+			_expect(is_equal_approx(enemy._telegraph(0.65 if blade else 0.7), Difficulty.telegraph(0.65 if blade else 0.7, tuning)), "Level 8 windup scaling is applied to the actual spawned fighter")
+			_expect(is_equal_approx(enemy._punish(1.05 if blade else 1.1), Difficulty.punish(1.05 if blade else 1.1, tuning)) and is_equal_approx(enemy._rest(1.25), Difficulty.rest(1.25, tuning)), "Level 8 recovery and cooldown scaling remain applied")
 		_expect(enemy.hp == (3 if definition.name == Layout.GATE_GUARD else 2), "Only the captain gets the elite health bonus")
 	_expect(Tide.speed_at(280, 280) == 1.0 and Tide.speed_at(280, 272) == 1.0, "Feet and ankle-depth water do not cause sudden drag")
 	_expect(is_equal_approx(Tide.speed_at(280, 248), 0.7), "Waist-depth water reaches 30 percent drag")
@@ -214,7 +214,7 @@ func _pause_and_reset() -> void:
 	for tick in 8:
 		await physics_frame
 	level = current_scene
-	_expect(level.level_number == 7 and level.tide.elapsed < 4 and level.player.movement_speed() == 90, "Replay starts a safe low tide and clears drag")
+	_expect(level.level_number == 8 and level.tide.elapsed < 4 and level.player.movement_speed() == 90, "Replay starts a safe low tide and clears drag")
 	level.player.position = Vector2(4120, 280)
 	level._on_title_pressed()
 	for tick in 5:
@@ -223,7 +223,7 @@ func _pause_and_reset() -> void:
 	for tick in 8:
 		await physics_frame
 	level = current_scene
-	_expect(level.level_number == 7 and level.player.position.distance_to(Layout.START) < 1 and level.tide.elapsed < 4 and level.player.movement_speed() == 90, "Retry returns to the entrance and starts at low tide")
+	_expect(level.level_number == 8 and level.player.position.distance_to(Layout.START) < 1 and level.tide.elapsed < 4 and level.player.movement_speed() == 90, "Retry returns to the entrance and starts at low tide")
 	await _open(1)
 	_expect(not level.has_node("AtlantisTide") and level.player.movement_speed() == 90, "Leaving Atlantis cannot carry water drag into earlier levels")
 
@@ -246,7 +246,7 @@ func _run() -> void:
 	_stop_audio(root)
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: cycling tides, actual Level 7 enemy scaling, full-speed Merfolk, player-only drag, higher ground, wine, unchanged jumps/attacks, all mandatory high-tide jumps, pause, replay, entrance retry and other-level isolation.")
+		print("PASS: cycling tides, actual Level 8 enemy scaling, full-speed Merfolk, player-only drag, higher ground, wine, unchanged jumps/attacks, all mandatory high-tide jumps, pause, replay, entrance retry and other-level isolation.")
 	quit(0 if failures.is_empty() else 1)
 
 

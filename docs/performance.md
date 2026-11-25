@@ -191,7 +191,7 @@ The native iOS summit preview rendered one landscape and fourteen landmarks at t
 
 All six level renderers use `scenes/levels/scenery_grounding.gd` for their floor-standing scenery. Its anchors record the painted base row at 50% alpha in each source image, allowing for transparent margins and import resizing. Placement overlaps the terrain by one world pixel so bilinear filtering does not expose a distant-background strip below the roots or stone bases. The Level 1 olive grove previously floated about 3.5 world pixels above the floor; the corrected sample places its painted base about 0.95 pixels into the ground. Source images, texture formats, mipmaps, camera/parallax behavior, and collision shapes are unchanged.
 
-The rule covers Level 1 trees, colonnades, aqueduct and waystones; Level 2 outcrops, quays, gateways and waystones; Level 3 amphorae, workshops and stoas; Level 4 groves, walls and outcrops; Level 5 temple ruins, outcrops and colonnades; Level 6 obelisks and pylon gateways; Level 7 wave walls, statues, arches and colonnades; and Level 4–5 broken columns. Waystones use the local authored surface height, including raised terraces. Anchors are stored with the scenery code; update them when the painted base in an asset changes. Gameplay performs no image readback or alpha search.
+The rule covers Level 1 trees, colonnades, aqueduct and waystones; Level 2 outcrops, quays, gateways and waystones; Level 3 amphorae, workshops and stoas; Level 4 Trojan horse, bastions, gateways and retaining walls; Level 5 groves, walls and outcrops; Level 6 temple ruins, outcrops and colonnades; Level 7 obelisks and pylon gateways; Level 8 wave walls, statues, arches and colonnades; and Level 5–6 broken columns. Waystones use the local authored surface height, including raised terraces. Anchors are stored with the scenery code; update them when the painted base in an asset changes. Gameplay performs no image readback or alpha search.
 
 ```sh
 godot --path . --script res://tests/scenery_grounding.gd
@@ -205,7 +205,7 @@ The native iOS preview independently read the grove’s imported alpha and measu
 
 The remaining city, mountain, and gorge paintings now use the same continuous
 architecture. The guides include refreshed in-game captures:
-[city](level_3.md), [mountains](level_4.md), and [gorge](level_5.md).
+[city](level_3.md), [mountains](level_5.md), and [gorge](level_6.md).
 Full-route coverage checks include climbs, summit landings, pit bottoms, and
 both optional bull ledges. Existing collision, spike recess, one-way ledge,
 and Hydra gate assertions remain in the scenery checks. The ground-contact
@@ -227,7 +227,7 @@ and the Hydra's three-head gate requirement.
 
 ## Atlantis play-test build
 
-[Level 7](level_7.md) uses the same continuous scenery and render budgets as
+[Level 8](level_8.md) uses the same continuous scenery and render budgets as
 the previous levels. Five wave walls and four bronze statues join four reused
 arches/colonnades; all bases are grounded. Low-tide canal puddles draw small translucent rectangles and short wave lines.
 The cycling tide adds water strips clipped to visible open terrain, ripples,
@@ -279,7 +279,7 @@ sustained GPU performance.
 
 ## Final labyrinth lighting
 
-[Level 8](level_8.md) adds one continuous GPU-compressed interior painting, a
+[Level 9](level_9.md) adds one continuous GPU-compressed interior painting, a
 lossless eight-pose Minotaur atlas, and a lossless four-frame torch atlas. Nearby
 torches share one 128×128 radial light texture and disable shadows; distant
 torches hide their lights. Cool ambient modulation affects the world, leaving
@@ -288,8 +288,8 @@ quality settings apply. No runtime image readbacks or seam processing are used.
 
 ## Egyptian desert and campaign numbering
 
-[The Pyramid Road](level_6.md) is Level 6, Atlantis is Level 7, and the
-Minotaur labyrinth is Level 8. Egypt uses one 2,172×724 GPU-compressed desert
+[The Pyramid Road](level_7.md) is Level 7, Atlantis is Level 8, and the
+Minotaur labyrinth is Level 9. Egypt uses one 2,172×724 GPU-compressed desert
 landscape, a lossless 1,024×1,536 obelisk and a lossless 1,536×1,024 pylon
 gateway. Six obelisks and four gateways share those textures and remain fixed
 to the authored sandstone landings; only the distant landscape uses parallax.
@@ -297,10 +297,10 @@ The level reuses existing soldiers, terrain material, player physics, touch
 controls and render profiles. It adds no water or dynamic lighting pass.
 
 The historical Atlantis performance measurements above predate this insertion
-and used Level 6 enemy tuning. Atlantis now receives the shared Level 7 curve.
+and used Level 6 enemy tuning. Atlantis now receives the shared Level 8 curve.
 No new native iOS/Android performance measurements are claimed for Egypt or
 the renumbered campaign. Campaign-wide renderer, grounding and countdown checks
-include the eighth level.
+include all nine levels.
 
 ## Longer level approaches
 
@@ -315,3 +315,13 @@ jump headroom and the bottom camera limit. `tests/music_loops.gd` decodes each
 MP3 through its ending and verifies playback continues at the configured loop
 offset. The 3:00 countdown and render budgets are unchanged. Earlier traversal
 and performance measurements in this document describe the shorter routes.
+
+## Troy’s fortifications
+
+[Troy](level_4.md) is Level 4. The mountain, gorge, Egypt, Atlantis and final
+labyrinth are now Levels 5–9. Troy uses one GPU-compressed continuous fortress
+painting, lossless transparent bastion and Trojan horse cutouts, and reused Cyclopean gateways and
+retaining walls. Its panorama covers the full 5,760-unit route with slow
+parallax; grounded props and solid stone terraces use the existing rendering
+profiles. It adds no shaders, water or dynamic lights. Music loads on entry
+and loops from the beginning. Native device performance needs separate checks.

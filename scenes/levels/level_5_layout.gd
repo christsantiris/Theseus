@@ -7,95 +7,104 @@ const HEIGHT := 352
 const FLOOR_Y := 280
 const START := Vector2(48, FLOOR_Y)
 const SECTIONS := [
-	{"x": 0, "name": "Gorge Mouth"},
-	{"x": 960, "name": "Temple Ledges"},
-	{"x": 1920, "name": "Broken Causeway"},
-	{"x": 2880, "name": "High Colonnade"},
-	{"x": 3840, "name": "Western Temple Court"},
-	{"x": 4800, "name": "Hydra Sanctuary"},
+	{"x": 0, "name": "Cypress Foothills"},
+	{"x": 960, "name": "Stone Switchbacks"},
+	{"x": 1920, "name": "Mountain Gardens"},
+	{"x": 2880, "name": "High Pass"},
+	{"x": 3840, "name": "Cypress Ridge"},
+	{"x": 4800, "name": "Summit Sanctuary"},
 ]
 
 const PLATFORMS := [
-	Rect2(736, 264, 96, 16),
-	Rect2(832, 248, 96, 32),
-	Rect2(928, 232, 256, 48),
-	Rect2(1184, 248, 80, 32),
-	Rect2(1264, 264, 80, 16),
-	Rect2(2144, 264, 112, 16),
-	Rect2(2256, 248, 112, 32),
-	Rect2(2368, 232, 256, 48),
-	Rect2(2624, 216, 112, 64),
-	Rect2(2736, 200, 112, 80),
-	Rect2(2848, 184, 112, 96),
-	Rect2(2960, 168, 512, 112),
-	Rect2(3472, 184, 112, 96),
-	Rect2(3584, 200, 112, 80),
-	Rect2(3696, 216, 112, 64),
-	Rect2(3808, 232, 32, 48),
-	Rect2(3840, 248, 96, 32),
-	Rect2(3936, 264, 96, 16),
-	Rect2(4448, 264, 64, 16),
-	Rect2(4512, 248, 64, 32),
-	Rect2(4576, 232, 224, 48),
-	Rect2(4800, 232, 224, 48),
-	Rect2(5024, 248, 64, 32),
-	Rect2(5088, 264, 32, 16),
+	Rect2(480, 264, 256, 16),
+	Rect2(736, 248, 112, 32),
+	Rect2(848, 232, 256, 48),
+	Rect2(1104, 248, 96, 32),
+	Rect2(1200, 264, 96, 16),
+	Rect2(1472, 264, 112, 16),
+	Rect2(1584, 248, 112, 32),
+	Rect2(1696, 232, 192, 48),
+	Rect2(1888, 248, 64, 32),
+	Rect2(1952, 264, 48, 16),
+	Rect2(2208, 264, 112, 16),
+	Rect2(2320, 248, 112, 32),
+	Rect2(2432, 232, 160, 48),
+	Rect2(2592, 216, 112, 64),
+	Rect2(2704, 200, 112, 80),
+	Rect2(2816, 184, 112, 96),
+	Rect2(2928, 168, 288, 112),
+	Rect2(3216, 152, 112, 128),
+	Rect2(3328, 136, 224, 144),
+	Rect2(3552, 168, 112, 112),
+	Rect2(3664, 200, 112, 80),
+	Rect2(3776, 232, 64, 48),
+	Rect2(3840, 248, 112, 32),
+	Rect2(3952, 264, 112, 16),
+	Rect2(4240, 264, 112, 16),
+	Rect2(4352, 248, 112, 32),
+	Rect2(4464, 232, 224, 48),
+	Rect2(4688, 232, 112, 48),
+	Rect2(4800, 232, 48, 48),
+	Rect2(4848, 248, 112, 32),
+	Rect2(4960, 264, 64, 16),
+	Rect2(5280, 264, 112, 16),
+	Rect2(5392, 248, 144, 32),
+	Rect2(5536, 264, 48, 16),
 ]
 
-# These ledges can be reached from a staggered bull. The main route never
-# requires a ride, and their one-way tops leave the charging lane clear.
-const BONUS_LEDGES := [Rect2(544, 224, 112, 8), Rect2(3328, 112, 112, 8)]
-# A pit's rim sits at the lowest neighboring ground, so it always reads as a
-# recess. Placing one inside a raised step leaves its far wall standing proud.
 const PITS := [
-	{"name": "CausewayPit", "position": Vector2(2080, 280), "width": 32.0, "depth": 24.0},
-	{"name": "SanctuaryPit", "position": Vector2(5152, 280), "width": 32.0, "depth": 24.0},
+	{"name": "FoothillPit", "position": Vector2(304, 280), "width": 32.0, "depth": 24.0},
+	{"name": "SwitchbackPit", "position": Vector2(1344, 280), "width": 40.0, "depth": 24.0},
+	{"name": "HighPassPit", "position": Vector2(3088, 168), "width": 40.0, "depth": 24.0},
+	{"name": "SummitPit", "position": Vector2(5184, 280), "width": 40.0, "depth": 24.0},
 ]
 
 const ENEMIES := [
-	{"name": "BullGorgeMouth", "kind": "bronze_bull", "position": Vector2(432, 280), "patrol": Vector2(192, 704)},
-	{"name": "TemplePupA", "kind": "cerberus_pup", "position": Vector2(1024, 232), "patrol": Vector2(960, 1152), "pack": "TemplePack", "delay": 0.3},
-	{"name": "TemplePupB", "kind": "cerberus_pup", "position": Vector2(1072, 232), "patrol": Vector2(960, 1152), "pack": "TemplePack", "delay": 0.9},
-	{"name": "BullDryRiver", "kind": "bronze_bull", "position": Vector2(1696, 280), "patrol": Vector2(1376, 1888)},
-	{"name": "CausewayPupA", "kind": "cerberus_pup", "position": Vector2(2448, 232), "patrol": Vector2(2400, 2592), "pack": "CausewayPack", "delay": 0.3},
-	{"name": "CausewayPupB", "kind": "cerberus_pup", "position": Vector2(2496, 232), "patrol": Vector2(2400, 2592), "pack": "CausewayPack", "delay": 0.9},
-	{"name": "BullColonnade", "kind": "bronze_bull", "position": Vector2(3264, 168), "patrol": Vector2(3008, 3440)},
-	{"name": "BullWesternCourt", "kind": "bronze_bull", "position": Vector2(4264, 280), "patrol": Vector2(4080, 4384)},
-	{"name": "WesternPupA", "kind": "cerberus_pup", "position": Vector2(4632, 232), "patrol": Vector2(4608, 4752), "pack": "WesternPack", "delay": 0.3},
-	{"name": "WesternPupB", "kind": "cerberus_pup", "position": Vector2(4680, 232), "patrol": Vector2(4608, 4752), "pack": "WesternPack", "delay": 0.9},
-	{"name": "SanctuaryPupA", "kind": "cerberus_pup", "position": Vector2(4864, 232), "patrol": Vector2(4800, 4992), "pack": "SanctuaryPack", "delay": 0.3},
-	{"name": "SanctuaryPupB", "kind": "cerberus_pup", "position": Vector2(4912, 232), "patrol": Vector2(4800, 4992), "pack": "SanctuaryPack", "delay": 0.9},
-	{"name": "HydraTempleGuard", "kind": "hydra", "position": Vector2(5568, 280), "patrol": Vector2(5440, 5648)},
+	{"name": "SatyrFoothills", "kind": "satyr", "position": Vector2(560, 264), "patrol": Vector2(496, 704)},
+	{"name": "CyclopsFoothills", "kind": "cyclops", "position": Vector2(896, 232), "patrol": Vector2(880, 1088)},
+	{"name": "RaiderScree", "kind": "raider", "position": Vector2(1136, 248), "patrol": Vector2(1120, 1184)},
+	{"name": "SatyrPitApproach", "kind": "satyr", "position": Vector2(1248, 264), "patrol": Vector2(1216, 1280)},
+	{"name": "TelchineSwitchback", "kind": "telchine", "position": Vector2(1528, 264), "patrol": Vector2(1488, 1568)},
+	{"name": "CyclopsSwitchback", "kind": "cyclops", "position": Vector2(1736, 232), "patrol": Vector2(1712, 1872)},
+	{"name": "RaiderCypress", "kind": "raider", "position": Vector2(2256, 264), "patrol": Vector2(2224, 2304)},
+	{"name": "SatyrGarden", "kind": "satyr", "position": Vector2(2512, 232), "patrol": Vector2(2448, 2576)},
+	{"name": "TelchineClimb", "kind": "telchine", "position": Vector2(2760, 200), "patrol": Vector2(2720, 2800)},
+	{"name": "CyclopsHighWall", "kind": "cyclops", "position": Vector2(2960, 168), "patrol": Vector2(2944, 3056)},
+	{"name": "RaiderHighPass", "kind": "raider", "position": Vector2(3400, 136), "patrol": Vector2(3360, 3504)},
+	{"name": "TelchineDescent", "kind": "telchine", "position": Vector2(3720, 200), "patrol": Vector2(3680, 3760)},
+	{"name": "TelchineRidge", "kind": "telchine", "position": Vector2(3896, 248), "patrol": Vector2(3864, 3920)},
+	{"name": "SatyrRidge", "kind": "satyr", "position": Vector2(4144, 280), "patrol": Vector2(4080, 4208)},
+	{"name": "CyclopsRidge", "kind": "cyclops", "position": Vector2(4576, 232), "patrol": Vector2(4496, 4656)},
+	{"name": "SatyrDescent", "kind": "satyr", "position": Vector2(4800, 232), "patrol": Vector2(3792, 4832)},
+	{"name": "TelchineSummit", "kind": "telchine", "position": Vector2(5320, 264), "patrol": Vector2(5296, 5376)},
+	{"name": "CyclopsSummit", "kind": "cyclops", "position": Vector2(5424, 248), "patrol": Vector2(5408, 5520)},
+	{"name": "RaiderSummitGuard", "kind": "raider", "position": Vector2(5632, 280), "patrol": Vector2(5600, 5664)},
 ]
 
 const FLASKS := [
-	{"name": "HealthFlaskBullLedge", "position": Vector2(616, 224), "bonus": true},
-	{"name": "HealthFlaskTemple", "position": Vector2(1216, 248)},
-	{"name": "HealthFlaskCauseway", "position": Vector2(2120, 280)},
-	{"name": "HealthFlaskHighLedge", "position": Vector2(3384, 112), "bonus": true},
-	{"name": "HealthFlaskSanctuary", "position": Vector2(5328, 280)},
+	{"name": "HealthFlaskFoothill", "position": Vector2(376, 280)},
+	{"name": "HealthFlaskSwitchback", "position": Vector2(1408, 280)},
+	{"name": "HealthFlaskGarden", "position": Vector2(2464, 232)},
+	{"name": "HealthFlaskHighPass", "position": Vector2(3168, 168)},
+	{"name": "HealthFlaskDescent", "position": Vector2(4888, 248)},
+	{"name": "HealthFlaskSummit", "position": Vector2(5256, 280)},
 ]
 const EXIT := Vector2(5712, FLOOR_Y)
-const GATE_GUARD := "HydraTempleGuard"
+const GATE_GUARD := "RaiderSummitGuard"
 const TIPS := [
-	{"x": 160, "end": 352, "text": "Jump the bull's charge; it cannot turn mid-charge."},
-	{"x": 480, "end": 704, "text": "Airborne Duck + Sword staggers a bull's back."},
-	{"x": 800, "end": 1056, "text": "Pups run in pairs. Sword hits interrupt their leaps."},
-	{"x": 1920, "end": 2072, "text": "Jump across the causeway spikes."},
-	{"x": 3104, "end": 3376, "text": "Ride the bull, then jump to the high flask ledge."},
-	{"x": 5280, "end": 5472, "text": "Cut all three Hydra heads. Jump for the high heads."},
+	{"x": 80, "end": 288, "text": "Jump spike pits. Hold jump to climb out."},
+	{"x": 480, "end": 704, "text": "Bounce on Satyrs. Wine briefly boosts speed."},
+	{"x": 736, "end": 960, "text": "Jump or sword boulders; counter during reload."},
+	{"x": 1280, "end": 1472, "text": "Spikes cost health. Keep moving and jump out."},
+	{"x": 2864, "end": 3072, "text": "A high pit ahead. Jump from the bright stone lip."},
 ]
 
 
-static func surface_at(x: float, include_bonus: bool = false) -> float:
+static func surface_at(x: float) -> float:
 	var surface := float(FLOOR_Y)
 	for platform: Rect2 in PLATFORMS:
 		if x >= platform.position.x and x < platform.end.x:
 			surface = minf(surface, platform.position.y)
-	if include_bonus:
-		for ledge: Rect2 in BONUS_LEDGES:
-			if x >= ledge.position.x and x < ledge.end.x:
-				surface = minf(surface, ledge.position.y)
 	for pit: Dictionary in PITS:
 		if x >= pit.position.x and x < pit.position.x + pit.width:
 			surface = pit.position.y + pit.depth

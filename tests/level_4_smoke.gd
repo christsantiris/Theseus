@@ -1,227 +1,161 @@
 extends SceneTree
 
-# Run: godot --headless --path . --script res://tests/level_4_smoke.gd --fixed-fps 60
-const Mountain := preload("res://scenes/levels/level_4_layout.gd")
-const Town := preload("res://scenes/levels/level_3_layout.gd")
+const Layout := preload("res://scenes/levels/level_4_layout.gd")
+const Difficulty := preload("res://scenes/levels/difficulty.gd")
 var failures: Array[String] = []
 var state: Node
 
 
 func _initialize() -> void:
-	call_deferred("_run")
+	_run.call_deferred()
 
 
 func _expect(value: bool, message: String) -> void:
-	if not value:
+	if not value and not failures.has(message):
 		failures.append(message)
 		push_error(message)
 
 
-func _frames(count: int = 4) -> void:
-	for frame in count:
+func _frames(count := 4) -> void:
+	for tick in count:
 		await physics_frame
 
 
-func _isolate() -> void:
+func _isolate(level: Node) -> void:
 	for enemy in get_nodes_in_group("enemies"):
-		enemy.set_physics_process(false)
-		enemy.collision_layer = 0
-		enemy.contact.collision_mask = 0
+		enemy.process_mode = Node.PROCESS_MODE_DISABLED
 		enemy.remove_from_group("enemies")
-		if enemy.get_script().resource_path.ends_with("satyr.gd"):
-			enemy.wine_drop_chance = 0
+		if enemy is CollisionObject2D:
+			enemy.collision_layer = 0
+			enemy.collision_mask = 0
 
 
-func _fresh(number: int = 4) -> Node:
+func _open(number := 4, score := 700) -> Node:
 	paused = false
-	for action in ["move_right", "jump", "attack"]:
-		Input.action_release(action)
-	if is_instance_valid(current_scene):
-		current_scene.free()
-	state.begin_level(number)
-	var level = load(state.scene_path()).instantiate()
-	root.add_child(level)
-	current_scene = level
-	_isolate()
+	state.begin_level(number, score)
+	change_scene_to_file(state.scene_path())
+	await scene_changed
+	_isolate(current_scene)
 	await _frames()
-	return level
-
-
-func _reload(previous_id: int) -> void:
-	var hades: Node = null
-	for frame in 100:
-		await physics_frame
-		if is_instance_valid(current_scene) and current_scene.get_instance_id() != previous_id:
-			hades = current_scene
-			break
-	_expect(hades != null and hades.has_method("load_game"), "Death opens Hades")
-	if hades != null and hades.has_method("load_game"):
-		hades.load_game()
-	for frame in 20:
-		await physics_frame
-		if is_instance_valid(current_scene) and current_scene != hades:
-			break
-	_isolate()
-	await _frames()
-	_expect(current_scene.get_instance_id() != previous_id and current_scene.has_node("Player"), "Load Game restores Level 4 after death")
+	return current_scene
 
 
 func _run() -> void:
 	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	state = root.get_node("LevelRun")
-	var level = await _fresh(3)
-	level._on_next_pressed()
-	_expect(state.level_number == 3, "Continue cannot skip an uncleared town")
+	var level := await _open(3)
 	level._on_gate_entered()
-	_expect(level.next_button.visible and level.next_button.text == "Continue to Level 4", "Town completion offers Level 4")
+	_expect(level.next_button.text == "Continue to Level 4", "The city offers the Trojan level")
 	level._on_next_pressed()
-	await _frames()
+	await scene_changed
 	level = current_scene
-	_isolate()
-	_expect(level.player.position.distance_to(Mountain.START) < 1, "Mountain entrance has the correct spawn")
-	level._on_title_pressed()
+	_isolate(level)
+	_expect(level.level_number == 4 and level.layout == Layout and level._score == 700, "The city enters Troy with the carried score")
+	_expect(not level.has_node("AtlantisTide") and level.player.movement_speed() == 90, "Troy uses the existing movement without water drag")
+	var picker: Node = load("res://scenes/debug/level_select.tscn").instantiate()
+	_expect(picker._level_numbers() == [1, 2, 3, 4, 5, 6, 7, 8, 9] and picker._validate(4).is_empty(), "The launcher discovers all nine levels")
+	picker.free()
+	_expect(root.get_node("GameMusic")._active_path == "res://assets/audio/music/IbnAl-Noor.mp3", "Troy selects its requested soundtrack")
+	_expect("Kevin MacLeod (incompetech.com)" in level.completion_text and "http://creativecommons.org/licenses/by/4.0/" in level.completion_text, "Troy includes the supplied soundtrack attribution")
+	var counts := {"hoplite": 0, "peltast": 0, "raider": 0}
+	for definition: Dictionary in Layout.ENEMIES:
+		counts[definition.kind] += 1
+		var enemy: Node = level.get_node(String(definition.name))
+		_expect(enemy.tuning == Difficulty.for_level(4, definition.name == Layout.GATE_GUARD), "Existing enemies receive Level 4 tuning once")
+		_expect(Layout.surface_at(definition.position.x) == definition.position.y, "Enemy starts on the ramparts: " + definition.name)
+		_expect(Layout.surface_at(definition.patrol.x) == definition.position.y and Layout.surface_at(definition.patrol.y) == definition.position.y, "Patrol stays on its landing: " + definition.name)
+	_expect(counts == {"hoplite": 6, "peltast": 7, "raider": 6}, "Troy reuses nineteen existing soldiers")
+	for flask: Dictionary in Layout.FLASKS:
+		_expect(Layout.surface_at(flask.position.x) == flask.position.y, "Every flask rests on reachable terrain")
+	level.player.position = Layout.FLASKS[0].position
 	await _frames()
-	current_scene._on_load_pressed()
-	await _frames()
-	level = current_scene
-	_isolate()
-	_expect(level.level_number == 4 and level.player.position.distance_to(Mountain.START) < 1, "Title Load resumes the highest level at its entrance")
-	var previous: int = level.get_instance_id()
-	level.player._die()
-	await _reload(previous)
-	level = current_scene
-	_expect(level.player.health == 5 and level.player.position.distance_to(Mountain.START) < 1, "Death from any point restores the mountain entrance")
-	await _placements(level)
-	level.player.position = Mountain.FLASKS[0].position
-	await _frames()
-	_expect(level.has_node("HealthFlaskFoothill"), "Full health leaves the first flask available")
+	_expect(level.has_node("HealthFlaskOuterWall"), "Full health leaves the flask available")
 	level.player.hurt(2)
-	level.player.velocity = Vector2.ZERO
 	await _frames()
-	_expect(level.player.health == 5 and "HealthFlaskFoothill" in level._collected, "Mountain flask heals and records collection")
-	level.get_node("CyclopsFoothills").die()
-	level.get_node("SatyrGarden").die()
-	_expect(level._score == 325, "Satyr awards its score in the real level")
-	# A final-health spike fall must use the same entrance recovery as combat.
-	previous = level.get_instance_id()
-	level.player.health = 1
-	level.player._hurt_lock = 0
-	level.player.position = Mountain.PITS[0].position + Vector2(16, 0)
-	level.player.velocity = Vector2.ZERO
-	await _reload(previous)
+	_expect(level.player.health == 5 and "HealthFlaskOuterWall" in level._collected, "A Trojan flask restores two health bars")
+	level.get_node("RaiderPlain").die()
+	_expect(level._score > 700, "Recycled enemies award their normal score")
+	level.player._die()
+	await scene_changed
+	_expect(current_scene.has_method("load_game"), "Death in Troy opens Hades")
+	current_scene.load_game()
+	await scene_changed
 	level = current_scene
-	_expect(level.player.health == 5 and level.player.position.distance_to(Mountain.START) < 1, "Fatal spike damage restores the mountain entrance")
-	_expect(level.has_node("CyclopsFoothills") and level.has_node("SatyrGarden") and level._score == 0, "Spike death restores the correct enemy and score snapshot")
-	_expect(level.has_node("HealthFlaskFoothill"), "Retry restores the collected flask")
+	_isolate(level)
+	_expect(level.level_number == 4 and level.player.position == Layout.START and level.player.health == 5 and level._score == 700, "Hades restores the Trojan entrance, health and carried score")
+	_expect(level.has_node("RaiderPlain") and level.has_node("HealthFlaskOuterWall") and state.elapsed_seconds < 1.0, "Retry restores encounters, flasks and countdown")
 	level._on_title_pressed()
-	await _frames()
+	await scene_changed
 	current_scene._on_load_pressed()
-	await _frames()
+	await scene_changed
 	level = current_scene
-	_isolate()
-	_expect(level.level_number == 4 and level.player.position.distance_to(Mountain.START) < 1, "Load resumes the mountain entrance")
+	_isolate(level)
+	_expect(level.level_number == 4 and level.player.position == Layout.START, "Title Load returns to the Trojan entrance")
 	await _traverse()
 	level = current_scene
-	_expect(level.pause_heading.text == "Level 4 Complete" and level.next_button.visible and level.next_button.text == "Continue to Level 5", "Mountain temple offers the gorge level")
-	_expect(ResourceLoader.exists(level.next_level), "Mountain continuation points to a real level scene")
+	_expect(level.pause_heading.text == "Level 4 Complete" and level.next_button.text == "Continue to Level 5", "Trojan results name the mountain as Level 5")
 	level._on_replay_pressed()
-	await _frames()
-	_expect(current_scene.level_number == 4 and state.can_load(), "Replay retains the current level")
-	_expect(current_scene.player.position.distance_to(Mountain.START) < 1, "Replay starts in the foothills")
-	current_scene._on_title_pressed()
-	await _frames()
-	current_scene._on_new_game_pressed()
-	await _frames()
-	_expect(state.level_number == 1 and not state.can_load(), "New Game resets the whole campaign")
+	await scene_changed
+	level = current_scene
+	_isolate(level)
+	_expect(level.level_number == 4 and level.player.health == 5 and state.elapsed_seconds < 1.0, "Replay restores a fresh Trojan attempt")
+	level._on_gate_entered()
+	level._on_next_pressed()
+	await scene_changed
+	_expect(current_scene.level_number == 5 and current_scene.layout == load("res://scenes/levels/level_5_layout.gd"), "Troy continues into the mountain sanctuary")
+	restore_scores.call()
 	_stop_audio(root)
 	OS.delay_msec(150)
-	if failures.is_empty():
-		print("PASS: Level 3→4, entrance/Load/death, all enemies, Cyclops placement, flasks, fatal spike recovery, full mountain traversal with four pit jumps, camera, temple entry, replay and New Game.")
-	restore_scores.call()
+	print("PASS: city→Troy→mountain, recycled enemies, scaling, healing, death/retry, title restart, replay, complete jump route, timer and temple gate." if failures.is_empty() else str(failures))
 	quit(0 if failures.is_empty() else 1)
 
 
-func _placements(level: Node) -> void:
-	var picker = load("res://scenes/debug/level_select.tscn").instantiate()
-	_expect(4 in picker._level_numbers() and picker._validate(4).is_empty(), "Play-test launcher discovers Level 4 at its entrance")
-	picker.free()
-	var counts := {"cyclops": 0, "satyr": 0, "raider": 0, "telchine": 0}
-	for encounter: Dictionary in Mountain.ENEMIES:
-		counts[encounter.kind] += 1
-		_expect(level.has_node(encounter.name), "Encounter spawns: " + String(encounter.name))
-		_expect(encounter.position.y == Mountain.surface_at(encounter.position.x), String(encounter.name) + " stands on safe terrain")
-		_expect(Mountain.surface_at(encounter.patrol.x) == encounter.position.y and Mountain.surface_at(encounter.patrol.y) == encounter.position.y, String(encounter.name) + " starts with a supported patrol")
-	for kind in counts:
-		_expect(counts[kind] == {"cyclops": 5, "satyr": 5, "raider": 4, "telchine": 5}[kind], "Mountain encounter roster includes the new ridge: " + kind)
-	for pickup: Dictionary in Mountain.FLASKS:
-		_expect(pickup.position.y == Mountain.surface_at(pickup.position.x), "Flask rests on safe terrain")
-	_expect(get_nodes_in_group("spike_pits").size() == 4, "All four pits have active hazards")
-	var cyclops = level.get_node("CyclopsFoothills")
-	level.player.position = Vector2(756, 248)
-	cyclops.set_physics_process(true)
-	for frame in 90:
-		await physics_frame
-		if cyclops._state == "windup":
-			break
-	_expect(cyclops._state == "windup" and cyclops.position == Mountain.ENEMIES[1].position, "Cyclops sees the approach from its actual elevated throwing position")
-	cyclops.set_physics_process(false)
-
-
 func _traverse() -> void:
-	var level = await _fresh()
-	var player = level.player
-	_expect(player.get_node("Camera2D").limit_right == Mountain.WIDTH and player.get_node("Camera2D").limit_bottom == Mountain.HEIGHT, "Camera covers the full mountain route and pit depths")
+	var level := await _open()
+	var player: Node = level.player
 	var jumping := false
-	var left_floor := false
+	var airborne := false
 	var jumps := 0
-	var pit_jumps: Array[String] = []
-	var highest := float(Mountain.FLOOR_Y)
-	var camera_top := float(Mountain.HEIGHT)
-	var camera_bottom := 0.0
-	var saw_entry := false
+	var highest := float(Layout.FLOOR_Y)
+	var tested_guard := false
 	Input.action_press("move_right")
-	for frame in 5500:
+	for tick in 6000:
 		await physics_frame
-		highest = minf(highest, player.position.y)
-		var camera_y: float = player.get_node("Camera2D").get_screen_center_position().y
-		camera_top = minf(camera_top, camera_y)
-		camera_bottom = maxf(camera_bottom, camera_y)
-		if level._entering_temple:
-			saw_entry = true
 		if level._complete:
 			break
+		highest = minf(highest, player.position.y)
 		if not player.is_on_floor() and jumping:
-			left_floor = true
-		if player.is_on_floor() and jumping and left_floor:
+			airborne = true
+		if player.is_on_floor() and jumping and airborne:
 			Input.action_release("jump")
 			jumping = false
-			left_floor = false
+			airborne = false
 		elif player.is_on_floor() and not jumping:
-			for pit: Dictionary in Mountain.PITS:
-				var distance: float = pit.position.x - player.position.x
-				if distance > 0 and distance <= 12 and absf(player.position.y - pit.position.y) < 1:
+			for platform: Rect2 in Layout.PLATFORMS:
+				var distance: float = platform.position.x - player.position.x
+				if distance > -7 and distance <= 27 and player.position.y - platform.position.y > 4:
 					Input.action_press("jump")
 					jumping = true
 					jumps += 1
-					pit_jumps.append(pit.name)
 					break
-			if not jumping:
-				for platform: Rect2 in Mountain.PLATFORMS:
-					var distance: float = platform.position.x - player.position.x
-					if distance > -7 and distance <= 27 and player.position.y - platform.position.y > 4:
-						Input.action_press("jump")
-						jumping = true
-						jumps += 1
-						break
-		if player.position.x > Mountain.EXIT.x - 52 and not level._gate.unlocked:
-			level.get_node(Mountain.GATE_GUARD).die()
+		if player.position.x > Layout.EXIT.x - 72 and not tested_guard:
+			tested_guard = true
+			var guard: Node = level.get_node(Layout.GATE_GUARD)
+			guard.sword_hit()
+			_expect(guard.hp == 3 and not level._gate.unlocked, "The captain's existing crouch blocks sword hits")
+			guard._state = "recover"
+			guard.sword_hit()
+			_expect(guard.alive and not level._gate.unlocked, "The elite hoplite survives the first sword hit")
+			guard.sword_hit()
+			_expect(guard.alive and not level._gate.unlocked, "The gate stays locked until the third hit")
+			guard.sword_hit()
+			_expect(not guard.alive and level._gate.unlocked, "Defeating the captain opens the sun temple")
 	Input.action_release("move_right")
 	Input.action_release("jump")
-	_expect(level._complete and saw_entry, "Normal movement traverses the whole mountain route; x=%.1f y=%.1f" % [player.position.x, player.position.y])
-	_expect(pit_jumps.size() == 4 and jumps >= 21 and player.health == 5, "Route clears four pits and seventeen climbs without damage or a speed boost")
-	_expect(highest < 125 and camera_bottom - camera_top > 90, "Route reaches the high pass with vertical camera scrolling")
-	_expect(player.sprite.modulate.a < 0.01 and player.position.distance_to(Mountain.EXIT + Vector2(2, -20)) < 0.1, "Theseus enters the sanctuary doorway before completion")
-	print("Mountain traversal: %d jumps (%d pits); peak feet y=%.1f; %.1f simulated seconds." % [jumps, pit_jumps.size(), highest, state.elapsed_seconds])
+	_expect(level._complete and paused and player.health == 5, "Normal movement and jumps traverse the entire Trojan route without a boost")
+	_expect(jumps >= 13 and highest < 190 and state.elapsed_seconds < Layout.TIME_LIMIT, "The route exercises the rampart climbs inside its countdown")
+	_expect(player.sprite.modulate.a < 0.01 and player.position.distance_to(Layout.EXIT + Vector2(2, -20)) < 0.1, "Theseus walks into the Trojan temple doorway")
+	print("Troy traversal: %d jumps, peak feet y=%.1f, %.1f simulated seconds (combat isolated)." % [jumps, highest, state.elapsed_seconds])
 
 
 func _stop_audio(node: Node) -> void:
