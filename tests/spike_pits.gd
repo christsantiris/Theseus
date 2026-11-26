@@ -1,7 +1,7 @@
 extends SceneTree
 
 # Run: godot --headless --path . --script res://tests/spike_pits.gd --fixed-fps 60
-const Mountain := preload("res://scenes/levels/level_4_layout.gd")
+const Mountain := preload("res://scenes/levels/level_5_layout.gd")
 var failures: Array[String] = []
 var level: Node
 var player: Node
@@ -64,8 +64,8 @@ func _fall_and_escape(definition: Dictionary, facing: int) -> void:
 
 
 func _run() -> void:
-	root.get_node("LevelRun").begin_level(4)
-	level = load("res://scenes/levels/level_4.tscn").instantiate()
+	root.get_node("LevelRun").begin_level(5)
+	level = load("res://scenes/levels/level_5.tscn").instantiate()
 	root.add_child(level)
 	current_scene = level
 	player = level.player

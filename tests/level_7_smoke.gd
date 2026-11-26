@@ -1,263 +1,159 @@
 extends SceneTree
 
-# Run: godot --headless --path . --script res://tests/level_7_smoke.gd --fixed-fps 60
-const Atlantis := preload("res://scenes/levels/level_7_layout.gd")
+const Layout := preload("res://scenes/levels/level_7_layout.gd")
+const Difficulty := preload("res://scenes/levels/difficulty.gd")
 var failures: Array[String] = []
 var state: Node
 
 
 func _initialize() -> void:
-	call_deferred("_run")
+	_run.call_deferred()
 
 
-func _expect(condition: bool, message: String) -> void:
-	if not condition:
+func _expect(value: bool, message: String) -> void:
+	if not value and not failures.has(message):
 		failures.append(message)
 		push_error(message)
 
 
-func _frames(count: int = 4) -> void:
-	for frame in count:
+func _frames(count := 4) -> void:
+	for tick in count:
 		await physics_frame
 
 
-func _freeze(node: Node) -> void:
-	node.set_physics_process(false)
-	if node is CollisionObject2D:
-		node.collision_layer = 0
-		node.collision_mask = 0
-	if node.is_in_group("enemies"):
-		node.remove_from_group("enemies")
-	for child in node.get_children():
-		_freeze(child)
-
-
 func _isolate(level: Node) -> void:
-	for encounter: Dictionary in level.layout.ENEMIES:
-		var enemy := level.find_child(String(encounter.name), true, false)
-		if is_instance_valid(enemy):
-			_freeze(enemy)
-	for pack in get_nodes_in_group("cerberus_packs"):
-		pack.set_physics_process(false)
+	for enemy in get_nodes_in_group("enemies"):
+		enemy.process_mode = Node.PROCESS_MODE_DISABLED
+		enemy.remove_from_group("enemies")
+		if enemy is CollisionObject2D:
+			enemy.collision_layer = 0
+			enemy.collision_mask = 0
 
 
-func _fresh(number: int = 7) -> Node:
+func _open(number := 7, score := 700) -> Node:
 	paused = false
-	for action in ["move_right", "jump", "attack"]:
-		Input.action_release(action)
-	if is_instance_valid(current_scene):
-		current_scene.free()
-	state.begin_level(number)
-	var level = load(state.scene_path()).instantiate()
-	root.add_child(level)
-	current_scene = level
-	_isolate(level)
+	state.begin_level(number, score)
+	change_scene_to_file(state.scene_path())
+	await scene_changed
+	_isolate(current_scene)
 	await _frames()
-	return level
+	return current_scene
 
 
 func _run() -> void:
 	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	state = root.get_node("LevelRun")
-	var level = await _fresh(6)
-	level._on_next_pressed()
-	_expect(state.level_number == 6, "Continue cannot skip an uncleared level")
+	var level := await _open(6)
 	level._on_gate_entered()
-	_expect(level.next_button.visible and level.next_button.text == "Continue to Level 7", "Level 6 completion names the correct next level")
+	_expect(level.next_button.text == "Continue to Level 7", "The gorge offers the Egyptian level")
 	level._on_next_pressed()
-	await _frames()
+	await scene_changed
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 7 and state.level_number == 7 and state.can_load(), "Level 6 advances to a current Level 7 entrance")
-	_expect(level.player.position.distance_to(Atlantis.START) < 1.0, "Atlantis entry starts at the correct ground height")
-	level._on_title_pressed()
+	_expect(level.level_number == 7 and level.layout == Layout and level._score == 700, "The gorge enters Egypt with the carried score")
+	_expect(not level.has_node("AtlantisTide") and level.player.movement_speed() == 90, "Desert sand uses the existing movement without water drag")
+	var picker: Node = load("res://scenes/debug/level_select.tscn").instantiate()
+	_expect(picker._level_numbers() == [1, 2, 3, 4, 5, 6, 7, 8, 9] and picker._validate(7).is_empty(), "The launcher discovers all nine levels")
+	picker.free()
+	var counts := {"hoplite": 0, "peltast": 0, "raider": 0, "spartoi": 0}
+	for definition: Dictionary in Layout.ENEMIES:
+		counts[definition.kind] += 1
+		var enemy: Node = level.get_node(String(definition.name))
+		_expect(enemy.tuning == Difficulty.for_level(7, definition.name == Layout.GATE_GUARD), "Existing enemies receive Level 7 tuning once")
+		_expect(Layout.surface_at(definition.position.x) == definition.position.y, "Enemy starts on sandstone: " + definition.name)
+		_expect(Layout.surface_at(definition.patrol.x) == definition.position.y and Layout.surface_at(definition.patrol.y) == definition.position.y, "Patrol stays on its landing: " + definition.name)
+	_expect(counts == {"hoplite": 4, "peltast": 5, "raider": 5, "spartoi": 5}, "Egypt adds three soldiers along the new causeway")
+	for flask: Dictionary in Layout.FLASKS:
+		_expect(Layout.surface_at(flask.position.x) == flask.position.y, "Every flask rests on reachable terrain")
+	level.player.position = Layout.FLASKS[0].position
 	await _frames()
-	current_scene._on_load_pressed()
-	await _frames()
-	level = current_scene
-	_isolate(level)
-	_expect(level.level_number == 7 and level.player.position.distance_to(Atlantis.START) < 1.0, "Title Load resumes Level 7 at its entrance")
-	var previous_id: int = level.get_instance_id()
-	level.player._die()
-	await _reload(previous_id)
-	level = current_scene
-	_expect(level.level_number == 7 and level.player.health == 5 and level.player.position.distance_to(Atlantis.START) < 1.0, "Death from any point restarts the Atlantis entrance")
-	await _check_encounters(level)
-	level.player.position = Atlantis.FLASKS[0].position
-	await _frames()
-	_expect(level.has_node("HealthFlaskHarbor"), "A full-health player leaves the Atlantis flask available")
+	_expect(level.has_node("HealthFlaskPyramids"), "Full health leaves the flask available")
 	level.player.hurt(2)
-	level.player.velocity = Vector2.ZERO
 	await _frames()
-	_expect(level.player.health == 5 and "HealthFlaskHarbor" in level._collected, "Atlantis flask restores two bars and records collection")
-	level.get_node("MerfolkHarbor").die()
-	level.get_node("MerfolkRingQuay").die()
-	_expect(level._score == 250, "Later Merfolk defeat awards its score")
-	previous_id = level.get_instance_id()
+	_expect(level.player.health == 5 and "HealthFlaskPyramids" in level._collected, "A desert flask restores two health bars")
+	level.get_node("RaiderDunes").die()
+	_expect(level._score > 700, "Recycled enemies award their normal score")
 	level.player._die()
-	await _reload(previous_id)
-	level = current_scene
-	_expect(level.has_node("MerfolkHarbor") and level.has_node("MerfolkRingQuay"), "Atlantis death restores all encounters")
-	_expect(level.has_node("HealthFlaskHarbor") and level._score == 0, "Retry restores flasks and rolls back level score")
-	_expect(level.player.position.distance_to(Atlantis.START) < 1.0, "Death restores the level entrance")
-	level._on_title_pressed()
-	await _frames()
-	current_scene._on_load_pressed()
-	await _frames()
+	await scene_changed
+	_expect(current_scene.has_method("load_game"), "Death in Egypt opens Hades")
+	current_scene.load_game()
+	await scene_changed
 	level = current_scene
 	_isolate(level)
-	_expect(level.level_number == 7 and level.player.position.distance_to(Atlantis.START) < 1.0, "Load resumes the Atlantis entrance")
-	var canal_level := await _fresh()
-	await _canals(canal_level)
+	_expect(level.level_number == 7 and level.player.position == Layout.START and level.player.health == 5 and level._score == 700, "Hades restores the desert entrance, health and carried score")
+	_expect(level.has_node("RaiderDunes") and level.has_node("HealthFlaskPyramids") and state.elapsed_seconds < 1.0, "Retry restores encounters, flasks and countdown")
+	level._on_title_pressed()
+	await scene_changed
+	current_scene._on_load_pressed()
+	await scene_changed
+	level = current_scene
+	_isolate(level)
+	_expect(level.level_number == 7 and level.player.position == Layout.START, "Title Restart Level returns to the Egyptian entrance")
 	await _traverse()
 	level = current_scene
-	_expect(level.pause_heading.text == "Level 7 Complete" and level.next_button.visible and level.next_level == "res://scenes/levels/level_8.tscn", "Atlantis continues into the final labyrinth")
+	_expect(level.pause_heading.text == "Level 7 Complete" and level.next_button.text == "Continue to Level 8", "Egyptian results name Atlantis as Level 8")
 	level._on_replay_pressed()
-	await _frames()
-	_expect(current_scene.level_number == 7 and state.can_load(), "Replay retains the current level")
-	_expect(current_scene.player.position.distance_to(Atlantis.START) < 1.0, "Replay begins at the harbor")
-	current_scene._on_title_pressed()
-	await _frames()
-	current_scene._on_new_game_pressed()
-	await _frames()
-	_expect(state.level_number == 1 and not state.can_load(), "New Game resets the campaign to Level 1")
-	paused = false
-	_stop_audio(root)
-	OS.delay_msec(125)
-	if failures.is_empty():
-		print("PASS: Level 6→7, entrance/Load/death, Merfolk roles, duckable tridents, safe canal escapes, pickups, entrance retry, full Atlantis traversal, camera, temple entry, completion, replay and New Game.")
+	await scene_changed
+	level = current_scene
+	_isolate(level)
+	_expect(level.level_number == 7 and level.player.health == 5 and state.elapsed_seconds < 1.0, "Replay restores a fresh desert attempt")
+	level._on_gate_entered()
+	level._on_next_pressed()
+	await scene_changed
+	_expect(current_scene.level_number == 8 and current_scene.has_node("AtlantisTide"), "Egypt continues into Atlantis, including its tide")
 	restore_scores.call()
+	_stop_audio(root)
+	OS.delay_msec(150)
+	print("PASS: gorge→Egypt→Atlantis, recycled enemies, scaling, healing, death/retry, title restart, replay, complete jump route, timer and temple gate." if failures.is_empty() else str(failures))
 	quit(0 if failures.is_empty() else 1)
 
 
-func _check_encounters(level: Node) -> void:
-	var counts := {"merfolk": 0, "reefblade": 0}
-	var total := 0
-	var picker = load("res://scenes/debug/level_select.tscn").instantiate()
-	_expect(7 in picker._level_numbers() and picker._validate(7).is_empty(), "Debug launcher discovers Atlantis at its entrance")
-	picker.free()
-	for encounter: Dictionary in Atlantis.ENEMIES:
-		counts[encounter.kind] += 1
-		var enemy := level.get_node(String(encounter.name))
-		total += enemy.points
-		_expect(enemy != null and encounter.position.y == Atlantis.surface_at(encounter.position.x), "Enemy is on its landing: " + String(encounter.name))
-		_expect(Atlantis.surface_at(encounter.patrol.x) == encounter.position.y and Atlantis.surface_at(encounter.patrol.y) == encounter.position.y, "Patrol stays level: " + String(encounter.name))
-		_expect(enemy.hp == (3 if encounter.name == Atlantis.GATE_GUARD else 2), "Only the captain receives one elite health bonus")
-	_expect(counts.merfolk == 9 and counts.reefblade == 4 and total == 1850, "Eight trident guards, four Reefblades and one captain award 1850 total")
-	for pickup: Dictionary in Atlantis.FLASKS:
-		_expect(pickup.position.y == Atlantis.surface_at(pickup.position.x), "Flask is supported")
-	var merfolk = level.get_node("MerfolkHarbor")
-	level.player.position = merfolk.position + Vector2(-32, 0)
-	merfolk.collision_layer = 4
-	merfolk.collision_mask = 1
-	merfolk.set_physics_process(true)
-	for tick in 70:
-		await physics_frame
-		if merfolk._state == "windup":
-			break
-	_expect(merfolk._state == "windup", "The real placed trident guard engages on its authored quay")
-	merfolk.set_physics_process(false)
-
-
-func _canals(level: Node) -> void:
-	for canal: Dictionary in Atlantis.CANALS:
-		for facing in [-1, 1]:
-			var player = level.player
-			player.position = canal.position + Vector2(canal.width * 0.5, canal.depth)
-			player.velocity = Vector2.ZERO
-			await _frames(8)
-			_expect(player.is_on_floor() and player.health == 5 and absf(player.position.y - 304) < 0.2, "Canal has a safe solid bed without automatic ejection")
-			var water: Node = level.get_node("World/" + String(canal.name))
-			level._set_paused(true)
-			var at: float = water._time
-			await _frames(8)
-			_expect(is_equal_approx(at, water._time), "Pause freezes local water animation")
-			level._set_paused(false)
-			var move := "move_right" if facing == 1 else "move_left"
-			Input.action_press(move)
-			Input.action_press("jump")
-			await _frames(38)
-			Input.action_release(move)
-			Input.action_release("jump")
-			_expect(player.position.x > canal.position.x + canal.width if facing == 1 else player.position.x < canal.position.x, "Canal can be escaped in either direction")
-			_expect(player.health == 5, "Shallow water never causes damage")
-
-
-func _reload(previous_id: int) -> void:
-	var hades: Node = null
-	for frame in 100:
-		await physics_frame
-		if is_instance_valid(current_scene) and current_scene.get_instance_id() != previous_id:
-			hades = current_scene
-			break
-	_expect(hades != null and hades.has_method("load_game"), "Death opens Hades")
-	if hades != null and hades.has_method("load_game"):
-		hades.load_game()
-	for frame in 20:
-		await physics_frame
-		if is_instance_valid(current_scene) and current_scene != hades:
-			break
-	_isolate(current_scene)
-	await _frames()
-	_expect(current_scene.get_instance_id() != previous_id and current_scene.has_node("Player"), "Load Game restores the Atlantis after death")
-
-
 func _traverse() -> void:
-	var level = await _fresh()
-	var player = level.player
-	_expect(player.get_node("Camera2D").limit_right == Atlantis.WIDTH and player.get_node("Camera2D").limit_bottom == Atlantis.HEIGHT, "Camera covers the Atlantis's full route")
-	_expect(level.get_node("World").has_node("AtlantisTerrace22Part0"), "All twenty-three Atlantis terraces have collision")
-	level._gate._on_body_entered(player)
-	_expect(not level._complete and not level._entering_temple, "Closed Atlantis gate cannot complete the level")
+	var level := await _open()
+	var player: Node = level.player
 	var jumping := false
-	var left_floor := false
+	var airborne := false
 	var jumps := 0
-	var highest := float(Atlantis.FLOOR_Y)
-	var camera_top := float(Atlantis.HEIGHT)
-	var camera_bottom := 0.0
-	var saw_entry := false
+	var highest := float(Layout.FLOOR_Y)
+	var tested_guard := false
 	Input.action_press("move_right")
-	for frame in 5500:
+	for tick in 6000:
 		await physics_frame
-		highest = minf(highest, player.position.y)
-		var camera_y: float = player.get_node("Camera2D").get_screen_center_position().y
-		camera_top = minf(camera_top, camera_y)
-		camera_bottom = maxf(camera_bottom, camera_y)
-		if level._entering_temple:
-			saw_entry = true
-			_expect(paused and not player.is_physics_processing(), "Temple entry pauses combat and controls")
 		if level._complete:
 			break
+		highest = minf(highest, player.position.y)
 		if not player.is_on_floor() and jumping:
-			left_floor = true
-		if player.is_on_floor() and jumping and left_floor:
+			airborne = true
+		if player.is_on_floor() and jumping and airborne:
 			Input.action_release("jump")
 			jumping = false
-			left_floor = false
+			airborne = false
 		elif player.is_on_floor() and not jumping:
-			for canal: Dictionary in Atlantis.CANALS:
-				var distance: float = canal.position.x - player.position.x
-				if distance > -5 and distance <= 3:
-					Input.action_press("jump")
-					jumping = true
-					jumps += 1
-			for platform: Rect2 in Atlantis.PLATFORMS:
+			for platform: Rect2 in Layout.PLATFORMS:
 				var distance: float = platform.position.x - player.position.x
-				var rise: float = player.position.y - platform.position.y
-				if distance > -7.0 and distance <= 27.0 and rise > 4.0:
+				if distance > -7 and distance <= 27 and player.position.y - platform.position.y > 4:
 					Input.action_press("jump")
 					jumping = true
 					jumps += 1
 					break
-		if player.position.x > 4700 and not level._gate.unlocked:
-			level.get_node(Atlantis.GATE_GUARD).die()
+		if player.position.x > Layout.EXIT.x - 72 and not tested_guard:
+			tested_guard = true
+			var guard: Node = level.get_node(Layout.GATE_GUARD)
+			guard.sword_hit()
+			_expect(guard.hp == 3 and not level._gate.unlocked, "The captain's existing crouch blocks sword hits")
+			guard._state = "recover"
+			guard.sword_hit()
+			_expect(guard.alive and not level._gate.unlocked, "The elite hoplite survives the first sword hit")
+			guard.sword_hit()
+			_expect(guard.alive and not level._gate.unlocked, "The gate stays locked until the third hit")
+			guard.sword_hit()
+			_expect(not guard.alive and level._gate.unlocked, "Defeating the captain opens the sun temple")
 	Input.action_release("move_right")
 	Input.action_release("jump")
-	_expect(level._complete and saw_entry, "Entire Atlantis reaches its temple entry and completion; x=%.1f y=%.1f" % [player.position.x, player.position.y])
-	_expect(jumps >= 17 and highest < 135, "Route exercises fifteen climbs and the temple district's height")
-	_expect(camera_bottom - camera_top > 60.0, "Camera follows the Atlantis ascent and descent")
-	_expect(player.sprite.modulate.a < 0.01 and player.position.distance_to(Atlantis.EXIT + Vector2(2, -20)) < 0.1, "Theseus disappears into the temple doorway")
-	print("Atlantis traversal: %d jumps; peak feet y=%.1f; %.1f simulated seconds." % [jumps, highest, state.elapsed_seconds])
+	_expect(level._complete and paused and player.health == 5, "Normal movement and jumps traverse the entire desert without a boost")
+	_expect(jumps >= 13 and highest < 190 and state.elapsed_seconds < Layout.TIME_LIMIT, "The route exercises the sandstone climbs inside its countdown")
+	_expect(player.sprite.modulate.a < 0.01 and player.position.distance_to(Layout.EXIT + Vector2(2, -20)) < 0.1, "Theseus walks into the Egyptian temple doorway")
+	print("Desert traversal: %d jumps, peak feet y=%.1f, %.1f simulated seconds (combat isolated)." % [jumps, highest, state.elapsed_seconds])
 
 
 func _stop_audio(node: Node) -> void:

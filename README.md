@@ -1,8 +1,8 @@
 # Theseus
 
-A left-to-right side scroller. Theseus travels from Athens through a rocky coast, sacred city, mountain terraces, a temple-lined gorge, an Egyptian desert, and Atlantis, before confronting the Minotaur in the labyrinth of Knossos. Theseus, all fifteen enemy types, and the scenery in all eight levels use detailed cinematic artwork.
+A left-to-right side scroller. Theseus travels from Athens through a rocky coast, sacred city, Troy’s fortifications, mountain terraces, a temple-lined gorge, an Egyptian desert, and Atlantis, before confronting the Minotaur in the labyrinth of Knossos. Theseus, all fifteen enemy types, and the scenery in all nine levels use detailed cinematic artwork.
 
-All eight levels use continuous backgrounds with independent scenery objects and layered parallax.
+All nine levels use continuous backgrounds with independent scenery objects and layered parallax.
 
 ## Contents
 
@@ -11,6 +11,7 @@ All eight levels use continuous backgrounds with independent scenery objects and
   - [The Temple Road](#the-temple-road)
   - [The Rocky Coast](#the-rocky-coast)
   - [The Sacred City](#the-sacred-city)
+  - [Troy’s Fortifications](#troys-fortifications)
   - [The Mountain Sanctuary](#the-mountain-sanctuary)
   - [The Gorge Sanctuary](#the-gorge-sanctuary)
   - [The Pyramid Road](#the-pyramid-road)
@@ -41,6 +42,9 @@ All eight levels use continuous backgrounds with independent scenery objects and
 
 Enemy windups, recovery windows, cooldowns, and pursuit speed scale with each level. Encounter layouts, counters, healing, and environmental mechanics also determine how difficult a level feels.
 
+Each level is 5,760 world units long, with six areas and three additional
+enemies along its extended approach. Soundtracks continue looping throughout.
+
 Every attempt starts at the level entrance with full health and a **3:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
 interruptions, temple entry, and completion. Running out of time opens Hades,
@@ -55,9 +59,9 @@ Session progress is held in memory; high scores are saved separately on disk.
 
 ### The Temple Road
 
-The opening level is a 4,800-pixel road in five stretches: the King's Road, the Broken Colonnade, the Olive Terraces, the Ruined Aqueduct, and the Temple Approach. Sixteen soldiers wait along it — raiders, peltasts, and hoplites — with health flasks. The temple gate stays shut until its guard falls.
+The opening level is a 5,760-pixel road in six stretches: the King's Road, the Broken Colonnade, the Olive Terraces, the Ruined Aqueduct, Sacred Grove, and the Temple Approach. Nineteen soldiers wait along it — raiders, peltasts, and hoplites — with health flasks. The temple gate stays shut until its guard falls.
 
-One continuous Attic landscape covers the full road behind complete olive groves, ruined colonnades, and a three-arch aqueduct. Slower background parallax adds depth, with detailed limestone surfaces, carved waystones, and a matching temple entrance. The platform layout, encounters, and movement are unchanged.
+One continuous Attic landscape covers the full road behind complete olive groves, ruined colonnades, and a three-arch aqueduct. Slower background parallax adds depth, with detailed limestone surfaces, carved waystones, and a matching temple entrance. The longer Sacred Grove approach adds terraces and encounters using the existing movement rules.
 
 [Level 1 guide](docs/level_1.md)
 
@@ -65,17 +69,35 @@ One continuous Attic landscape covers the full road behind complete olive groves
 
 Clear the temple and the road continues onto limestone cliffs above the sea. Birds cross the sky, telchines jab from the ledges, and spartoi hold the landings. The coast is taller than the road, so the view follows Theseus up and down. A sanctuary closes the level.
 
-One continuous Aegean coastline shows blue sea, dry islands, rocky coves, and a distant sanctuary. Complete outcrops, ruined quays, and Cyclopean gateways stay anchored to the original ledges, while slower sea parallax adds depth through both climbs.
+One continuous Aegean coastline shows blue sea, dry islands, rocky coves, and a distant sanctuary. Complete outcrops, ruined quays, and Cyclopean gateways stay anchored to the authored ledges, while slower sea parallax adds depth through both climbs.
 
 [Level 2 guide](docs/level_2.md)
 
 ### The Sacred City
 
-The third level is a Greek town: houses, tiled roofs, an agora, and the climb to the acropolis. Lamia share the streets with hoplites, peltasts, and spartoi. The temple at the top opens the way into the mountains.
+The third level is a Greek town: houses, tiled roofs, an agora, and the climb to the acropolis. Lamia share the streets with hoplites, peltasts, and spartoi. The temple at the top opens the way to Troy.
 
 One continuous sacred-city landscape sits behind complete plaster workshops, blue doors, terracotta roofs, shaded stoas, and ruined colonnades. Grounded buildings and amphorae frame the original cut-stone terraces through the temple climb.
 
 [Level 3 guide](docs/level_3.md)
+
+### Troy’s Fortifications
+
+Level 4 crosses the dry Trojan plain, climbs the outer rampart and gate court,
+then follows high battlements and the inner wall to the citadel gate.
+Nineteen existing Hoplites, Peltasts and Raiders defend the route, including
+an elite Hoplite captain at the exit. Five flasks support the climb.
+
+A continuous Bronze Age fortress panorama scrolls behind seven stone-and-timber
+bastions, a large wooden Trojan horse, four Cyclopean gateways and four retaining
+walls. All climbs use normal
+jumps. The soundtrack is “Ibn Al-Noor” by Kevin MacLeod, playing and looping from
+the beginning. Defeating the captain opens the road to the mountain sanctuary,
+now Level 5.
+
+[Level 4 guide](docs/level_4.md)
+
+Play-test with `tools/play_level.sh 4`, or `tools/play_mobile.sh 4`.
 
 ### The Mountain Sanctuary
 
@@ -83,30 +105,30 @@ Cypress trees rise above Greek mountain slopes and terraced stone walls. Cyclops
 
 One continuous mountain landscape shows rocky ridges, cypress slopes, terraced walls, and a distant sanctuary. Complete groves, low retaining walls, rocky outcrops, and weathered column fragments stand on the original terraces, leaving all four spike pits open.
 
-[Level 4 guide](docs/level_4.md)
+[Level 5 guide](docs/level_5.md)
 
 ### The Gorge Sanctuary
 
-Pale limestone cliffs, dark clefts, ruined temples, and stone causeways frame the fifth level. Bronze Bulls charge along flat corridors, Cerberus Pups pursue in pairs, and a three-headed Hydra guards the exit. Two optional high flask ledges reward riding a staggered bull. The main route uses normal jumps, with two spike pits.
+Pale limestone cliffs, dark clefts, ruined temples, and stone causeways frame the sixth level. Bronze Bulls charge along flat corridors, Cerberus Pups pursue in pairs, and a three-headed Hydra guards the exit. Two optional high flask ledges reward riding a staggered bull. The main route uses normal jumps, with two spike pits.
 
 One continuous dry gorge landscape shows stratified limestone walls and distant cliffside temples. Complete ruined shrines, colonnades, and rocky outcrops stand on the original causeways, while both bull ledges and pit openings keep their original geometry.
 
-[Level 5 guide](docs/level_5.md)
+[Level 6 guide](docs/level_6.md)
 
 ### The Pyramid Road
 
-Level 6 crosses an Egyptian desert beneath pyramids, with dunes, carved
-obelisks and sandstone temple gateways. Twenty-two terraces lead through five
-areas to the Temple of the Sun. Four each of the existing Hoplites, Peltasts,
+Level 7 crosses an Egyptian desert beneath pyramids, with dunes, carved
+obelisks and sandstone temple gateways. Twenty-five terraces lead through six
+areas to the Temple of the Sun. Four Hoplites and five each of the existing Peltasts,
 Raiders and Spartoi defend the road; an elite Hoplite captain guards the exit.
 Four flasks support the route, and every climb uses normal jumps.
 
-One continuous desert landscape scrolls behind six grounded obelisks and four
-pylon gateways. The sun temple continues into Atlantis, now Level 7.
+One continuous desert landscape scrolls behind seven grounded obelisks and five
+pylon gateways. The sun temple continues into Atlantis, now Level 8.
 
-[Level 6 guide](docs/level_6.md)
+[Level 7 guide](docs/level_7.md)
 
-Play-test with `tools/play_level.sh 6`, or `tools/play_mobile.sh 6` for touch
+Play-test with `tools/play_level.sh 7`, or `tools/play_mobile.sh 7` for touch
 controls.
 
 ### Atlantis
@@ -114,25 +136,25 @@ controls.
 Atlantis is a partially flooded city with dry marble causeways, ring canals,
 a palace climb, and Poseidon's sanctuary. Merfolk trident guards make high
 thrusts that can be ducked; Reefblades make low lunges that can be jumped.
-Thirteen Merfolk encounters include the elite captain guarding the exit.
+Sixteen Merfolk encounters include the elite captain guarding the exit.
 A repeating tide floods and drains the causeways. Water slows Theseus by up to
-30% while Merfolk keep their full Level 7-scaled speed. Higher platforms reduce
+30% while Merfolk keep their full Level 8-scaled speed. Higher platforms reduce
 the drag; a tide meter shows the phase and remaining time. The shallow canals
 remain safe to fall into and can be climbed out of with Jump.
 
 One continuous landscape and grounded wave-carved walls, bronze Poseidon
-statues, and ruined arches frame twenty-three terraces. Two flasks support the route. Level 6 continues into Atlantis.
+statues, and ruined arches frame twenty-seven terraces. Two flasks support the route. Level 7 continues into Atlantis.
 
-[Level 7 guide](docs/level_7.md)
+[Level 8 guide](docs/level_8.md)
 
-Play-test Atlantis with `tools/play_level.sh 7`, or `tools/play_mobile.sh 7` for touch
+Play-test Atlantis with `tools/play_level.sh 8`, or `tools/play_mobile.sh 8` for touch
 controls. Review both Merfolk roles and the captain with
 `godot --path . res://scenes/reviews/merfolk_review.tscn`.
 
 ### The Labyrinth
 
-Level 8 ends the journey in a dim, torch-lit labyrinth. Raised galleries and
-low-roofed passages lead past four Hoplites, four Peltasts, and four Raiders.
+Level 9 ends the journey in a dim, torch-lit labyrinth. Raised galleries and
+low-roofed passages lead past five Hoplites, five Peltasts, and five Raiders.
 Three flasks support the approach.
 
 The eight-health Minotaur winds up, charges with lowered horns, headbutts,
@@ -140,9 +162,9 @@ recovers, and backs away before attacking again. Time a full jump over his
 charge, then counter during recovery. Defeat him and enter the exit to finish
 the campaign. Existing keyboard and touch controls apply throughout.
 
-[Level 8 guide](docs/level_8.md)
+[Level 9 guide](docs/level_9.md)
 
-Play-test with `tools/play_level.sh 8`, or `tools/play_mobile.sh 8`.
+Play-test with `tools/play_level.sh 9`, or `tools/play_mobile.sh 9`.
 
 ## How to play
 
@@ -171,7 +193,7 @@ The Bronze Bull is available in a separate review arena. Jump its committed char
 
 ## Mobile version
 
-Android and iOS share the eight levels, artwork, combat, and level countdowns. Landscape touch controls support movement, ducking, jumping, sword attacks, and pause, including simultaneous presses for airborne attacks. Menus have larger touch targets. Tutorial messages sit at the bottom, between the left and right buttons, and gameplay pauses when the app loses focus. After a level is cleared, a ready full-screen ad appears after a brief transition and before the results screen. Continue then opens the next level directly. If no ad is ready, results appear immediately. Desktop and the web build skip ads.
+Android and iOS share the nine levels, artwork, combat, and level countdowns. Landscape touch controls support movement, ducking, jumping, sword attacks, and pause, including simultaneous presses for airborne attacks. Menus have larger touch targets. Tutorial messages sit at the bottom, between the left and right buttons, and gameplay pauses when the app loses focus. After a level is cleared, a ready full-screen ad appears after a brief transition and before the results screen. Continue then opens the next level directly. If no ad is ready, results appear immediately. Desktop and the web build skip ads.
 
 Phones render the world at 1280×720 while keeping HUD, menus, and touch controls at display resolution. A 960×540 option reduces world rendering further; simulators use a separate 320×180 preview. All profiles retain the same 320×180 game coordinates. Desktop keeps native rendering. Compare the phone budgets with `tools/play_mobile.sh 1 --mobile-render=720` and `tools/play_mobile.sh 1 --mobile-render=540`; see the [rendering profiles](docs/mobile.md#rendering-profiles).
 
@@ -188,7 +210,7 @@ Preview the controls with a mouse on desktop:
 ```sh
 tools/play_mobile.sh        # title screen
 tools/play_mobile.sh 2      # Level 2
-tools/play_mobile.sh 5      # Level 5 entrance
+tools/play_mobile.sh 6      # Level 6 entrance
 ```
 
 Start the installed iPhone 17 Pro simulator on this Mac:
@@ -227,19 +249,23 @@ A one-time $0.99 purchase permanently turns off ads.
 
 ## Credits
 
-Menus, Level 1 and Level 8 — Ancient Greek Inspired Folk. Music by <a href="https://pixabay.com/users/moonpub-15209240/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Johnny Hoeve</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Pixabay</a>
+Menus, Level 1 and Level 9 — Ancient Greek Inspired Folk. Music by <a href="https://pixabay.com/users/moonpub-15209240/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Johnny Hoeve</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=621132">Pixabay</a>
 
 Level 2 — Santorini Breeze. Music by <a href="https://pixabay.com/users/u_98673jp944-48995615/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=470783">u_98673jp944</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=470783">Pixabay</a>
 
 Level 3 — Ancient Temple. Music by <a href="https://pixabay.com/users/alex-morgan-54692529/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=587426">Alex Morgan</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=587426">Pixabay</a>
 
-Level 4 — Atlas Egypt. Music by <a href="https://pixabay.com/users/vadim_makes_sound-54823268/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=559404">Vadim</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=559404">Pixabay</a>
+Level 4 — "Ibn Al-Noor" Kevin MacLeod (incompetech.com)<br>
+Licensed under Creative Commons: By Attribution 4.0 License<br>
+[http://creativecommons.org/licenses/by/4.0/](http://creativecommons.org/licenses/by/4.0/)
 
-Level 5 — Ancient Persian Music. Music by <a href="https://pixabay.com/users/sounovamusic-51943437/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=460551">Sounova Music</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=460551">Pixabay</a>
+Level 5 — Atlas Egypt. Music by <a href="https://pixabay.com/users/vadim_makes_sound-54823268/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=559404">Vadim</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=559404">Pixabay</a>
 
-Level 6 — Ancient Persia Epic Soundtrack 03 (starts and loops from 1:02). Music by <a href="https://pixabay.com/users/vjgalaxy-8110364/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=532242">Alejandro Piñero Amerio</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=532242">Pixabay</a>
+Level 6 — Ancient Persian Music. Music by <a href="https://pixabay.com/users/sounovamusic-51943437/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=460551">Sounova Music</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=460551">Pixabay</a>
 
-Level 7 — Ancient Egypt Historical Epic. Music by <a href="https://pixabay.com/users/openmindaudio-53602733/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">OpenMindAudio</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">Pixabay</a>
+Level 7 — Ancient Persia Epic Soundtrack 03 (starts and loops from 1:02). Music by <a href="https://pixabay.com/users/vjgalaxy-8110364/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=532242">Alejandro Piñero Amerio</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=532242">Pixabay</a>
+
+Level 8 — Ancient Egypt Historical Epic. Music by <a href="https://pixabay.com/users/openmindaudio-53602733/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">OpenMindAudio</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=632173">Pixabay</a>
 
 Sound effect by <a href="https://pixabay.com/users/daviddumaisaudio-41768500/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=185432">David Dumais</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=185432">Pixabay</a>
 
@@ -255,7 +281,7 @@ To review Cerberus Pups, run `godot --path . res://scenes/reviews/cerberus_pup_r
 
 To review the Hydra, run `godot --path . res://scenes/reviews/hydra_review.tscn`, or open that scene and press **F6**. Each of its three heads has two health and a separate hit area. Cut down every head to defeat it; hitting the coiled body does no damage. Jump to reach the higher heads, or counter their telegraphed bites as they dip toward Theseus. Severed heads stay gone, and the survivors continue taking turns attacking.
 
-To check all eight continuous landscapes, complete scenery objects, and the absence of checkpoint triggers, run `godot --path . --script res://tests/scenery_art.gd`. This check uses the renderer.
+To check all nine extended landscapes, full-route camera coverage, complete scenery objects, and the absence of checkpoint triggers, run `godot --path . --script res://tests/scenery_art.gd`. This check uses the renderer.
 
 Start any level at its entrance:
 
@@ -266,11 +292,17 @@ tools/play_level.sh 3      # Level 3 from the entrance
 
 To skip the wrapper script, run `godot --path . res://scenes/debug/level_select.tscn -- --level=3`, or open `scenes/debug/level_select.tscn` in the editor and press **F6**.
 
-Check all eight countdowns, expiry to Hades, and entrance retries:
+Check all nine countdowns, expiry to Hades, and entrance retries:
 
 ```sh
 godot --headless --path . --script res://tests/level_timers.gd --fixed-fps 60
 godot --headless --path . --script res://tests/level_timers.gd --fixed-fps 60 -- --mobile-controls
+```
+
+Check every soundtrack decoding across its file ending and returning to its selected loop offset:
+
+```sh
+godot --headless --path . --script res://tests/music_loops.gd
 ```
 
 ## Background builds and performance

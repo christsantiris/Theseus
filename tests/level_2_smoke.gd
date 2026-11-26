@@ -173,7 +173,7 @@ func _traverse() -> void:
 					jumping = true
 					jumps += 1
 					break
-		if player.position.x > 4700 and not level._gate.unlocked:
+		if player.position.x > Coast.EXIT.x - 52 and not level._gate.unlocked:
 			level.get_node(Coast.GATE_GUARD).die()
 	Input.action_release("move_right")
 	Input.action_release("jump")

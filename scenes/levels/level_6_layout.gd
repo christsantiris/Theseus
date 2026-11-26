@@ -1,69 +1,128 @@
 extends RefCounted
 
 const TIME_LIMIT := 180.0
-const WIDTH := 4800
+
+const WIDTH := 5760
 const HEIGHT := 352
 const FLOOR_Y := 280
 const START := Vector2(48, FLOOR_Y)
 const SECTIONS := [
-	{"x": 0, "name": "Desert Road"},
-	{"x": 960, "name": "Pyramid Causeway"},
-	{"x": 1920, "name": "Buried Courts"},
-	{"x": 2880, "name": "Obelisk Rise"},
-	{"x": 3840, "name": "Temple of the Sun"},
+	{"x": 0, "name": "Gorge Mouth"},
+	{"x": 960, "name": "Temple Ledges"},
+	{"x": 1920, "name": "Broken Causeway"},
+	{"x": 2880, "name": "High Colonnade"},
+	{"x": 3840, "name": "Western Temple Court"},
+	{"x": 4800, "name": "Hydra Sanctuary"},
 ]
+
 const PLATFORMS := [
-	Rect2(640, 264, 128, 16), Rect2(768, 248, 128, 32),
-	Rect2(896, 232, 256, 48), Rect2(1152, 248, 128, 32),
-	Rect2(1280, 264, 128, 16),
-	Rect2(1600, 264, 128, 16), Rect2(1728, 248, 128, 32),
-	Rect2(1856, 232, 256, 48), Rect2(2112, 248, 128, 32),
-	Rect2(2240, 264, 128, 16),
-	Rect2(2496, 264, 128, 16), Rect2(2624, 248, 128, 32),
-	Rect2(2752, 232, 128, 48), Rect2(2880, 216, 128, 64),
-	Rect2(3008, 200, 256, 80), Rect2(3264, 216, 128, 64),
-	Rect2(3392, 232, 128, 48), Rect2(3520, 248, 128, 32),
-	Rect2(3648, 264, 128, 16),
-	Rect2(4032, 264, 128, 16), Rect2(4160, 248, 256, 32),
-	Rect2(4416, 264, 128, 16),
+	Rect2(736, 264, 96, 16),
+	Rect2(832, 248, 96, 32),
+	Rect2(928, 232, 256, 48),
+	Rect2(1184, 248, 80, 32),
+	Rect2(1264, 264, 80, 16),
+	Rect2(2144, 264, 112, 16),
+	Rect2(2256, 248, 112, 32),
+	Rect2(2368, 232, 256, 48),
+	Rect2(2624, 216, 112, 64),
+	Rect2(2736, 200, 112, 80),
+	Rect2(2848, 184, 112, 96),
+	Rect2(2960, 168, 512, 112),
+	Rect2(3472, 184, 112, 96),
+	Rect2(3584, 200, 112, 80),
+	Rect2(3696, 216, 112, 64),
+	Rect2(3808, 232, 32, 48),
+	Rect2(3840, 248, 96, 32),
+	Rect2(3936, 264, 96, 16),
+	Rect2(4448, 264, 64, 16),
+	Rect2(4512, 248, 64, 32),
+	Rect2(4576, 232, 224, 48),
+	Rect2(4800, 232, 224, 48),
+	Rect2(5024, 248, 64, 32),
+	Rect2(5088, 264, 32, 16),
 ]
+
+# These ledges can be reached from a staggered bull. The main route never
+# requires a ride, and their one-way tops leave the charging lane clear.
+const BONUS_LEDGES := [Rect2(544, 224, 112, 8), Rect2(3328, 112, 112, 8)]
+# A pit's rim sits at the lowest neighboring ground, so it always reads as a
+# recess. Placing one inside a raised step leaves its far wall standing proud.
+const PITS := [
+	{"name": "CausewayPit", "position": Vector2(2080, 280), "width": 32.0, "depth": 24.0},
+	{"name": "SanctuaryPit", "position": Vector2(5152, 280), "width": 32.0, "depth": 24.0},
+]
+
 const ENEMIES := [
-	{"name": "RaiderDunes", "kind": "raider", "position": Vector2(352, 280), "patrol": Vector2(288, 448)},
-	{"name": "PeltastPyramidRoad", "kind": "peltast", "position": Vector2(800, 248), "patrol": Vector2(784, 864)},
-	{"name": "HoplitePyramidGuard", "kind": "hoplite", "position": Vector2(1008, 232), "patrol": Vector2(928, 1120)},
-	{"name": "SpartoiCauseway", "kind": "spartoi", "position": Vector2(1344, 264), "patrol": Vector2(1304, 1384)},
-	{"name": "RaiderBuriedCourt", "kind": "raider", "position": Vector2(1520, 280), "patrol": Vector2(1456, 1568)},
-	{"name": "PeltastCourt", "kind": "peltast", "position": Vector2(1792, 248), "patrol": Vector2(1752, 1824)},
-	{"name": "SpartoiCourt", "kind": "spartoi", "position": Vector2(1984, 232), "patrol": Vector2(1888, 2064)},
-	{"name": "HopliteCourt", "kind": "hoplite", "position": Vector2(2304, 264), "patrol": Vector2(2264, 2336)},
-	{"name": "RaiderObeliskSteps", "kind": "raider", "position": Vector2(2688, 248), "patrol": Vector2(2648, 2720)},
-	{"name": "PeltastHighCourt", "kind": "peltast", "position": Vector2(3072, 200), "patrol": Vector2(3032, 3120)},
-	{"name": "HopliteHighCourt", "kind": "hoplite", "position": Vector2(3200, 200), "patrol": Vector2(3160, 3232)},
-	{"name": "SpartoiDescent", "kind": "spartoi", "position": Vector2(3456, 232), "patrol": Vector2(3416, 3488)},
-	{"name": "RaiderTempleRoad", "kind": "raider", "position": Vector2(3888, 280), "patrol": Vector2(3824, 3952)},
-	{"name": "PeltastTemple", "kind": "peltast", "position": Vector2(4224, 248), "patrol": Vector2(4192, 4336)},
-	{"name": "SpartoiTemple", "kind": "spartoi", "position": Vector2(4480, 264), "patrol": Vector2(4448, 4512)},
-	{"name": "HopliteSunCaptain", "kind": "hoplite", "position": Vector2(4576, 280), "patrol": Vector2(4552, 4600)},
+	{"name": "BullGorgeMouth", "kind": "bronze_bull", "position": Vector2(432, 280), "patrol": Vector2(192, 704)},
+	{"name": "TemplePupA", "kind": "cerberus_pup", "position": Vector2(1024, 232), "patrol": Vector2(960, 1152), "pack": "TemplePack", "delay": 0.3},
+	{"name": "TemplePupB", "kind": "cerberus_pup", "position": Vector2(1072, 232), "patrol": Vector2(960, 1152), "pack": "TemplePack", "delay": 0.9},
+	{"name": "BullDryRiver", "kind": "bronze_bull", "position": Vector2(1696, 280), "patrol": Vector2(1376, 1888)},
+	{"name": "CausewayPupA", "kind": "cerberus_pup", "position": Vector2(2448, 232), "patrol": Vector2(2400, 2592), "pack": "CausewayPack", "delay": 0.3},
+	{"name": "CausewayPupB", "kind": "cerberus_pup", "position": Vector2(2496, 232), "patrol": Vector2(2400, 2592), "pack": "CausewayPack", "delay": 0.9},
+	{"name": "BullColonnade", "kind": "bronze_bull", "position": Vector2(3264, 168), "patrol": Vector2(3008, 3440)},
+	{"name": "BullWesternCourt", "kind": "bronze_bull", "position": Vector2(4264, 280), "patrol": Vector2(4080, 4384)},
+	{"name": "WesternPupA", "kind": "cerberus_pup", "position": Vector2(4632, 232), "patrol": Vector2(4608, 4752), "pack": "WesternPack", "delay": 0.3},
+	{"name": "WesternPupB", "kind": "cerberus_pup", "position": Vector2(4680, 232), "patrol": Vector2(4608, 4752), "pack": "WesternPack", "delay": 0.9},
+	{"name": "SanctuaryPupA", "kind": "cerberus_pup", "position": Vector2(4864, 232), "patrol": Vector2(4800, 4992), "pack": "SanctuaryPack", "delay": 0.3},
+	{"name": "SanctuaryPupB", "kind": "cerberus_pup", "position": Vector2(4912, 232), "patrol": Vector2(4800, 4992), "pack": "SanctuaryPack", "delay": 0.9},
+	{"name": "HydraTempleGuard", "kind": "hydra", "position": Vector2(5568, 280), "patrol": Vector2(5440, 5648)},
 ]
+
 const FLASKS := [
-	{"name": "HealthFlaskPyramids", "position": Vector2(1216, 248)},
-	{"name": "HealthFlaskCourts", "position": Vector2(2400, 280)},
-	{"name": "HealthFlaskObelisk", "position": Vector2(2944, 216)},
-	{"name": "HealthFlaskSunTemple", "position": Vector2(4000, 280)},
+	{"name": "HealthFlaskBullLedge", "position": Vector2(616, 224), "bonus": true},
+	{"name": "HealthFlaskTemple", "position": Vector2(1216, 248)},
+	{"name": "HealthFlaskCauseway", "position": Vector2(2120, 280)},
+	{"name": "HealthFlaskHighLedge", "position": Vector2(3384, 112), "bonus": true},
+	{"name": "HealthFlaskSanctuary", "position": Vector2(5328, 280)},
 ]
-const EXIT := Vector2(4640, FLOOR_Y)
-const GATE_GUARD := "HopliteSunCaptain"
+const EXIT := Vector2(5712, FLOOR_Y)
+const GATE_GUARD := "HydraTempleGuard"
 const TIPS := [
-	{"x": 560, "end": 752, "text": "Climb the sandstone steps with normal jumps."},
-	{"x": 960, "end": 1152, "text": "Bait the hoplite's spear, then counter in recovery."},
-	{"x": 1856, "end": 2064, "text": "Spartoi guard the courts. Make space before striking."},
-	{"x": 4416, "end": 4576, "text": "Defeat the sun captain to open the temple."},
+	{"x": 160, "end": 352, "text": "Jump the bull's charge; it cannot turn mid-charge."},
+	{"x": 480, "end": 704, "text": "Airborne Duck + Sword staggers a bull's back."},
+	{"x": 800, "end": 1056, "text": "Pups run in pairs. Sword hits interrupt their leaps."},
+	{"x": 1920, "end": 2072, "text": "Jump across the causeway spikes."},
+	{"x": 3104, "end": 3376, "text": "Ride the bull, then jump to the high flask ledge."},
+	{"x": 5280, "end": 5472, "text": "Cut all three Hydra heads. Jump for the high heads."},
 ]
 
 
-static func surface_at(x: float) -> float:
+static func surface_at(x: float, include_bonus: bool = false) -> float:
 	var surface := float(FLOOR_Y)
 	for platform: Rect2 in PLATFORMS:
 		if x >= platform.position.x and x < platform.end.x:
 			surface = minf(surface, platform.position.y)
+	if include_bonus:
+		for ledge: Rect2 in BONUS_LEDGES:
+			if x >= ledge.position.x and x < ledge.end.x:
+				surface = minf(surface, ledge.position.y)
+	for pit: Dictionary in PITS:
+		if x >= pit.position.x and x < pit.position.x + pit.width:
+			surface = pit.position.y + pit.depth
 	return surface
+
+
+static func terrain_pieces(rectangle: Rect2) -> Array[Rect2]:
+	var pieces: Array[Rect2] = []
+	var cursor := rectangle.position.x
+	for pit: Dictionary in PITS:
+		var bottom: float = pit.position.y + pit.depth
+		var left: float = maxf(cursor, pit.position.x)
+		var right: float = minf(rectangle.end.x, pit.position.x + pit.width)
+		if right <= left or pit.position.y > rectangle.position.y or bottom <= rectangle.position.y:
+			continue
+		if left > cursor:
+			pieces.append(Rect2(cursor, rectangle.position.y, left - cursor, rectangle.size.y))
+		if bottom < rectangle.end.y:
+			pieces.append(Rect2(left, bottom, right - left, rectangle.end.y - bottom))
+		cursor = right
+	if cursor < rectangle.end.x:
+		pieces.append(Rect2(cursor, rectangle.position.y, rectangle.end.x - cursor, rectangle.size.y))
+	return pieces
+
+
+static func is_spike_floor(rectangle: Rect2) -> bool:
+	for pit: Dictionary in PITS:
+		if rectangle.position.x == pit.position.x and rectangle.position.y == pit.position.y + pit.depth:
+			return true
+	return false

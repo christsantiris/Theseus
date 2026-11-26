@@ -1,22 +1,22 @@
 # Level 1 — The Temple Road
 
 A complete, left-to-right opening level built from the original 960-pixel test
-course. The route is now **4,800 pixels long**, or fifteen 320-pixel screens,
+course. The route is now **5,760 pixels long**, or eighteen 320-pixel screens,
 leading from a cypress-lined road to the guarded temple entrance.
 
-![Five playable areas captured from Godot](level_1_preview.png)
+![Views from the route](level_1_preview.png)
 
 ## Cinematic scenery
 
 Level 1 uses **one continuous Attic landscape**, with connected mountains,
 terraced olive groves, a consistent sky, and a distant sanctuary. It never
 switches paintings or blends unrelated edges. A 2,172×724 source image renders
-at 768×256 world units; the camera moves across it at 10% of horizontal travel
+at 768×256 world units; the camera moves across it at 8% of horizontal travel
 and 30% of vertical travel. The existing camera still follows Theseus' climbs
-and descents within the original 4,800×256 visual bounds.
+and descents within the 5,760×256 visual bounds.
 
-Thirteen complete transparent scenery objects establish the route's five areas:
-seven olive-and-cypress groves, five ruined colonnades, and one three-arch
+Fifteen complete transparent scenery objects establish the route's six areas:
+eight olive-and-cypress groves, six ruined colonnades, and one three-arch
 aqueduct. These scroll at 82% of horizontal camera travel and stay rooted at
 the road's ground height. Trees, columns and arches remain whole as the camera
 passes them. There are no panorama seams, fading architecture, repeated road
@@ -30,8 +30,8 @@ project's 4,096-pixel mobile limit. No scenery texture generates mipmaps; the
 separate repeating stone terrain keeps its existing mipmaps.
 
 Detailed masonry, waystones, and the temple facade complete the scenery. Ground and platform collision,
-movement, enemies, pickups, and temple entry are unchanged.
-All six levels now use continuous landscapes with independent landmarks.
+movement, pickups and temple entry retain their existing rules. The new grove adds three enemies and three terraces.
+All eight levels now use continuous landscapes with independent landmarks.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
 one world pixel of overlap at the ground. This closes transparent-padding gaps
@@ -46,13 +46,14 @@ and collision layout. See the [ground-contact regression](performance.md#scenery
 | Broken Colonnade | 960–1919 | Climb a staircase of 16-pixel rises, then handle separate close-combat encounters after the drop. | 1 Peltast, 1 Raider, 1 Hoplite |
 | Olive Terraces | 1920–2879 | Apply the learned timings around an elevated javelin fighter. A health flask on the upper terrace rewards climbing; the ground catches missed jumps. | 2 Raiders, 1 Peltast |
 | Ruined Aqueduct | 2880–3839 | Cross ascending and descending stone terraces, with two separated javelin fighters and a final spear guard. | 2 Peltasts, 1 Hoplite |
-| Temple Approach | 3840–4799 | Remix the three soldier types in sequence. Defeat the named temple guard to raise the gate, then enter to complete Level 1. | 1 Raider, 1 Peltast, 2 Hoplites |
+| Sacred Grove | 3840–4799 | Cross a low grove terrace, with a Raider on the approach, a raised Peltast and a Hoplite on open ground. | 1 Raider, 1 Peltast, 1 Hoplite |
+| Temple Approach | 4800–5759 | Remix the three soldier types in sequence. Defeat the named temple guard to raise the gate, then enter to complete Level 1. | 1 Raider, 1 Peltast, 2 Hoplites |
 
 [Open the route map](level_1_map.svg) for exact enemy, pickup, and terrace positions.
 
-There are **16 soldiers** and **5 health flasks**. The
-maximum combat score is **1,850**: five Hoplites at 150 points, six Peltasts at
-100, and five Raiders at 100. Earlier enemies can be bypassed; only the temple
+There are **19 soldiers** and **5 health flasks**. The
+maximum combat score is **2,200**: six Hoplites at 150 points, seven Peltasts at
+100, and six Raiders at 100. Earlier enemies can be bypassed; only the temple
 guard must be defeated to finish.
 
 ## Movement and fairness
@@ -74,9 +75,9 @@ and 12 vertical pixels. They use a held javelin for a stationary, telegraphed ja
 followed by a safe recovery window. There are no ranged enemy attacks.
 
 Duck remains available, but the route does not require crouch-walking. First-clear
-pacing is intended to be roughly **2–4 minutes** with combat and exploration;
+pacing is intended to be under the **3-minute limit** with combat and exploration;
 this is a design target for human playtesting. The automated combat-free route
-takes approximately **53 simulated seconds** and uses 15 jumps.
+takes approximately **63 simulated seconds** and uses 17 jumps.
 
 Landing on an enemy's head costs **one health for both Theseus and the enemy**.
 It does not instantly defeat an enemy at full health. Side grazes do not count,
@@ -116,7 +117,7 @@ pickup positions, time limit, and tutorial prompts. `level_1_geometry.gd`
 inherits the original collision construction from `level_geometry.gd`, then
 renders the continuous landscape, independent scenery cutouts, and stone surfaces.
 `assets/art/backgrounds/level_1/attic_landscape.png` is the single opaque painting;
-`olive_grove.png`, `colonnade.png`, and `aqueduct.png` are transparent landmarks. `level_1_temple.gd` renders the cinematic facade shared by all six levels,
+`olive_grove.png`, `colonnade.png`, and `aqueduct.png` are transparent landmarks. `level_1_temple.gd` renders the cinematic facade used by the Greek sanctuary exits,
 leaving gate collision, unlocking, and entry logic on the existing temple.
 Each level owns its scenery renderer. Scenery is also visible in the editor.
 `level_1.gd` builds the encounters and manages
@@ -147,7 +148,14 @@ and first-clear pacing still need human playtesting.
 
 The scenery check verifies vertical camera and skyline movement, background
 coverage through climbs and jumps and across the entire route, monotonic sampling
-without wraps, natural proportions, unchanged ground and
+without wraps, natural proportions, extended ground and authored
 terrace collisions, the open facade during paused temple entry, and camera and
 renderer isolation from Levels 2–5. The route test also checks vertical camera
 travel during actual movement and jumping.
+
+## Extended approach
+
+The route is 20% longer: 5,760 world units with a new Sacred Grove section
+at X=3840–4799 before the final area. Three additional enemies occupy that
+space. The countdown remains 3:00, and existing music keeps looping at its
+configured offset. Background camera coverage includes the full extended route.

@@ -69,7 +69,7 @@ func _fresh(real_player := false) -> void:
 	boss.position = Vector2(240, 280)
 	boss.patrol_left = 80
 	boss.patrol_right = 800
-	boss.tuning = load("res://scenes/levels/difficulty.gd").for_level(8, true)
+	boss.tuning = load("res://scenes/levels/difficulty.gd").for_level(9, true)
 	arena.add_child(boss)
 	await _frames()
 

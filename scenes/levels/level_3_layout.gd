@@ -2,7 +2,7 @@ extends RefCounted
 
 const TIME_LIMIT := 180.0
 
-const WIDTH := 4800
+const WIDTH := 5760
 const HEIGHT := 320
 const FLOOR_Y := 280
 const START := Vector2(48, FLOOR_Y)
@@ -11,25 +11,43 @@ const SECTIONS := [
 	{"x": 960, "name": "Potters' Quarter"},
 	{"x": 1920, "name": "Agora Terraces"},
 	{"x": 2880, "name": "Temple District"},
-	{"x": 3840, "name": "Acropolis Approach"},
+	{"x": 3840, "name": "Processional Courts"},
+	{"x": 4800, "name": "Acropolis Approach"},
 ]
 
 # Connected uphill steps and generous combat landings keep every missed jump
 # recoverable. The breaks at street level are shallow courtyards, not pits.
 const PLATFORMS := [
-	Rect2(480, 264, 256, 16), Rect2(736, 248, 112, 32),
-	Rect2(848, 232, 320, 48), Rect2(1168, 248, 128, 32),
+	Rect2(480, 264, 256, 16),
+	Rect2(736, 248, 112, 32),
+	Rect2(848, 232, 320, 48),
+	Rect2(1168, 248, 128, 32),
 	Rect2(1296, 264, 128, 16),
-	Rect2(1488, 264, 112, 16), Rect2(1600, 248, 160, 32),
+	Rect2(1488, 264, 112, 16),
+	Rect2(1600, 248, 160, 32),
 	Rect2(1760, 264, 128, 16),
-	Rect2(2208, 264, 112, 16), Rect2(2320, 248, 112, 32),
-	Rect2(2432, 232, 224, 48), Rect2(2656, 216, 256, 64),
-	Rect2(2912, 200, 128, 80), Rect2(3040, 184, 128, 96),
-	Rect2(3168, 168, 192, 112), Rect2(3360, 152, 256, 128),
-	Rect2(3616, 184, 112, 96), Rect2(3728, 216, 112, 64),
-	Rect2(3840, 248, 112, 32), Rect2(3952, 264, 112, 16),
-	Rect2(4240, 264, 112, 16), Rect2(4352, 248, 192, 32),
-	Rect2(4544, 264, 80, 16),
+	Rect2(2208, 264, 112, 16),
+	Rect2(2320, 248, 112, 32),
+	Rect2(2432, 232, 224, 48),
+	Rect2(2656, 216, 256, 64),
+	Rect2(2912, 200, 128, 80),
+	Rect2(3040, 184, 128, 96),
+	Rect2(3168, 168, 192, 112),
+	Rect2(3360, 152, 256, 128),
+	Rect2(3616, 184, 112, 96),
+	Rect2(3728, 216, 112, 64),
+	Rect2(3840, 232, 128, 48),
+	Rect2(3968, 248, 128, 32),
+	Rect2(4096, 264, 96, 16),
+	Rect2(4352, 264, 112, 16),
+	Rect2(4464, 248, 112, 32),
+	Rect2(4576, 232, 112, 48),
+	Rect2(4688, 248, 112, 32),
+	Rect2(4800, 248, 112, 32),
+	Rect2(4912, 264, 112, 16),
+	Rect2(5200, 264, 112, 16),
+	Rect2(5312, 248, 192, 32),
+	Rect2(5504, 264, 80, 16),
 ]
 
 const ENEMIES := [
@@ -45,10 +63,13 @@ const ENEMIES := [
 	{"name": "PeltastTempleLanding", "kind": "peltast", "position": Vector2(3088, 184), "patrol": Vector2(3056, 3152)},
 	{"name": "SpartoiTempleRoof", "kind": "spartoi", "position": Vector2(3264, 168), "patrol": Vector2(3184, 3344)},
 	{"name": "LamiaTemple", "kind": "lamia", "position": Vector2(3504, 152), "patrol": Vector2(3424, 3584)},
-	{"name": "PeltastDescent", "kind": "peltast", "position": Vector2(3888, 248), "patrol": Vector2(3856, 3936)},
-	{"name": "SpartoiSanctuary", "kind": "spartoi", "position": Vector2(4208, 280), "patrol": Vector2(4144, 4232)},
-	{"name": "LamiaSanctuary", "kind": "lamia", "position": Vector2(4448, 248), "patrol": Vector2(4384, 4512)},
-	{"name": "HopliteAcropolisGuard", "kind": "hoplite", "position": Vector2(4672, 280), "patrol": Vector2(4640, 4704)},
+	{"name": "PeltastProcession", "kind": "peltast", "position": Vector2(4032, 248), "patrol": Vector2(3992, 4072)},
+	{"name": "SpartoiProcession", "kind": "spartoi", "position": Vector2(4272, 280), "patrol": Vector2(4224, 4320)},
+	{"name": "LamiaProcession", "kind": "lamia", "position": Vector2(4744, 248), "patrol": Vector2(4712, 4776)},
+	{"name": "PeltastDescent", "kind": "peltast", "position": Vector2(4848, 248), "patrol": Vector2(4816, 4896)},
+	{"name": "SpartoiSanctuary", "kind": "spartoi", "position": Vector2(5168, 280), "patrol": Vector2(5104, 5192)},
+	{"name": "LamiaSanctuary", "kind": "lamia", "position": Vector2(5408, 248), "patrol": Vector2(5344, 5472)},
+	{"name": "HopliteAcropolisGuard", "kind": "hoplite", "position": Vector2(5632, 280), "patrol": Vector2(5600, 5664)},
 ]
 
 const FLASKS := [
@@ -56,9 +77,9 @@ const FLASKS := [
 	{"name": "HealthFlaskPotters", "position": Vector2(1456, 280)},
 	{"name": "HealthFlaskAgora", "position": Vector2(2384, 248)},
 	{"name": "HealthFlaskTemple", "position": Vector2(3664, 184)},
-	{"name": "HealthFlaskAcropolis", "position": Vector2(4320, 264)},
+	{"name": "HealthFlaskAcropolis", "position": Vector2(5280, 264)},
 ]
-const EXIT := Vector2(4752, FLOOR_Y)
+const EXIT := Vector2(5712, FLOOR_Y)
 const GATE_GUARD := "HopliteAcropolisGuard"
 const TIPS := [
 	{"x": 80, "end": 320, "text": "The town road leads to the acropolis."},

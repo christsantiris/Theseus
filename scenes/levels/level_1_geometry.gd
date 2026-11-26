@@ -13,7 +13,7 @@ const WAYSTONE := preload("res://assets/art/backgrounds/level_1/waystone.png")
 const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 const TEMPLE := preload("res://scenes/levels/level_1_temple.gd")
 const LANDSCAPE_HEIGHT := 256.0
-const FAR_SCROLL := 0.1
+const FAR_SCROLL := 0.08
 const FAR_VERTICAL_SCROLL := 0.3
 const MID_SCROLL := 0.82
 const MATERIAL_DENSITY := 16.0
@@ -22,7 +22,7 @@ var midground: Node2D
 
 
 func _ready() -> void:
-	# Keep every original collision body, surface height and node name.
+	# Build collision from the authored road, including its longer approach.
 	super()
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
@@ -59,12 +59,14 @@ func _build_landscape() -> void:
 	# Positions refer to the route, heights to the visible object. Every arch,
 	# column and tree is drawn whole, with genuine transparent space around it.
 	for grove in [Vector2(220, 116), Vector2(720, 100), Vector2(1940, 98),
-		Vector2(2300, 126), Vector2(2630, 104), Vector2(3930, 108), Vector2(4240, 96)]:
+		Vector2(2300, 126), Vector2(2630, 104), Vector2(4890, 108), Vector2(5200, 96)]:
 		_landmark(GROVE, grove.x, grove.y, "OliveGrove")
 	for ruin in [Vector2(1150, 106), Vector2(1530, 92), Vector2(1770, 76),
-		Vector2(3680, 78), Vector2(4470, 110)]:
+		Vector2(3680, 78), Vector2(5430, 110)]:
 		_landmark(COLONNADE, ruin.x, ruin.y, "Colonnade")
 	_landmark(AQUEDUCT, 3300, 152, "Aqueduct")
+	_landmark(GROVE, 4224, 100, "OliveGrove")
+	_landmark(COLONNADE, 4624, 68, "Colonnade")
 	_sync_backdrop()
 
 
@@ -87,8 +89,8 @@ func _sync_backdrop() -> void:
 	if camera != null and not Engine.is_editor_hint():
 		var view := Vector2(get_window().content_scale_size) / camera.zoom
 		view_top_left = camera.get_screen_center_position() - view * 0.5
-	# At the last camera position the right edge of this single 768-unit
-	# painting meets the viewport exactly. No wrapping, stitching or image readback.
+	# Slower parallax keeps this single 768-unit painting over the full longer
+	# route. No wrapping, stretching, stitching or image readback.
 	backdrop.position = Vector2(view_top_left.x * (1.0 - FAR_SCROLL),
 		view_top_left.y * (1.0 - FAR_VERTICAL_SCROLL) - 40.0)
 	midground.position.x = view_top_left.x * (1.0 - MID_SCROLL)
@@ -113,7 +115,7 @@ func _draw() -> void:
 	_draw_masonry(Rect2(0, Layout.FLOOR_Y, Layout.WIDTH, Layout.HEIGHT - Layout.FLOOR_Y))
 	for platform: Rect2 in Layout.PLATFORMS:
 		_draw_masonry(platform)
-	for x in [624, 944, 1856, 2272, 2832, 3744, 4576]:
+	for x in [624, 944, 1856, 2272, 2832, 3744, 5536]:
 		draw_texture_rect(WAYSTONE, GROUNDING.rect(WAYSTONE, x, Layout.surface_at(x), 21.0, 18.0), false)
 
 

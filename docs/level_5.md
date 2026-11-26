@@ -1,27 +1,26 @@
-# Level 5 — The Gorge Sanctuary
+# Level 5 — The Mountain Sanctuary
 
-A 4,800×352-pixel rocky gorge with pale limestone faces, deep dry clefts,
-weathered Greek temples, broken columns, and bright stone causeways. Eighteen
-main terraces climb from y=280 to the high colonnade at y=168, then descend
-to the Hydra's sanctuary. Background ruins use muted stone; bright caps mark
-the playable path.
+A 5,760×352-pixel mountain route with layered rocky ridges, cypress trees,
+terraced retaining walls, olive scrub and a Greek sanctuary exit.
+Thirty-four main terraces climb 144 pixels above the foothill road before
+descending to the summit approach. Bright stone caps mark walkable terrain;
+muted slopes and smaller walls form the background.
 
-![Five areas of the rocky gorge](level_5.png)
+![Views from the route](level_5.png)
 
 ## Cinematic scenery
 
-One continuous gorge landscape shows dry stratified cliffs, distant ruins,
-and a deep rocky valley. Eleven complete transparent landmarks frame the
-causeways: four ruined cliff temples, five rocky outcrops, and two colonnades.
-Their painted bases stay on authored landings while the distant landscape
-scrolls at 13% of horizontal camera travel and 25% of vertical travel. Its
-2,172×724 painting fills 912×304 world units without wrapping, panel blending,
-or stretched ground extensions.
+One continuous mountain landscape shows dry rocky ridges, cypress slopes,
+terraced hillsides, and a distant sanctuary. Fifteen complete transparent
+landmarks stand on the route: six olive/cypress groves, five low retaining
+walls, and four rocky outcrops. They stay fixed to authored landings while
+the distant landscape scrolls at 10.5% of horizontal camera travel and 25% of
+vertical travel. Its 2,172×724 painting fills 912×304 world units without
+wrapping, panel blending, or stretched ground extensions.
 
-All eighteen main terraces, both one-way bull ledges, both recessed spike pits,
-and their collision settings are unchanged. Scenery leaves the spike openings
-clear. Existing column fragments remain, and the temple
-stays closed until the Hydra's final head falls, including paused entry.
+All thirty-four terraces, four recessed spike pits, hazard areas, and unsafe
+Satyr landing markers keep their original geometry and behavior. Scenery stays
+clear of pit openings. Rustic stone, existing broken columns, and the matching temple entrance retain their gameplay roles.
 
 Standing scenery uses measured painted bases from `scenery_grounding.gd`, with
 one world pixel of overlap at the ground. This closes transparent-padding gaps
@@ -32,68 +31,63 @@ and collision layout. See the [ground-contact regression](performance.md#scenery
 
 | Area | World X | Route and encounters |
 | --- | --- | --- |
-| Gorge Mouth | 0–959 | A broad, flat lane introduces the first Bronze Bull. Staggering it opens an optional route to a high flask ledge. Three low steps lead to the temple terraces. |
-| Temple Ledges | 960–1919 | The first pair of Cerberus Pups holds a broad landing. Descend into a second flat bull corridor before the causeway. |
-| Broken Causeway | 1920–2879 | Cross a spike pit, and climb 16-pixel steps. A second pup pair guards a wide terrace halfway up. |
-| High Colonnade | 2880–3839 | A third bull charges along a 512-pixel causeway. A second high flask ledge rewards riding it. Descending terraces lead toward the sanctuary. |
-| Hydra Sanctuary | 3840–4799 | The final pup pair guards the descent. Jump the last spike pit, then defeat every Hydra head to open the exit temple. |
+| Cypress Foothills | 0–959 | An empty approach teaches the first spike pit. A Satyr occupies a broad low terrace; the first Cyclops throws from an elevated ledge. |
+| Stone Switchbacks | 960–1919 | Raider and Satyr encounters lead to a wider pit. A flask follows the landing, then Telchine and Cyclops fights accompany the climb. |
+| Mountain Gardens | 1920–2879 | Ascending 16-pixel steps with Raider, Satyr, and Telchine encounters. |
+| High Pass | 2880–3839 | A Cyclops guards the high wall. A recessed spike pit cuts the upper terrace, then the route climbs to y=136 before descending past Raider and Telchine guards. |
+| Cypress Ridge | 3840–4799 | A Telchine descent leads to a Satyr lane and a broad Cyclops landing. |
+| Summit Sanctuary | 4800–5759 | A Satyr on the descent, final pit, Telchine and Cyclops encounters, then the Raider guarding the sanctuary. |
 
-## Encounters
+## Spike pits
 
-Bronze Bulls and Cerberus Pups use cinematic 3D-style artwork, with eight poses
-each covering their charge, stagger, run, pounce, and recovery states. The larger
-source atlases keep their original world sizes, combat timing, and collision
-shapes, including the bull's ride platform. Their separate review arenas include
-pose galleries: `scenes/reviews/bronze_bull_review.tscn` and
-`scenes/reviews/cerberus_pup_review.tscn`.
+Four genuine recesses interrupt the terrain. The first is 32 pixels wide; the
+other three are 40 pixels wide. All are 24 pixels deep. A normal held jump at
+the base speed crosses each pit; stolen wine is optional. Take off near the
+bright stone lip and keep moving across the gap.
 
-The Hydra now uses matching cinematic coils and six head-and-neck poses. Each
-jaw stays aligned with its original mouth hit area through idle, windup, bite,
-retreat, and recovery. The three heads still have independent health and can be
-severed separately; only defeating all three opens the exit. Review the complete
-boss with `godot --path . res://scenes/reviews/hydra_review.tscn`.
-
-| Enemy | Count | Health / score | Counter |
-| --- | --- | --- | --- |
-| Bronze Bull | 3 | 4 / 250 | Jump the committed charge. While airborne, hold Duck and press Sword to thrust onto its back, deal one damage, and stagger it into a temporary moving platform. |
-| Cerberus Pup | 6, in three pairs | 2 / 100 each | The pair shares pursuit and takes turns making a telegraphed leap. Jump over the attack or interrupt it with a sword hit. Killing one pup leaves its partner active. |
-| Hydra | 1, with three heads | 2 per head / 450 total | Each mouth has independent health. Use jumping sword attacks to reach higher heads, or counter a head as it dips into a bite. Body hits do no damage. All three heads must be defeated; severed heads stay gone. |
-
-The maximum combat score is **1,800** across ten encounters. Each pup counts
-separately; the Hydra counts once after its final head falls. Ordinary airborne
-collisions with enemies or Hydra mouths still cost both Theseus and the target
-one health. There is no automatic stomp kill.
-
-## Optional bull ledges and spike pits
-
-The main route needs ten terrace climbs and two pit jumps, all possible at the
-normal movement speed. It does not require riding a bull. Two extra ledges
-stand 56 pixels above the bull lanes, beyond a normal jump from the ground:
-
-| Ledge | Span | Top Y | Flask X |
-| --- | --- | --- | --- |
-| Gorge Mouth | 544–656 | 224 | 616 |
-| High Colonnade | 3328–3440 | 112 | 3384 |
-
-A downward thrust on a bull's back opens a brief ride. Its cool sheen marks
-the safe platform; amber warns that it is recovering. Ride toward the ledge,
-then jump onto its bright stone cap. The ledges allow approach from below,
-leaving the charging corridor clear. Both reward a health flask; three more
-flasks sit on the main route. Each restores two health without exceeding five.
-
-Two spike recesses reuse Level 4's bronze spikes and damage-and-escape mechanic:
+Falling onto a pit's bed costs **one health bar**. The player stays in the pit:
+there is no teleport or automatic escape. After landing, hold Jump and move
+toward either side to clear the 24-pixel wall. The damage recoil is too small
+to escape on its own. Each pit gives 1.25 seconds between damaging contacts,
+in addition to Theseus's normal damage cooldown, leaving time to jump out.
+Remaining on the spikes eventually costs another bar. A fatal hit opens Hades.
+Retry Level uses the same entrance restart as any other death.
 
 | Pit | Left edge | Rim Y | Width / depth |
 | --- | --- | --- | --- |
-| CausewayPit | 2080 | 280 | 32 / 24 |
-| SanctuaryPit | 4192 | 280 | 32 / 24 |
+| FoothillPit | 304 | 280 | 32 / 24 |
+| SwitchbackPit | 1344 | 280 | 40 / 24 |
+| HighPassPit | 3088 | 168 | 40 / 24 |
+| SummitPit | 4224 | 280 | 40 / 24 |
 
-Falling onto a pit bed costs one health bar. Hold Jump and move toward either
-rim to climb out; there is no automatic ejection. The 1.25-second interval
-between damaging contacts leaves time to escape. A fatal hit opens Hades.
-Retry Level restarts the level from its entrance.
+The terrain's collision and drawing use the same cutout definitions. Pit beds
+are marked as unsafe destinations for Satyr hops. Player damage checks the
+current body position as well as the detection area, preventing stale overlap
+hits after exiting a pit. Pausing freezes the hazard timers.
 
-## Progress and the exit
+## Enemies and recovery
+
+Cyclops Slingers use cinematic 3D-style artwork across all eight ready, lift,
+windup, throw, reload, and recovery poses. The larger source atlas keeps their
+original world size, planted feet, collision shapes, and attack timing. Review
+the poses or fight one with `godot --path . res://scenes/reviews/cyclops_review.tscn`.
+
+Satyrs also use eight cinematic poses for breathing, hop preparation, rising
+and falling hops, horn windup, charge, and recovery. Their collision shapes,
+horn reach, safe bounce, and wine drops are unchanged. Review them with
+`godot --path . res://scenes/reviews/satyr_review.tscn`.
+
+| Enemy | Count | Health / score | Counter |
+| --- | --- | --- | --- |
+| Cyclops Slinger | 4 | 3 / 200 | A slow, committed windup launches one boulder along a fixed arc. Jump the descending boulder or destroy it with a timed sword hit. Close during the long reload opening. |
+| Satyr | 4 | 2 / 125 | Varied hops use supported landing spots. Bait or jump the short horn charge, or land on its head to bounce safely and deal one damage. |
+| Raider | 4 | 2 / 100 | Bait the committed sword lunge, then counter during recovery. Keeps pursuing Theseus on safe ground. |
+| Telchine | 4 | 2 / 100 | A dog-headed melee fighter using the held-weapon jab. Back away or jump the windup, then counter. |
+
+The maximum combat score is 2,100. Satyrs have a 35% chance to drop stolen wine,
+which grants six seconds of 35% faster movement with a visible timer. Another
+pickup refreshes the duration without stacking speed. The level's required
+jumps all work without it. Six health flasks restore two bars each.
 
 Every attempt starts at the level entrance with full health and a **3:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
@@ -107,38 +101,47 @@ once Level 2 or later has been reached in this session. Replay also resets the
 level and countdown. New Game resets the campaign and score to Level 1.
 Session progress is held in memory; high scores are saved separately on disk.
 
-HydraTempleGuard at (4608, 280) guards the temple at (4752, 280). Cutting
-one or two heads leaves the gate locked. The last head awards 450 points
-once and opens the gate. Theseus climbs the temple steps and disappears
-inside before the Level 5 completion menu. Replay restarts Level 5, and
-New Game resets the campaign to Level 1. **Continue to Level 6** enters
-[the Egyptian Pyramid Road](level_6.md) with a fresh countdown.
+Defeat RaiderSummitGuard to unlock the sanctuary at (5712, 280). Theseus climbs
+the steps and disappears into its doorway before the completion menu. Continue
+opens [Level 6's rocky gorge](level_6.md) with a fresh countdown. Replay Level
+restarts Level 5, while New Game explicitly resets the campaign to Level 1.
 
 ## Play and validation
 
 ```sh
 tools/play_level.sh 5
-godot --path . res://scenes/levels/level_5.tscn
+godot --path . --scene res://scenes/levels/level_5.tscn
+godot --headless --path . --script res://tests/spike_pits.gd --fixed-fps 60
 godot --headless --path . --script res://tests/level_5_smoke.gd --fixed-fps 60
 godot --headless --path . --script res://tests/level_5_scenery.gd --fixed-fps 60
 ```
 
-The integration suite checks Level 4→5, entrance retries, actual
-death/reload, individual pup scoring, survivor attacks, pickup and enemy
-placement, fatal spike recovery, real sword-and-jump combat against the Hydra
-guard, the bull ride and high flask reward, camera scrolling, temple entry,
-replay, and New Game. With combat isolated, the complete main route takes
-about 52 simulated seconds and twelve jumps without damage or a speed boost.
+The pit suite tests all four jumps and escapes in both directions, actual fall
+damage, no automatic ejection, repeated-hit grace, pause, wine-assisted jumping,
+and unsafe Satyr landing rejection. The level suite checks Level 3→4, entrance
+retries, actual death/reload including fatal spike damage, enemy and
+pickup placement, Cyclops engagement, the debug launcher, level score rollback, camera scrolling, temple entry, replay, and New Game.
 
-`scenes/levels/level_5_geometry.gd` keeps the original terrain cuts, spike-floor
-metadata, and one-way ledge construction while rendering the gorge in the game
-and editor. `assets/art/backgrounds/level_5/` contains `gorge_landscape.png`,
-the complete `cliff_temple.png` cutout, and causeway masonry. Rocky outcrops
-and colonnades reuse Levels 1–2 art. Column fragments reuse Level 4's cutout; stone caps and the temple
-facade reuse Level 1's art.
+A traversal with combat isolated clears the entire route at normal speed in
+about 62 simulated seconds, using 20 terrace jumps and four pit jumps, without
+losing health. Existing level and combat regressions also pass. Combat pacing
+still benefits from a human playthrough.
 
-The scenery check verifies one continuous landscape, eleven complete landmarks,
-clear pit openings, and full camera coverage at street level, both
-bonus ledges and pit bottoms, original terrain collisions, one-way settings,
-spike metadata, the Hydra's three-head gate requirement, paused facade updates,
-and isolation from the other levels.
+`scenes/levels/level_5_geometry.gd` keeps the original terrain construction,
+including `terrain_pieces` and spike-floor metadata, and renders the cinematic
+mountains in the game and editor. `assets/art/backgrounds/level_4/` contains
+`mountain_landscape.png`, the complete `terrace_wall.png` cutout, retaining
+stone, and the existing column cutout. Groves and outcrops reuse Levels 1–2 art.
+The stone caps and temple facade reuse Level 1's art.
+
+The scenery check verifies one continuous landscape, fifteen complete landmarks,
+clear pit openings, and full camera coverage from the foothills
+to the high pass and pit bottoms, every terrain collision and cutout, spike-floor
+metadata, hazard dimensions, paused gate updates, and isolation from other levels.
+
+## Extended approach
+
+The route is 20% longer: 5,760 world units with a new Cypress Ridge section
+at X=3840–4799 before the final area. Three additional enemies occupy that
+space. The countdown remains 3:00, and existing music keeps looping at its
+configured offset. Background camera coverage includes the full extended route.

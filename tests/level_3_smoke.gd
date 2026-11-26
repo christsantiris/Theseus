@@ -98,7 +98,7 @@ func _run() -> void:
 	_expect(level.level_number == 3 and level.player.position.distance_to(Town.START) < 1.0, "Load resumes the town entrance")
 	await _traverse()
 	level = current_scene
-	_expect(level.pause_heading.text == "Level 3 Complete" and level.next_button.visible and level.next_button.text == "Continue to Level 4", "Town completion offers the mountain level")
+	_expect(level.pause_heading.text == "Level 3 Complete" and level.next_button.visible and level.next_button.text == "Continue to Level 4", "Town completion offers Troy")
 	_expect(ResourceLoader.exists(level.next_level), "Town continuation points to a real level scene")
 	level._on_replay_pressed()
 	await _frames()
@@ -126,7 +126,7 @@ func _check_encounters(level: Node) -> void:
 		_expect(encounter.position.y == Town.surface_at(encounter.position.x), String(encounter.name) + " stands on the correct terrace")
 		_expect(Town.surface_at(encounter.patrol.x) == encounter.position.y and Town.surface_at(encounter.patrol.y) == encounter.position.y, String(encounter.name) + " has a level patrol landing")
 	for kind in counts:
-		_expect(counts[kind] == 4, "Town contains four " + kind + " enemies")
+		_expect(counts[kind] == {"hoplite": 4, "lamia": 5, "spartoi": 5, "peltast": 5}[kind], "Town encounter roster includes the new courts: " + kind)
 	for pickup: Dictionary in Town.FLASKS:
 		_expect(pickup.position.y == Town.surface_at(pickup.position.x), "Flask is on terrain: " + String(pickup.name))
 	var lamia = level.get_node("LamiaWorkshop")
@@ -203,7 +203,7 @@ func _traverse() -> void:
 					jumping = true
 					jumps += 1
 					break
-		if player.position.x > 4700 and not level._gate.unlocked:
+		if player.position.x > Town.EXIT.x - 52 and not level._gate.unlocked:
 			level.get_node(Town.GATE_GUARD).die()
 	Input.action_release("move_right")
 	Input.action_release("jump")

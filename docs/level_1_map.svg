@@ -1,83 +1,93 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1152" height="1048" viewBox="0 0 1152 1048" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1152" height="1220" viewBox="0 0 1152 1220" role="img" aria-labelledby="title desc">
 <title id="title">Level 1: The Temple Road route map</title>
-<desc id="desc">Five consecutive 960-pixel areas showing all sixteen soldiers, fifteen stone terraces, five health flasks, and the temple exit.</desc>
-<rect width="1152" height="1048" fill="#101827"/>
+<desc id="desc">Six consecutive 960-unit areas, nineteen soldiers, eighteen terraces, five flasks and the temple exit.</desc>
+<rect width="1152" height="1220" fill="#101827"/>
 <g font-family="Arial,sans-serif" fill="#e6d8b5">
-<text x="32" y="36" font-size="24">LEVEL 1 / THE TEMPLE ROAD</text>
-<text x="32" y="62" font-size="14" fill="#a9b9c9">Read each row left to right, then continue on the next row. Coordinates are world pixels.</text>
-<text x="32" y="88" font-size="14">R = Raider    P = Peltast    H = Hoplite    + = Health flask</text>
-<text x="32" y="126" font-size="18">01 / The King's Road</text>
-<rect x="96" y="238" width="960" height="20" fill="#bba77e"/>
-<path d="M96 238H1056" stroke="#f0deb2" stroke-width="3"/>
-<rect x="344" y="206" width="112" height="32" fill="#bba77e" stroke="#d9c69d"/>
-<rect x="472" y="190" width="96" height="48" fill="#bba77e" stroke="#d9c69d"/>
-<g><title>Raider at X=168</title><circle cx="264" cy="220" r="11" fill="#ad4b42"/><text x="264" y="224" text-anchor="middle" fill="white" font-size="12">R</text></g>
-<g><title>Peltast at X=304</title><circle cx="400" cy="188" r="11" fill="#478f89"/><text x="400" y="192" text-anchor="middle" fill="white" font-size="12">P</text></g>
-<g><title>Hoplite at X=800</title><circle cx="896" cy="220" r="11" fill="#c69e52"/><text x="896" y="224" text-anchor="middle" fill="white" font-size="12">H</text></g>
-<g><title>Health +2 at X=528</title><circle cx="624" cy="226" r="8" fill="#b4c7a0"/><text x="624" y="230" text-anchor="middle" fill="#17352b" font-size="13">+</text></g>
-<path d="M96 260v5" stroke="#a9b9c9"/><text x="96" y="282" text-anchor="middle" font-size="12" fill="#a9b9c9">0</text>
-<path d="M416 260v5" stroke="#a9b9c9"/><text x="416" y="282" text-anchor="middle" font-size="12" fill="#a9b9c9">320</text>
-<path d="M736 260v5" stroke="#a9b9c9"/><text x="736" y="282" text-anchor="middle" font-size="12" fill="#a9b9c9">640</text>
-<path d="M1056 260v5" stroke="#a9b9c9"/><text x="1056" y="282" text-anchor="middle" font-size="12" fill="#a9b9c9">960</text>
-<text x="144" y="222" text-anchor="middle" font-size="12">START</text>
-<text x="32" y="306" font-size="18">02 / Broken Colonnade</text>
-<rect x="96" y="418" width="960" height="20" fill="#bba77e"/>
-<path d="M96 418H1056" stroke="#f0deb2" stroke-width="3"/>
-<rect x="192" y="402" width="96" height="16" fill="#bba77e" stroke="#d9c69d"/>
-<rect x="304" y="386" width="128" height="32" fill="#bba77e" stroke="#d9c69d"/>
-<rect x="448" y="370" width="96" height="48" fill="#bba77e" stroke="#d9c69d"/>
-<g><title>PeltastColonnade at X=1360</title><circle cx="496" cy="352" r="11" fill="#478f89"/><text x="496" y="356" text-anchor="middle" fill="white" font-size="12">P</text></g>
-<g><title>RaiderColonnade at X=1536</title><circle cx="672" cy="400" r="11" fill="#ad4b42"/><text x="672" y="404" text-anchor="middle" fill="white" font-size="12">R</text></g>
-<g><title>HopliteColonnade at X=1760</title><circle cx="896" cy="400" r="11" fill="#c69e52"/><text x="896" y="404" text-anchor="middle" fill="white" font-size="12">H</text></g>
-<g><title>Health +2 at X=1424</title><circle cx="560" cy="406" r="8" fill="#b4c7a0"/><text x="560" y="410" text-anchor="middle" fill="#17352b" font-size="13">+</text></g>
-<path d="M96 440v5" stroke="#a9b9c9"/><text x="96" y="462" text-anchor="middle" font-size="12" fill="#a9b9c9">960</text>
-<path d="M416 440v5" stroke="#a9b9c9"/><text x="416" y="462" text-anchor="middle" font-size="12" fill="#a9b9c9">1280</text>
-<path d="M736 440v5" stroke="#a9b9c9"/><text x="736" y="462" text-anchor="middle" font-size="12" fill="#a9b9c9">1600</text>
-<path d="M1056 440v5" stroke="#a9b9c9"/><text x="1056" y="462" text-anchor="middle" font-size="12" fill="#a9b9c9">1920</text>
-<text x="32" y="486" font-size="18">03 / Olive Terraces</text>
-<rect x="96" y="598" width="960" height="20" fill="#bba77e"/>
-<path d="M96 598H1056" stroke="#f0deb2" stroke-width="3"/>
-<rect x="416" y="582" width="96" height="16" fill="#bba77e" stroke="#d9c69d"/>
-<rect x="528" y="566" width="128" height="32" fill="#bba77e" stroke="#d9c69d"/>
-<rect x="672" y="550" width="80" height="48" fill="#bba77e" stroke="#d9c69d"/>
-<g><title>RaiderOlives at X=2128</title><circle cx="304" cy="580" r="11" fill="#ad4b42"/><text x="304" y="584" text-anchor="middle" fill="white" font-size="12">R</text></g>
-<g><title>PeltastOlives at X=2400</title><circle cx="576" cy="548" r="11" fill="#478f89"/><text x="576" y="552" text-anchor="middle" fill="white" font-size="12">P</text></g>
-<g><title>RaiderTerraces at X=2704</title><circle cx="880" cy="580" r="11" fill="#ad4b42"/><text x="880" y="584" text-anchor="middle" fill="white" font-size="12">R</text></g>
-<g><title>Health +2 at X=2544</title><circle cx="720" cy="538" r="8" fill="#b4c7a0"/><text x="720" y="542" text-anchor="middle" fill="#17352b" font-size="13">+</text></g>
-<path d="M96 620v5" stroke="#a9b9c9"/><text x="96" y="642" text-anchor="middle" font-size="12" fill="#a9b9c9">1920</text>
-<path d="M416 620v5" stroke="#a9b9c9"/><text x="416" y="642" text-anchor="middle" font-size="12" fill="#a9b9c9">2240</text>
-<path d="M736 620v5" stroke="#a9b9c9"/><text x="736" y="642" text-anchor="middle" font-size="12" fill="#a9b9c9">2560</text>
-<path d="M1056 620v5" stroke="#a9b9c9"/><text x="1056" y="642" text-anchor="middle" font-size="12" fill="#a9b9c9">2880</text>
-<text x="32" y="666" font-size="18">04 / Ruined Aqueduct</text>
-<rect x="96" y="778" width="960" height="20" fill="#bba77e"/>
-<path d="M96 778H1056" stroke="#f0deb2" stroke-width="3"/>
-<rect x="176" y="762" width="96" height="16" fill="#bba77e" stroke="#d9c69d"/>
-<rect x="288" y="746" width="128" height="32" fill="#bba77e" stroke="#d9c69d"/>
-<rect x="432" y="730" width="96" height="48" fill="#bba77e" stroke="#d9c69d"/>
-<rect x="560" y="746" width="128" height="32" fill="#bba77e" stroke="#d9c69d"/>
-<rect x="720" y="762" width="80" height="16" fill="#bba77e" stroke="#d9c69d"/>
-<g><title>PeltastAqueductWest at X=3136</title><circle cx="352" cy="728" r="11" fill="#478f89"/><text x="352" y="732" text-anchor="middle" fill="white" font-size="12">P</text></g>
-<g><title>PeltastAqueductEast at X=3408</title><circle cx="624" cy="728" r="11" fill="#478f89"/><text x="624" y="732" text-anchor="middle" fill="white" font-size="12">P</text></g>
-<g><title>HopliteAqueduct at X=3648</title><circle cx="864" cy="760" r="11" fill="#c69e52"/><text x="864" y="764" text-anchor="middle" fill="white" font-size="12">H</text></g>
-<g><title>Health +2 at X=3312</title><circle cx="528" cy="766" r="8" fill="#b4c7a0"/><text x="528" y="770" text-anchor="middle" fill="#17352b" font-size="13">+</text></g>
-<path d="M96 800v5" stroke="#a9b9c9"/><text x="96" y="822" text-anchor="middle" font-size="12" fill="#a9b9c9">2880</text>
-<path d="M416 800v5" stroke="#a9b9c9"/><text x="416" y="822" text-anchor="middle" font-size="12" fill="#a9b9c9">3200</text>
-<path d="M736 800v5" stroke="#a9b9c9"/><text x="736" y="822" text-anchor="middle" font-size="12" fill="#a9b9c9">3520</text>
-<path d="M1056 800v5" stroke="#a9b9c9"/><text x="1056" y="822" text-anchor="middle" font-size="12" fill="#a9b9c9">3840</text>
-<text x="32" y="846" font-size="18">05 / Temple Approach</text>
-<rect x="96" y="958" width="960" height="20" fill="#bba77e"/>
-<path d="M96 958H1056" stroke="#f0deb2" stroke-width="3"/>
-<rect x="432" y="942" width="96" height="16" fill="#bba77e" stroke="#d9c69d"/>
-<rect x="544" y="926" width="128" height="32" fill="#bba77e" stroke="#d9c69d"/>
-<g><title>RaiderTemple at X=4048</title><circle cx="304" cy="940" r="11" fill="#ad4b42"/><text x="304" y="944" text-anchor="middle" fill="white" font-size="12">R</text></g>
-<g><title>PeltastTemple at X=4352</title><circle cx="608" cy="908" r="11" fill="#478f89"/><text x="608" y="912" text-anchor="middle" fill="white" font-size="12">P</text></g>
-<g><title>HopliteTempleOuter at X=4496</title><circle cx="752" cy="940" r="11" fill="#c69e52"/><text x="752" y="944" text-anchor="middle" fill="white" font-size="12">H</text></g>
-<g><title>HopliteTempleGuard at X=4640</title><circle cx="896" cy="940" r="11" fill="#c69e52"/><text x="896" y="944" text-anchor="middle" fill="white" font-size="12">H</text></g>
-<g><title>Health +2 at X=4224</title><circle cx="480" cy="930" r="8" fill="#b4c7a0"/><text x="480" y="934" text-anchor="middle" fill="#17352b" font-size="13">+</text></g>
-<path d="M96 980v5" stroke="#a9b9c9"/><text x="96" y="1002" text-anchor="middle" font-size="12" fill="#a9b9c9">3840</text>
-<path d="M416 980v5" stroke="#a9b9c9"/><text x="416" y="1002" text-anchor="middle" font-size="12" fill="#a9b9c9">4160</text>
-<path d="M736 980v5" stroke="#a9b9c9"/><text x="736" y="1002" text-anchor="middle" font-size="12" fill="#a9b9c9">4480</text>
-<path d="M1056 980v5" stroke="#a9b9c9"/><text x="1056" y="1002" text-anchor="middle" font-size="12" fill="#a9b9c9">4800</text>
-<path d="M1008 958v-68h32v68" fill="none" stroke="#f1d28c" stroke-width="4"/><text x="1024" y="880" text-anchor="middle" font-size="12">EXIT</text>
-</g>
-</svg>
+<text x="32" y="36" font-size="24">LEVEL 1 / THE TEMPLE ROAD — 5,760 UNITS</text>
+<text x="32" y="62" font-size="14">Read each row left to right. R = Raider, P = Peltast, H = Hoplite, + = Health flask.</text>
+<text x="32" y="100" font-size="18">01 / The King&#x27;s Road</text>
+<rect x="96" y="226" width="960" height="20" fill="#bba77e"/>
+<rect x="344" y="194" width="112" height="32" fill="#bba77e" stroke="#d9c69d"/>
+<rect x="472" y="178" width="96" height="48" fill="#bba77e" stroke="#d9c69d"/>
+<g><title>Raider at X=168</title><circle cx="264" cy="208" r="11" fill="#ad4b42"/><text x="264" y="212" text-anchor="middle" fill="white" font-size="12">R</text></g>
+<g><title>Peltast at X=304</title><circle cx="400" cy="176" r="11" fill="#478f89"/><text x="400" y="180" text-anchor="middle" fill="white" font-size="12">P</text></g>
+<g><title>Hoplite at X=800</title><circle cx="896" cy="208" r="11" fill="#c69e52"/><text x="896" y="212" text-anchor="middle" fill="white" font-size="12">H</text></g>
+<text x="624" y="218" text-anchor="middle" fill="#95dca3" font-size="20">+</text>
+<text x="96" y="266" font-size="11" text-anchor="middle">0</text>
+<text x="336" y="266" font-size="11" text-anchor="middle">240</text>
+<text x="576" y="266" font-size="11" text-anchor="middle">480</text>
+<text x="816" y="266" font-size="11" text-anchor="middle">720</text>
+<text x="1056" y="266" font-size="11" text-anchor="middle">960</text>
+<text x="32" y="280" font-size="18">02 / Broken Colonnade</text>
+<rect x="96" y="406" width="960" height="20" fill="#bba77e"/>
+<rect x="192" y="390" width="96" height="16" fill="#bba77e" stroke="#d9c69d"/>
+<rect x="304" y="374" width="128" height="32" fill="#bba77e" stroke="#d9c69d"/>
+<rect x="448" y="358" width="96" height="48" fill="#bba77e" stroke="#d9c69d"/>
+<g><title>PeltastColonnade at X=1360</title><circle cx="496" cy="340" r="11" fill="#478f89"/><text x="496" y="344" text-anchor="middle" fill="white" font-size="12">P</text></g>
+<g><title>RaiderColonnade at X=1536</title><circle cx="672" cy="388" r="11" fill="#ad4b42"/><text x="672" y="392" text-anchor="middle" fill="white" font-size="12">R</text></g>
+<g><title>HopliteColonnade at X=1760</title><circle cx="896" cy="388" r="11" fill="#c69e52"/><text x="896" y="392" text-anchor="middle" fill="white" font-size="12">H</text></g>
+<text x="560" y="398" text-anchor="middle" fill="#95dca3" font-size="20">+</text>
+<text x="96" y="446" font-size="11" text-anchor="middle">960</text>
+<text x="336" y="446" font-size="11" text-anchor="middle">1200</text>
+<text x="576" y="446" font-size="11" text-anchor="middle">1440</text>
+<text x="816" y="446" font-size="11" text-anchor="middle">1680</text>
+<text x="1056" y="446" font-size="11" text-anchor="middle">1920</text>
+<text x="32" y="460" font-size="18">03 / Olive Terraces</text>
+<rect x="96" y="586" width="960" height="20" fill="#bba77e"/>
+<rect x="416" y="570" width="96" height="16" fill="#bba77e" stroke="#d9c69d"/>
+<rect x="528" y="554" width="128" height="32" fill="#bba77e" stroke="#d9c69d"/>
+<rect x="672" y="538" width="80" height="48" fill="#bba77e" stroke="#d9c69d"/>
+<g><title>RaiderOlives at X=2128</title><circle cx="304" cy="568" r="11" fill="#ad4b42"/><text x="304" y="572" text-anchor="middle" fill="white" font-size="12">R</text></g>
+<g><title>PeltastOlives at X=2400</title><circle cx="576" cy="536" r="11" fill="#478f89"/><text x="576" y="540" text-anchor="middle" fill="white" font-size="12">P</text></g>
+<g><title>RaiderTerraces at X=2704</title><circle cx="880" cy="568" r="11" fill="#ad4b42"/><text x="880" y="572" text-anchor="middle" fill="white" font-size="12">R</text></g>
+<text x="720" y="530" text-anchor="middle" fill="#95dca3" font-size="20">+</text>
+<text x="96" y="626" font-size="11" text-anchor="middle">1920</text>
+<text x="336" y="626" font-size="11" text-anchor="middle">2160</text>
+<text x="576" y="626" font-size="11" text-anchor="middle">2400</text>
+<text x="816" y="626" font-size="11" text-anchor="middle">2640</text>
+<text x="1056" y="626" font-size="11" text-anchor="middle">2880</text>
+<text x="32" y="640" font-size="18">04 / Ruined Aqueduct</text>
+<rect x="96" y="766" width="960" height="20" fill="#bba77e"/>
+<rect x="176" y="750" width="96" height="16" fill="#bba77e" stroke="#d9c69d"/>
+<rect x="288" y="734" width="128" height="32" fill="#bba77e" stroke="#d9c69d"/>
+<rect x="432" y="718" width="96" height="48" fill="#bba77e" stroke="#d9c69d"/>
+<rect x="560" y="734" width="128" height="32" fill="#bba77e" stroke="#d9c69d"/>
+<rect x="720" y="750" width="80" height="16" fill="#bba77e" stroke="#d9c69d"/>
+<g><title>PeltastAqueductWest at X=3136</title><circle cx="352" cy="716" r="11" fill="#478f89"/><text x="352" y="720" text-anchor="middle" fill="white" font-size="12">P</text></g>
+<g><title>PeltastAqueductEast at X=3408</title><circle cx="624" cy="716" r="11" fill="#478f89"/><text x="624" y="720" text-anchor="middle" fill="white" font-size="12">P</text></g>
+<g><title>HopliteAqueduct at X=3648</title><circle cx="864" cy="748" r="11" fill="#c69e52"/><text x="864" y="752" text-anchor="middle" fill="white" font-size="12">H</text></g>
+<text x="528" y="758" text-anchor="middle" fill="#95dca3" font-size="20">+</text>
+<text x="96" y="806" font-size="11" text-anchor="middle">2880</text>
+<text x="336" y="806" font-size="11" text-anchor="middle">3120</text>
+<text x="576" y="806" font-size="11" text-anchor="middle">3360</text>
+<text x="816" y="806" font-size="11" text-anchor="middle">3600</text>
+<text x="1056" y="806" font-size="11" text-anchor="middle">3840</text>
+<text x="32" y="820" font-size="18">05 / Sacred Grove</text>
+<rect x="96" y="946" width="960" height="20" fill="#bba77e"/>
+<rect x="256" y="930" width="112" height="16" fill="#bba77e" stroke="#d9c69d"/>
+<rect x="368" y="914" width="224" height="32" fill="#bba77e" stroke="#d9c69d"/>
+<rect x="592" y="930" width="112" height="16" fill="#bba77e" stroke="#d9c69d"/>
+<g><title>RaiderGrove at X=3896</title><circle cx="152" cy="928" r="11" fill="#ad4b42"/><text x="152" y="932" text-anchor="middle" fill="white" font-size="12">R</text></g>
+<g><title>PeltastGrove at X=4224</title><circle cx="480" cy="896" r="11" fill="#478f89"/><text x="480" y="900" text-anchor="middle" fill="white" font-size="12">P</text></g>
+<g><title>HopliteGrove at X=4624</title><circle cx="880" cy="928" r="11" fill="#c69e52"/><text x="880" y="932" text-anchor="middle" fill="white" font-size="12">H</text></g>
+<text x="96" y="986" font-size="11" text-anchor="middle">3840</text>
+<text x="336" y="986" font-size="11" text-anchor="middle">4080</text>
+<text x="576" y="986" font-size="11" text-anchor="middle">4320</text>
+<text x="816" y="986" font-size="11" text-anchor="middle">4560</text>
+<text x="1056" y="986" font-size="11" text-anchor="middle">4800</text>
+<text x="32" y="1000" font-size="18">06 / Temple Approach</text>
+<rect x="96" y="1126" width="960" height="20" fill="#bba77e"/>
+<rect x="432" y="1110" width="96" height="16" fill="#bba77e" stroke="#d9c69d"/>
+<rect x="544" y="1094" width="128" height="32" fill="#bba77e" stroke="#d9c69d"/>
+<g><title>RaiderTemple at X=5008</title><circle cx="304" cy="1108" r="11" fill="#ad4b42"/><text x="304" y="1112" text-anchor="middle" fill="white" font-size="12">R</text></g>
+<g><title>PeltastTemple at X=5312</title><circle cx="608" cy="1076" r="11" fill="#478f89"/><text x="608" y="1080" text-anchor="middle" fill="white" font-size="12">P</text></g>
+<g><title>HopliteTempleOuter at X=5456</title><circle cx="752" cy="1108" r="11" fill="#c69e52"/><text x="752" y="1112" text-anchor="middle" fill="white" font-size="12">H</text></g>
+<g><title>HopliteTempleGuard at X=5600</title><circle cx="896" cy="1108" r="11" fill="#c69e52"/><text x="896" y="1112" text-anchor="middle" fill="white" font-size="12">H</text></g>
+<text x="480" y="1102" text-anchor="middle" fill="#95dca3" font-size="20">+</text>
+<text x="96" y="1166" font-size="11" text-anchor="middle">4800</text>
+<text x="336" y="1166" font-size="11" text-anchor="middle">5040</text>
+<text x="576" y="1166" font-size="11" text-anchor="middle">5280</text>
+<text x="816" y="1166" font-size="11" text-anchor="middle">5520</text>
+<text x="1056" y="1166" font-size="11" text-anchor="middle">5760</text>
+<text x="1008" y="1096" font-size="12" text-anchor="middle">EXIT 5712</text>
+</g></svg>

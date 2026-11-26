@@ -57,8 +57,8 @@ func _run() -> void:
 	_run_state = root.get_node("LevelRun")
 	var level = await _fresh_level()
 	var player = level.player
-	_expect(get_nodes_in_group("enemies").size() == 16, "All sixteen enemies spawn")
-	_expect(player.get_node("Camera2D").limit_right == 4800, "Camera covers the full level")
+	_expect(get_nodes_in_group("enemies").size() == 19, "All nineteen enemies spawn")
+	_expect(player.get_node("Camera2D").limit_right == 5760, "Camera covers the full level")
 	for encounter: Dictionary in Layout.ENEMIES:
 		_expect(is_equal_approx(encounter.position.y, Layout.surface_at(encounter.position.x)), String(encounter.name) + " stands on terrain")
 		_expect(encounter.position.x >= encounter.patrol.x and encounter.position.x <= encounter.patrol.y, String(encounter.name) + " starts inside patrol")
@@ -196,7 +196,7 @@ func _traverse_route() -> void:
 					jump_held = true
 					jumps += 1
 					break
-		if player.position.x > 4700 and not level._gate.unlocked:
+		if player.position.x > Layout.EXIT.x - 52 and not level._gate.unlocked:
 			level.get_node(Layout.GATE_GUARD).die()
 	_expect(level._complete, "The complete route is traversable with real movement and jumping; final x=%.1f" % player.position.x)
 	_expect(jumps >= 10, "Traversal exercises the terrace jumps")
