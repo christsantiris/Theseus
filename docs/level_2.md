@@ -43,19 +43,25 @@ one world pixel of overlap at the ground. This closes transparent-padding gaps
 under trees, ruins, pots, columns, and waystones while preserving their artwork
 and collision layout. See the [ground-contact regression](performance.md#scenery-ground-contacts).
 
-## Overtopping wave
+## Collapsing quay stones
 
-At x=1740–1820 in the Broken Quays, foam gathers for one second before a wave washes over the ledge for 0.8 seconds. Cross during the 3.2 seconds of calm between bursts.
+Three collapsing crossings span spike pits between solid banks. Each has three limestone slabs that shed grit when stepped on, drop after half a second, and reset 2.4 seconds later. Run across or jump ahead to the next slab. Landing on the spikes costs one health. Move to either edge and jump onto the bank.
+
+| Crossing | World X | Rim Y |
+| --- | --- | ---: |
+| Broken Quays | 1760–1832 | 200 |
+| Sea Cliffs | 2328–2400 | 232 |
+| Saltwind Causeway | 4704–4776 | 232 |
 
 ## Route
 
 | Area | X range | Route and encounters |
 | --- | --- | --- |
 | Coastal Road | 0–959 | Flat approach teaches a high bird, then a low bird; short ledge climbs introduce a Telchine. |
-| Broken Quays | 960–1919 | Terraces climb to y=168. Telchine jabs and Spartoi lunges share broad landings; high and low birds occupy separate lanes. |
-| Sea Cliffs | 1920–2879 | A second climb with melee fights and a high bird. |
+| Broken Quays | 960–1919 | Terraces climb to y=168. Telchine jabs and Spartoi lunges share broad landings. High and low birds occupy separate lanes, and collapsing slabs cross a spike pit near the descent. |
+| Sea Cliffs | 1920–2879 | A second climb with melee fights, a high bird, and another collapsing crossing. |
 | Cyclopean Ruins | 2880–3839 | Low bird, Telchine, and Spartoi summit guard. Highest landing is y=104, followed by descending ledges. |
-| Saltwind Causeway | 3840–4799 | Descend to a Telchine, pass a high bird, then climb to a Spartoi landing. |
+| Saltwind Causeway | 3840–4799 | Descend to a Telchine, pass a high bird, then climb to a Spartoi landing and the last collapsing crossing. |
 | Rocky Sanctuary | 4800–5759 | Final low terraces and melee fights, then the Spartoi temple guard. |
 
 ## Enemies

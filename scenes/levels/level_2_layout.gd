@@ -15,6 +15,16 @@ const SECTIONS := [
 	{"x": 4800, "name": "Rocky Sanctuary"},
 ]
 
+const QUAY_CROSSINGS := [
+	{"name": "BrokenQuays", "position": Vector2(1760, 200)},
+	{"name": "SeaCliffs", "position": Vector2(2328, 232)},
+	{"name": "SaltwindCauseway", "position": Vector2(4704, 232)},
+]
+const QUAY_SLAB_WIDTH := 24.0
+const QUAY_SLAB_COUNT := 3
+const QUAY_PIT_WIDTH := QUAY_SLAB_WIDTH * QUAY_SLAB_COUNT
+const QUAY_PIT_DEPTH := 24.0
+
 const PLATFORMS := [
 	Rect2(560, 264, 112, 16),
 	Rect2(672, 248, 112, 32),
@@ -25,11 +35,15 @@ const PLATFORMS := [
 	Rect2(1264, 168, 144, 112),
 	Rect2(1408, 168, 176, 112),
 	Rect2(1584, 184, 128, 96),
-	Rect2(1712, 200, 144, 80),
+	Rect2(1712, 200, 48, 80),
+	Rect2(1760, 224, 72, 56),
+	Rect2(1832, 200, 24, 80),
 	Rect2(1856, 248, 96, 32),
 	Rect2(2080, 264, 112, 16),
 	Rect2(2192, 248, 112, 32),
-	Rect2(2304, 232, 112, 48),
+	Rect2(2304, 232, 24, 48),
+	Rect2(2328, 256, 72, 24),
+	Rect2(2400, 232, 16, 48),
 	Rect2(2416, 216, 128, 64),
 	Rect2(2544, 200, 144, 80),
 	Rect2(2688, 184, 144, 96),
@@ -47,7 +61,9 @@ const PLATFORMS := [
 	Rect2(4240, 264, 112, 16),
 	Rect2(4352, 248, 112, 32),
 	Rect2(4464, 232, 224, 48),
-	Rect2(4688, 232, 112, 48),
+	Rect2(4688, 232, 16, 48),
+	Rect2(4704, 256, 72, 24),
+	Rect2(4776, 232, 24, 48),
 	Rect2(4800, 232, 80, 48),
 	Rect2(4880, 264, 80, 16),
 	Rect2(5184, 264, 112, 16),
@@ -85,22 +101,19 @@ const FLASKS := [
 ]
 const EXIT := Vector2(5712, FLOOR_Y)
 const GATE_GUARD := "SpartoiSanctuaryGuard"
-const TimingObstacle := preload("res://scenes/objects/timing_obstacle.gd")
-const TIMING_OBSTACLE := {
-	"name": "QuayWave", "kind": TimingObstacle.Kind.WAVE,
-	"position": Vector2(1740, 200), "width": 80.0, "durations": Vector3(3.2, 1, 0.8),
-}
-
 const TIPS := [
 	{"x": 80, "end": 304, "text": "Duck under high birds. Let them pass."},
 	{"x": 320, "end": 500, "text": "Jump low birds. Time your sword to hit them."},
 	{"x": 680, "end": 920, "text": "Dog-headed Telchines jab. Bait, then counter."},
 	{"x": 1200, "end": 1392, "text": "Spartoi lunge like Raiders. Two hits defeat them."},
-	{"x": 1685, "end": 1740, "text": "Foam warns of a wave. Cross after it breaks."},
+	{"x": 1695, "end": 1760, "text": "Run across the cracked stones before they drop onto the spikes."},
 ]
 
 
 static func surface_at(x: float) -> float:
+	for crossing: Dictionary in QUAY_CROSSINGS:
+		if x >= crossing.position.x and x < crossing.position.x + QUAY_PIT_WIDTH:
+			return crossing.position.y
 	var surface := float(FLOOR_Y)
 	for platform: Rect2 in PLATFORMS:
 		if x >= platform.position.x and x < platform.end.x:

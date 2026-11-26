@@ -1,7 +1,7 @@
 extends Node2D
 ## The physics clock drives both the visible cue and the contact region.
 
-enum Kind { WEIGHT, WAVE, KILN, ARROWS, ROCKFALL, BRIDGE, SUNBEAM, JETS, STONE_GATE }
+enum Kind { WEIGHT, KILN, ARROWS, ROCKFALL, BRIDGE, SUNBEAM, JETS, STONE_GATE }
 
 # The sprites are tightly packed in a padded four-column atlas.
 enum Sprite { PIVOT, LINK, WEIGHT, BOULDER, KILN, DRAIN, MIRROR, DECK,
@@ -214,8 +214,6 @@ func _danger_rect() -> Rect2:
 		return Rect2()
 	var progress := time / durations.z
 	match kind:
-		Kind.WAVE:
-			return Rect2(0, -22, width * minf(progress * 2.0, 1.0), 22)
 		Kind.KILN, Kind.JETS:
 			return Rect2(0, -28, width, 28)
 		Kind.ARROWS:
@@ -241,8 +239,6 @@ func _draw() -> void:
 	match kind:
 		Kind.WEIGHT:
 			_draw_weight()
-		Kind.WAVE:
-			_draw_wave(warning, danger)
 		Kind.KILN, Kind.JETS:
 			_draw_vents(warning, danger.has_area())
 		Kind.ARROWS:
@@ -275,16 +271,6 @@ func _draw_weight() -> void:
 		_art(Sprite.LINK, Rect2(-1.9, -3.2, 3.8, 6.4))
 	draw_set_transform(Vector2.ZERO)
 	_art(Sprite.WEIGHT, Rect2(weight - Vector2(8, 8), Vector2(16, 16)))
-
-
-func _draw_wave(warning: bool, danger: Rect2) -> void:
-	# Break up the wet edge with short washes so it reads against the paving.
-	for x in range(0, int(width), 16):
-		_art(Sprite.WAVE, Rect2(x, -2, 16, 3), Color(0.52, 0.70, 0.71, 0.5))
-		if warning:
-			_art(Sprite.WAVE, Rect2(x, -5 + sin(x + elapsed * 16), 16, 5), FOAM)
-	if danger.has_area():
-		_art(Sprite.WAVE, danger)
 
 
 func _draw_vents(warning: bool, active: bool) -> void:

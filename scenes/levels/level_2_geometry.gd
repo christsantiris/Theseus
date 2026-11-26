@@ -64,7 +64,7 @@ func _build_landscape() -> void:
 	for point in [Vector2(260, 108), Vector2(616, 52), Vector2(2016, 56),
 		Vector2(2360, 48), Vector2(2760, 64), Vector2(4832, 40), Vector2(5060, 80)]:
 		_landmark(OUTCROP, point.x, point.y, "CoastalOutcrop")
-	for point in [Vector2(1080, 42), Vector2(1496, 48), Vector2(1776, 40), Vector2(5240, 34)]:
+	for point in [Vector2(1080, 42), Vector2(1496, 48), Vector2(2616, 40), Vector2(5240, 34)]:
 		_landmark(QUAY, point.x, point.y, "RuinedQuay")
 	for point in [Vector2(3032, 88), Vector2(3464, 88), Vector2(5368, 84)]:
 		_landmark(CYCLOPEAN_GATE, point.x, point.y, "CyclopeanGate")

@@ -60,6 +60,10 @@ func _run() -> void:
 	for number in range(1, 10):
 		var level := await _open_level(number)
 		var player: CharacterBody2D = level.player
+		if number == 2:
+			for crossing: Dictionary in level.layout.QUAY_CROSSINGS:
+				await _check_quay_slabs(level, player, crossing.name)
+			continue
 		var obstacle_name: String = level.layout.PITS[0].bridge if number == 6 else level.layout.TIMING_OBSTACLE.name
 		var obstacle: Node2D = level.get_node(obstacle_name)
 		var origin := obstacle.global_position
@@ -113,6 +117,51 @@ func _run() -> void:
 	if _failures == 0:
 		print("PASS: nine timing obstacles, pause, damage, duck, bridge, gate, and high-tide crossing (%s)." % ("touch" if _controls.enabled else "desktop"))
 	quit(int(_failures > 0))
+
+
+func _check_quay_slabs(level: Node, player: CharacterBody2D, crossing: String) -> void:
+	var first := level.get_node(crossing + "QuaySlab1") as StaticBody2D
+	var second := level.get_node(crossing + "QuaySlab2") as StaticBody2D
+	var pit: Node2D = level.get_node(crossing + "QuayPit")
+	var origin := first.global_position
+	var width: float = level.layout.QUAY_PIT_WIDTH
+	_expect(level.layout.surface_at(origin.x - 1) == origin.y
+		and level.layout.surface_at(origin.x + width) == origin.y,
+		crossing + " has a solid bank on both sides")
+	_expect(pit.z_index > level.get_node("World/SeaBackdrop").z_index and pit.z_index < player.z_index,
+		crossing + " spikes render above the backdrop and behind Theseus")
+	await _frames(45)
+	_expect(first.elapsed < 0.0 and first.collision_layer == 1, "Quay slabs wait for a footstep")
+	_place(player, origin + Vector2(12, -4))
+	await _frames(16)
+	_expect(first.elapsed >= 0.0 and first.collision_layer == 1 and second.elapsed < 0.0,
+		"A footstep starts only the slab beneath Theseus")
+	var before: float = first.elapsed
+	paused = true
+	await _frames(35)
+	_expect(first.elapsed == before and first.collision_layer == 1, "Pausing freezes the crumbling slab")
+	paused = false
+	await _frames(55)
+	_expect(first.collision_layer == 0 and player.global_position.y > origin.y + 14
+		and player.health == player.MAX_HEALTH - 1, crossing + " drops Theseus onto damaging spikes")
+	_move("move_right", true)
+	await _frames(31)
+	_move("jump", true, 1)
+	await _frames(18)
+	_move("move_right", false)
+	await _frames(21)
+	_move("jump", false, 1)
+	_expect(player.global_position.x > origin.x + width and absf(player.global_position.y - origin.y) < 1.0
+		and player.health == player.MAX_HEALTH - 1, crossing + " allows Theseus to jump onto the far bank")
+	await _frames(80)
+	_expect(first.elapsed < 0.0 and first.collision_layer == 1, crossing + " slabs reset after the fall")
+	_place(player, origin + Vector2(-12, 0))
+	await _frames(4)
+	_move("move_right", true)
+	await _frames(66)
+	_move("move_right", false)
+	_expect(player.global_position.x > origin.x + width and player.health == player.MAX_HEALTH,
+		"Continuously moving crosses all three quay slabs before they fall")
 
 
 func _check_rockfall(level: Node, obstacle: Node2D, player: CharacterBody2D) -> void:
