@@ -3,12 +3,12 @@ extends Node2D
 
 enum Kind { WEIGHT, WAVE, KILN, ARROWS, ROCKFALL, BRIDGE, SUNBEAM, JETS, STONE_GATE }
 
-const BRONZE := Color("b8884b")
+# The sprites are tightly packed in a padded four-column atlas.
+enum Sprite { PIVOT, LINK, WEIGHT, BOULDER, KILN, DRAIN, MIRROR, DECK,
+	SLAB, LINTEL, ARROW_SLITS, ARROW, WAVE, FLAME, JET, DUST }
+const ART := preload("res://assets/art/objects/timing_obstacles.png")
 const GOLD := Color("ffe1a0")
-const STONE := Color("766b68")
-const SHADOW := Color("3e3433")
 const FOAM := Color("d4fcf7")
-const WATER := Color("47b7cf")
 const WEIGHT_PIVOT_Y := -94.0
 const GATE_HEIGHT := 72.0
 const GATE_TRAVEL := 0.45
@@ -28,6 +28,7 @@ var _hit_this_cycle := false
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	z_index = 9
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	_player_shape = player.get_node("CollisionShape2D")
 	if kind == Kind.BRIDGE or kind == Kind.STONE_GATE:
 		_solid = StaticBody2D.new()
@@ -157,24 +158,13 @@ func _draw() -> void:
 		Kind.WEIGHT:
 			_draw_weight()
 		Kind.WAVE:
-			draw_rect(Rect2(0, -4, width, 4), WATER.darkened(0.45))
-			if warning:
-				for x in range(3, int(width), 7):
-					draw_circle(Vector2(x, -3 + sin(x + elapsed * 16) * 2), 1.3, FOAM)
-			if danger.has_area():
-				_draw_wave(danger)
+			_draw_wave(warning, danger)
 		Kind.KILN, Kind.JETS:
 			_draw_vents(warning, danger.has_area())
 		Kind.ARROWS:
 			_draw_volley(warning, danger)
 		Kind.ROCKFALL:
-			for index in 2:
-				var x := width * (0.25 + index * 0.5)
-				draw_line(Vector2(x - 8, -1), Vector2(x + 8, -1), BRONZE, 2)
-				if warning:
-					_draw_dust(x, 0)
-			if danger.has_area():
-				_draw_rock(danger.get_center(), 8, STONE)
+			_draw_rockfall(warning, danger)
 		Kind.SUNBEAM:
 			_draw_mirror(warning, danger)
 		Kind.BRIDGE:
@@ -183,102 +173,125 @@ func _draw() -> void:
 			_draw_gate(warning)
 
 
+func _sprite_region(sprite: Sprite) -> Rect2:
+	return Rect2((sprite % 4) * 128 + 2, floori(sprite / 4.0) * 128 + 2, 124, 124)
+
+
+func _art(sprite: Sprite, bounds: Rect2, tint := Color.WHITE) -> void:
+	draw_texture_rect_region(ART, bounds, _sprite_region(sprite), tint)
+
+
 func _draw_weight() -> void:
 	var anchor := Vector2(width / 2, WEIGHT_PIVOT_Y)
 	var weight := _weight_center()
-	draw_rect(Rect2(anchor - Vector2(11, 4), Vector2(22, 6)), STONE)
-	draw_circle(anchor, 4, BRONZE)
+	_art(Sprite.PIVOT, Rect2(anchor - Vector2(15, 11), Vector2(30, 19)))
+	var angle := (weight - anchor).angle() - PI / 2
 	for link in range(1, 12):
-		draw_circle(anchor.lerp(weight, link / 12.0), 2, BRONZE if link % 2 else SHADOW)
-	_draw_rock(weight, 8, BRONZE)
+		draw_set_transform(anchor.lerp(weight, link / 12.0), angle)
+		_art(Sprite.LINK, Rect2(-1.9, -3.2, 3.8, 6.4))
+	draw_set_transform(Vector2.ZERO)
+	_art(Sprite.WEIGHT, Rect2(weight - Vector2(8, 8), Vector2(16, 16)))
 
 
-func _draw_wave(danger: Rect2) -> void:
-	var crest := PackedVector2Array([Vector2(0, 0)])
-	for x in range(0, int(danger.size.x), 3):
-		crest.append(Vector2(x, -17 + sin(x * 0.3 - elapsed * 24) * 4))
-	crest.append(Vector2(danger.end.x, -14))
-	draw_colored_polygon(crest + PackedVector2Array([Vector2(danger.end.x, 0)]), WATER)
-	if crest.size() > 2:
-		draw_polyline(crest.slice(1), FOAM, 2)
+func _draw_wave(warning: bool, danger: Rect2) -> void:
+	# Break up the wet edge with short washes so it reads against the paving.
+	for x in range(0, int(width), 16):
+		_art(Sprite.WAVE, Rect2(x, -2, 16, 3), Color(0.52, 0.70, 0.71, 0.5))
+		if warning:
+			_art(Sprite.WAVE, Rect2(x, -5 + sin(x + elapsed * 16), 16, 5), FOAM)
+	if danger.has_area():
+		_art(Sprite.WAVE, danger)
 
 
 func _draw_vents(warning: bool, active: bool) -> void:
 	var water := kind == Kind.JETS
+	var grate := Sprite.DRAIN if water else Sprite.KILN
+	var plume := Sprite.JET if water else Sprite.FLAME
 	var light := FOAM if water else GOLD
-	var plume := WATER if water else Color("e96f38")
 	for x in range(5, int(width), 10):
-		draw_rect(Rect2(x - 5, -4, 10, 4), STONE)
-		draw_line(Vector2(x - 3, -2), Vector2(x + 3, -2), light if warning or active else SHADOW, 2)
-		if warning and water:
-			var bubble := Vector2(x, -6 - fposmod(elapsed * 23 + x, 16))
-			draw_arc(bubble, 1.6, 0, TAU, 8, light, 1)
+		var grate_tint := Color.WHITE if warning or active else Color(0.67, 0.62, 0.58)
+		_art(grate, Rect2(x - 5, -4, 10, 5), grate_tint)
 		if active:
-			var tip := Vector2(x + sin(x + elapsed * 30) * 2, -24 - 4 * sin(x + elapsed * 22))
-			draw_colored_polygon(PackedVector2Array([Vector2(x - 5, -2), tip, Vector2(x + 5, -2)]), plume)
-			draw_line(Vector2(x, -3), tip * Vector2(1, 0.75), light, 1.5)
+			var plume_height := 27.0 + sin(x + elapsed * 22) * 2.0
+			var sway := sin(x + elapsed * 30)
+			_art(plume, Rect2(x - 5 + sway, -plume_height, 10, plume_height - 1))
+		elif warning and water:
+			for bubble in 3:
+				var lift := fposmod(elapsed * 23 + x + bubble * 6, 16)
+				draw_arc(Vector2(x + sin(lift) * 2, -5 - lift), 1.35, 0, TAU, 12, light, 0.6, true)
+		elif warning:
+			var flicker := 0.55 + 0.25 * sin(x + elapsed * 29)
+			_art(plume, Rect2(x - 3, -5, 6, 4), Color(1, 0.9, 0.7, flicker))
 
 
 func _draw_volley(warning: bool, danger: Rect2) -> void:
-	for offset in [0, -8, -16]:
-		var slit := Vector2(width + offset, -40)
-		draw_rect(Rect2(slit - Vector2(3, 7), Vector2(6, 14)), SHADOW)
-		if warning:
-			draw_arc(slit, 4, -PI / 2, PI / 2, 8, BRONZE, 1)
-			draw_line(slit + Vector2(2, 0), slit - Vector2(5, 0), GOLD, 1)
+	_art(Sprite.ARROW_SLITS, Rect2(width - 26, -53, 33, 25))
+	if warning:
+		for offset in [0, -8, -16]:
+			var slit := Vector2(width + offset, -40)
+			draw_arc(slit, 3, -PI / 2, PI / 2, 12, GOLD, 0.8, true)
+			_art(Sprite.ARROW, Rect2(slit - Vector2(5, 1.5), Vector2(8, 3)), GOLD)
 	if danger.has_area():
-		draw_line(Vector2(danger.position.x, -40), Vector2(danger.end.x, -40), GOLD, 2)
-		draw_colored_polygon(PackedVector2Array([
-			Vector2(danger.position.x, -40), Vector2(danger.position.x + 5, -42),
-			Vector2(danger.position.x + 5, -38),
-		]), BRONZE)
+		_art(Sprite.ARROW, danger)
+
+
+func _draw_rockfall(warning: bool, danger: Rect2) -> void:
+	for index in 2:
+		var x := width * (0.25 + index * 0.5)
+		_art(Sprite.DUST, Rect2(x - 9, -3, 18, 4), Color(0.79, 0.68, 0.53, 0.65))
+		if warning:
+			_draw_dust(x, 0)
+	if danger.has_area():
+		var center := danger.get_center()
+		_art(Sprite.BOULDER, danger)
+		if center.y >= -9:
+			_art(Sprite.DUST, Rect2(center.x - 14, -10, 28, 12), Color(1, 0.89, 0.74, 0.8))
 
 
 func _draw_mirror(warning: bool, danger: Rect2) -> void:
-	draw_rect(Rect2(-18, -19, 15, 19), STONE)
-	draw_rect(Rect2(-21, -25, 21, 6), STONE.lightened(0.18))
-	draw_line(Vector2(width, 0), Vector2(width, -19), BRONZE, 3)
-	draw_circle(Vector2(width, -19), 7, BRONZE)
-	draw_circle(Vector2(width, -19), 5, GOLD if warning else Color("d9bb77"))
+	_art(Sprite.LINTEL, Rect2(-22, -23, 21, 6), Color("dbbb87"))
+	_art(Sprite.ARROW_SLITS, Rect2(-20, -18, 17, 18), Color("c6a374"))
+	_art(Sprite.MIRROR, Rect2(width - 8, -28, 16, 28), GOLD if warning else Color.WHITE)
 	if warning:
-		draw_arc(Vector2(width, -19), 10 + sin(elapsed * 35) * 2, 0, TAU, 16, GOLD, 1)
+		draw_arc(Vector2(width, -20), 9 + sin(elapsed * 35) * 2, 0, TAU, 24, GOLD, 0.85, true)
 	if danger.has_area():
-		draw_rect(danger, Color("d98833"))
-		draw_line(danger.position + Vector2(danger.size.x / 2, 1), danger.get_center() + Vector2(0, 6), GOLD, 3)
+		_art(Sprite.FLAME, danger, GOLD)
+		var core := danger.get_center().x
+		draw_line(Vector2(core, -10), Vector2(core, -2), GOLD, 1.5, true)
 
 
 func _draw_bridge(warning: bool) -> void:
 	var extent := width * (1.0 - clampf(_active_time() / 0.18, 0.0, 1.0))
 	var shake := sin(elapsed * 45) if warning else 0.0
-	draw_rect(Rect2(-4, 0, 5, 9), SHADOW)
-	draw_rect(Rect2(width - 1, 0, 5, 9), SHADOW)
-	draw_rect(Rect2(0, shake, extent, 4), GOLD if warning else BRONZE)
-	for x in range(2, int(extent), 5):
-		draw_line(Vector2(x, shake), Vector2(x, shake + 4), SHADOW, 1)
+	_art(Sprite.PIVOT, Rect2(-5, 0, 7, 9))
+	_art(Sprite.PIVOT, Rect2(width - 2, 0, 7, 9))
+	if extent > 0.0:
+		var source := _sprite_region(Sprite.DECK)
+		source.size.x *= extent / width
+		var tint := GOLD if warning else Color.WHITE
+		draw_texture_rect_region(ART, Rect2(0, shake, extent, 5), source, tint)
 
 
 func _draw_gate(warning: bool) -> void:
-	draw_rect(Rect2(-17, -GATE_HEIGHT - 7, width + 34, 11), STONE)
 	var bottom := _gate_bottom()
+	var stone := Color("ada596")
+	for side in [-5, width]:
+		_art(Sprite.SLAB, Rect2(side, -GATE_HEIGHT, 5, GATE_HEIGHT), stone.darkened(0.35))
 	if bottom > -GATE_HEIGHT:
-		draw_rect(Rect2(0, -GATE_HEIGHT, width, bottom + GATE_HEIGHT), SHADOW)
-		draw_rect(Rect2(2, -GATE_HEIGHT, width - 4, bottom + GATE_HEIGHT), STONE)
-		for y in range(int(bottom) - 5, -int(GATE_HEIGHT), -10):
-			draw_line(Vector2(0, y), Vector2(width, y), SHADOW, 1)
+		var panel := _sprite_region(Sprite.SLAB)
+		var visible_height := bottom + GATE_HEIGHT
+		# Reveal the bottom of the slab first as it slides out of the lintel.
+		var hidden_height := panel.size.y * (1.0 - visible_height / GATE_HEIGHT)
+		panel.position.y += hidden_height
+		panel.size.y -= hidden_height
+		draw_texture_rect_region(ART, Rect2(0, -GATE_HEIGHT, width, visible_height), panel, stone)
+	_art(Sprite.LINTEL, Rect2(-12, -GATE_HEIGHT - 8, width + 24, 13), stone)
 	if warning:
-		_draw_dust(width / 2, -GATE_HEIGHT)
+		_draw_dust(width / 2, -GATE_HEIGHT + 12)
 
 
 func _draw_dust(x: float, y: float) -> void:
-	for speck in 7:
-		var drift := fposmod(elapsed * 23 + speck * 3, 21)
-		draw_circle(Vector2(x + sin(speck * 5.0) * 8, y + drift - 18), 1.3, GOLD)
-
-
-func _draw_rock(center: Vector2, radius: float, color: Color) -> void:
-	var points := PackedVector2Array()
-	for corner in 8:
-		var length := radius if corner % 3 else radius * 0.78
-		points.append(center + Vector2.from_angle(corner * TAU / 8) * length)
-	draw_colored_polygon(points, color)
-	draw_line(center + Vector2(-4, -2), center + Vector2(0, -5), color.lightened(0.5), 2)
+	for speck in 4:
+		var phase := fposmod(elapsed * 1.7 + speck * 0.25, 1.0)
+		var tint := Color(1, 0.91, 0.76, sin(phase * PI) * 0.9)
+		_art(Sprite.DUST, Rect2(x + sin(speck * 5.0) * 7 - 4, y + phase * 18 - 18, 8, 5), tint)
