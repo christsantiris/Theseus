@@ -68,7 +68,7 @@ func _build_landscape() -> void:
 		_landmark(QUAY, point.x, point.y, "RuinedQuay")
 	for point in [Vector2(3032, 88), Vector2(3464, 88), Vector2(5368, 84)]:
 		_landmark(CYCLOPEAN_GATE, point.x, point.y, "CyclopeanGate")
-	_landmark(OUTCROP, 4120, 80, "CoastalOutcrop")
+	_landmark(OUTCROP, 4144, 80, "CoastalOutcrop")
 	_landmark(CYCLOPEAN_GATE, 4576, 80, "CyclopeanGate")
 	_sync_backdrop()
 

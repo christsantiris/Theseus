@@ -5,6 +5,7 @@ extends SceneTree
 const GROUNDING := preload("res://scenes/levels/scenery_grounding.gd")
 var failures: Array[String] = []
 var feet := {}
+var footprints := {}
 const SAMPLES := [
 	["troy/trojan_horse", 112.0],
 	["troy/bastion", 112.0],
@@ -43,6 +44,25 @@ func _foot(texture: Texture2D) -> float:
 				return row
 	_expect(false, "Scenery contains visible painted pixels")
 	return 0.0
+
+
+# Columns whose lowest painted pixel reaches the footing band: the posts, legs
+# and plinths that must all stand on the same landing.
+func _footprint(texture: Texture2D) -> Array:
+	if footprints.has(texture.resource_path):
+		return footprints[texture.resource_path]
+	var image := texture.get_image()
+	var foot := _foot(texture)
+	var band := image.get_height() * 0.04
+	var columns: Array = []
+	for x in image.get_width():
+		for y in range(image.get_height() - 1, -1, -1):
+			if image.get_pixel(x, y).a >= 0.5:
+				if y + 1 >= foot - band:
+					columns.append(x)
+				break
+	footprints[texture.resource_path] = columns
+	return columns
 
 
 func _contact_pixels(image: Image, scale: int) -> int:
@@ -99,6 +119,14 @@ func _actual_landmarks(number: int) -> void:
 		enemy.set_physics_process(false)
 	var camera: Camera2D = level.player.get_node("Camera2D")
 	var world: Node2D = level.get_node("World")
+	if number != 1: # Level 1 landmarks use parallax over a flat road.
+		for sprite: Sprite2D in world.midground.get_children():
+			var landing: float = level.layout.surface_at(sprite.position.x + sprite.texture.get_width() * sprite.scale.x * 0.5)
+			for column in _footprint(sprite.texture):
+				var x: float = sprite.position.x + (column + 0.5) * sprite.scale.x
+				if level.layout.surface_at(x) != landing:
+					_expect(false, "Level %d %s keeps every painted footing on one landing (x=%.1f)" % [number, sprite.name, x])
+					break
 	for point in [Vector2(48, level.layout.FLOOR_Y), Vector2(2704, level.layout.surface_at(2704)), Vector2(3464, 66), Vector2(4640, level.layout.FLOOR_Y)]:
 		level.player.position = point
 		camera.reset_smoothing()
@@ -125,5 +153,5 @@ func _run() -> void:
 			await _render_contact(texture, sample[1], scale)
 	for number in range(1, 9):
 		await _actual_landmarks(number)
-	print("PASS: painted scenery contacts, floating-tree negative control, preview/540p/720p/desktop pixels, and moving-camera landmark bases." if failures.is_empty() else "FAIL: " + str(failures))
+	print("PASS: painted scenery contacts, single-landing footprints, floating-tree negative control, preview/540p/720p/desktop pixels, and moving-camera landmark bases." if failures.is_empty() else "FAIL: " + str(failures))
 	quit(0 if failures.is_empty() else 1)

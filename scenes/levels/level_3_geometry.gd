@@ -70,8 +70,8 @@ func _build_landscape() -> void:
 		_landmark(GROVE, point.x, point.y, "OliveGrove")
 	for point in [Vector2(3264, 68)]:
 		_landmark(COLONNADE, point.x, point.y, "Colonnade")
-	_landmark(WORKSHOP, 3896, 90, "Workshop")
-	_landmark(STOA, 4408, 56, "Stoa")
+	_landmark(WORKSHOP, 3904, 90, "Workshop")
+	_landmark(STOA, 4272, 52, "Stoa")
 	_sync_backdrop()
 
 
