@@ -31,7 +31,8 @@ A single 2,172×724 continuous fortress panorama uses slow parallax across the
 entire route. A large wooden Trojan horse stands in the gate court at X=2112. Seven
 independent stone-and-timber bastions, four reused Cyclopean gateways and four retaining walls are grounded on their landings. Bright stone
 caps match solid rampart geometry. The final Cyclopean gateway uses the shared
-locked exit and entry animation. Textures stay below the 4,096-pixel mobile
+exit lock. Theseus walks along the paving and fades as he enters the doorway.
+Textures stay below the 4,096-pixel mobile
 limit; the opaque panorama uses desktop and mobile GPU compression.
 
 The unmodified `assets/audio/music/IbnAl-Noor.mp3` starts at 0:00 and loops to

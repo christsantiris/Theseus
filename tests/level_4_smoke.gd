@@ -118,9 +118,17 @@ func _traverse() -> void:
 	var jumps := 0
 	var highest := float(Layout.FLOOR_Y)
 	var tested_guard := false
+	var entry_frame := -1
+	var walk_advanced := false
 	Input.action_press("move_right")
 	for tick in 6000:
 		await physics_frame
+		if level._gate.entering:
+			_expect(absf(player.position.y - Layout.FLOOR_Y) < 0.1, "Theseus keeps his feet on the paving throughout the Troy exit")
+			_expect(player.sprite.animation == &"walk" and player.sprite.is_playing(), "The walk cycle plays during the scripted entry")
+			if entry_frame == -1:
+				entry_frame = player.sprite.frame
+			walk_advanced = walk_advanced or player.sprite.frame != entry_frame
 		if level._complete:
 			break
 		highest = minf(highest, player.position.y)
@@ -154,7 +162,7 @@ func _traverse() -> void:
 	Input.action_release("jump")
 	_expect(level._complete and paused and player.health == 5, "Normal movement and jumps traverse the entire Trojan route without a boost")
 	_expect(jumps >= 13 and highest < 190 and state.elapsed_seconds < Layout.TIME_LIMIT, "The route exercises the rampart climbs inside its countdown")
-	_expect(player.sprite.modulate.a < 0.01 and player.position.distance_to(Layout.EXIT + Vector2(2, -20)) < 0.1, "Theseus walks into the Trojan temple doorway")
+	_expect(walk_advanced and player.sprite.modulate.a < 0.01 and player.position.distance_to(Layout.EXIT + Vector2(2, 0)) < 0.1, "Theseus walks to the doorway at paving height and fades inside it")
 	print("Troy traversal: %d jumps, peak feet y=%.1f, %.1f simulated seconds (combat isolated)." % [jumps, highest, state.elapsed_seconds])
 
 

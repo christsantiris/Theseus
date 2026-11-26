@@ -6,6 +6,7 @@ signal entry_started(player: Node2D)
 
 var unlocked := false
 var entering := false
+var has_entry_stairs := true
 
 
 func _ready() -> void:
@@ -43,17 +44,27 @@ func _on_body_entered(body: Node2D) -> void:
 	sprite.modulate = Color.WHITE
 	preload("res://scenes/player/theseus_art.gd").anchor(sprite, "walk")
 	sprite.play("walk")
-	# Keep the hero in front while he walks up the visible stair treads.
 	var tween := create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	var steps := [Vector2(-46, -6), Vector2(-30, -11), Vector2(-16, -16), Vector2(0, -16)]
-	for step: Vector2 in steps:
-		var destination := to_global(step)
-		if destination.x > body.global_position.x:
-			tween.tween_property(body, "global_position", destination, 0.18)
-	# A small inward step and a darkening, shrinking silhouette suggest doorway depth.
-	tween.tween_property(body, "global_position", to_global(Vector2(2, -20)), 0.3)
-	tween.parallel().tween_property(sprite, "scale", sprite.scale * 0.72, 0.3)
-	tween.parallel().tween_property(sprite, "modulate", Color(0.35, 0.4, 0.45, 0.0), 0.3)
+	var entry_end := to_global(Vector2(2, -20))
+	var entry_duration := 0.3
+	if has_entry_stairs:
+		var steps := [Vector2(-46, -6), Vector2(-30, -11), Vector2(-16, -16), Vector2(0, -16)]
+		for step: Vector2 in steps:
+			var destination := to_global(step)
+			if destination.x > body.global_position.x:
+				tween.tween_property(body, "global_position", destination, 0.18)
+	else:
+		var approach_x := to_global(Vector2(-12, 0)).x
+		var walk_speed: float = body.movement_speed()
+		sprite.speed_scale = walk_speed / body.SPEED
+		var fade_start_x := maxf(body.global_position.x, approach_x)
+		if approach_x > body.global_position.x:
+			tween.tween_property(body, "global_position:x", approach_x, (approach_x - body.global_position.x) / walk_speed)
+		entry_end.y = body.global_position.y
+		entry_duration = absf(entry_end.x - fade_start_x) / walk_speed
+	tween.tween_property(body, "global_position", entry_end, entry_duration)
+	tween.parallel().tween_property(sprite, "scale", sprite.scale * 0.72, entry_duration)
+	tween.parallel().tween_property(sprite, "modulate", Color(0.35, 0.4, 0.45, 0.0), entry_duration)
 	tween.tween_callback(func() -> void: entered.emit())
 
 
