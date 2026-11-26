@@ -18,7 +18,7 @@ scrolls at 10.5% of horizontal camera travel and 25% of vertical travel. Its
 2,172×724 painting fills 912×304 world units without wrapping, panel blending,
 or stretched ground extensions.
 
-All twenty-four main terraces, both one-way bull ledges and both recessed spike pits
+All twenty-four main terraces, both one-way bull ledges and all three recessed spike pits
 use the authored collision rectangles. Scenery leaves the spike openings
 clear. Existing column fragments remain, and the temple
 stays closed until the Hydra's final head falls, including paused entry.
@@ -28,20 +28,20 @@ one world pixel of overlap at the ground. This closes transparent-padding gaps
 under trees, ruins, pots, columns, and waystones while preserving their artwork
 and collision layout. See the [ground-contact regression](performance.md#scenery-ground-contacts).
 
-## Retracting bridge
+## Retracting bridges
 
-A bronze deck covers the Broken Causeway pit at x=2080–2112 for three seconds, then rattles for 0.8 seconds before retracting for two seconds. Walk across while it is extended or jump the gap while it is open.
+Three bronze decks span the spike pits at the Gorge Mouth, Broken Causeway, and Hydra Sanctuary. Each extends for three seconds, rattles for 0.8 seconds, then retracts for two seconds. Wait at the bank and run across when the deck extends. The gaps are wider than a full running jump.
 
 ## Route
 
 | Area | World X | Route and encounters |
 | --- | --- | --- |
-| Gorge Mouth | 0–959 | A broad, flat lane introduces the first Bronze Bull. Staggering it opens an optional route to a high flask ledge. Three low steps lead to the temple terraces. |
+| Gorge Mouth | 0–959 | Cross the first timed bridge to reach the broad lane that introduces the first Bronze Bull. Staggering it opens an optional route to a high flask ledge. Three low steps lead to the temple terraces. |
 | Temple Ledges | 960–1919 | The first pair of Cerberus Pups holds a broad landing. Descend into a second flat bull corridor before the causeway. |
-| Broken Causeway | 1920–2879 | Cross a spike pit, and climb 16-pixel steps. A second pup pair guards a wide terrace halfway up. |
+| Broken Causeway | 1920–2879 | Time the second bridge crossing, then climb 16-pixel steps. A second pup pair guards a wide terrace halfway up. |
 | High Colonnade | 2880–3839 | A third bull charges along a 512-pixel causeway. A second high flask ledge rewards riding it. Descending terraces lead toward the sanctuary. |
 | Western Temple Court | 3840–4799 | A long bull lane and a coordinated pup pair lead back up to the sanctuary causeway. |
-| Hydra Sanctuary | 4800–5759 | The final pup pair guards the descent. Jump the last spike pit, then defeat every Hydra head to open the exit temple. |
+| Hydra Sanctuary | 4800–5759 | The final pup pair guards the descent. Cross the last timed bridge, then defeat every Hydra head to open the exit temple. |
 
 ## Encounters
 
@@ -71,8 +71,7 @@ one health. There is no automatic stomp kill.
 
 ## Optional bull ledges and spike pits
 
-The main route needs thirteen terrace climbs and two pit jumps, all possible at the
-normal movement speed. It does not require riding a bull. Two extra ledges
+The main route has thirteen terrace climbs and three timed bridge crossings, all possible at normal movement speed. It does not require riding a bull. Two extra ledges
 stand 56 pixels above the bull lanes, beyond a normal jump from the ground:
 
 | Ledge | Span | Top Y | Flask X |
@@ -86,17 +85,15 @@ then jump onto its bright stone cap. The ledges allow approach from below,
 leaving the charging corridor clear. Both reward a health flask; three more
 flasks sit on the main route. Each restores two health without exceeding five.
 
-Two spike recesses reuse Level 5's bronze spikes and damage-and-escape mechanic:
-
 | Pit | Left edge | Rim Y | Width / depth |
 | --- | --- | --- | --- |
-| CausewayPit | 2080 | 280 | 32 / 24 |
-| SanctuaryPit | 4192 | 280 | 32 / 24 |
+| Gorge Mouth | 80 | 280 | 112 / 48 |
+| Broken Causeway | 2016 | 280 | 112 / 48 |
+| Hydra Sanctuary | 5136 | 280 | 112 / 48 |
 
-Falling onto a pit bed costs one health bar. Hold Jump and move toward either
-rim to climb out; there is no automatic ejection. The 1.25-second interval
-between damaging contacts leaves time to escape. A fatal hit opens Hades.
-Retry Level restarts the level from its entrance.
+Landing on the spikes costs one health and returns Theseus to the bank he
+approached from. A fatal hit opens Hades. Retry Level restarts the level from
+its entrance.
 
 ## Progress and the exit
 
@@ -144,7 +141,7 @@ facade reuse Level 1's art.
 
 The scenery check verifies one continuous landscape, thirteen complete landmarks,
 clear pit openings, and full camera coverage at street level, both
-bonus ledges and pit bottoms, original terrain collisions, one-way settings,
+bonus ledges and pit bottoms, terrain collisions, one-way settings,
 spike metadata, the Hydra's three-head gate requirement, paused facade updates,
 and isolation from the other levels.
 

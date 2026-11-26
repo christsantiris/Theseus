@@ -122,6 +122,7 @@ func _progress_and_saves() -> void:
 	previous = level.get_instance_id()
 	level.player.health = 1
 	level.player._hurt_lock = 0
+	level.get_node(Gorge.PITS[0].bridge).elapsed = Gorge.BRIDGE_TIMING.x + Gorge.BRIDGE_TIMING.y
 	level.player.position = Gorge.PITS[0].position + Vector2(16, 0)
 	level.player.velocity = Vector2.ZERO
 	await _reload(previous)
@@ -189,7 +190,7 @@ func _placements(level: Node) -> void:
 		var ledge: Rect2 = Gorge.BONUS_LEDGES[index]
 		var collision: CollisionShape2D = level.get_node("World/BullLedge%d" % index).get_child(0)
 		_expect(collision.one_way_collision and Gorge.surface_at(ledge.position.x) - ledge.position.y == 56, "Bonus ledge is above a normal jump and can be approached through its underside")
-	_expect(get_nodes_in_group("spike_pits").size() == 2, "Both gorge spike recesses have active hazards")
+	_expect(get_nodes_in_group("spike_pits").size() == Gorge.PITS.size(), "All gorge spike recesses have active hazards")
 
 
 func _swing() -> void:
@@ -298,7 +299,7 @@ func _traverse() -> void:
 	var jumping := false
 	var left_floor := false
 	var jumps := 0
-	var pit_jumps := 0
+	var crossed_bridges := {}
 	var highest := float(Gorge.FLOOR_Y)
 	var camera_top := float(Gorge.HEIGHT)
 	var camera_bottom := 0.0
@@ -320,15 +321,21 @@ func _traverse() -> void:
 			jumping = false
 			left_floor = false
 		elif player.is_on_floor() and not jumping:
+			var waiting := false
 			for pit: Dictionary in Gorge.PITS:
 				var distance: float = pit.position.x - player.position.x
-				if distance > 0 and distance <= 12 and absf(player.position.y - pit.position.y) < 1:
-					Input.action_press("jump")
-					jumping = true
-					jumps += 1
-					pit_jumps += 1
-					break
-			if not jumping:
+				if pit.name in crossed_bridges or distance < 0 or distance > 18:
+					continue
+				var bridge := level.get_node(pit.bridge)
+				if bridge.elapsed <= 1.8:
+					crossed_bridges[pit.name] = true
+				else:
+					waiting = true
+				break
+			if waiting:
+				Input.action_release("move_right")
+			else:
+				Input.action_press("move_right")
 				for platform: Rect2 in Gorge.PLATFORMS:
 					var distance: float = platform.position.x - player.position.x
 					if distance > -7 and distance <= 27 and player.position.y - platform.position.y > 4:
@@ -342,10 +349,10 @@ func _traverse() -> void:
 	Input.action_release("move_right")
 	Input.action_release("jump")
 	_expect(level._complete and saw_entry, "Normal movement traverses the complete gorge; x=%.1f y=%.1f" % [player.position.x, player.position.y])
-	_expect(pit_jumps == 2 and jumps >= 12 and player.health == 5 and highest < 145, "Main route clears ten climbs and both pits with normal jumps and no damage")
+	_expect(crossed_bridges.size() == Gorge.PITS.size() and jumps >= 12 and player.health == 5 and highest < 145, "Main route clears all climbs and bridges with no damage")
 	_expect(camera_bottom - camera_top > 80, "Traversal scrolls vertically")
 	_expect(player.sprite.modulate.a < 0.01 and player.position.distance_to(Gorge.EXIT + Vector2(2, -20)) < 0.1, "Theseus enters the sanctuary doorway before completion")
-	print("Gorge traversal: %d jumps (%d pits); peak feet y=%.1f; %.1f simulated seconds." % [jumps, pit_jumps, highest, state.elapsed_seconds])
+	print("Gorge traversal: %d jumps (%d bridges); peak feet y=%.1f; %.1f simulated seconds." % [jumps, crossed_bridges.size(), highest, state.elapsed_seconds])
 
 
 func _pit_escape() -> void:
@@ -357,21 +364,16 @@ func _pit_escape() -> void:
 			for definition: Dictionary in Gorge.FLASKS:
 				level.get_node(NodePath(definition.name)).free()
 			var player = level.player
-			player.position = pit.position + Vector2(pit.width * 0.5, 0)
+			var bridge := level.get_node(pit.bridge)
+			bridge.elapsed = Gorge.BRIDGE_TIMING.x + Gorge.BRIDGE_TIMING.y
+			var bank_x: float = -8 if direction < 0 else pit.width + 8
+			player.position = pit.position + Vector2(bank_x, 0)
 			player.velocity = Vector2.ZERO
-			for frame in 90:
-				await physics_frame
-				if player.health == 4 and player.is_on_floor() and absf(player.velocity.y) < 1 and absf(player.position.y - pit.position.y - pit.depth) < 1:
-					break
-			_expect(player.health == 4 and player.position.y > pit.position.y + 20, "A gorge pit costs one health and keeps the player inside")
-			var action := "move_left" if direction < 0 else "move_right"
-			Input.action_press(action)
-			Input.action_press("jump")
-			await _frames(45)
-			Input.action_release(action)
-			Input.action_release("jump")
-			var outside: bool = player.position.x < pit.position.x - 7 if direction < 0 else player.position.x > pit.position.x + pit.width + 7
-			_expect(outside and player.health == 4, "%s is escapable to side %d without another spike hit" % [pit.name, direction])
+			await _frames(4)
+			player.position = pit.position + Vector2(pit.width * 0.5, 0)
+			await _frames(55)
+			_expect(player.position.distance_to(pit.position + Vector2(bank_x, 0)) < 1 and player.health == 4,
+				"%s costs one health and returns Theseus to his approach bank (%d)" % [pit.name, direction])
 
 
 func _run() -> void:

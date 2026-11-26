@@ -8,7 +8,7 @@ func _ready() -> void:
 	layout = preload("res://scenes/levels/level_6_layout.gd")
 	level_number = 6
 	next_level = "res://scenes/levels/level_7.tscn"
-	objective = "Cross the gorge. Cut every Hydra head to open the temple."
+	objective = "Wait for the bridges. Cut every Hydra head to open the temple."
 	completion_text = "The gorge sanctuary is free of the Hydra."
 	$Player/Camera2D.position.y = -24
 	super()
@@ -18,8 +18,16 @@ func _ready() -> void:
 		pit.position = definition.position
 		pit.pit_width = definition.width
 		pit.pit_depth = definition.depth
-		pit.damaged.connect(_on_spike_damage)
+		pit.damaged.connect(_on_spike_damage.bind(get_node(definition.bridge)))
 		add_child(pit)
+
+
+func _build_timing_obstacle() -> void:
+	for pit: Dictionary in layout.PITS:
+		_add_timing_obstacle({
+			"name": pit.bridge, "kind": TimingObstacle.Kind.BRIDGE,
+			"position": pit.position, "width": pit.width, "durations": layout.BRIDGE_TIMING,
+		})
 
 
 func _build_enemies() -> void:
@@ -46,5 +54,7 @@ func _build_enemies() -> void:
 		add_child(pack)
 
 
-func _on_spike_damage(_body: CharacterBody2D) -> void:
-	hud.show_message("Spikes! Hold jump and move to climb out.", 2.5, 3)
+func _on_spike_damage(body: CharacterBody2D, bridge: Node2D) -> void:
+	if body.health > 0:
+		bridge.return_to_bridge_bank()
+		hud.show_message("Wait for the bridge to extend before crossing.", 2.5, 3)

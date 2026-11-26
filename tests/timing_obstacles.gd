@@ -60,7 +60,8 @@ func _run() -> void:
 	for number in range(1, 10):
 		var level := await _open_level(number)
 		var player: CharacterBody2D = level.player
-		var obstacle: Node2D = level.get_node(level.layout.TIMING_OBSTACLE.name)
+		var obstacle_name: String = level.layout.PITS[0].bridge if number == 6 else level.layout.TIMING_OBSTACLE.name
+		var obstacle: Node2D = level.get_node(obstacle_name)
 		var origin := obstacle.global_position
 		var idle: float = obstacle.durations.x
 		var warning: float = obstacle.durations.y
@@ -77,7 +78,8 @@ func _run() -> void:
 				await _check_rockfall(level, level.get_node(level.layout.GARDEN_ROCKFALL.name), player)
 				await _check_rockfall(level, obstacle, player)
 			6:
-				await _check_bridge(obstacle, player)
+				for pit: Dictionary in level.layout.PITS:
+					await _check_bridge(level.get_node(pit.bridge), player)
 			9:
 				await _check_gate(obstacle, player)
 			_:
@@ -178,23 +180,29 @@ func _check_bridge(obstacle: Node2D, player: CharacterBody2D) -> void:
 	obstacle.elapsed = 0.0
 	await _frames(4)
 	_move("move_right", true)
-	await _frames(39)
+	await _frames(100)
 	_move("move_right", false)
 	_expect(player.global_position.x > origin.x + obstacle.width and player.health == player.MAX_HEALTH,
 		"The extended bridge carries a walking player across")
-	_place(player, origin + Vector2(16, 0))
-	obstacle.elapsed = 3.8
-	await _frames(13)
-	_expect(player.global_position.y > origin.y + 12, "A retracted bridge exposes the spike pit")
-	_place(player, origin + Vector2(-9, 0))
+	# A boosted full-height jump from the edge is the longest normal jump.
+	_place(player, origin + Vector2(-12, 0))
+	obstacle.elapsed = obstacle.durations.x + obstacle.durations.y
+	await _frames(4)
+	_place(player, origin + Vector2(4, 0))
 	await _frames(3)
+	player.grant_speed_boost()
 	_move("move_right", true)
 	_move("jump", true, 1)
-	await _frames(38)
+	await _frames(15)
+	_expect(player.global_position.y < origin.y - 25.0, "Theseus reaches full jump height at " + String(obstacle.name))
+	await _frames(25)
 	_move("move_right", false)
 	_move("jump", false, 1)
-	_expect(player.global_position.x > origin.x + obstacle.width and player.health == player.MAX_HEALTH,
-		"Moving and jumping together clears the open bridge")
+	_expect(player.global_position.x < origin.x + obstacle.width - 7 and player.global_position.y > origin.y,
+		"%s is too wide even for a boosted running jump" % obstacle.name)
+	await _frames(25)
+	_expect(player.global_position.x < origin.x and player.health == player.MAX_HEALTH - 1,
+		"%s returns a player who hits the spikes to the approach bank" % obstacle.name)
 
 
 func _check_gate(obstacle: Node2D, player: CharacterBody2D) -> void:

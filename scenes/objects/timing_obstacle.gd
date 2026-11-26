@@ -27,6 +27,7 @@ var elapsed := 0.0
 var _solid: StaticBody2D
 var _player_shape: CollisionShape2D
 var _hit_this_cycle := false
+var _bridge_from_right := false
 var _rockfall_started := false
 
 
@@ -56,6 +57,10 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if kind == Kind.BRIDGE:
+		var x := player.global_position.x - global_position.x
+		if x <= -7.0 or x >= width + 7.0:
+			_bridge_from_right = x > width
 	if kind == Kind.ROCKFALL and not _rockfall_started:
 		var player_x := player.global_position.x - global_position.x
 		if player_x < -ROCK_APPROACH or player_x > width + ROCK_APPROACH:
@@ -106,6 +111,15 @@ func _update_solid() -> void:
 			_solid.collision_layer = int(_active_time() < 0.0)
 		Kind.STONE_GATE:
 			_solid.collision_layer = int(_gate_bottom() >= 0.0)
+
+
+func return_to_bridge_bank() -> void:
+	var bank_x := width + 8.0 if _bridge_from_right else -8.0
+	player.global_position = to_global(Vector2(bank_x, 0.0))
+	player.velocity = Vector2.ZERO
+	var camera := get_viewport().get_camera_2d()
+	if camera != null:
+		camera.reset_smoothing()
 
 
 func _gate_bottom() -> float:
@@ -306,11 +320,12 @@ func _draw_bridge(warning: bool) -> void:
 	var shake := sin(elapsed * 45) if warning else 0.0
 	_art(Sprite.PIVOT, Rect2(-5, 0, 7, 9))
 	_art(Sprite.PIVOT, Rect2(width - 2, 0, 7, 9))
-	if extent > 0.0:
+	for x in range(0, ceili(extent), 28):
+		var span := minf(28.0, extent - x)
 		var source := _sprite_region(Sprite.DECK)
-		source.size.x *= extent / width
+		source.size.x *= span / 28.0
 		var tint := GOLD if warning else Color.WHITE
-		draw_texture_rect_region(ART, Rect2(0, shake, extent, 5), source, tint)
+		draw_texture_rect_region(ART, Rect2(x, shake, span, 5), source, tint)
 
 
 func _draw_gate(warning: bool) -> void:

@@ -109,9 +109,9 @@ One continuous mountain landscape shows rocky ridges, cypress slopes, terraced w
 
 ### The Gorge Sanctuary
 
-Pale limestone cliffs, dark clefts, ruined temples, and stone causeways frame the sixth level. Bronze Bulls charge along flat corridors, Cerberus Pups pursue in pairs, and a three-headed Hydra guards the exit. Two optional high flask ledges reward riding a staggered bull. The main route uses normal jumps, with two spike pits. A timed bronze bridge covers the Broken Causeway pit between retractions.
+Pale limestone cliffs, dark clefts, ruined temples, and stone causeways frame the sixth level. Bronze Bulls charge along flat corridors, Cerberus Pups pursue in pairs, and a three-headed Hydra guards the exit. Two optional high flask ledges reward riding a staggered bull. Three wide spike pits interrupt the main route. Wait for each bronze bridge to extend before crossing.
 
-One continuous dry gorge landscape shows stratified limestone walls and distant cliffside temples. Complete ruined shrines, colonnades, and rocky outcrops stand on the original causeways, while both bull ledges and pit openings keep their original geometry.
+One continuous dry gorge landscape shows stratified limestone walls and distant cliffside temples. Complete ruined shrines, colonnades, and rocky outcrops frame the causeways.
 
 [Level 6 guide](docs/level_6.md)
 
@@ -175,7 +175,7 @@ final victory records one result, including all points earned during the attempt
 Reopening the same result screen does not add it again. New lives and replays
 can qualify separately, and earlier entries keep their place when scores tie.
 
-Theseus runs, jumps, ducks, and fights. Grounded sword attacks alternate between a stab and a diagonal slash, with the same timing, reach, and one-health damage. Regular airborne attacks always slash, including when Jump and Sword are pressed together. Taking off during a stab changes it to a slash without restarting the attack. Airborne attacks leave the grounded sequence unchanged; Duck + Sword in the air still performs a downward thrust. With a keyboard, releasing Jump early makes a short jump; touch jumps are always full height, so one thumb can jump and then reach Sword. Sword hits and a jump into an enemy each cost that enemy one health; landing on a Satyr bounces Theseus safely. Theseus has five health. Flasks restore two, and they never fill him past five. Stolen wine grants six seconds of extra speed. Spike pits cost one health bar per damaging contact and have enough room to jump out.
+Theseus runs, jumps, ducks, and fights. Grounded sword attacks alternate between a stab and a diagonal slash, with the same timing, reach, and one-health damage. Regular airborne attacks always slash, including when Jump and Sword are pressed together. Taking off during a stab changes it to a slash without restarting the attack. Airborne attacks leave the grounded sequence unchanged; Duck + Sword in the air still performs a downward thrust. With a keyboard, releasing Jump early makes a short jump; touch jumps are always full height, so one thumb can jump and then reach Sword. Sword hits and a jump into an enemy each cost that enemy one health; landing on a Satyr bounces Theseus safely. Theseus has five health. Flasks restore two, and they never fill him past five. Stolen wine grants six seconds of extra speed. Spike pits cost one health bar per damaging contact. Jump out of shallow pits. Falling into a timed bridge pit sends Theseus back to the bank he approached from.
 
 | Action | Keys |
 | --- | --- |

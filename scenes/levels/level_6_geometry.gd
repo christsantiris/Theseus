@@ -79,9 +79,9 @@ func _build_landscape() -> void:
 	# uses parallax. Painted bases overlap the terrain through GROUNDING.
 	for point in [Vector2(1056, 100), Vector2(3152, 104), Vector2(4880, 96), Vector2(5424, 90)]:
 		_landmark(CLIFF_TEMPLE, point.x, point.y, "CliffTemple")
-	for point in [Vector2(160, 104), Vector2(1432, 72), Vector2(1960, 72), Vector2(2520, 72), Vector2(3640, 44)]:
+	for point in [Vector2(336, 104), Vector2(1432, 72), Vector2(1900, 72), Vector2(2520, 72), Vector2(3640, 44)]:
 		_landmark(OUTCROP, point.x, point.y, "RockyOutcrop")
-	for point in [Vector2(2904, 48), Vector2(5256, 56)]:
+	for point in [Vector2(2904, 48), Vector2(5304, 56)]:
 		_landmark(COLONNADE, point.x, point.y, "Colonnade")
 	_landmark(OUTCROP, 4220, 64, "RockyOutcrop")
 	_landmark(CLIFF_TEMPLE, 4688, 96, "CliffTemple")

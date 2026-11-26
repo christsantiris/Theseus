@@ -45,15 +45,17 @@ const PLATFORMS := [
 # These ledges can be reached from a staggered bull. The main route never
 # requires a ride, and their one-way tops leave the charging lane clear.
 const BONUS_LEDGES := [Rect2(544, 224, 112, 8), Rect2(3328, 112, 112, 8)]
-# A pit's rim sits at the lowest neighboring ground, so it always reads as a
-# recess. Placing one inside a raised step leaves its far wall standing proud.
+const BRIDGE_TIMING := Vector3(3.0, 0.8, 2.0)
+const BRIDGE_WIDTH := 112.0
+const BRIDGE_PIT_DEPTH := 48.0
 const PITS := [
-	{"name": "CausewayPit", "position": Vector2(2080, 280), "width": 32.0, "depth": 24.0},
-	{"name": "SanctuaryPit", "position": Vector2(5152, 280), "width": 32.0, "depth": 24.0},
+	{"name": "GorgeMouthPit", "bridge": "GorgeMouthBridge", "position": Vector2(80, 280), "width": BRIDGE_WIDTH, "depth": BRIDGE_PIT_DEPTH},
+	{"name": "CausewayPit", "bridge": "CausewayBridge", "position": Vector2(2016, 280), "width": BRIDGE_WIDTH, "depth": BRIDGE_PIT_DEPTH},
+	{"name": "SanctuaryPit", "bridge": "SanctuaryBridge", "position": Vector2(5136, 280), "width": BRIDGE_WIDTH, "depth": BRIDGE_PIT_DEPTH},
 ]
 
 const ENEMIES := [
-	{"name": "BullGorgeMouth", "kind": "bronze_bull", "position": Vector2(432, 280), "patrol": Vector2(192, 704)},
+	{"name": "BullGorgeMouth", "kind": "bronze_bull", "position": Vector2(432, 280), "patrol": Vector2(224, 704)},
 	{"name": "TemplePupA", "kind": "cerberus_pup", "position": Vector2(1024, 232), "patrol": Vector2(960, 1152), "pack": "TemplePack", "delay": 0.3},
 	{"name": "TemplePupB", "kind": "cerberus_pup", "position": Vector2(1072, 232), "patrol": Vector2(960, 1152), "pack": "TemplePack", "delay": 0.9},
 	{"name": "BullDryRiver", "kind": "bronze_bull", "position": Vector2(1696, 280), "patrol": Vector2(1376, 1888)},
@@ -71,26 +73,21 @@ const ENEMIES := [
 const FLASKS := [
 	{"name": "HealthFlaskBullLedge", "position": Vector2(616, 224), "bonus": true},
 	{"name": "HealthFlaskTemple", "position": Vector2(1216, 248)},
-	{"name": "HealthFlaskCauseway", "position": Vector2(2120, 280)},
+	{"name": "HealthFlaskCauseway", "position": Vector2(2136, 280)},
 	{"name": "HealthFlaskHighLedge", "position": Vector2(3384, 112), "bonus": true},
 	{"name": "HealthFlaskSanctuary", "position": Vector2(5328, 280)},
 ]
 const EXIT := Vector2(5712, FLOOR_Y)
 const GATE_GUARD := "HydraTempleGuard"
-const TimingObstacle := preload("res://scenes/objects/timing_obstacle.gd")
-const TIMING_OBSTACLE := {
-	"name": "CausewayBridge", "kind": TimingObstacle.Kind.BRIDGE,
-	"position": Vector2(2080, 280), "width": 32.0, "durations": Vector3(3, 0.8, 2),
-}
-
 const TIPS := [
+	{"x": 48, "end": 80, "text": "Wait for the bridge, then run across."},
 	{"x": 160, "end": 352, "text": "Jump the bull's charge; it cannot turn mid-charge."},
 	{"x": 480, "end": 704, "text": "Airborne Duck + Sword staggers a bull's back."},
 	{"x": 800, "end": 1056, "text": "Pups run in pairs. Sword hits interrupt their leaps."},
-	{"x": 1920, "end": 2072, "text": "Jump across the causeway spikes."},
+	{"x": 1920, "end": 2016, "text": "Cross the bridge before it retracts."},
 	{"x": 3104, "end": 3376, "text": "Ride the bull, then jump to the high flask ledge."},
 	{"x": 5280, "end": 5472, "text": "Cut all three Hydra heads. Jump for the high heads."},
-	{"x": 2025, "end": 2080, "text": "Cross the bronze bridge before it retracts, or jump the pit."},
+	{"x": 5056, "end": 5136, "text": "Wait for the sanctuary bridge."},
 ]
 
 
