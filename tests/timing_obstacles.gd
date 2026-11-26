@@ -207,20 +207,29 @@ func _check_bridge(obstacle: Node2D, player: CharacterBody2D) -> void:
 
 func _check_gate(obstacle: Node2D, player: CharacterBody2D) -> void:
 	var origin := obstacle.global_position
+	var countdown := obstacle.get_node("GateCountdown") as Label
+	await _frames(190)
+	_expect(obstacle.elapsed == 0.0 and obstacle._gate_bottom() == 0.0 and countdown.text == "OPENS IN 3",
+		"The gate stays shut with a visible countdown until Theseus approaches")
+	_place(player, origin + Vector2(-30, 0))
+	await _frames(4)
+	_move("move_right", true)
+	await _frames(164)
+	_expect(player.global_position.x < origin.x and obstacle._gate_bottom() == 0.0 and countdown.text == "OPENS IN 1",
+		"The gate blocks Theseus for the first three seconds")
+	await _frames(60)
+	_move("move_right", false)
+	_expect(player.global_position.x > origin.x + obstacle.width and countdown.text == "CLOSES IN 3",
+		"Theseus can cross on the first opening, with a closing countdown")
+	await _frames(140)
+	_expect(obstacle._gate_bottom() == -obstacle.GATE_HEIGHT and countdown.text == "CLOSES IN 1",
+		"The gate remains fully raised until the open countdown ends")
 	_place(player, origin + Vector2(4, 0))
-	obstacle.elapsed = 4.60
-	await _frames(12)
+	await _frames(48)
 	_expect(player.health == player.MAX_HEALTH - 1 and player.global_position.x < origin.x - 6,
 		"The descending gate damages Theseus and pushes him out on the nearer side")
-	var health: int = player.health
-	_move("move_right", true)
-	await _frames(35)
-	_expect(player.global_position.x < origin.x and player.health == health,
-		"The closed gate blocks passage without dealing damage")
-	obstacle.elapsed = 0.0
-	await _frames(56)
-	_move("move_right", false)
-	_expect(player.global_position.x > origin.x + obstacle.width, "Theseus can cross when the gate rises")
+	_expect(countdown.text == "OPENS IN 3" and obstacle._gate_bottom() == 0.0,
+		"The next closed countdown starts once the gate lands")
 
 
 func _check_high_tide(level: Node, obstacle: Node2D, player: CharacterBody2D) -> void:

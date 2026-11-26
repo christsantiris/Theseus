@@ -12,6 +12,9 @@ const FOAM := Color("d4fcf7")
 const WEIGHT_PIVOT_Y := -94.0
 const GATE_HEIGHT := 72.0
 const GATE_TRAVEL := 0.45
+const GATE_APPROACH := 48.0
+const GATE_SIGN_WIDTH := 88.0
+const GATE_SIGN_Y := -98.0
 const ROCK_APPROACH := 136.0
 const ROCK_INTERVAL := 1.0
 const ROCK_FALL_SECONDS := 0.88
@@ -20,7 +23,8 @@ const ROCK_RADIUS := 11.0
 
 var kind: Kind
 var width: float
-# Seconds spent in rest, warning, and active phases.
+# Seconds spent in rest, warning, and active phases. The gate uses the first
+# and last values for time fully closed and fully open.
 var durations: Vector3
 var player: CharacterBody2D
 var elapsed := 0.0
@@ -29,6 +33,8 @@ var _player_shape: CollisionShape2D
 var _hit_this_cycle := false
 var _bridge_from_right := false
 var _rockfall_started := false
+var _gate_started := false
+var _gate_label: Label
 
 
 func _ready() -> void:
@@ -54,6 +60,9 @@ func _ready() -> void:
 		_solid.add_child(collider)
 		add_child(_solid)
 		_update_solid()
+	if kind == Kind.STONE_GATE:
+		_build_gate_label()
+		_update_gate_label()
 
 
 func _physics_process(delta: float) -> void:
@@ -67,13 +76,22 @@ func _physics_process(delta: float) -> void:
 			return
 		_rockfall_started = true
 		elapsed = durations.x
+	if kind == Kind.STONE_GATE and not _gate_started:
+		var player_x := player.global_position.x - global_position.x
+		if player_x < -GATE_APPROACH or player_x > width + GATE_APPROACH:
+			return
+		_gate_started = true
 	var cycle := durations.x + durations.y + durations.z
+	if kind == Kind.STONE_GATE:
+		cycle += 2.0 * GATE_TRAVEL
 	elapsed += delta
 	if elapsed >= cycle:
 		elapsed = fposmod(elapsed, cycle)
 		_hit_this_cycle = false
-	if kind == Kind.STONE_GATE and player.health > 0:
-		_resolve_gate_contact()
+	if kind == Kind.STONE_GATE:
+		_update_gate_label()
+		if player.health > 0:
+			_resolve_gate_contact()
 	_update_solid()
 	if kind != Kind.STONE_GATE and player.health > 0 and not _hit_this_cycle:
 		var danger := _danger_rect()
@@ -122,11 +140,42 @@ func return_to_bridge_bank() -> void:
 		camera.reset_smoothing()
 
 
+func _gate_open_time() -> float:
+	return elapsed - durations.x - GATE_TRAVEL
+
+
 func _gate_bottom() -> float:
-	# The first part of the open phase is the raising animation.
-	if elapsed < GATE_TRAVEL:
-		return lerpf(0.0, -GATE_HEIGHT, elapsed / GATE_TRAVEL)
-	return lerpf(-GATE_HEIGHT, 0.0, clampf(_active_time() / GATE_TRAVEL, 0.0, 1.0))
+	if elapsed < durations.x:
+		return 0.0
+	var open_time := _gate_open_time()
+	if open_time < 0.0:
+		return lerpf(0.0, -GATE_HEIGHT, 1.0 + open_time / GATE_TRAVEL)
+	return lerpf(-GATE_HEIGHT, 0.0, clampf((open_time - durations.z) / GATE_TRAVEL, 0.0, 1.0))
+
+
+func _build_gate_label() -> void:
+	_gate_label = Label.new()
+	_gate_label.name = "GateCountdown"
+	_gate_label.position = Vector2((width - GATE_SIGN_WIDTH) / 2.0, GATE_SIGN_Y)
+	_gate_label.size = Vector2(GATE_SIGN_WIDTH, 14)
+	_gate_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_gate_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_gate_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_gate_label.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_gate_label.add_theme_font_size_override("font_size", 8)
+	add_child(_gate_label)
+
+
+func _update_gate_label() -> void:
+	var open_time := _gate_open_time()
+	if elapsed < durations.x:
+		_gate_label.text = "OPENS IN %d" % ceili(durations.x - elapsed)
+	elif open_time < 0.0:
+		_gate_label.text = "OPENING"
+	elif open_time < durations.z:
+		_gate_label.text = "CLOSES IN %d" % ceili(durations.z - open_time)
+	else:
+		_gate_label.text = "CLOSING"
 
 
 func _resolve_gate_contact() -> void:
@@ -139,7 +188,7 @@ func _resolve_gate_contact() -> void:
 	var half_body := body.size.x / 2
 	var exit_x := -half_body - 0.1 if relative_x < width / 2 else width + half_body + 0.1
 	player.move_and_collide(Vector2(exit_x - relative_x, 0), false, 0.08, false)
-	if _active_time() >= 0.0 and _active_time() <= GATE_TRAVEL and not _hit_this_cycle:
+	if _gate_open_time() >= durations.z and not _hit_this_cycle:
 		_hurt_player()
 
 
@@ -205,7 +254,7 @@ func _draw() -> void:
 		Kind.BRIDGE:
 			_draw_bridge(warning)
 		Kind.STONE_GATE:
-			_draw_gate(warning)
+			_draw_gate()
 
 
 func _sprite_region(sprite: Sprite) -> Rect2:
@@ -328,7 +377,7 @@ func _draw_bridge(warning: bool) -> void:
 		draw_texture_rect_region(ART, Rect2(x, shake, span, 5), source, tint)
 
 
-func _draw_gate(warning: bool) -> void:
+func _draw_gate() -> void:
 	var bottom := _gate_bottom()
 	var stone := Color("ada596")
 	for side in [-5, width]:
@@ -342,8 +391,12 @@ func _draw_gate(warning: bool) -> void:
 		panel.size.y -= hidden_height
 		draw_texture_rect_region(ART, Rect2(0, -GATE_HEIGHT, width, visible_height), panel, stone)
 	_art(Sprite.LINTEL, Rect2(-12, -GATE_HEIGHT - 8, width + 24, 13), stone)
-	if warning:
+	var open_time := _gate_open_time()
+	if open_time >= durations.z - 0.75 and open_time < durations.z:
 		_draw_dust(width / 2, -GATE_HEIGHT + 12)
+	var sign := Rect2((width - GATE_SIGN_WIDTH) / 2.0, GATE_SIGN_Y, GATE_SIGN_WIDTH, 14.0)
+	draw_rect(sign, Color("26201d"))
+	draw_rect(sign, GOLD if open_time < 0.0 or open_time >= durations.z else FOAM, false, 1.0)
 
 
 func _draw_dust(x: float, y: float) -> void:

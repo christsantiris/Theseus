@@ -8,7 +8,7 @@ Hoplites, Peltasts, and Raiders, and defeats the Minotaur to escape. The existin
 
 ## Descending stone gate
 
-The Silent Gallery gate at x=4454–4474 stays raised for three seconds, sheds dust for one second, then descends. It stays closed for two seconds before rising. Wait beside the doorway until it opens. The descending slab deals one damage and pushes Theseus to the nearer side.
+The Silent Gallery gate at x=4454–4474 starts closed. When Theseus approaches, the sign above it counts down three seconds until it rises. The gate then stays open for three seconds, with a countdown and a dust warning before it descends. Each cycle repeats with three seconds fully closed and three seconds fully open. The descending slab deals one damage and pushes Theseus to the nearer side.
 
 ## Route
 

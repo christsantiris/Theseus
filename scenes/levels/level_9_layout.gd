@@ -66,7 +66,7 @@ const GATE_GUARD := "Minotaur"
 const TimingObstacle := preload("res://scenes/objects/timing_obstacle.gd")
 const TIMING_OBSTACLE := {
 	"name": "SilentGalleryGate", "kind": TimingObstacle.Kind.STONE_GATE,
-	"position": Vector2(4454, 280), "width": 20.0, "durations": Vector3(3.45, 1, 2.45),
+	"position": Vector2(4454, 280), "width": 20.0, "durations": Vector3(3, 0, 3),
 }
 
 const TIPS := [
@@ -74,7 +74,7 @@ const TIPS := [
 	{"x": 1776, "end": 1896, "text": "Low stone lintel ahead. Keep to the ground."},
 	{"x": 4856, "end": 5040, "text": "Prepare to jump the Minotaur’s charge."},
 	{"x": 5080, "end": 5280, "text": "Jump his low charge. Counter after the headbutt."},
-	{"x": 4399, "end": 4454, "text": "Dust warns that the stone gate is about to descend."},
+	{"x": 4399, "end": 4454, "text": "Wait for the gate to rise, then cross before it closes."},
 ]
 
 
