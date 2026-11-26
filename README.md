@@ -109,7 +109,7 @@ One continuous mountain landscape shows rocky ridges, cypress slopes, terraced w
 
 ### The Gorge Sanctuary
 
-Pale limestone cliffs, dark clefts, ruined temples, and stone causeways frame the sixth level. Bronze Bulls charge along flat corridors, Cerberus Pups pursue in pairs, and a three-headed Hydra guards the exit. Two optional high flask ledges reward riding a staggered bull. The main route uses normal jumps, with two spike pits.
+Pale limestone cliffs, dark clefts, ruined temples, and stone causeways frame the sixth level. Bronze Bulls charge along flat corridors, Cerberus Pups pursue in pairs, and a three-headed Hydra guards the exit. Two optional high flask ledges reward riding a staggered bull. The main route uses normal jumps, with two spike pits. A timed bronze bridge covers the Broken Causeway pit between retractions.
 
 One continuous dry gorge landscape shows stratified limestone walls and distant cliffside temples. Complete ruined shrines, colonnades, and rocky outcrops stand on the original causeways, while both bull ledges and pit openings keep their original geometry.
 

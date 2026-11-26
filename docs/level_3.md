@@ -26,6 +26,10 @@ one world pixel of overlap at the ground. This closes transparent-padding gaps
 under trees, ruins, pots, columns, and waystones while preserving their artwork
 and collision layout. See the [ground-contact regression](performance.md#scenery-ground-contacts).
 
+## Kiln vents
+
+At x=1784–1864 in the Potters’ Quarter, kiln vents glow for 0.8 seconds, flare for one second, and then cool for 2.7 seconds. Wait for the flames to die down before crossing.
+
 ## Route
 
 | Area | World X | Route and encounters |

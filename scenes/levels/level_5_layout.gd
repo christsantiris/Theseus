@@ -91,12 +91,19 @@ const FLASKS := [
 ]
 const EXIT := Vector2(5712, FLOOR_Y)
 const GATE_GUARD := "RaiderSummitGuard"
+const TimingObstacle := preload("res://scenes/objects/timing_obstacle.gd")
+const TIMING_OBSTACLE := {
+	"name": "HighPassRockfall", "kind": TimingObstacle.Kind.ROCKFALL,
+	"position": Vector2(3568, 168), "width": 80.0, "durations": Vector3(3.5, 1, 0.8),
+}
+
 const TIPS := [
 	{"x": 80, "end": 288, "text": "Jump spike pits. Hold jump to climb out."},
 	{"x": 480, "end": 704, "text": "Bounce on Satyrs. Wine briefly boosts speed."},
 	{"x": 736, "end": 960, "text": "Jump or sword boulders; counter during reload."},
 	{"x": 1280, "end": 1472, "text": "Spikes cost health. Keep moving and jump out."},
 	{"x": 2864, "end": 3072, "text": "A high pit ahead. Jump from the bright stone lip."},
+	{"x": 3513, "end": 3568, "text": "Watch the dust. Cross after both rocks fall."},
 ]
 
 

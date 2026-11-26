@@ -38,6 +38,10 @@ one world pixel of overlap at the ground. This closes transparent-padding gaps
 under trees, ruins, pots, columns, and waystones while preserving their artwork
 and collision layout. See the [ground-contact regression](performance.md#scenery-ground-contacts).
 
+## Bronze weight
+
+A bronze weight swings over the Broken Colonnade at x=1180–1284 on a four-second cycle. Watch the weight pass and run underneath as it swings away. Contact costs one health.
+
 ## Route and encounter progression
 
 | Area | World X | Purpose | Encounters |

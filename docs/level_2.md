@@ -43,6 +43,10 @@ one world pixel of overlap at the ground. This closes transparent-padding gaps
 under trees, ruins, pots, columns, and waystones while preserving their artwork
 and collision layout. See the [ground-contact regression](performance.md#scenery-ground-contacts).
 
+## Overtopping wave
+
+At x=1740–1820 in the Broken Quays, foam gathers for one second before a wave washes over the ledge for 0.8 seconds. Cross during the 3.2 seconds of calm between bursts.
+
 ## Route
 
 | Area | X range | Route and encounters |

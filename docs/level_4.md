@@ -7,6 +7,10 @@ systems. Every climb works with normal jumps and base movement speed.
 
 ![Troy’s gate court](level_4_preview.png)
 
+## Arrow volley
+
+On the High Battlements at x=3600–3688, bows appear in the slits for 0.9 seconds before arrows sweep left at standing head height. Duck on the landing to let the volley pass, then run across during the three-second reload.
+
 ## Route
 
 | Area | World X | Layout |

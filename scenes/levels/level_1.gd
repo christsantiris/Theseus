@@ -20,6 +20,7 @@ const ENEMY_SCENES := {
 	"cerberus_pup": "res://scenes/enemies/cerberus_pup.tscn",
 	"hydra": "res://scenes/enemies/hydra.tscn",
 }
+const TimingObstacle := preload("res://scenes/objects/timing_obstacle.gd")
 const Difficulty := preload("res://scenes/levels/difficulty.gd")
 const FLASK := preload("res://scenes/pickups/health_flask.tscn")
 const GATE := preload("res://scenes/objects/temple_gate.tscn")
@@ -64,6 +65,7 @@ func _ready() -> void:
 	_score = LevelRun.level_start_score
 	LevelRun.begin_attempt(_score)
 	_build_encounters()
+	_build_timing_obstacle()
 	for child in get_children():
 		if child != $PauseLayer:
 			child.process_mode = Node.PROCESS_MODE_PAUSABLE
@@ -105,6 +107,18 @@ func _build_encounters() -> void:
 	_gate.entry_started.connect(_on_gate_entry_started)
 	_gate.entered.connect(_on_gate_entered)
 	add_child(_gate)
+
+
+func _build_timing_obstacle() -> void:
+	var definition: Dictionary = layout.TIMING_OBSTACLE
+	var obstacle := TimingObstacle.new()
+	obstacle.name = definition.name
+	obstacle.kind = definition.kind
+	obstacle.position = definition.position
+	obstacle.width = definition.width
+	obstacle.durations = definition.durations
+	obstacle.player = player
+	add_child(obstacle)
 
 
 func _build_enemies() -> void:

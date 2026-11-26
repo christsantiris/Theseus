@@ -77,6 +77,12 @@ const FLASKS := [
 ]
 const EXIT := Vector2(5712, FLOOR_Y)
 const GATE_GUARD := "HydraTempleGuard"
+const TimingObstacle := preload("res://scenes/objects/timing_obstacle.gd")
+const TIMING_OBSTACLE := {
+	"name": "CausewayBridge", "kind": TimingObstacle.Kind.BRIDGE,
+	"position": Vector2(2080, 280), "width": 32.0, "durations": Vector3(3, 0.8, 2),
+}
+
 const TIPS := [
 	{"x": 160, "end": 352, "text": "Jump the bull's charge; it cannot turn mid-charge."},
 	{"x": 480, "end": 704, "text": "Airborne Duck + Sword staggers a bull's back."},
@@ -84,6 +90,7 @@ const TIPS := [
 	{"x": 1920, "end": 2072, "text": "Jump across the causeway spikes."},
 	{"x": 3104, "end": 3376, "text": "Ride the bull, then jump to the high flask ledge."},
 	{"x": 5280, "end": 5472, "text": "Cut all three Hydra heads. Jump for the high heads."},
+	{"x": 2025, "end": 2080, "text": "Cross the bronze bridge before it retracts, or jump the pit."},
 ]
 
 

@@ -69,11 +69,18 @@ const FLASKS := [
 ]
 const EXIT := Vector2(5600, FLOOR_Y)
 const GATE_GUARD := "HopliteSunCaptain"
+const TimingObstacle := preload("res://scenes/objects/timing_obstacle.gd")
+const TIMING_OBSTACLE := {
+	"name": "ObeliskSunbeam", "kind": TimingObstacle.Kind.SUNBEAM,
+	"position": Vector2(3544, 248), "width": 80.0, "durations": Vector3(3, 0.9, 1.4),
+}
+
 const TIPS := [
 	{"x": 560, "end": 752, "text": "Climb the sandstone steps with normal jumps."},
 	{"x": 960, "end": 1152, "text": "Bait the hoplite's spear, then counter in recovery."},
 	{"x": 1856, "end": 2064, "text": "Spartoi guard the courts. Make space before striking."},
 	{"x": 5376, "end": 5536, "text": "Defeat the sun captain to open the temple."},
+	{"x": 3489, "end": 3544, "text": "Jump the sweeping sunbeam or wait outside its path."},
 ]
 
 

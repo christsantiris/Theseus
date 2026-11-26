@@ -76,11 +76,18 @@ const FLASKS := [
 ]
 const EXIT := Vector2(5728, FLOOR_Y)
 const GATE_GUARD := "HopliteTrojanCaptain"
+const TimingObstacle := preload("res://scenes/objects/timing_obstacle.gd")
+const TIMING_OBSTACLE := {
+	"name": "BattlementVolley", "kind": TimingObstacle.Kind.ARROWS,
+	"position": Vector2(3600, 168), "width": 88.0, "durations": Vector3(3, 0.9, 0.7),
+}
+
 const TIPS := [
 	{"x": 496, "end": 704, "text": "Climb Troy's ramparts with normal jumps."},
 	{"x": 880, "end": 1056, "text": "Bait the hoplite's spear, then counter in recovery."},
 	{"x": 2816, "end": 3008, "text": "The high wall leads to the inner defenses."},
 	{"x": 5536, "end": 5680, "text": "Defeat the Trojan captain to open the citadel gate."},
+	{"x": 3545, "end": 3600, "text": "Duck under the arrows, then cross during the reload."},
 ]
 
 

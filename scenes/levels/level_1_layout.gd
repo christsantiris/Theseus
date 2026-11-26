@@ -73,11 +73,18 @@ const FLASKS := [
 const EXIT := Vector2(5712, 152)
 const GATE_GUARD := "HopliteTempleGuard"
 
+const TimingObstacle := preload("res://scenes/objects/timing_obstacle.gd")
+const TIMING_OBSTACLE := {
+	"name": "BronzeWeight", "kind": TimingObstacle.Kind.WEIGHT,
+	"position": Vector2(1180, 120), "width": 104.0, "durations": Vector3(0, 0, 4),
+}
+
 const TIPS := [
 	{"x": 96, "end": 224, "text": "Sword hits deal damage. Two hits fell a raider."},
 	{"x": 224, "end": 288, "text": "Hold Jump to climb these terraces."},
 	{"x": 288, "end": 480, "text": "Land on an enemy: both lose one health."},
 	{"x": 640, "end": 832, "text": "Spear guards take two sword hits."},
+	{"x": 1125, "end": 1180, "text": "Run under the bronze weight as it swings away."},
 ]
 
 

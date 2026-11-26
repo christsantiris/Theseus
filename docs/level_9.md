@@ -6,6 +6,10 @@ Hoplites, Peltasts, and Raiders, and defeats the Minotaur to escape. The existin
 
 ![Theseus confronts the Minotaur](level_9_preview.png)
 
+## Descending stone gate
+
+The Silent Gallery gate at x=4454–4474 stays raised for three seconds, sheds dust for one second, then descends. It stays closed for two seconds before rising. Wait beside the doorway until it opens. The descending slab deals one damage and pushes Theseus to the nearer side.
+
 ## Route
 
 The 5,760×352-unit route starts at (48, 280) and ends at (5712, 280).

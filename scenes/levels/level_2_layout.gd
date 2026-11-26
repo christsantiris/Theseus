@@ -85,11 +85,18 @@ const FLASKS := [
 ]
 const EXIT := Vector2(5712, FLOOR_Y)
 const GATE_GUARD := "SpartoiSanctuaryGuard"
+const TimingObstacle := preload("res://scenes/objects/timing_obstacle.gd")
+const TIMING_OBSTACLE := {
+	"name": "QuayWave", "kind": TimingObstacle.Kind.WAVE,
+	"position": Vector2(1740, 200), "width": 80.0, "durations": Vector3(3.2, 1, 0.8),
+}
+
 const TIPS := [
 	{"x": 80, "end": 304, "text": "Duck under high birds. Let them pass."},
 	{"x": 320, "end": 500, "text": "Jump low birds. Time your sword to hit them."},
 	{"x": 680, "end": 920, "text": "Dog-headed Telchines jab. Bait, then counter."},
 	{"x": 1200, "end": 1392, "text": "Spartoi lunge like Raiders. Two hits defeat them."},
+	{"x": 1685, "end": 1740, "text": "Foam warns of a wave. Cross after it breaks."},
 ]
 
 

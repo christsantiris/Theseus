@@ -81,11 +81,18 @@ const FLASKS := [
 ]
 const EXIT := Vector2(5712, FLOOR_Y)
 const GATE_GUARD := "HopliteAcropolisGuard"
+const TimingObstacle := preload("res://scenes/objects/timing_obstacle.gd")
+const TIMING_OBSTACLE := {
+	"name": "PottersKiln", "kind": TimingObstacle.Kind.KILN,
+	"position": Vector2(1784, 264), "width": 80.0, "durations": Vector3(2.7, 0.8, 1),
+}
+
 const TIPS := [
 	{"x": 80, "end": 320, "text": "The town road leads to the acropolis."},
 	{"x": 864, "end": 1120, "text": "Lamia reaches far. Bait her strike, then wait."},
 	{"x": 1120, "end": 1456, "text": "Closed coils are protected. Counter when open."},
 	{"x": 2656, "end": 2880, "text": "Jump the long strike or retreat out of reach."},
+	{"x": 1729, "end": 1784, "text": "Glowing kiln vents are about to flare."},
 ]
 
 

@@ -71,11 +71,18 @@ const FLASKS := [
 ]
 const EXIT := Vector2(5712, FLOOR_Y)
 const GATE_GUARD := "MerfolkGateCaptain"
+const TimingObstacle := preload("res://scenes/objects/timing_obstacle.gd")
+const TIMING_OBSTACLE := {
+	"name": "OuterRingJets", "kind": TimingObstacle.Kind.JETS,
+	"position": Vector2(4020, 280), "width": 80.0, "durations": Vector3(4, 1, 1),
+}
+
 const TIPS := [
 	{"x": 240, "end": 480, "text": "Duck high tridents. Stand and counter after."},
 	{"x": 976, "end": 1184, "text": "Low blades: jump or retreat, then counter."},
 	{"x": 1424, "end": 1552, "text": "Tides slow Theseus. Climb higher or wait for low tide."},
 	{"x": 5520, "end": 5680, "text": "Defeat the captain to open Poseidon's sanctuary."},
+	{"x": 3965, "end": 4020, "text": "Bubbles warn of water jets. Cross between bursts."},
 ]
 
 

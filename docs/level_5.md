@@ -27,6 +27,10 @@ one world pixel of overlap at the ground. This closes transparent-padding gaps
 under trees, ruins, pots, columns, and waystones while preserving their artwork
 and collision layout. See the [ground-contact regression](performance.md#scenery-ground-contacts).
 
+## High Pass rockfall
+
+Dust marks two landing spots on the terrace at x=3568–3648 for one second. Rocks fall into the spots in succession. Wait for both impacts, then cross during the 3.5-second clear window.
+
 ## Route
 
 | Area | World X | Route and encounters |

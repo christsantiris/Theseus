@@ -55,6 +55,10 @@ units; the two canal recesses are 24 units deep and 32/40 units wide, matching
 sizes already used by the game's escapable pits. Traversal is checked with the real controller, including full-height touch
 jumps in the combat regression.
 
+## Water jets
+
+On the Outer Ring Causeway at x=4020–4100, bubbles mark the vents for one second before the jets erupt for one second. Four seconds of calm give Theseus time to cross even at high tide. The vents have their own cycle.
+
 ## Route
 
 The world is 5,760×352 units, starting at (48, 280) and ending at

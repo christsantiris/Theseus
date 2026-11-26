@@ -7,6 +7,10 @@ artwork, attacks, counters and score rewards. No new enemy type is introduced.
 
 ![Theseus on the Egyptian pyramid road](level_7_preview.png)
 
+## Sunbeam sweep
+
+At x=3544–3624 on Obelisk Rise, a bronze mirror flashes for 0.9 seconds before a low beam sweeps left for 1.4 seconds. Jump over it or wait in the stone recess outside the beam’s path. The mirror resets for three seconds.
+
 ## Route
 
 The 5,760×352-unit route begins at (48, 280) and ends at the sun temple at

@@ -28,6 +28,10 @@ one world pixel of overlap at the ground. This closes transparent-padding gaps
 under trees, ruins, pots, columns, and waystones while preserving their artwork
 and collision layout. See the [ground-contact regression](performance.md#scenery-ground-contacts).
 
+## Retracting bridge
+
+A bronze deck covers the Broken Causeway pit at x=2080–2112 for three seconds, then rattles for 0.8 seconds before retracting for two seconds. Walk across while it is extended or jump the gap while it is open.
+
 ## Route
 
 | Area | World X | Route and encounters |
