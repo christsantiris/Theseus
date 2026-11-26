@@ -32,6 +32,10 @@ func _run() -> void:
 	_expect(world.midground.get_child_count() == 16 and world.midground.z_index < 0, "Seven bastions, a Trojan horse, four gateways and four retaining walls stay behind the player")
 	for sprite: Sprite2D in world.midground.get_children():
 		_expect(sprite.texture.get_width() <= 4096 and sprite.texture.get_height() <= 4096 and sprite.texture.get_image().get_pixel(0, 0).a < 0.01, "Trojan props have transparency and fit mobile GPUs")
+		var footprint := Rect2(sprite.position, sprite.texture.get_size() * sprite.scale)
+		var landing := Layout.surface_at(footprint.position.x)
+		for x in range(int(footprint.position.x), int(footprint.end.x)):
+			_expect(Layout.surface_at(x) == landing, "%s rests on one landing instead of hanging over a step" % sprite.name)
 	_expect(world.midground.has_node("TrojanHorse2112") and world.midground.get_node("TrojanHorse2112").texture == world.TROJAN_HORSE, "The gate court features the complete wooden Trojan horse")
 	for index in Layout.PLATFORMS.size():
 		var terrace: StaticBody2D = world.get_node("Rampart%d" % index)

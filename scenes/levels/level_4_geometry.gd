@@ -43,12 +43,14 @@ func _ready() -> void:
 	midground.name = "TrojanFortifications"
 	midground.z_index = -2
 	add_child(midground)
-	for point in [Vector2(224, 112), Vector2(960, 108), Vector2(1456, 96), Vector2(2752, 102), Vector2(3360, 110), Vector2(4160, 104), Vector2(5248, 116)]:
+	# Each landmark's full width rests on a single landing; spanning a 16-pixel
+	# step would leave one footing hanging in the air.
+	for point in [Vector2(224, 112), Vector2(960, 108), Vector2(1472, 96), Vector2(2752, 102), Vector2(3360, 110), Vector2(4160, 104), Vector2(5248, 116)]:
 		_landmark(BASTION, point, "Bastion")
 	_landmark(TROJAN_HORSE, Vector2(2112, 112), "TrojanHorse")
-	for point in [Vector2(1136, 80), Vector2(2288, 80), Vector2(4352, 88), Vector2(5728, 112)]:
+	for point in [Vector2(1216, 80), Vector2(2240, 80), Vector2(4284, 88), Vector2(5728, 112)]:
 		_landmark(GATEWAY, point, "Gateway")
-	for point in [Vector2(688, 36), Vector2(1856, 36), Vector2(3616, 36), Vector2(4776, 40)]:
+	for point in [Vector2(704, 36), Vector2(1856, 36), Vector2(3648, 36), Vector2(4800, 40)]:
 		_landmark(LOW_WALL, point, "RetainingWall")
 	_sync_backdrop()
 	if not Engine.is_editor_hint():
