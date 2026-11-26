@@ -12,7 +12,11 @@ const FOAM := Color("d4fcf7")
 const WEIGHT_PIVOT_Y := -94.0
 const GATE_HEIGHT := 72.0
 const GATE_TRAVEL := 0.45
-const ROCK_INTERVAL := 0.40
+const ROCK_APPROACH := 136.0
+const ROCK_INTERVAL := 1.0
+const ROCK_FALL_SECONDS := 0.88
+const ROCK_DUST_SECONDS := 0.37
+const ROCK_RADIUS := 11.0
 
 var kind: Kind
 var width: float
@@ -23,6 +27,7 @@ var elapsed := 0.0
 var _solid: StaticBody2D
 var _player_shape: CollisionShape2D
 var _hit_this_cycle := false
+var _rockfall_started := false
 
 
 func _ready() -> void:
@@ -30,6 +35,8 @@ func _ready() -> void:
 	z_index = 9
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	_player_shape = player.get_node("CollisionShape2D")
+	if kind == Kind.ARROWS:
+		_add_arrow_housing()
 	if kind == Kind.BRIDGE or kind == Kind.STONE_GATE:
 		_solid = StaticBody2D.new()
 		_solid.collision_mask = 0
@@ -49,6 +56,12 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if kind == Kind.ROCKFALL and not _rockfall_started:
+		var player_x := player.global_position.x - global_position.x
+		if player_x < -ROCK_APPROACH or player_x > width + ROCK_APPROACH:
+			return
+		_rockfall_started = true
+		elapsed = durations.x
 	var cycle := durations.x + durations.y + durations.z
 	elapsed += delta
 	if elapsed >= cycle:
@@ -121,9 +134,13 @@ func _weight_center() -> Vector2:
 	return Vector2(width / 2, WEIGHT_PIVOT_Y) + Vector2(sin(angle), cos(angle)) * 55.0
 
 
-func _rock_center(index: int) -> Vector2:
-	var fall := clampf((_active_time() - index * ROCK_INTERVAL) / 0.30, 0.0, 1.0)
-	return Vector2(width * (0.25 + index * 0.5), lerpf(-72, -8, fall * fall))
+func _rock_x(index: int) -> float:
+	return width * (0.25 + index * 0.5)
+
+
+func _rock_center(index: int, time: float) -> Vector2:
+	var fall := clampf(time / ROCK_FALL_SECONDS, 0.0, 1.0)
+	return Vector2(_rock_x(index), lerpf(-112.0, -ROCK_RADIUS, fall * fall))
 
 
 func _danger_rect() -> Rect2:
@@ -144,7 +161,11 @@ func _danger_rect() -> Rect2:
 			return Rect2(left, -42, maxf(0, minf(front, width) - left), 4)
 		Kind.ROCKFALL:
 			var index := int(time >= ROCK_INTERVAL)
-			return Rect2(_rock_center(index) - Vector2(8, 8), Vector2(16, 16))
+			var fall_time := time - index * ROCK_INTERVAL
+			if fall_time > ROCK_FALL_SECONDS + 0.07:
+				return Rect2()
+			var radius := Vector2(ROCK_RADIUS, ROCK_RADIUS)
+			return Rect2(_rock_center(index, fall_time) - radius, radius * 2.0)
 		Kind.SUNBEAM:
 			var left := lerpf(width, -10.0, progress)
 			return Rect2(maxf(0, left), -13, clampf(left + 10, 0, width) - maxf(0, left), 13)
@@ -224,8 +245,23 @@ func _draw_vents(warning: bool, active: bool) -> void:
 			_art(plume, Rect2(x - 3, -5, 6, 4), Color(1, 0.9, 0.7, flicker))
 
 
+func _add_arrow_housing() -> void:
+	var texture := AtlasTexture.new()
+	texture.atlas = ART
+	texture.region = _sprite_region(Sprite.ARROW_SLITS)
+	var housing := Sprite2D.new()
+	housing.name = "ArrowHousing"
+	housing.texture = texture
+	housing.centered = false
+	housing.position = Vector2(width - 26, -53)
+	housing.scale = Vector2(33, 25) / texture.region.size
+	# The masonry sits behind Theseus while the arrow cues stay in front.
+	housing.z_as_relative = false
+	housing.z_index = -1
+	add_child(housing)
+
+
 func _draw_volley(warning: bool, danger: Rect2) -> void:
-	_art(Sprite.ARROW_SLITS, Rect2(width - 26, -53, 33, 25))
 	if warning:
 		for offset in [0, -8, -16]:
 			var slit := Vector2(width + offset, -40)
@@ -237,15 +273,20 @@ func _draw_volley(warning: bool, danger: Rect2) -> void:
 
 func _draw_rockfall(warning: bool, danger: Rect2) -> void:
 	for index in 2:
-		var x := width * (0.25 + index * 0.5)
-		_art(Sprite.DUST, Rect2(x - 9, -3, 18, 4), Color(0.79, 0.68, 0.53, 0.65))
+		var x := _rock_x(index)
+		_art(Sprite.DUST, Rect2(x - 12, -3, 24, 4), Color(0.79, 0.68, 0.53, 0.65))
 		if warning:
 			_draw_dust(x, 0)
 	if danger.has_area():
-		var center := danger.get_center()
 		_art(Sprite.BOULDER, danger)
-		if center.y >= -9:
-			_art(Sprite.DUST, Rect2(center.x - 14, -10, 28, 12), Color(1, 0.89, 0.74, 0.8))
+	for index in 2:
+		var impact_time := _active_time() - index * ROCK_INTERVAL - ROCK_FALL_SECONDS
+		if impact_time >= 0.0 and impact_time < ROCK_DUST_SECONDS:
+			var progress := impact_time / ROCK_DUST_SECONDS
+			var spread := lerpf(13.0, 24.0, progress)
+			var height := lerpf(12.0, 21.0, progress)
+			_art(Sprite.DUST, Rect2(_rock_x(index) - spread, -height, spread * 2.0, height),
+				Color(1, 0.89, 0.74, 1.0 - progress))
 
 
 func _draw_mirror(warning: bool, danger: Rect2) -> void:

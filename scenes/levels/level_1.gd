@@ -110,7 +110,10 @@ func _build_encounters() -> void:
 
 
 func _build_timing_obstacle() -> void:
-	var definition: Dictionary = layout.TIMING_OBSTACLE
+	_add_timing_obstacle(layout.TIMING_OBSTACLE)
+
+
+func _add_timing_obstacle(definition: Dictionary) -> void:
 	var obstacle := TimingObstacle.new()
 	obstacle.name = definition.name
 	obstacle.kind = definition.kind

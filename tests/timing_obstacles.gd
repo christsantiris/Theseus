@@ -73,6 +73,9 @@ func _run() -> void:
 		paused = false
 
 		match number:
+			5:
+				await _check_rockfall(level, level.get_node(level.layout.GARDEN_ROCKFALL.name), player)
+				await _check_rockfall(level, obstacle, player)
 			6:
 				await _check_bridge(obstacle, player)
 			9:
@@ -84,11 +87,6 @@ func _run() -> void:
 					obstacle.elapsed = idle + warning / 2
 					_expect(obstacle._warning() and not obstacle._danger_rect().has_area(), "Level %d warning gives a safe cue" % number)
 				obstacle.elapsed = idle + warning + active / 2
-				if number == 5:
-					obstacle.elapsed = idle + warning + 0.33
-					var first: Rect2 = obstacle._danger_rect()
-					obstacle.elapsed += 0.40
-					_expect(obstacle._danger_rect().position.x > first.position.x, "Rockfall reaches the two marked spots in order")
 				var danger: Rect2 = obstacle._danger_rect()
 				var feet_y := minf(0.0, danger.get_center().y + 20.0)
 				_place(player, origin + Vector2(danger.get_center().x, feet_y))
@@ -113,6 +111,37 @@ func _run() -> void:
 	if _failures == 0:
 		print("PASS: nine timing obstacles, pause, damage, duck, bridge, gate, and high-tide crossing (%s)." % ("touch" if _controls.enabled else "desktop"))
 	quit(int(_failures > 0))
+
+
+func _check_rockfall(level: Node, obstacle: Node2D, player: CharacterBody2D) -> void:
+	var origin := obstacle.global_position
+	var label := String(obstacle.name)
+	var approach := origin.x - 146.0
+	_place(player, Vector2(approach, level.layout.surface_at(approach)))
+	await _frames(4)
+	_expect(obstacle.elapsed == 0.0, label + " waits for Theseus to get close")
+	_move("move_right", true)
+	await _frames(15)
+	_expect(obstacle._warning(), label + " warns while Theseus is approaching")
+	await _frames(35)
+	_move("move_right", false)
+	var first: Rect2 = obstacle._danger_rect()
+	_expect(player.global_position.x < origin.x and first.has_area() and first.position.y < -80,
+		label + " starts falling high above the path before Theseus enters")
+	await _frames(26)
+	var falling: Rect2 = obstacle._danger_rect()
+	_expect(falling.has_area() and falling.position.y > first.position.y,
+		label + " keeps the first boulder visible as it falls")
+	var second_impact: float = obstacle.durations.x + obstacle.durations.y + obstacle.ROCK_INTERVAL + obstacle.ROCK_FALL_SECONDS
+	obstacle.elapsed = second_impact
+	var second: Rect2 = obstacle._danger_rect()
+	_expect(second.position.x > first.position.x, label + " then drops a second boulder")
+	_place(player, origin + Vector2(second.get_center().x, 0))
+	await _frames(3)
+	_expect(player.health == player.MAX_HEALTH - 1, label + " damages Theseus at the impact point")
+	_expect(level.layout.surface_at(origin.x) == origin.y
+		and level.layout.surface_at(origin.x + obstacle.width - 1) == origin.y,
+		label + " follows a flat section of the route")
 
 
 func _check_weight(obstacle: Node2D, player: CharacterBody2D) -> void:

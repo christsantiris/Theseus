@@ -11,6 +11,7 @@ func _ready() -> void:
 	completion_text = "The mountain sanctuary is clear."
 	$Player/Camera2D.position.y = -24
 	super()
+	_add_timing_obstacle(layout.GARDEN_ROCKFALL)
 	for definition: Dictionary in layout.PITS:
 		var pit = SPIKE_PIT.instantiate()
 		pit.name = definition.name
