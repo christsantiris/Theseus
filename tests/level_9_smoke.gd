@@ -67,6 +67,11 @@ func _run() -> void:
 		_expect(Layout.surface_at(encounter.patrol.x) == encounter.position.y and Layout.surface_at(encounter.patrol.y) == encounter.position.y, "Enemy patrol stays on its landing")
 	_expect(kinds == {"hoplite": 5, "peltast": 5, "raider": 5, "minotaur": 1}, "Five of each soldier precede one final boss")
 	_expect(level.get_node("Minotaur").hp == 8 and not level._gate.unlocked, "Eight-health boss locks the final exit")
+	for definition: Dictionary in Layout.SPIKE_BALLS:
+		var ball: Node = level.get_node(String(definition.name))
+		_expect(ball.kind == Layout.TimingObstacle.Kind.WEIGHT and ball.variant == "labyrinth", "Labyrinth spike ball uses Level 9 art: " + String(definition.name))
+		_expect(Layout.surface_at(definition.position.x) == definition.position.y and Layout.surface_at(definition.position.x + definition.width - 1) == definition.position.y,
+			"Labyrinth spike ball spans a flat terrace: " + String(definition.name))
 	await _scenery(level)
 	level._on_title_pressed()
 	await _frames()
@@ -117,11 +122,25 @@ func _traverse() -> void:
 	var airborne := false
 	var jumps := 0
 	var corridor_frames := 0
+	var moving_right := true
 	Input.action_press("move_right")
 	for tick in 6000:
 		await physics_frame
 		if level._complete:
 			break
+		var wait_for_ball := false
+		for definition: Dictionary in Layout.SPIKE_BALLS:
+			if player.position.x >= definition.position.x - 18.0 and player.position.x < definition.position.x - 6.0:
+				var ball: Node2D = level.get_node(String(definition.name))
+				if ball.elapsed < 2.65 or ball.elapsed > 3.15:
+					wait_for_ball = true
+					break
+		if wait_for_ball and moving_right:
+			Input.action_release("move_right")
+			moving_right = false
+		elif not wait_for_ball and not moving_right:
+			Input.action_press("move_right")
+			moving_right = true
 		var low := false
 		for lintel: Rect2 in Layout.CEILINGS:
 			if player.position.x >= lintel.position.x - 30 and player.position.x <= lintel.end.x + 14:

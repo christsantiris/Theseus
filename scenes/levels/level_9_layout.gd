@@ -67,9 +67,18 @@ const TIMING_OBSTACLE := {
 	"name": "SilentGalleryGate", "kind": TimingObstacle.Kind.STONE_GATE,
 	"position": Vector2(4454, 280), "width": 20.0, "durations": Vector3(3, 0, 3),
 }
+const SPIKE_BALLS := [
+	{"name": "KnossosSpikeBall", "kind": TimingObstacle.Kind.WEIGHT, "variant": "labyrinth",
+		"position": Vector2(788, 264), "width": 104.0, "durations": Vector3(0, 0, 4)},
+	{"name": "GallerySpikeBall", "kind": TimingObstacle.Kind.WEIGHT, "variant": "labyrinth",
+		"position": Vector2(1540, 248), "width": 104.0, "durations": Vector3(0, 0, 4)},
+	{"name": "PassageSpikeBall", "kind": TimingObstacle.Kind.WEIGHT, "variant": "labyrinth",
+		"position": Vector2(3604, 264), "width": 104.0, "durations": Vector3(0, 0, 4)},
+]
 
 const TIPS := [
 	{"x": 168, "end": 320, "text": "Follow the bronze thread through the labyrinth."},
+	{"x": 728, "end": 788, "text": "Drop under the iron spike ball as it swings away."},
 	{"x": 1776, "end": 1896, "text": "Low stone lintel ahead. Keep to the ground."},
 	{"x": 4856, "end": 5040, "text": "Prepare to jump the Minotaur’s charge."},
 	{"x": 5080, "end": 5280, "text": "Jump his charge. Two red lines warn of a follow-up charge."},

@@ -6,6 +6,21 @@ Hoplites, Peltasts, and Raiders, and defeats the Minotaur to escape. The existin
 
 ![Theseus confronts the Minotaur](level_9_preview.png)
 
+## Swinging iron spike balls
+
+Three blackened-iron spike balls on dark chains hang from carved Minoan stone
+brackets over descending galleries:
+
+- **Gates of Knossos** (`x=788–892`, terrace `y=264`)
+- **Twisting Galleries** (`x=1540–1644`, terrace `y=248`)
+- **Ariadne's Passage** (`x=3604–3708`, terrace `y=264`)
+
+Each swings on a four-second pendulum cycle using the same contact timing as
+Level 1's bronze weight, restyled with labyrinth stone, iron links, and spiked
+spheres (`assets/art/objects/labyrinth_pendulum.png`). Pause on the higher
+terrace, drop underneath as the ball swings away, and cross before it returns.
+Contact costs one health.
+
 ## Descending stone gate
 
 The Silent Gallery gate at x=4454–4474 starts closed and begins cycling when
@@ -23,11 +38,11 @@ Ducking still holds position, as it does elsewhere in the game.
 
 | Section | World X | Encounters and route |
 | --- | --- | --- |
-| Gates of Knossos | 0–959 | Arrival corridor, Raider, two short climbs, Hoplite. |
-| Twisting Galleries | 960–1919 | Peltast, raised Raider gallery, descent past a Peltast, first low lintel. |
+| Gates of Knossos | 0–959 | Arrival corridor, Raider, two short climbs, Hoplite, first swinging spike ball. |
+| Twisting Galleries | 960–1919 | Peltast, raised Raider gallery, second swinging spike ball, descent past a Peltast, first low lintel. |
 | Hall of the Bull | 1920–2879 | Hoplite, four climbs, Raider/Peltast pair. |
-| Ariadne's Passage | 2880–3839 | Hoplite, low-roofed passage, raised Raider/Peltast pair, final Hoplite. |
-| The Silent Gallery | 3840–4799 | A Raider approach, raised Peltast gallery and Hoplite guard precede the original boss arena. |
+| Ariadne's Passage | 2880–3839 | Hoplite, low-roofed passage, raised Raider/Peltast pair, third swinging spike ball, final Hoplite. |
+| The Silent Gallery | 3840–4799 | A Raider approach, raised Peltast gallery, descending stone gate, and Hoplite guard precede the original boss arena. |
 | The Minotaur's Lair | 4800–5759 | Broad flat charge arena, locked exit. |
 
 There are five of each soldier, one Minotaur, and two two-health flasks.

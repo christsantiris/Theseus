@@ -7,6 +7,7 @@ enum Kind { WEIGHT, KILN, ARROWS, ROCKFALL, BRIDGE, SUNBEAM, JETS, STONE_GATE }
 enum Sprite { PIVOT, LINK, WEIGHT, BOULDER, KILN, DRAIN, MIRROR, DECK,
 	SLAB, LINTEL, ARROW_SLITS, ARROW, WAVE, FLAME, JET, DUST }
 const ART := preload("res://assets/art/objects/timing_obstacles.png")
+const LABYRINTH_PENDULUM := preload("res://assets/art/objects/labyrinth_pendulum.png")
 const GOLD := Color("ffe1a0")
 const FOAM := Color("d4fcf7")
 const WEIGHT_PIVOT_Y := -94.0
@@ -20,6 +21,7 @@ const ROCK_DUST_SECONDS := 0.37
 const ROCK_RADIUS := 11.0
 
 var kind: Kind
+var variant := ""
 var width: float
 # Seconds spent in rest, warning, and active phases. The gate uses the first
 # and last values for time fully closed and fully open.
@@ -228,11 +230,24 @@ func _art(sprite: Sprite, bounds: Rect2, tint := Color.WHITE) -> void:
 	draw_texture_rect_region(ART, bounds, _sprite_region(sprite), tint)
 
 
+func _labyrinth_region(cell: int) -> Rect2:
+	return Rect2(cell * 128 + 2, 2, 124, 124)
+
+
 func _draw_weight() -> void:
 	var anchor := Vector2(width / 2, WEIGHT_PIVOT_Y)
 	var weight := _weight_center()
-	_art(Sprite.PIVOT, Rect2(anchor - Vector2(15, 11), Vector2(30, 19)))
 	var angle := (weight - anchor).angle() - PI / 2
+	if variant == "labyrinth":
+		draw_texture_rect_region(LABYRINTH_PENDULUM, Rect2(anchor - Vector2(13, 20), Vector2(26, 26)), _labyrinth_region(0))
+		for link in range(1, 11):
+			draw_set_transform(anchor.lerp(weight, link / 12.0), angle)
+			draw_texture_rect_region(LABYRINTH_PENDULUM, Rect2(-2.1, -3.3, 4.2, 6.6), _labyrinth_region(1))
+		draw_set_transform(weight, angle)
+		draw_texture_rect_region(LABYRINTH_PENDULUM, Rect2(-12, -13, 24, 24), _labyrinth_region(2))
+		draw_set_transform(Vector2.ZERO)
+		return
+	_art(Sprite.PIVOT, Rect2(anchor - Vector2(15, 11), Vector2(30, 19)))
 	for link in range(1, 12):
 		draw_set_transform(anchor.lerp(weight, link / 12.0), angle)
 		_art(Sprite.LINK, Rect2(-1.9, -3.2, 3.8, 6.4))

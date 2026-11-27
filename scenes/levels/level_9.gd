@@ -11,6 +11,12 @@ func _ready() -> void:
 	super()
 
 
+func _build_timing_obstacle() -> void:
+	super()
+	for definition: Dictionary in layout.SPIKE_BALLS:
+		_add_timing_obstacle(definition)
+
+
 func _on_gate_entered() -> void:
 	super()
 	pause_heading.text = "Theseus Victorious"

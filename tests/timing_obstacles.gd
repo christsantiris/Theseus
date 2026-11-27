@@ -91,6 +91,8 @@ func _run() -> void:
 					await _check_bridge(level.get_node(pit.bridge), player)
 			9:
 				await _check_gate(obstacle, player)
+				for definition: Dictionary in level.layout.SPIKE_BALLS:
+					await _check_labyrinth_spike_ball(level, level.get_node(definition.name), player)
 			_:
 				_expect(level.layout.surface_at(origin.x) == origin.y and level.layout.surface_at(origin.x + obstacle.width - 1) == origin.y,
 					"Level %d obstacle follows a flat section of the route" % number)
@@ -209,6 +211,35 @@ func _check_weight(obstacle: Node2D, player: CharacterBody2D) -> void:
 	_move("move_right", false)
 	_expect(player.global_position.x > origin.x + obstacle.width and player.health == player.MAX_HEALTH,
 		"Running under the weight as it swings high clears the colonnade")
+
+
+func _check_labyrinth_spike_ball(level: Node, obstacle: Node2D, player: CharacterBody2D) -> void:
+	var origin := obstacle.global_position
+	var label := String(obstacle.name)
+	_expect(obstacle.kind == obstacle.Kind.WEIGHT and obstacle.variant == "labyrinth",
+		label + " uses the Level 9 labyrinth spike-ball variant")
+	_expect(level.layout.surface_at(origin.x) == origin.y and level.layout.surface_at(origin.x + obstacle.width - 1) == origin.y,
+		label + " follows a flat section of the labyrinth")
+	paused = true
+	var before: float = obstacle.elapsed
+	await _frames(4)
+	_expect(obstacle.elapsed == before, label + " freezes while paused")
+	paused = false
+	obstacle.elapsed = obstacle.durations.z / 4.0
+	var danger: Rect2 = obstacle._danger_rect()
+	_place(player, origin + Vector2(danger.get_center().x, minf(0.0, danger.get_center().y + 20.0)))
+	await _frames(3)
+	_expect(player.health == player.MAX_HEALTH - 1, label + " active hazard costs one health")
+	var approach_x := origin.x - 12.0
+	_place(player, Vector2(approach_x, level.layout.surface_at(approach_x)))
+	obstacle.elapsed = obstacle.durations.z
+	await _frames(4)
+	obstacle.elapsed = 2.85
+	_move("move_right", true)
+	await _frames(86)
+	_move("move_right", false)
+	_expect(player.global_position.x > origin.x + obstacle.width and player.health == player.MAX_HEALTH,
+		label + " clears cleanly when dropping under the swinging ball")
 
 
 func _check_sunbeam(obstacle: Node2D, player: CharacterBody2D) -> void:

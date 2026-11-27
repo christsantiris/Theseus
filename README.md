@@ -154,8 +154,9 @@ controls. Review both Merfolk roles and the captain with
 
 ### The Labyrinth
 
-Level 9 ends the journey in a dim, torch-lit labyrinth. Raised galleries and
-low-roofed passages lead past five Hoplites, five Peltasts, and five Raiders.
+Level 9 ends the journey in a dim, torch-lit labyrinth. Raised galleries,
+low-roofed passages, three swinging iron spike balls, and a descending stone
+gate lead past five Hoplites, five Peltasts, and five Raiders.
 Two flasks support the approach.
 
 The eight-health Minotaur winds up, charges with lowered horns, headbutts,
