@@ -82,7 +82,7 @@ stand 56 pixels above the bull lanes, beyond a normal jump from the ground:
 A downward thrust on a bull's back opens a brief ride. Its cool sheen marks
 the safe platform; amber warns that it is recovering. Ride toward the ledge,
 then jump onto its bright stone cap. The ledges allow approach from below,
-leaving the charging corridor clear. Both reward a health flask; three more
+leaving the charging corridor clear. Both reward a health flask; two more
 flasks sit on the main route. Each restores two health without exceeding five.
 
 | Pit | Left edge | Rim Y | Width / depth |

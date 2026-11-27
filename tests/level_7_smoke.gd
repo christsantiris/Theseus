@@ -62,7 +62,11 @@ func _run() -> void:
 		_expect(enemy.tuning == Difficulty.for_level(7, definition.name == Layout.GATE_GUARD), "Existing enemies receive Level 7 tuning once")
 		_expect(Layout.surface_at(definition.position.x) == definition.position.y, "Enemy starts on sandstone: " + definition.name)
 		_expect(Layout.surface_at(definition.patrol.x) == definition.position.y and Layout.surface_at(definition.patrol.y) == definition.position.y, "Patrol stays on its landing: " + definition.name)
-	_expect(counts == {"hoplite": 4, "peltast": 5, "raider": 5, "spartoi": 5}, "Egypt adds three soldiers along the new causeway")
+	_expect(counts == {"hoplite": 4, "peltast": 5, "raider": 6, "spartoi": 5}, "The captain’s approach includes the additional Raider")
+	var sunbeam := level.get_node("ObeliskSunbeam") as Node2D
+	var descent_guard := level.get_node("SpartoiDescent") as CharacterBody2D
+	_expect(descent_guard.global_position.x > sunbeam.global_position.x + Layout.TIMING_OBSTACLE.width,
+		"The descent guard waits beyond the sunbeam crossing")
 	for flask: Dictionary in Layout.FLASKS:
 		_expect(Layout.surface_at(flask.position.x) == flask.position.y, "Every flask rests on reachable terrain")
 	level.player.position = Layout.FLASKS[0].position

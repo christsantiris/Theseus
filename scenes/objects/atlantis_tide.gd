@@ -12,15 +12,10 @@ const WADING_SPEED := 0.70
 const DRAG_START_DEPTH := 8.0
 const FULL_DRAG_DEPTH := 32.0
 var player: CharacterBody2D
-var hud: CanvasLayer
 var elapsed := 0.0
 var water_y := LOW_Y
-var phase_name := "LOW TIDE"
 var _surface_runs: Array[Rect2] = []
 var _puddles: Array[Node2D] = []
-var _display: Control
-var _label: Label
-var _fill: ColorRect
 
 
 func _ready() -> void:
@@ -31,7 +26,6 @@ func _ready() -> void:
 	_build_surface_runs()
 	for canal: Dictionary in Layout.CANALS:
 		_puddles.append(get_parent().get_node("World/" + String(canal.name)))
-	_build_display()
 	_sync_tide()
 
 
@@ -67,22 +61,6 @@ func _sync_tide() -> void:
 		player.set_environment_speed_multiplier(speed_at(player.global_position.y, water_y))
 	for puddle in _puddles:
 		puddle.visible = water_y > puddle.global_position.y + puddle.canal_depth - 7.0
-	var time := fposmod(elapsed, CYCLE_SECONDS)
-	var end := LOW_SECONDS
-	phase_name = "LOW TIDE"
-	if time >= LOW_SECONDS + FILL_SECONDS + HIGH_SECONDS:
-		phase_name = "DRAINING"
-		end = CYCLE_SECONDS
-	elif time >= LOW_SECONDS + FILL_SECONDS:
-		phase_name = "HIGH TIDE"
-		end = LOW_SECONDS + FILL_SECONDS + HIGH_SECONDS
-	elif time >= LOW_SECONDS:
-		phase_name = "RISING"
-		end = LOW_SECONDS + FILL_SECONDS
-	if is_instance_valid(_label):
-		_label.text = "%s  %ds" % [phase_name, ceili(end - time)]
-		_label.add_theme_color_override("font_color", Color("efca76") if phase_name == "RISING" else Color("e2f2ee"))
-		_fill.size.x = 86.0 * (LOW_Y - water_y) / (LOW_Y - HIGH_Y)
 	queue_redraw()
 
 
@@ -143,47 +121,6 @@ func _draw() -> void:
 			draw_arc(Vector2(x, y), 0.6 + (cell % 3) * 0.2, 0.0, TAU, 8, Color(0.78, 0.96, 0.98, 0.42), 0.3, true)
 
 
-func _build_display() -> void:
-	if not is_instance_valid(hud):
-		return
-	_display = Control.new()
-	_display.name = "TideStatus"
-	_display.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_display.anchor_left = 0.5
-	_display.anchor_right = 0.5
-	_display.offset_left = -55
-	_display.offset_right = 55
-	_display.offset_top = 20
-	_display.offset_bottom = 39
-	hud._root.add_child(_display)
-	var backdrop := ColorRect.new()
-	backdrop.size = Vector2(110, 18)
-	backdrop.color = Color(0.03, 0.12, 0.16, 0.72)
-	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_display.add_child(backdrop)
-	_label = Label.new()
-	_label.position = Vector2(2, 1)
-	_label.size = Vector2(106, 10)
-	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_label.add_theme_font_size_override("font_size", 6)
-	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_display.add_child(_label)
-	var track := ColorRect.new()
-	track.position = Vector2(12, 13)
-	track.size = Vector2(86, 2)
-	track.color = Color("263f49")
-	track.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_display.add_child(track)
-	_fill = ColorRect.new()
-	_fill.position = track.position
-	_fill.size.y = 2
-	_fill.color = Color("8bd7d8")
-	_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_display.add_child(_fill)
-
-
 func _exit_tree() -> void:
 	if is_instance_valid(player):
 		player.set_environment_speed_multiplier(1.0)
-	if is_instance_valid(_display):
-		_display.queue_free()

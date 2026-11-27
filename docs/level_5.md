@@ -91,7 +91,7 @@ horn reach, safe bounce, and wine drops are unchanged. Review them with
 The maximum combat score is 2,100. Satyrs have a 35% chance to drop stolen wine,
 which grants six seconds of 35% faster movement with a visible timer. Another
 pickup refreshes the duration without stacking speed. The level's required
-jumps all work without it. Six health flasks restore two bars each.
+jumps all work without it. Five health flasks restore two bars each.
 
 Every attempt starts at the level entrance with full health and a **3:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app

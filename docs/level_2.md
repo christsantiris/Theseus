@@ -92,7 +92,7 @@ retaining the original logical size, flight lanes, hitboxes, and animation speed
 
 ## Countdown, recovery, and completion
 
-Four health flasks restore two health each.
+Three health flasks restore two health each.
 
 Every attempt starts at the level entrance with full health and a **3:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app

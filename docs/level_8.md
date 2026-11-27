@@ -23,17 +23,10 @@ beds are still harmless and escapable in either direction.
 
 ## Atlantis tide
 
-| Phase | Duration | Water behavior |
-| --- | ---: | --- |
-| Low tide | 4 seconds | Surface rests at y=304; the causeways are dry and the canal puddles remain. |
-| Filling | 8 seconds | Water smoothly rises to y=128, progressively covering the low route. |
-| High tide | 6 seconds | The lower causeways are submerged. The highest palace landing has shallower water and less drag. |
-| Draining | 8 seconds | Water smoothly falls back to the canal beds, restoring normal movement. |
-
-The 26-second cycle repeats. A meter below the area title shows the tide phase,
-remaining seconds, and water height. An animated surface, ripples, and sparse
-bubbles make filling and draining visible. Water is clipped to open space above
-the authored terrain so stone lips and canal openings stay clear.
+The tide repeatedly floods and drains the causeways. Watch the animated
+waterline, ripples, and bubbles to judge whether water is rising or falling.
+The highest palace landing stays shallower, and the water is clipped to open
+space above the terrain so stone lips and canal openings stay clear.
 
 Drag starts after eight units of immersion and reaches its maximum at 32 units.
 Theseus moves at 90 units/second on dry ground and 63 in deep water. Jumping
@@ -57,7 +50,13 @@ jumps in the combat regression.
 
 ## Water jets
 
-On the Outer Ring Causeway at x=4020–4100, bubbles mark the vents for one second before the jets erupt for one second. Four seconds of calm give Theseus time to cross even at high tide. The vents have their own cycle.
+Three banks of water jets interrupt the causeways. Bubbles warn of each burst. Wait for the jets to die down, then cross during the quiet phase. Each bank leaves enough time to cross at high tide.
+
+| Jet bank | World X | Quiet / warning / burst (seconds) |
+| --- | --- | --- |
+| Sunken Agora | 2052–2132 | 3.2 / 0.9 / 1 |
+| Outer Ring Causeway | 4020–4100 | 4 / 1 / 1 |
+| Poseidon’s Sanctuary | 5064–5152 | 3.5 / 1 / 1.25 |
 
 ## Route
 
@@ -198,7 +197,7 @@ the fourth occupies the new outer ring, and the fifth uses the broad lower cause
 
 ## Recovery and progression
 
-Two health flasks at (888, 248) and (2800, 200) restore two health each, up to five.
+One health flask at (2800, 200) restores two health, up to five.
 
 Every attempt starts at the level entrance with full health and a **3:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app

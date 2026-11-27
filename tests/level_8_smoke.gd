@@ -85,11 +85,11 @@ func _run() -> void:
 	await _check_encounters(level)
 	level.player.position = Atlantis.FLASKS[0].position
 	await _frames()
-	_expect(level.has_node("HealthFlaskHarbor"), "A full-health player leaves the Atlantis flask available")
+	_expect(level.has_node("HealthFlaskAgora"), "A full-health player leaves the Atlantis flask available")
 	level.player.hurt(2)
 	level.player.velocity = Vector2.ZERO
 	await _frames()
-	_expect(level.player.health == 5 and "HealthFlaskHarbor" in level._collected, "Atlantis flask restores two bars and records collection")
+	_expect(level.player.health == 5 and "HealthFlaskAgora" in level._collected, "Atlantis flask restores two bars and records collection")
 	level.get_node("MerfolkHarbor").die()
 	level.get_node("MerfolkRingQuay").die()
 	_expect(level._score == 250, "Later Merfolk defeat awards its score")
@@ -98,7 +98,7 @@ func _run() -> void:
 	await _reload(previous_id)
 	level = current_scene
 	_expect(level.has_node("MerfolkHarbor") and level.has_node("MerfolkRingQuay"), "Atlantis death restores all encounters")
-	_expect(level.has_node("HealthFlaskHarbor") and level._score == 0, "Retry restores flasks and rolls back level score")
+	_expect(level.has_node("HealthFlaskAgora") and level._score == 0, "Retry restores flasks and rolls back level score")
 	_expect(level.player.position.distance_to(Atlantis.START) < 1.0, "Death restores the level entrance")
 	level._on_title_pressed()
 	await _frames()

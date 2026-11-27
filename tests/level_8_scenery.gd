@@ -36,7 +36,7 @@ func _load_level(number: int) -> void:
 
 
 func _run() -> void:
-	await _load_level(7)
+	await _load_level(8)
 	var world := level.get_node("World")
 	var backdrop := world.get_node("AtlantisBackdrop") as Node2D
 	_expect(backdrop.get_child_count() == 1, "One continuous Atlantis painting replaces ten separate panoramas")
@@ -105,7 +105,7 @@ func _run() -> void:
 	paused = true
 	await _frames()
 	_expect(facade._last_unlocked and gate.get_node("Barrier/CollisionShape2D").disabled, "Atlantis facade opens during paused entry without changing gate collision logic")
-	for number in [1, 2, 3, 4, 5, 6]:
+	for number in [1, 2, 3, 4, 5, 6, 7]:
 		await _load_level(number)
 		_expect(not level.get_node("World").has_node("AtlantisBackdrop"), "Level %d does not inherit Atlantis scenery" % number)
 	paused = false

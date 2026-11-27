@@ -82,12 +82,11 @@ const ENEMIES := [
 ]
 
 const FLASKS := [
-	{"name": "HealthFlaskFoothill", "position": Vector2(376, 280)},
+	{"name": "HealthFlaskFoothill", "position": Vector2(432, 280)},
 	{"name": "HealthFlaskSwitchback", "position": Vector2(1408, 280)},
 	{"name": "HealthFlaskGarden", "position": Vector2(2464, 232)},
-	{"name": "HealthFlaskHighPass", "position": Vector2(3168, 168)},
-	{"name": "HealthFlaskDescent", "position": Vector2(4888, 248)},
-	{"name": "HealthFlaskSummit", "position": Vector2(5256, 280)},
+	{"name": "HealthFlaskHighPass", "position": Vector2(3520, 136)},
+	{"name": "HealthFlaskSummit", "position": Vector2(4888, 248)},
 ]
 const EXIT := Vector2(5712, FLOOR_Y)
 const GATE_GUARD := "RaiderSummitGuard"

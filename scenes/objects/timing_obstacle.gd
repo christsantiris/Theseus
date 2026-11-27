@@ -13,8 +13,6 @@ const WEIGHT_PIVOT_Y := -94.0
 const GATE_HEIGHT := 72.0
 const GATE_TRAVEL := 0.45
 const GATE_APPROACH := 48.0
-const GATE_SIGN_WIDTH := 88.0
-const GATE_SIGN_Y := -98.0
 const ROCK_APPROACH := 136.0
 const ROCK_INTERVAL := 1.0
 const ROCK_FALL_SECONDS := 0.88
@@ -34,7 +32,6 @@ var _hit_this_cycle := false
 var _bridge_from_right := false
 var _rockfall_started := false
 var _gate_started := false
-var _gate_label: Label
 
 
 func _ready() -> void:
@@ -60,9 +57,6 @@ func _ready() -> void:
 		_solid.add_child(collider)
 		add_child(_solid)
 		_update_solid()
-	if kind == Kind.STONE_GATE:
-		_build_gate_label()
-		_update_gate_label()
 
 
 func _physics_process(delta: float) -> void:
@@ -88,10 +82,8 @@ func _physics_process(delta: float) -> void:
 	if elapsed >= cycle:
 		elapsed = fposmod(elapsed, cycle)
 		_hit_this_cycle = false
-	if kind == Kind.STONE_GATE:
-		_update_gate_label()
-		if player.health > 0:
-			_resolve_gate_contact()
+	if kind == Kind.STONE_GATE and player.health > 0:
+		_resolve_gate_contact()
 	_update_solid()
 	if kind != Kind.STONE_GATE and player.health > 0 and not _hit_this_cycle:
 		var danger := _danger_rect()
@@ -151,31 +143,6 @@ func _gate_bottom() -> float:
 	if open_time < 0.0:
 		return lerpf(0.0, -GATE_HEIGHT, 1.0 + open_time / GATE_TRAVEL)
 	return lerpf(-GATE_HEIGHT, 0.0, clampf((open_time - durations.z) / GATE_TRAVEL, 0.0, 1.0))
-
-
-func _build_gate_label() -> void:
-	_gate_label = Label.new()
-	_gate_label.name = "GateCountdown"
-	_gate_label.position = Vector2((width - GATE_SIGN_WIDTH) / 2.0, GATE_SIGN_Y)
-	_gate_label.size = Vector2(GATE_SIGN_WIDTH, 14)
-	_gate_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_gate_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_gate_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_gate_label.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	_gate_label.add_theme_font_size_override("font_size", 8)
-	add_child(_gate_label)
-
-
-func _update_gate_label() -> void:
-	var open_time := _gate_open_time()
-	if elapsed < durations.x:
-		_gate_label.text = "OPENS IN %d" % ceili(durations.x - elapsed)
-	elif open_time < 0.0:
-		_gate_label.text = "OPENING"
-	elif open_time < durations.z:
-		_gate_label.text = "CLOSES IN %d" % ceili(durations.z - open_time)
-	else:
-		_gate_label.text = "CLOSING"
 
 
 func _resolve_gate_contact() -> void:
@@ -380,9 +347,6 @@ func _draw_gate() -> void:
 	var open_time := _gate_open_time()
 	if open_time >= durations.z - 0.75 and open_time < durations.z:
 		_draw_dust(width / 2, -GATE_HEIGHT + 12)
-	var sign := Rect2((width - GATE_SIGN_WIDTH) / 2.0, GATE_SIGN_Y, GATE_SIGN_WIDTH, 14.0)
-	draw_rect(sign, Color("26201d"))
-	draw_rect(sign, GOLD if open_time < 0.0 or open_time >= durations.z else FOAM, false, 1.0)
 
 
 func _draw_dust(x: float, y: float) -> void:

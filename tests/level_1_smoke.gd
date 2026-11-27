@@ -64,7 +64,7 @@ func _run() -> void:
 		_expect(encounter.position.x >= encounter.patrol.x and encounter.position.x <= encounter.patrol.y, String(encounter.name) + " starts inside patrol")
 	for pickup: Dictionary in Layout.FLASKS:
 		_expect(is_equal_approx(pickup.position.y, Layout.surface_at(pickup.position.x)), String(pickup.name) + " sits on terrain")
-	player.position = Vector2(528, 152)
+	player.position = level.get_node("HealthFlaskRoad").position
 	await _settle()
 	_expect(level.has_node("HealthFlaskRoad"), "A full-health player does not consume a flask")
 	player.hurt(2)

@@ -48,14 +48,14 @@ A bronze weight swings over the Broken Colonnade at x=1180–1284 on a four-seco
 | --- | --- | --- | --- |
 | The King's Road | 0–959 | Establish run, full-height jump, and attack timing using the original raider, two raised platforms, peltast, and hoplite sequence. Short prompts introduce the enemy openings. | 1 Raider, 1 Peltast, 1 Hoplite |
 | Broken Colonnade | 960–1919 | Climb a staircase of 16-pixel rises, then handle separate close-combat encounters after the drop. | 1 Peltast, 1 Raider, 1 Hoplite |
-| Olive Terraces | 1920–2879 | Apply the learned timings around an elevated javelin fighter. A health flask on the upper terrace rewards climbing; the ground catches missed jumps. | 2 Raiders, 1 Peltast |
+| Olive Terraces | 1920–2879 | Apply the learned timings around an elevated javelin fighter. The ground catches missed jumps. | 2 Raiders, 1 Peltast |
 | Ruined Aqueduct | 2880–3839 | Cross ascending and descending stone terraces, with two separated javelin fighters and a final spear guard. | 2 Peltasts, 1 Hoplite |
 | Sacred Grove | 3840–4799 | Cross a low grove terrace, with a Raider on the approach, a raised Peltast and a Hoplite on open ground. | 1 Raider, 1 Peltast, 1 Hoplite |
 | Temple Approach | 4800–5759 | Remix the three soldier types in sequence. Defeat the named temple guard to raise the gate, then enter to complete Level 1. | 1 Raider, 1 Peltast, 2 Hoplites |
 
 [Open the route map](level_1_map.svg) for exact enemy, pickup, and terrace positions.
 
-There are **19 soldiers** and **5 health flasks**. The
+There are **19 soldiers** and **4 health flasks**. The
 maximum combat score is **2,200**: six Hoplites at 150 points, seven Peltasts at
 100, and six Raiders at 100. Earlier enemies can be bypassed; only the temple
 guard must be defeated to finish.

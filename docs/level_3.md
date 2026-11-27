@@ -74,7 +74,7 @@ landing. No ranged attacks, new controls, or additional enemy variants are added
 
 ## Recovery and progression
 
-Five health flasks restore two health each.
+Four health flasks restore two health each.
 
 Every attempt starts at the level entrance with full health and a **3:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
