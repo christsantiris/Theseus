@@ -1,7 +1,7 @@
 # Level 4 — Troy’s Fortifications
 
 A 5,760×352-world-unit route along Bronze Age Troy’s defensive walls. The
-three-minute countdown, combat, keyboard/mouse controls, simultaneous mobile
+two-and-a-half-minute countdown, combat, keyboard/mouse controls, simultaneous mobile
 touch inputs, entrance retries, completion ads and results use the shared game
 systems. Every climb works with normal jumps and base movement speed.
 

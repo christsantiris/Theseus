@@ -45,7 +45,7 @@ Enemy windups, recovery windows, cooldowns, and pursuit speed scale with each le
 Each level is 5,760 world units long, with six areas and three additional
 enemies along its extended approach. Soundtracks continue looping throughout.
 
-Every attempt starts at the level entrance with full health and a **3:00 countdown**.
+Every attempt starts at the level entrance with full health and a **2:30 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
 interruptions, temple entry, and completion. Running out of time opens Hades,
 just like a fatal hit. **Retry Level** there restarts the entire level, including

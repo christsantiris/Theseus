@@ -92,7 +92,7 @@ Sword damage occurs only while the blade is visibly extended during an attack.
 
 Health flasks restore two health and remain available when Theseus is already full.
 
-Every attempt starts at the level entrance with full health and a **3:00 countdown**.
+Every attempt starts at the level entrance with full health and a **2:30 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
 interruptions, temple entry, and completion. Running out of time opens Hades,
 just like a fatal hit. **Retry Level** there restarts the entire level, including
@@ -161,5 +161,5 @@ travel during actual movement and jumping.
 
 The route is 20% longer: 5,760 world units with a new Sacred Grove section
 at X=3840–4799 before the final area. Three additional enemies occupy that
-space. The countdown remains 3:00, and existing music keeps looping at its
+space. The countdown is 2:30, and existing music keeps looping at its
 configured offset. Background camera coverage includes the full extended route.

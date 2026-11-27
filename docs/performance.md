@@ -313,7 +313,7 @@ full camera range. Levels 1–7 add two reused complete scenery objects each.
 `tests/scenery_art.gd` checks every route from entrance to exit at floor height,
 jump headroom and the bottom camera limit. `tests/music_loops.gd` decodes each
 MP3 through its ending and verifies playback continues at the configured loop
-offset. The 3:00 countdown and render budgets are unchanged. Earlier traversal
+offset. The current countdown is 2:30. The render budgets were unchanged by the route extension. Earlier traversal
 and performance measurements in this document describe the shorter routes.
 
 ## Troy’s fortifications
