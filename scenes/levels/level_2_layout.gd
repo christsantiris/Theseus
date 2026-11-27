@@ -1,6 +1,6 @@
 extends RefCounted
 
-const TIME_LIMIT := 180.0
+const TIME_LIMIT := 150.0
 
 const WIDTH := 5760
 const HEIGHT := 320
@@ -94,10 +94,9 @@ const ENEMIES := [
 ]
 
 const FLASKS := [
-	{"name": "HealthFlaskQuay", "position": Vector2(1200, 184)},
-	{"name": "HealthFlaskCliff", "position": Vector2(2880, 168)},
-	{"name": "HealthFlaskDescent", "position": Vector2(3760, 200)},
-	{"name": "HealthFlaskSanctuary", "position": Vector2(5472, 264)},
+	{"name": "HealthFlaskQuay", "position": Vector2(1320, 168)},
+	{"name": "HealthFlaskCliff", "position": Vector2(2904, 168)},
+	{"name": "HealthFlaskSanctuary", "position": Vector2(4592, 232)},
 ]
 const EXIT := Vector2(5712, FLOOR_Y)
 const GATE_GUARD := "SpartoiSanctuaryGuard"

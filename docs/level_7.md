@@ -23,26 +23,21 @@ The highest landing is at Y=200, eighty units above the desert road.
 | --- | --- | --- |
 | Desert Road | 0–959 | Raider, Peltast and the first sandstone climb. |
 | Pyramid Causeway | 960–1919 | Hoplite and Spartoi, a lower Raider court, then a Peltast climb. |
-| Buried Courts | 1920–2879 | Spartoi and Hoplite landings, a recovery flask, then a Raider on the ascent. |
-| Obelisk Rise | 2880–3839 | Recovery flask, a Peltast/Hoplite pair on the high court, then Spartoi on the descent. |
+| Buried Courts | 1920–2879 | Spartoi and Hoplite landings precede a Raider on the ascent. |
+| Obelisk Rise | 2880–3839 | A recovery flask precedes the high court pair. Cross the sunbeam, then face Spartoi on the next landing. |
 | Sandstone Causeway | 3840–4799 | Low sandstone steps separate a Raider, a raised Peltast and a Spartoi approach. |
-| Temple of the Sun | 4800–5759 | Raider, Peltast and Spartoi precede the elite Hoplite captain and the temple. |
+| Temple of the Sun | 4800–5759 | Raider, Peltast and Spartoi lead to a second Raider stationed on the elite Hoplite captain’s approach. |
 
 ## Encounters and healing
 
-Four Hoplites, five Peltasts, five Raiders and five Spartoi make nineteen encounters. All receive the
+Four Hoplites, five Peltasts, six Raiders and five Spartoi make twenty encounters. All receive the
 existing Level 7 difficulty curve once. The sun captain alone receives the
 standard elite health bonus: three hits during vulnerable states defeat him.
 His existing crouch and rise still block sword hits. Bait the attack and counter
 during recovery. Defeating him unlocks the temple gate.
 
-Four flasks restore two health bars each, at (1216, 248), (2400, 280),
-(2944, 216) and (4960, 280). Full health leaves a flask available for later.
-The existing campaign heuristic rates Egypt at about 42.2, between the gorge's
-38.5 and Atlantis's 48.6. This estimates content pressure; it does not replace
-human combat play testing. After Troy’s insertion, the gorge-to-Egypt step is
-about 9.6%, slightly below the heuristic test’s 10% minimum; existing Egypt
-encounters and healing are unchanged.
+Three flasks restore two health each, at (1216, 248), (2896, 216), and
+(4496, 280). Full health leaves a flask available for later.
 
 ## Campaign, controls and results
 
@@ -50,7 +45,7 @@ The gorge offers **Continue to Level 7**. Finishing Egypt shows a ready ad befor
 results on mobile, then **Continue to Level 8** enters [Atlantis](level_8.md).
 The [Minotaur finale](level_9.md) is Level 9.
 
-Each attempt starts with full health and a 3:00 countdown. Pause, app
+Each attempt starts with full health and a 2:30 countdown. Pause, app
 interruptions, temple entry, the ad and results freeze the clock. Death or time
 expiry opens Hades; Retry Level restores the Egyptian entrance, enemies,
 flasks and score carried from earlier levels. Replay and the title's Load also restart the attempt. There are no checkpoints.
@@ -96,5 +91,5 @@ device performance still require device checks.
 
 The route is 20% longer: 5,760 world units with a new Sandstone Causeway section
 at X=3840–4799 before the final area. Three additional enemies occupy that
-space. The countdown remains 3:00, and existing music keeps looping at its
+space. The countdown is 2:30, and existing music keeps looping at its
 configured offset. Background camera coverage includes the full extended route.

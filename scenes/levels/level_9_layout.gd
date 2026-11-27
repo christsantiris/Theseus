@@ -1,6 +1,6 @@
 extends RefCounted
 
-const TIME_LIMIT := 180.0
+const TIME_LIMIT := 150.0
 
 const WIDTH := 5760
 const HEIGHT := 352
@@ -57,9 +57,8 @@ const ENEMIES := [
 	{"name": "Minotaur", "kind": "minotaur", "position": Vector2(5440, 280), "patrol": Vector2(5040, 5624)},
 ]
 const FLASKS := [
-	{"name": "GalleryFlask", "position": Vector2(1600, 248)},
-	{"name": "BullHallFlask", "position": Vector2(2800, 248)},
-	{"name": "PassageFlask", "position": Vector2(3648, 264)},
+	{"name": "GalleryFlask", "position": Vector2(1792, 280)},
+	{"name": "PassageFlask", "position": Vector2(3960, 280)},
 ]
 const EXIT := Vector2(5712, 280)
 const GATE_GUARD := "Minotaur"
@@ -68,12 +67,21 @@ const TIMING_OBSTACLE := {
 	"name": "SilentGalleryGate", "kind": TimingObstacle.Kind.STONE_GATE,
 	"position": Vector2(4454, 280), "width": 20.0, "durations": Vector3(3, 0, 3),
 }
+const SPIKE_BALLS := [
+	{"name": "KnossosSpikeBall", "kind": TimingObstacle.Kind.WEIGHT, "variant": "labyrinth",
+		"position": Vector2(788, 264), "width": 104.0, "durations": Vector3(0, 0, 4)},
+	{"name": "GallerySpikeBall", "kind": TimingObstacle.Kind.WEIGHT, "variant": "labyrinth",
+		"position": Vector2(1540, 248), "width": 104.0, "durations": Vector3(0, 0, 4)},
+	{"name": "PassageSpikeBall", "kind": TimingObstacle.Kind.WEIGHT, "variant": "labyrinth",
+		"position": Vector2(3604, 264), "width": 104.0, "durations": Vector3(0, 0, 4)},
+]
 
 const TIPS := [
 	{"x": 168, "end": 320, "text": "Follow the bronze thread through the labyrinth."},
+	{"x": 728, "end": 788, "text": "Drop under the iron spike ball as it swings away."},
 	{"x": 1776, "end": 1896, "text": "Low stone lintel ahead. Keep to the ground."},
 	{"x": 4856, "end": 5040, "text": "Prepare to jump the Minotaur’s charge."},
-	{"x": 5080, "end": 5280, "text": "Jump his low charge. Counter after the headbutt."},
+	{"x": 5080, "end": 5280, "text": "Jump his charge. Two red lines warn of a follow-up charge."},
 	{"x": 4399, "end": 4454, "text": "Wait for the gate to rise, then cross before it closes."},
 ]
 

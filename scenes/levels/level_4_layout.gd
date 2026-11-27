@@ -1,6 +1,6 @@
 extends RefCounted
 
-const TIME_LIMIT := 180.0
+const TIME_LIMIT := 150.0
 const WIDTH := 5760
 const HEIGHT := 352
 const FLOOR_Y := 280
@@ -68,11 +68,10 @@ const ENEMIES := [
 	{"name": "HopliteTrojanCaptain", "kind": "hoplite", "position": Vector2(5680, 280), "patrol": Vector2(5640, 5704)},
 ]
 const FLASKS := [
-	{"name": "HealthFlaskOuterWall", "position": Vector2(1184, 248)},
-	{"name": "HealthFlaskGateCourt", "position": Vector2(1888, 232)},
-	{"name": "HealthFlaskRampart", "position": Vector2(3104, 168)},
-	{"name": "HealthFlaskInnerWall", "position": Vector2(4416, 232)},
-	{"name": "HealthFlaskCitadel", "position": Vector2(5056, 248)},
+	{"name": "HealthFlaskOuterWall", "position": Vector2(1136, 232)},
+	{"name": "HealthFlaskRampart", "position": Vector2(2400, 232)},
+	{"name": "HealthFlaskInnerWall", "position": Vector2(3696, 168)},
+	{"name": "HealthFlaskCitadel", "position": Vector2(4992, 248)},
 ]
 const EXIT := Vector2(5728, FLOOR_Y)
 const GATE_GUARD := "HopliteTrojanCaptain"

@@ -64,6 +64,11 @@ func _run() -> void:
 			for crossing: Dictionary in level.layout.QUAY_CROSSINGS:
 				await _check_quay_slabs(level, player, crossing.name)
 			continue
+		if number == 8:
+			_expect(not level.hud._root.has_node("TideStatus"), "Atlantis has no tide countdown display")
+			for definition: Dictionary in level.layout.JET_BANKS:
+				await _check_atlantis_jets(level, level.get_node(definition.name), player)
+			continue
 		var obstacle_name: String = level.layout.PITS[0].bridge if number == 6 else level.layout.TIMING_OBSTACLE.name
 		var obstacle: Node2D = level.get_node(obstacle_name)
 		var origin := obstacle.global_position
@@ -86,6 +91,8 @@ func _run() -> void:
 					await _check_bridge(level.get_node(pit.bridge), player)
 			9:
 				await _check_gate(obstacle, player)
+				for definition: Dictionary in level.layout.SPIKE_BALLS:
+					await _check_labyrinth_spike_ball(level, level.get_node(definition.name), player)
 			_:
 				_expect(level.layout.surface_at(origin.x) == origin.y and level.layout.surface_at(origin.x + obstacle.width - 1) == origin.y,
 					"Level %d obstacle follows a flat section of the route" % number)
@@ -112,8 +119,6 @@ func _run() -> void:
 					await _frames(42)
 					_expect(player.health == player.MAX_HEALTH, "Ducking clears the arrow volley")
 					_move("duck", false)
-				if number == 8:
-					await _check_high_tide(level, obstacle, player)
 	if _failures == 0:
 		print("PASS: nine timing obstacles, pause, damage, duck, bridge, gate, and high-tide crossing (%s)." % ("touch" if _controls.enabled else "desktop"))
 	quit(int(_failures > 0))
@@ -208,6 +213,35 @@ func _check_weight(obstacle: Node2D, player: CharacterBody2D) -> void:
 		"Running under the weight as it swings high clears the colonnade")
 
 
+func _check_labyrinth_spike_ball(level: Node, obstacle: Node2D, player: CharacterBody2D) -> void:
+	var origin := obstacle.global_position
+	var label := String(obstacle.name)
+	_expect(obstacle.kind == obstacle.Kind.WEIGHT and obstacle.variant == "labyrinth",
+		label + " uses the Level 9 labyrinth spike-ball variant")
+	_expect(level.layout.surface_at(origin.x) == origin.y and level.layout.surface_at(origin.x + obstacle.width - 1) == origin.y,
+		label + " follows a flat section of the labyrinth")
+	paused = true
+	var before: float = obstacle.elapsed
+	await _frames(4)
+	_expect(obstacle.elapsed == before, label + " freezes while paused")
+	paused = false
+	obstacle.elapsed = obstacle.durations.z / 4.0
+	var danger: Rect2 = obstacle._danger_rect()
+	_place(player, origin + Vector2(danger.get_center().x, minf(0.0, danger.get_center().y + 20.0)))
+	await _frames(3)
+	_expect(player.health == player.MAX_HEALTH - 1, label + " active hazard costs one health")
+	var approach_x := origin.x - 12.0
+	_place(player, Vector2(approach_x, level.layout.surface_at(approach_x)))
+	obstacle.elapsed = obstacle.durations.z
+	await _frames(4)
+	obstacle.elapsed = 2.85
+	_move("move_right", true)
+	await _frames(86)
+	_move("move_right", false)
+	_expect(player.global_position.x > origin.x + obstacle.width and player.health == player.MAX_HEALTH,
+		label + " clears cleanly when dropping under the swinging ball")
+
+
 func _check_sunbeam(obstacle: Node2D, player: CharacterBody2D) -> void:
 	var origin := obstacle.global_position
 	_place(player, origin + Vector2(27, 0))
@@ -256,39 +290,54 @@ func _check_bridge(obstacle: Node2D, player: CharacterBody2D) -> void:
 
 func _check_gate(obstacle: Node2D, player: CharacterBody2D) -> void:
 	var origin := obstacle.global_position
-	var countdown := obstacle.get_node("GateCountdown") as Label
+	_expect(not obstacle.has_node("GateCountdown"), "The gate has no countdown display")
 	await _frames(190)
-	_expect(obstacle.elapsed == 0.0 and obstacle._gate_bottom() == 0.0 and countdown.text == "OPENS IN 3",
-		"The gate stays shut with a visible countdown until Theseus approaches")
+	_expect(obstacle.elapsed == 0.0 and obstacle._gate_bottom() == 0.0,
+		"The gate stays shut until Theseus approaches")
 	_place(player, origin + Vector2(-30, 0))
 	await _frames(4)
 	_move("move_right", true)
 	await _frames(164)
-	_expect(player.global_position.x < origin.x and obstacle._gate_bottom() == 0.0 and countdown.text == "OPENS IN 1",
+	_expect(player.global_position.x < origin.x and obstacle._gate_bottom() == 0.0,
 		"The gate blocks Theseus for the first three seconds")
 	await _frames(60)
 	_move("move_right", false)
-	_expect(player.global_position.x > origin.x + obstacle.width and countdown.text == "CLOSES IN 3",
-		"Theseus can cross on the first opening, with a closing countdown")
+	_expect(player.global_position.x > origin.x + obstacle.width,
+		"Theseus can cross on the first opening")
 	await _frames(140)
-	_expect(obstacle._gate_bottom() == -obstacle.GATE_HEIGHT and countdown.text == "CLOSES IN 1",
-		"The gate remains fully raised until the open countdown ends")
+	_expect(obstacle._gate_bottom() == -obstacle.GATE_HEIGHT,
+		"The gate remains fully raised during its open phase")
 	_place(player, origin + Vector2(4, 0))
 	await _frames(48)
 	_expect(player.health == player.MAX_HEALTH - 1 and player.global_position.x < origin.x - 6,
 		"The descending gate damages Theseus and pushes him out on the nearer side")
-	_expect(countdown.text == "OPENS IN 3" and obstacle._gate_bottom() == 0.0,
-		"The next closed countdown starts once the gate lands")
+	_expect(obstacle._gate_bottom() == 0.0,
+		"The gate begins the next closed phase after landing")
 
 
-func _check_high_tide(level: Node, obstacle: Node2D, player: CharacterBody2D) -> void:
+func _check_atlantis_jets(level: Node, obstacle: Node2D, player: CharacterBody2D) -> void:
 	var origin := obstacle.global_position
+	var label := String(obstacle.name)
+	_expect(level.layout.surface_at(origin.x - 12) == origin.y
+		and level.layout.surface_at(origin.x + obstacle.width + 12) == origin.y,
+		label + " leaves a flat approach and exit")
+	obstacle.elapsed = obstacle.durations.x + obstacle.durations.y / 2
+	_expect(obstacle._warning() and not obstacle._danger_rect().has_area(), label + " warns before becoming dangerous")
+	paused = true
+	var before: float = obstacle.elapsed
+	await _frames(4)
+	_expect(obstacle.elapsed == before, label + " pauses with gameplay")
+	paused = false
+	obstacle.elapsed = obstacle.durations.x + obstacle.durations.y
+	_place(player, origin + Vector2(obstacle.width / 2, 0))
+	await _frames(4)
+	_expect(player.health == player.MAX_HEALTH - 1, label + " damages Theseus during a burst")
 	level.tide.elapsed = 12.0
 	obstacle.elapsed = 0.0
 	_place(player, origin + Vector2(-12, 0))
 	await _frames(4)
 	_move("move_right", true)
-	await _frames(111)
+	await _frames(117)
 	_move("move_right", false)
-	_expect(level.tide.phase_name == "HIGH TIDE" and player.global_position.x > origin.x + obstacle.width + 7
-		and player.health == player.MAX_HEALTH, "High-tide drag leaves enough time to pass the inactive jets")
+	_expect(is_equal_approx(level.tide.water_y, level.tide.HIGH_Y) and player.global_position.x > origin.x + obstacle.width + 7
+		and player.health == player.MAX_HEALTH, label + " leaves enough time to cross even at high tide")

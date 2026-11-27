@@ -6,9 +6,27 @@ Hoplites, Peltasts, and Raiders, and defeats the Minotaur to escape. The existin
 
 ![Theseus confronts the Minotaur](level_9_preview.png)
 
+## Swinging iron spike balls
+
+Three blackened-iron spike balls on dark chains hang from carved Minoan stone
+brackets over descending galleries:
+
+- **Gates of Knossos** (`x=788–892`, terrace `y=264`)
+- **Twisting Galleries** (`x=1540–1644`, terrace `y=248`)
+- **Ariadne's Passage** (`x=3604–3708`, terrace `y=264`)
+
+Each swings on a four-second pendulum cycle using the same contact timing as
+Level 1's bronze weight, restyled with labyrinth stone, iron links, and spiked
+spheres (`assets/art/objects/labyrinth_pendulum.png`). Pause on the higher
+terrace, drop underneath as the ball swings away, and cross before it returns.
+Contact costs one health.
+
 ## Descending stone gate
 
-The Silent Gallery gate at x=4454–4474 starts closed. When Theseus approaches, the sign above it counts down three seconds until it rises. The gate then stays open for three seconds, with a countdown and a dust warning before it descends. Each cycle repeats with three seconds fully closed and three seconds fully open. The descending slab deals one damage and pushes Theseus to the nearer side.
+The Silent Gallery gate at x=4454–4474 starts closed and begins cycling when
+Theseus approaches. Watch for it to rise and cross before it descends. Dust
+falls from the lintel just before it closes. A descending slab deals one
+damage and pushes Theseus to the nearer side.
 
 ## Route
 
@@ -20,16 +38,16 @@ Ducking still holds position, as it does elsewhere in the game.
 
 | Section | World X | Encounters and route |
 | --- | --- | --- |
-| Gates of Knossos | 0–959 | Arrival corridor, Raider, two short climbs, Hoplite. |
-| Twisting Galleries | 960–1919 | Peltast, raised Raider gallery, descent past a Peltast, first low lintel. |
-| Hall of the Bull | 1920–2879 | Hoplite, four climbs, Raider/Peltast pair and recovery flask. |
-| Ariadne's Passage | 2880–3839 | Hoplite, low-roofed passage, raised Raider/Peltast pair, final Hoplite. |
-| The Silent Gallery | 3840–4799 | A Raider approach, raised Peltast gallery and Hoplite guard precede the original boss arena. |
+| Gates of Knossos | 0–959 | Arrival corridor, Raider, two short climbs, Hoplite, first swinging spike ball. |
+| Twisting Galleries | 960–1919 | Peltast, raised Raider gallery, second swinging spike ball, descent past a Peltast, first low lintel. |
+| Hall of the Bull | 1920–2879 | Hoplite, four climbs, Raider/Peltast pair. |
+| Ariadne's Passage | 2880–3839 | Hoplite, low-roofed passage, raised Raider/Peltast pair, third swinging spike ball, final Hoplite. |
+| The Silent Gallery | 3840–4799 | A Raider approach, raised Peltast gallery, descending stone gate, and Hoplite guard precede the original boss arena. |
 | The Minotaur's Lair | 4800–5759 | Broad flat charge arena, locked exit. |
 
-There are five of each soldier, one Minotaur, and three two-health flasks.
+There are five of each soldier, one Minotaur, and two two-health flasks.
 
-Every attempt starts at the level entrance with full health and a **3:00 countdown**.
+Every attempt starts at the level entrance with full health and a **2:30 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
 interruptions, temple entry, and completion. Running out of time opens Hades,
 just like a fatal hit. **Retry Level** there restarts the entire level, including
@@ -52,16 +70,16 @@ also cost Theseus one health; landing on the boss is not a free stomp kill.
 | Wind-up | Plants his hooves, lowers his horns, and commits to a direction. A bronze ground cue reinforces the warning. |
 | Charge | Rushes at 126 world units/second for at most 1.1 seconds. His collision height lowers to 28 units, allowing a correctly timed full jump over his back. The charge does not track a jumping player. |
 | Headbutt | Stops near a grounded player, at an arena edge, or when the charge ends. A short horn strike deals one damage at most once per attack. Terrain blocks the strike. |
+| Follow-up | At half health, two red ground lines warn that the next attack includes a second charge. After the first headbutt, the Minotaur turns toward Theseus and winds up again. |
 | Recovery | Recoils with exposed chest. Sword hits deal one damage without restarting the recovery or cancelling his whole attack cycle. |
 | Backstep | Steps backward while still facing Theseus, then lines up another wind-up. He stops before leaving the arena or walking into terrain. |
 
 All soldiers and the boss receive the existing Level 9 difficulty curve. Boss
 wind-up uses the authored 1.15 seconds, recovery 1.45 seconds, and backstep/rest
 the existing timing helpers, which preserve minimum warning and counter windows.
-The campaign heuristic scores Level 9 at approximately 58.5 versus Atlantis's
-48.6, a 20% increase. This is a content estimate; combat pacing needs human play
-testing. Jump as the charge approaches, cross over the lowered body, and counter
-after the headbutt. A sword hit does not interrupt the committed charge.
+Jump as the charge approaches and cross over the lowered body. When two
+red lines appear, save the counterattack until after the second headbutt.
+A sword hit does not interrupt a committed charge.
 
 The exit remains locked until the eighth hit defeats the boss. Theseus then
 enters the existing doorway sequence and reaches **Theseus Victorious**.
@@ -128,5 +146,5 @@ unverified. The normal iOS campaign app was restored after the probe.
 
 The route is 20% longer: 5,760 world units with a new The Silent Gallery section
 at X=3840–4799 before the final area. Three additional enemies occupy that
-space. The countdown remains 3:00, and existing music keeps looping at its
+space. The countdown is 2:30, and existing music keeps looping at its
 configured offset. Background camera coverage includes the full extended route.

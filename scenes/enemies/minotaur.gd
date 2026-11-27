@@ -7,12 +7,14 @@ const POSES := {"idle": [0], "windup": [1], "charge": [2, 3], "headbutt": [4], "
 const CHARGE_SPEED := 126.0
 const WINDUP := 1.15
 const RECOVERY := 1.45
+const RETURN_WINDUP := 1.0
 var _state := "idle"
 var _state_time := 0.0
 var _cooldown := 0.65
 var _flash := 0.0
 var _hits := {}
 var _cell := Vector2.ZERO
+var _charges_left := 1
 
 
 func _ready() -> void:
@@ -82,6 +84,9 @@ func _tick(delta: float) -> void:
 		"windup":
 			if _state_time >= _telegraph(WINDUP):
 				_enter("charge")
+		"return_windup":
+			if _state_time >= _telegraph(RETURN_WINDUP):
+				_enter("charge")
 		"charge":
 			var target := _player()
 			var close_ahead: bool = target != null and (target.global_position.x - global_position.x) * direction >= 0 and _player_close(34, 12)
@@ -93,7 +98,11 @@ func _tick(delta: float) -> void:
 			if _state_time >= 0.10 and _state_time < 0.25:
 				_horn_strike()
 			if _state_time >= 0.35:
-				_enter("recover")
+				_charges_left -= 1
+				if _charges_left > 0:
+					_enter("return_windup")
+				else:
+					_enter("recover")
 		"recover":
 			if _state_time >= _punish(RECOVERY):
 				_enter("backstep")
@@ -122,14 +131,16 @@ func _enter(next: String) -> void:
 	_state = next
 	_state_time = 0
 	velocity.x = 0
-	if next in ["windup", "backstep"]:
+	if next == "windup":
+		_charges_left = 2 if hp * 2 <= max_hp else 1
+	if next in ["windup", "return_windup", "backstep"]:
 		_face_player(FOCUS_HEIGHT)
 	if next == "headbutt":
 		_hits.clear()
 	# Lowered horns and torso have a genuinely jumpable collision silhouette.
 	var height := 28.0 if next in ["charge", "headbutt"] else 46.0
 	_set_body(26, height, Vector2(0, -height * 0.5))
-	_play(next)
+	_play("windup" if next == "return_windup" else next)
 	_anchor()
 
 
@@ -161,5 +172,9 @@ func _draw() -> void:
 		return
 	draw_rect(Rect2(-24, -62, 48, 4), Color("241b1b"))
 	draw_rect(Rect2(-24, -62, 48.0 * hp / max_hp, 4), Color("c34729"))
-	if _state == "windup":
-		draw_line(Vector2(direction * 18, -4), Vector2(direction * 38, -4), Color("ffc369"), 1.5)
+	if _state in ["windup", "return_windup"]:
+		var double_charge := _state == "return_windup" or _charges_left > 1
+		var cue := Color("ff9168") if double_charge else Color("ffc369")
+		draw_line(Vector2(direction * 18, -4), Vector2(direction * 38, -4), cue, 1.5)
+		if double_charge:
+			draw_line(Vector2(direction * 18, -8), Vector2(direction * 38, -8), cue, 1.5)

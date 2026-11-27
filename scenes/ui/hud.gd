@@ -107,7 +107,7 @@ func _layout_mobile(safe := Rect2()) -> void:
 	_root.offset_bottom = safe.end.y - get_viewport().get_visible_rect().size.y
 	_area.size.x = maxf(0.0, safe.size.x - 192.0)
 	_area.clip_text = true
-	# Clear the pause button and Atlantis tide meter on touch screens.
+	# Clear the pause button on touch screens.
 	_level_time.offset_top = 44.0
 	_level_time.offset_bottom = 56.0
 	# Above the thumb controls: the speed timer, and hints when the bottom

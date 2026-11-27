@@ -1,6 +1,6 @@
 extends RefCounted
 
-const TIME_LIMIT := 180.0
+const TIME_LIMIT := 150.0
 
 const WIDTH := 5760
 const HEIGHT := 352
@@ -66,23 +66,27 @@ const ENEMIES := [
 	{"name": "MerfolkGateCaptain", "kind": "merfolk", "position": Vector2(5632, 280), "patrol": Vector2(5600, 5664)},
 	]
 const FLASKS := [
-	{"name": "HealthFlaskHarbor", "position": Vector2(888, 248)},
 	{"name": "HealthFlaskAgora", "position": Vector2(2800, 200)},
 ]
 const EXIT := Vector2(5712, FLOOR_Y)
 const GATE_GUARD := "MerfolkGateCaptain"
 const TimingObstacle := preload("res://scenes/objects/timing_obstacle.gd")
-const TIMING_OBSTACLE := {
-	"name": "OuterRingJets", "kind": TimingObstacle.Kind.JETS,
-	"position": Vector2(4020, 280), "width": 80.0, "durations": Vector3(4, 1, 1),
-}
+const JET_BANKS := [
+	{"name": "AgoraJets", "kind": TimingObstacle.Kind.JETS,
+		"position": Vector2(2052, 280), "width": 80.0, "durations": Vector3(3.2, 0.9, 1)},
+	{"name": "OuterRingJets", "kind": TimingObstacle.Kind.JETS,
+		"position": Vector2(4020, 280), "width": 80.0, "durations": Vector3(4, 1, 1)},
+	{"name": "SanctuaryJets", "kind": TimingObstacle.Kind.JETS,
+		"position": Vector2(5064, 280), "width": 88.0, "durations": Vector3(3.5, 1, 1.25)},
+]
 
 const TIPS := [
 	{"x": 240, "end": 480, "text": "Duck high tridents. Stand and counter after."},
 	{"x": 976, "end": 1184, "text": "Low blades: jump or retreat, then counter."},
 	{"x": 1424, "end": 1552, "text": "Tides slow Theseus. Climb higher or wait for low tide."},
 	{"x": 5520, "end": 5680, "text": "Defeat the captain to open Poseidon's sanctuary."},
-	{"x": 3965, "end": 4020, "text": "Bubbles warn of water jets. Cross between bursts."},
+	{"x": 1980, "end": 2052, "text": "Bubbles warn of water jets. Cross after they die down."},
+	{"x": 3944, "end": 4020, "text": "Give yourself extra time to cross the jets at high tide."},
 ]
 
 

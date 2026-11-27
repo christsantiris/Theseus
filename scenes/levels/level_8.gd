@@ -16,5 +16,9 @@ func _ready() -> void:
 	tide = Tide.new()
 	tide.name = "AtlantisTide"
 	tide.player = player
-	tide.hud = hud
 	add_child(tide)
+
+
+func _build_timing_obstacle() -> void:
+	for definition: Dictionary in layout.JET_BANKS:
+		_add_timing_obstacle(definition)

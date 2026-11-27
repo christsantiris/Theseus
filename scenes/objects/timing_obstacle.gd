@@ -7,14 +7,13 @@ enum Kind { WEIGHT, KILN, ARROWS, ROCKFALL, BRIDGE, SUNBEAM, JETS, STONE_GATE }
 enum Sprite { PIVOT, LINK, WEIGHT, BOULDER, KILN, DRAIN, MIRROR, DECK,
 	SLAB, LINTEL, ARROW_SLITS, ARROW, WAVE, FLAME, JET, DUST }
 const ART := preload("res://assets/art/objects/timing_obstacles.png")
+const LABYRINTH_PENDULUM := preload("res://assets/art/objects/labyrinth_pendulum.png")
 const GOLD := Color("ffe1a0")
 const FOAM := Color("d4fcf7")
 const WEIGHT_PIVOT_Y := -94.0
 const GATE_HEIGHT := 72.0
 const GATE_TRAVEL := 0.45
 const GATE_APPROACH := 48.0
-const GATE_SIGN_WIDTH := 88.0
-const GATE_SIGN_Y := -98.0
 const ROCK_APPROACH := 136.0
 const ROCK_INTERVAL := 1.0
 const ROCK_FALL_SECONDS := 0.88
@@ -22,6 +21,7 @@ const ROCK_DUST_SECONDS := 0.37
 const ROCK_RADIUS := 11.0
 
 var kind: Kind
+var variant := ""
 var width: float
 # Seconds spent in rest, warning, and active phases. The gate uses the first
 # and last values for time fully closed and fully open.
@@ -34,7 +34,6 @@ var _hit_this_cycle := false
 var _bridge_from_right := false
 var _rockfall_started := false
 var _gate_started := false
-var _gate_label: Label
 
 
 func _ready() -> void:
@@ -60,9 +59,6 @@ func _ready() -> void:
 		_solid.add_child(collider)
 		add_child(_solid)
 		_update_solid()
-	if kind == Kind.STONE_GATE:
-		_build_gate_label()
-		_update_gate_label()
 
 
 func _physics_process(delta: float) -> void:
@@ -88,10 +84,8 @@ func _physics_process(delta: float) -> void:
 	if elapsed >= cycle:
 		elapsed = fposmod(elapsed, cycle)
 		_hit_this_cycle = false
-	if kind == Kind.STONE_GATE:
-		_update_gate_label()
-		if player.health > 0:
-			_resolve_gate_contact()
+	if kind == Kind.STONE_GATE and player.health > 0:
+		_resolve_gate_contact()
 	_update_solid()
 	if kind != Kind.STONE_GATE and player.health > 0 and not _hit_this_cycle:
 		var danger := _danger_rect()
@@ -151,31 +145,6 @@ func _gate_bottom() -> float:
 	if open_time < 0.0:
 		return lerpf(0.0, -GATE_HEIGHT, 1.0 + open_time / GATE_TRAVEL)
 	return lerpf(-GATE_HEIGHT, 0.0, clampf((open_time - durations.z) / GATE_TRAVEL, 0.0, 1.0))
-
-
-func _build_gate_label() -> void:
-	_gate_label = Label.new()
-	_gate_label.name = "GateCountdown"
-	_gate_label.position = Vector2((width - GATE_SIGN_WIDTH) / 2.0, GATE_SIGN_Y)
-	_gate_label.size = Vector2(GATE_SIGN_WIDTH, 14)
-	_gate_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_gate_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_gate_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_gate_label.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	_gate_label.add_theme_font_size_override("font_size", 8)
-	add_child(_gate_label)
-
-
-func _update_gate_label() -> void:
-	var open_time := _gate_open_time()
-	if elapsed < durations.x:
-		_gate_label.text = "OPENS IN %d" % ceili(durations.x - elapsed)
-	elif open_time < 0.0:
-		_gate_label.text = "OPENING"
-	elif open_time < durations.z:
-		_gate_label.text = "CLOSES IN %d" % ceili(durations.z - open_time)
-	else:
-		_gate_label.text = "CLOSING"
 
 
 func _resolve_gate_contact() -> void:
@@ -261,11 +230,24 @@ func _art(sprite: Sprite, bounds: Rect2, tint := Color.WHITE) -> void:
 	draw_texture_rect_region(ART, bounds, _sprite_region(sprite), tint)
 
 
+func _labyrinth_region(cell: int) -> Rect2:
+	return Rect2(cell * 128 + 2, 2, 124, 124)
+
+
 func _draw_weight() -> void:
 	var anchor := Vector2(width / 2, WEIGHT_PIVOT_Y)
 	var weight := _weight_center()
-	_art(Sprite.PIVOT, Rect2(anchor - Vector2(15, 11), Vector2(30, 19)))
 	var angle := (weight - anchor).angle() - PI / 2
+	if variant == "labyrinth":
+		draw_texture_rect_region(LABYRINTH_PENDULUM, Rect2(anchor - Vector2(13, 20), Vector2(26, 26)), _labyrinth_region(0))
+		for link in range(1, 11):
+			draw_set_transform(anchor.lerp(weight, link / 12.0), angle)
+			draw_texture_rect_region(LABYRINTH_PENDULUM, Rect2(-2.1, -3.3, 4.2, 6.6), _labyrinth_region(1))
+		draw_set_transform(weight, angle)
+		draw_texture_rect_region(LABYRINTH_PENDULUM, Rect2(-12, -13, 24, 24), _labyrinth_region(2))
+		draw_set_transform(Vector2.ZERO)
+		return
+	_art(Sprite.PIVOT, Rect2(anchor - Vector2(15, 11), Vector2(30, 19)))
 	for link in range(1, 12):
 		draw_set_transform(anchor.lerp(weight, link / 12.0), angle)
 		_art(Sprite.LINK, Rect2(-1.9, -3.2, 3.8, 6.4))
@@ -380,9 +362,6 @@ func _draw_gate() -> void:
 	var open_time := _gate_open_time()
 	if open_time >= durations.z - 0.75 and open_time < durations.z:
 		_draw_dust(width / 2, -GATE_HEIGHT + 12)
-	var sign := Rect2((width - GATE_SIGN_WIDTH) / 2.0, GATE_SIGN_Y, GATE_SIGN_WIDTH, 14.0)
-	draw_rect(sign, Color("26201d"))
-	draw_rect(sign, GOLD if open_time < 0.0 or open_time >= durations.z else FOAM, false, 1.0)
 
 
 func _draw_dust(x: float, y: float) -> void:

@@ -132,11 +132,26 @@ func _run() -> void:
 	boss.sword_hit()
 	boss.sword_hit()
 	_expect(not boss.alive and defeats.count == 1, "Final hit defeats the Minotaur exactly once")
+	await _check_follow_up_charge()
 	await _jump_clearance()
 	_stop_audio(root)
 	OS.delay_msec(150)
 	print("PASS: Minotaur windup, committed charge, headbutt hit deduplication, exposed counters, backward retreat, repeat cycle, pause, eight-health defeat, and real-player jump clearance." if failures.is_empty() else str(failures))
 	quit(0 if failures.is_empty() else 1)
+
+
+func _check_follow_up_charge() -> void:
+	await _fresh()
+	while boss.hp > 4:
+		boss.sword_hit()
+	_expect(await _until("windup"), "At half health the Minotaur winds up a two-charge attack")
+	var opening_direction: int = boss.direction
+	_expect(boss._charges_left == 2 and await _until("charge"), "The first charge is committed")
+	player.position.x = 120
+	_expect(await _until("return_windup"), "The first headbutt leads to a fresh warning instead of recovery")
+	_expect(boss.direction == -opening_direction, "The second warning retargets Theseus before committing")
+	_expect(await _until("charge"), "The second warning leads to a second charge")
+	_expect(await _until("recover"), "The second headbutt opens the usual recovery window")
 
 
 func _jump_clearance() -> void:

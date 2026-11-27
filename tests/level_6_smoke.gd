@@ -107,7 +107,7 @@ func _progress_and_saves() -> void:
 	level = current_scene
 	_expect(level.player.health == 5 and level.player.position.distance_to(Gorge.START) < 1, "Death restores the gorge entrance")
 	_placements(level)
-	level.player.position = Gorge.FLASKS[2].position
+	level.player.position = level.get_node("HealthFlaskCauseway").position
 	await _frames()
 	_expect(level.has_node("HealthFlaskCauseway"), "Full health leaves a flask available")
 	level.player.hurt(2)

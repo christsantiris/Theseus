@@ -1,6 +1,6 @@
 extends RefCounted
 
-const TIME_LIMIT := 180.0
+const TIME_LIMIT := 150.0
 const WIDTH := 5760
 const HEIGHT := 352
 const FLOOR_Y := 280
@@ -52,20 +52,20 @@ const ENEMIES := [
 	{"name": "RaiderObeliskSteps", "kind": "raider", "position": Vector2(2688, 248), "patrol": Vector2(2648, 2720)},
 	{"name": "PeltastHighCourt", "kind": "peltast", "position": Vector2(3072, 200), "patrol": Vector2(3032, 3120)},
 	{"name": "HopliteHighCourt", "kind": "hoplite", "position": Vector2(3200, 200), "patrol": Vector2(3160, 3232)},
-	{"name": "SpartoiDescent", "kind": "spartoi", "position": Vector2(3456, 232), "patrol": Vector2(3416, 3488)},
+	{"name": "SpartoiDescent", "kind": "spartoi", "position": Vector2(3696, 264), "patrol": Vector2(3664, 3744)},
 	{"name": "RaiderSands", "kind": "raider", "position": Vector2(3896, 280), "patrol": Vector2(3856, 3936)},
 	{"name": "PeltastSands", "kind": "peltast", "position": Vector2(4224, 248), "patrol": Vector2(4144, 4304)},
 	{"name": "SpartoiSands", "kind": "spartoi", "position": Vector2(4624, 280), "patrol": Vector2(4528, 4704)},
-	{"name": "RaiderTempleRoad", "kind": "raider", "position": Vector2(4848, 280), "patrol": Vector2(3824, 4912)},
+	{"name": "RaiderTempleRoad", "kind": "raider", "position": Vector2(4848, 280), "patrol": Vector2(4784, 4912)},
 	{"name": "PeltastTemple", "kind": "peltast", "position": Vector2(5184, 248), "patrol": Vector2(5152, 5296)},
 	{"name": "SpartoiTemple", "kind": "spartoi", "position": Vector2(5440, 264), "patrol": Vector2(5408, 5472)},
+	{"name": "RaiderSunApproach", "kind": "raider", "position": Vector2(5490, 264), "patrol": Vector2(5468, 5500)},
 	{"name": "HopliteSunCaptain", "kind": "hoplite", "position": Vector2(5536, 280), "patrol": Vector2(5512, 5560)},
 ]
 const FLASKS := [
 	{"name": "HealthFlaskPyramids", "position": Vector2(1216, 248)},
-	{"name": "HealthFlaskCourts", "position": Vector2(2400, 280)},
-	{"name": "HealthFlaskObelisk", "position": Vector2(2944, 216)},
-	{"name": "HealthFlaskSunTemple", "position": Vector2(4960, 280)},
+	{"name": "HealthFlaskCourts", "position": Vector2(2896, 216)},
+	{"name": "HealthFlaskSunTemple", "position": Vector2(4496, 280)},
 ]
 const EXIT := Vector2(5600, FLOOR_Y)
 const GATE_GUARD := "HopliteSunCaptain"
@@ -80,7 +80,7 @@ const TIPS := [
 	{"x": 960, "end": 1152, "text": "Bait the hoplite's spear, then counter in recovery."},
 	{"x": 1856, "end": 2064, "text": "Spartoi guard the courts. Make space before striking."},
 	{"x": 5376, "end": 5536, "text": "Defeat the sun captain to open the temple."},
-	{"x": 3489, "end": 3544, "text": "Jump the sweeping sunbeam or wait outside its path."},
+	{"x": 3489, "end": 3544, "text": "Cross the sunbeam, then face the guard on the next landing."},
 ]
 
 

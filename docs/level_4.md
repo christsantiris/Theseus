@@ -1,7 +1,7 @@
 # Level 4 — Troy’s Fortifications
 
 A 5,760×352-world-unit route along Bronze Age Troy’s defensive walls. The
-three-minute countdown, combat, keyboard/mouse controls, simultaneous mobile
+two-and-a-half-minute countdown, combat, keyboard/mouse controls, simultaneous mobile
 touch inputs, entrance retries, completion ads and results use the shared game
 systems. Every climb works with normal jumps and base movement speed.
 
@@ -23,7 +23,7 @@ On the High Battlements at x=3600–3688, bows appear in the slits for 0.9 secon
 | Citadel Gate | 4800–5759 | Final terraces, a flask and the elite Hoplite captain guarding the exit. |
 
 Six Hoplites, seven Peltasts and six Raiders reuse existing enemy artwork and
-behavior, with Level 4 difficulty tuning. Five health flasks restore two bars
+behavior, with Level 4 difficulty tuning. Four health flasks restore two bars
 each. Enemies, patrol endpoints and flasks are placed on supported terrain.
 The captain unlocks the gate at (5728, 280). Finishing Troy carries the score
 into [Level 5’s mountain sanctuary](level_5.md). Death, timeout, Replay and the

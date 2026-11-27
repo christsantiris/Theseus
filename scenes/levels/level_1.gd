@@ -117,6 +117,7 @@ func _add_timing_obstacle(definition: Dictionary) -> void:
 	var obstacle := TimingObstacle.new()
 	obstacle.name = definition.name
 	obstacle.kind = definition.kind
+	obstacle.variant = String(definition.get("variant", ""))
 	obstacle.position = definition.position
 	obstacle.width = definition.width
 	obstacle.durations = definition.durations

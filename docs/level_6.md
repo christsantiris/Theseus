@@ -82,7 +82,7 @@ stand 56 pixels above the bull lanes, beyond a normal jump from the ground:
 A downward thrust on a bull's back opens a brief ride. Its cool sheen marks
 the safe platform; amber warns that it is recovering. Ride toward the ledge,
 then jump onto its bright stone cap. The ledges allow approach from below,
-leaving the charging corridor clear. Both reward a health flask; three more
+leaving the charging corridor clear. Both reward a health flask; two more
 flasks sit on the main route. Each restores two health without exceeding five.
 
 | Pit | Left edge | Rim Y | Width / depth |
@@ -97,7 +97,7 @@ its entrance.
 
 ## Progress and the exit
 
-Every attempt starts at the level entrance with full health and a **3:00 countdown**.
+Every attempt starts at the level entrance with full health and a **2:30 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
 interruptions, temple entry, and completion. Running out of time opens Hades,
 just like a fatal hit. **Retry Level** there restarts the entire level, including
@@ -149,5 +149,5 @@ and isolation from the other levels.
 
 The route is 20% longer: 5,760 world units with a new Western Temple Court section
 at X=3840–4799 before the final area. Three additional enemies occupy that
-space. The countdown remains 3:00, and existing music keeps looping at its
+space. The countdown is 2:30, and existing music keeps looping at its
 configured offset. Background camera coverage includes the full extended route.

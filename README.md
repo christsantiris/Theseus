@@ -45,7 +45,7 @@ Enemy windups, recovery windows, cooldowns, and pursuit speed scale with each le
 Each level is 5,760 world units long, with six areas and three additional
 enemies along its extended approach. Soundtracks continue looping throughout.
 
-Every attempt starts at the level entrance with full health and a **3:00 countdown**.
+Every attempt starts at the level entrance with full health and a **2:30 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
 interruptions, temple entry, and completion. Running out of time opens Hades,
 just like a fatal hit. **Retry Level** there restarts the entire level, including
@@ -86,7 +86,7 @@ One continuous sacred-city landscape sits behind complete plaster workshops, blu
 Level 4 crosses the dry Trojan plain, climbs the outer rampart and gate court,
 then follows high battlements and the inner wall to the citadel gate.
 Nineteen existing Hoplites, Peltasts and Raiders defend the route, including
-an elite Hoplite captain at the exit. Five flasks support the climb.
+an elite Hoplite captain at the exit. Four flasks support the climb.
 
 A continuous Bronze Age fortress panorama scrolls behind seven stone-and-timber
 bastions, a large wooden Trojan horse, four Cyclopean gateways and four retaining
@@ -119,9 +119,9 @@ One continuous dry gorge landscape shows stratified limestone walls and distant 
 
 Level 7 crosses an Egyptian desert beneath pyramids, with dunes, carved
 obelisks and sandstone temple gateways. Twenty-five terraces lead through six
-areas to the Temple of the Sun. Four Hoplites and five each of the existing Peltasts,
-Raiders and Spartoi defend the road; an elite Hoplite captain guards the exit.
-Four flasks support the route, and every climb uses normal jumps.
+areas to the Temple of the Sun. Cross the sweeping sunbeam before facing the
+Spartoi on the next landing. An elite Hoplite captain guards the exit, with
+a Raider on the approach. Three flasks support the route.
 
 One continuous desert landscape scrolls behind seven grounded obelisks and five
 pylon gateways. The sun temple continues into Atlantis, now Level 8.
@@ -139,11 +139,12 @@ thrusts that can be ducked; Reefblades make low lunges that can be jumped.
 Sixteen Merfolk encounters include the elite captain guarding the exit.
 A repeating tide floods and drains the causeways. Water slows Theseus by up to
 30% while Merfolk keep their full Level 8-scaled speed. Higher platforms reduce
-the drag; a tide meter shows the phase and remaining time. The shallow canals
-remain safe to fall into and can be climbed out of with Jump.
+the drag. Three banks of water jets interrupt the causeways. Watch for bubbles
+and cross after the burst. Watch the waterline to read the tide.
+The shallow canals remain safe to fall into and can be climbed out of with Jump.
 
 One continuous landscape and grounded wave-carved walls, bronze Poseidon
-statues, and ruined arches frame twenty-seven terraces. Two flasks support the route. Level 7 continues into Atlantis.
+statues, and ruined arches frame twenty-seven terraces. One flask supports the route. Level 7 continues into Atlantis.
 
 [Level 8 guide](docs/level_8.md)
 
@@ -153,14 +154,16 @@ controls. Review both Merfolk roles and the captain with
 
 ### The Labyrinth
 
-Level 9 ends the journey in a dim, torch-lit labyrinth. Raised galleries and
-low-roofed passages lead past five Hoplites, five Peltasts, and five Raiders.
-Three flasks support the approach.
+Level 9 ends the journey in a dim, torch-lit labyrinth. Raised galleries,
+low-roofed passages, three swinging iron spike balls, and a descending stone
+gate lead past five Hoplites, five Peltasts, and five Raiders.
+Two flasks support the approach.
 
 The eight-health Minotaur winds up, charges with lowered horns, headbutts,
 recovers, and backs away before attacking again. Time a full jump over his
-charge, then counter during recovery. Defeat him and enter the exit to finish
-the campaign. Existing keyboard and touch controls apply throughout.
+charge, then counter during recovery. At half health, two red lines warn of a
+follow-up charge before recovery. Defeat him and enter the exit to finish the
+campaign. Existing keyboard and touch controls apply throughout.
 
 [Level 9 guide](docs/level_9.md)
 
