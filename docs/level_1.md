@@ -75,8 +75,10 @@ Peltasts occupy readable raised positions; Hoplites guard ground approaches.
 Raiders start their sword windup only against visible targets within 64 horizontal
 and 24 vertical pixels, and their lunges respect terrain and patrol bounds.
 Peltasts wait outside 192 horizontal pixels. Inside 156 horizontal and 24
-vertical pixels they open with a thrown javelin after a brief pause. The windup
-stays readable, and the throw can be jumped. Inside 38 horizontal and 12
+vertical pixels they can throw one javelin per life after a brief pause. After
+that throw, they close in and use only melee jabs; retreating or waiting does
+not replenish the throw. This rule applies to Peltasts in every level. The
+windup stays readable, and the throw can be jumped. Inside 38 horizontal and 12
 vertical pixels they jab with the javelin still in hand. Both attacks are
 stationary and leave a recovery window.
 
@@ -99,7 +101,7 @@ Sword damage occurs only while the blade is visibly extended during an attack.
 
 Health flasks restore two health and remain available when Theseus is already full.
 
-Every attempt starts at the level entrance with full health and a **2:30 countdown**.
+Every attempt starts at the level entrance with full health and a **2:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
 interruptions, temple entry, and completion. Running out of time opens Hades,
 just like a fatal hit. **Retry Level** there restarts the entire level, including
@@ -168,5 +170,5 @@ travel during actual movement and jumping.
 
 The route is 20% longer: 5,760 world units with a new Sacred Grove section
 at X=3840–4799 before the final area. Three additional enemies occupy that
-space. The countdown is 2:30, and existing music keeps looping at its
+space. The countdown is 2:00, and existing music keeps looping at its
 configured offset. Background camera coverage includes the full extended route.

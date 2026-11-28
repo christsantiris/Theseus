@@ -69,7 +69,7 @@ defeated to open the exit.
 | Lamia | Coils on a broad platform, telegraphs a long melee strike, then withdraws into invulnerable coils. Bait the strike and retreat, jump it, or move behind her locked facing. Wait for the coils to open before counterattacking. |
 | Hoplite | Reuses the crouch, rise, march, and spear thrust behavior. Avoid body contact after he stands; time sword hits while he is exposed. |
 | Spartoi | Reuses Raider's committed sword lunge. Bait the windup and counter during recovery. |
-| Peltast | Opens with a thrown javelin while Theseus is still outside jab range. Jump the javelin, or step in and counter the jab recovery. |
+| Peltast | Can throw one javelin per life while Theseus is outside jab range, then closes in and uses only melee jabs. Jump the javelin, or step in and counter the jab recovery. |
 
 Lamia's workshop, agora, and temple landings provide room to back out of her
 68-pixel engagement range. Her protective retreat and guard last 0.83 seconds, followed
@@ -80,7 +80,7 @@ landing. No new controls or additional enemy variants are added.
 
 Four health flasks restore two health each.
 
-Every attempt starts at the level entrance with full health and a **2:30 countdown**.
+Every attempt starts at the level entrance with full health and a **2:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
 interruptions, temple entry, and completion. Running out of time opens Hades,
 just like a fatal hit. **Retry Level** there restarts the entire level, including
@@ -133,5 +133,5 @@ Combat difficulty and first-clear pacing still need a human playthrough.
 
 The route is 20% longer: 5,760 world units with a new Processional Courts section
 at X=3840–4799 before the final area. Three additional enemies occupy that
-space. The countdown is 2:30, and existing music keeps looping at its
+space. The countdown is 2:00, and existing music keeps looping at its
 configured offset. Background camera coverage includes the full extended route.

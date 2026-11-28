@@ -12,6 +12,7 @@ class Target:
 
 
 var failures: Array[String] = []
+var throws := 0
 
 
 func _initialize() -> void:
@@ -60,6 +61,9 @@ func _reset_attack(peltast: Node, player: Target) -> void:
 
 
 func _run() -> void:
+	root.child_entered_tree.connect(func(child: Node) -> void:
+		if child.get_script() == preload("res://scenes/projectiles/thrown_weapon.gd"):
+			throws += 1)
 	_solid(Rect2(0, 152, 600, 32))
 	var player := Target.new()
 	player.position = Vector2(500, 152)
@@ -149,6 +153,7 @@ func _run() -> void:
 	peltast.sword_hit()
 	_expect(not peltast.alive and awarded.points == 100, "Second sword hit defeats Peltast and awards its existing score")
 	peltast.set_physics_process(false)
+	await _check_single_throw(player)
 	await _check_telchines(player)
 	await _check_javelins(player)
 	for child in root.get_node("GameMusic").get_children():
@@ -157,10 +162,71 @@ func _run() -> void:
 			child.stream = null
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: Peltast dormancy, opening javelin throw, fast Telchine trident-only jabs, detailed javelin flight/hits/walls/lifetime, close jab, elevation, walls, windup, retreat/jump/side-step counters, recovery, single-hit damage, no automatic stomp kills, and score.")
+		print("PASS: Peltast dormancy, one throw per life across level tunings and both directions, melee-only pursuit after throwing, fast Telchine trident-only jabs, detailed javelin flight/hits/walls/lifetime, close jab, elevation, walls, windup, retreat/jump/side-step counters, recovery, single-hit damage, no automatic stomp kills, and score.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)
+
+
+func _check_single_throw(player: Target) -> void:
+	const Difficulty := preload("res://scenes/levels/difficulty.gd")
+	for number in [1, 3, 4, 7, 9]:
+		for facing in [-1, 1]:
+			var peltast = load("res://scenes/enemies/peltast.tscn").instantiate()
+			peltast.tuning = Difficulty.for_level(number)
+			peltast.position = Vector2(300, 152)
+			peltast.direction = facing
+			peltast.patrol_left = 48.0
+			peltast.patrol_right = 552.0
+			player.position = peltast.position + Vector2(facing * 32, 0)
+			player.health = 100
+			player.hits = 0
+			root.add_child(peltast)
+			var before := throws
+			_expect(await _until(peltast, "windup", 30), "A fresh Peltast can start in melee")
+			_expect(await _until(peltast, "recover", 65), "The first melee jab completes")
+			_expect(throws == before and peltast._can_throw(), "Melee before throwing does not consume the one javelin")
+			player.position = peltast.position + Vector2(facing * 140, 0)
+			_expect(await _until(peltast, "windup", 150), "A fresh Peltast retains its own ranged attack")
+			paused = true
+			await _frames(6)
+			_expect(throws == before and peltast._can_throw(), "Paused windup does not release or consume a javelin")
+			paused = false
+			_expect(await _until(peltast, "jab", 50), "The one ranged attack releases normally")
+			_expect(throws == before + 1 and peltast._ranged, "Each Peltast releases exactly one ranged projectile")
+			# Spending the javelin must not turn this same throw into a melee hit.
+			player.position = peltast.position + Vector2(facing * 32, 0)
+			for weapon in get_nodes_in_group("thrown_weapons"):
+				weapon.free()
+			var hits := player.hits
+			await _frames(5)
+			_expect(player.hits == hits, "The throwing animation does not also deal a melee hit")
+			# Keep the target outside jab range for longer than two attack cycles.
+			var start_x: float = peltast.position.x
+			for frame in 300:
+				player.position = peltast.position + Vector2(facing * 100, 0)
+				await physics_frame
+			_expect(throws == before + 1 and not peltast._can_engage(), "Cooldowns cannot replenish the throw or cause distant melee attacks")
+			_expect((peltast.position.x - start_x) * facing > 40, "A spent Peltast pursues Theseus for melee")
+			player.position = peltast.position + Vector2(facing * 300, 0)
+			await _frames(4)
+			_expect(not peltast._has_focus, "Retreat releases the encounter focus")
+			player.position = peltast.position + Vector2(facing * 100, 0)
+			await _frames(4)
+			peltast.sword_hit()
+			peltast._throw_weapon()
+			_expect(peltast._has_focus and throws == before + 1, "Reacquiring Theseus, taking damage and a repeated launch call do not restore the throw")
+			player.position = peltast.position + Vector2(facing * 32, 0)
+			_expect(await _until(peltast, "jab", 100), "A spent Peltast still attacks in melee")
+			_expect(not peltast._ranged, "The spent Peltast selects a held-javelin jab")
+			hits = player.hits
+			_expect(await _until(peltast, "recover", 20), "The melee attack recovers normally")
+			_expect(player.hits == hits + 1 and throws == before + 1, "The post-throw jab deals one melee hit without another projectile")
+			peltast.free()
+			for weapon in get_nodes_in_group("thrown_weapons"):
+				weapon.free()
+	player.health = 10
+	player.hits = 0
 
 
 func _check_telchines(player: Target) -> void:

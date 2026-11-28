@@ -42,6 +42,9 @@ All nine levels use continuous backgrounds with independent scenery objects and 
 
 Enemy windups, recovery windows, cooldowns, and pursuit speed scale with each level. Encounter layouts, counters, healing, and environmental mechanics also determine how difficult a level feels.
 
+Each Peltast can throw one javelin per life. After throwing it, that Peltast
+closes in and uses only melee jabs. This applies throughout the game.
+
 Each level is 5,760 world units long, with six areas and three additional
 enemies along its extended approach. Soundtracks continue looping throughout.
 
