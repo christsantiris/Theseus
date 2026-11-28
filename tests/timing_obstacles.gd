@@ -386,6 +386,23 @@ func _check_labyrinth_spike_ball(level: Node, obstacle: Node2D, player: Characte
 	_move("move_right", false)
 	_expect(player.global_position.x > origin.x + obstacle.width and player.health == player.MAX_HEALTH,
 		label + " clears cleanly when dropping under the swinging ball")
+	_move("duck", true)
+	for x in [20.0, obstacle.width / 2.0, obstacle.width - 20.0]:
+		_place(player, origin + Vector2(x, 0))
+		obstacle.elapsed = 0.0
+		obstacle._hit_this_cycle = false
+		await _frames(3)
+		_expect(player._ducked, label + " uses the real crouching collision shape")
+		await _frames(ceili(obstacle.durations.z * 60.0) * 2)
+		_expect(player.health == player.MAX_HEALTH,
+			"Ducking at x=%.0f clears two complete %s swings" % [x, label])
+	_move("duck", false)
+	_place(player, origin + Vector2(obstacle.width / 2.0, 0))
+	obstacle.elapsed = obstacle.durations.z / 4.0
+	obstacle._hit_this_cycle = false
+	await _frames(3)
+	_expect(not player._ducked and player.health == player.MAX_HEALTH - 1,
+		label + " still hits Theseus when standing on the terrace")
 
 
 func _check_sunbeam(obstacle: Node2D, player: CharacterBody2D) -> void:

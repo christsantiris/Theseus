@@ -13,7 +13,8 @@ const FOAM := Color("d4fcf7")
 # The Level 1 weight clears the 36-pixel duck pose, including its painted
 # lower edge, while still reaching the 44-pixel standing body.
 const WEIGHT_PIVOT_Y := -101.0
-const LABYRINTH_PIVOT_Y := -94.0
+# The larger, rotating spike-ball artwork also clears the ducking pose.
+const LABYRINTH_PIVOT_Y := -104.0
 const GATE_HEIGHT := 72.0
 const GATE_TRAVEL := 0.45
 const GATE_APPROACH := 48.0

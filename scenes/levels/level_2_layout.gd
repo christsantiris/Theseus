@@ -1,6 +1,6 @@
 extends RefCounted
 
-const TIME_LIMIT := 150.0
+const TIME_LIMIT := 120.0
 
 const WIDTH := 5760
 const HEIGHT := 320

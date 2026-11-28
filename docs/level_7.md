@@ -45,7 +45,7 @@ The gorge offers **Continue to Level 7**. Finishing Egypt shows a ready ad befor
 results on mobile, then **Continue to Level 8** enters [Atlantis](level_8.md).
 The [Minotaur finale](level_9.md) is Level 9.
 
-Each attempt starts with full health and a 2:30 countdown. Pause, app
+Each attempt starts with full health and a 2:00 countdown. Pause, app
 interruptions, temple entry, the ad and results freeze the clock. Death or time
 expiry opens Hades; Retry Level restores the Egyptian entrance, enemies,
 flasks and score carried from earlier levels. Replay and the title's Load also restart the attempt. There are no checkpoints.
@@ -91,5 +91,5 @@ device performance still require device checks.
 
 The route is 20% longer: 5,760 world units with a new Sandstone Causeway section
 at X=3840–4799 before the final area. Three additional enemies occupy that
-space. The countdown is 2:30, and existing music keeps looping at its
+space. The countdown is 2:00, and existing music keeps looping at its
 configured offset. Background camera coverage includes the full extended route.

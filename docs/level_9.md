@@ -19,7 +19,8 @@ Each swings on a four-second pendulum cycle using the same contact timing as
 Level 1's bronze weight, restyled with labyrinth stone, iron links, and spiked
 spheres (`assets/art/objects/labyrinth_pendulum.png`). Pause on the higher
 terrace, drop underneath as the ball swings away, and cross before it returns.
-Contact costs one health.
+Ducking on the lower terrace safely clears a complete swing, including the
+painted spikes. Standing in the ball's path still costs one health.
 
 ## Descending stone gate
 
@@ -47,7 +48,7 @@ Ducking still holds position, as it does elsewhere in the game.
 
 There are five of each soldier, one Minotaur, and two two-health flasks.
 
-Every attempt starts at the level entrance with full health and a **2:30 countdown**.
+Every attempt starts at the level entrance with full health and a **2:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
 interruptions, temple entry, and completion. Running out of time opens Hades,
 just like a fatal hit. **Retry Level** there restarts the entire level, including
@@ -146,5 +147,5 @@ unverified. The normal iOS campaign app was restored after the probe.
 
 The route is 20% longer: 5,760 world units with a new The Silent Gallery section
 at X=3840–4799 before the final area. Three additional enemies occupy that
-space. The countdown is 2:30, and existing music keeps looping at its
+space. The countdown is 2:00, and existing music keeps looping at its
 configured offset. Background camera coverage includes the full extended route.
