@@ -85,6 +85,17 @@ const TIMING_OBSTACLE := {
 	"name": "PottersKiln", "kind": TimingObstacle.Kind.KILN,
 	"position": Vector2(1784, 264), "width": 80.0, "durations": Vector3(2.7, 0.8, 1),
 }
+const KILNS := [
+	{
+		"name": "CityGateKiln", "kind": TimingObstacle.Kind.KILN,
+		"position": Vector2(128, 280), "width": 80.0, "durations": Vector3(2.7, 0.8, 1),
+	},
+	TIMING_OBSTACLE,
+	{
+		"name": "ProcessionalKiln", "kind": TimingObstacle.Kind.KILN,
+		"position": Vector2(4480, 248), "width": 80.0, "durations": Vector3(2.7, 0.8, 1),
+	},
+]
 
 const TIPS := [
 	{"x": 80, "end": 320, "text": "The town road leads to the acropolis."},

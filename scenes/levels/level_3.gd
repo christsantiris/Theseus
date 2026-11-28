@@ -8,3 +8,8 @@ func _ready() -> void:
 	objective = "Cross the town. Wait for Lamia's coils to open."
 	completion_text = "The city's sacred road is clear."
 	super()
+
+
+func _build_timing_obstacle() -> void:
+	for definition: Dictionary in layout.KILNS:
+		_add_timing_obstacle(definition)

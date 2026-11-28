@@ -64,6 +64,12 @@ func _run() -> void:
 			for crossing: Dictionary in level.layout.QUAY_CROSSINGS:
 				await _check_quay_slabs(level, player, crossing.name)
 			continue
+		if number == 3:
+			var kilns := level.find_children("*Kiln", "Node2D", false, false)
+			_expect(kilns.size() == 3, "Level 3 spawns three flame obstacles")
+			for definition: Dictionary in level.layout.KILNS:
+				await _check_kiln(level, level.get_node(definition.name), player)
+			continue
 		if number == 8:
 			_expect(not level.hud._root.has_node("TideStatus"), "Atlantis has no tide countdown display")
 			for definition: Dictionary in level.layout.JET_BANKS:
@@ -122,6 +128,37 @@ func _run() -> void:
 	if _failures == 0:
 		print("PASS: nine timing obstacles, pause, damage, duck, bridge, gate, and high-tide crossing (%s)." % ("touch" if _controls.enabled else "desktop"))
 	quit(int(_failures > 0))
+
+
+func _check_kiln(level: Node, obstacle: Node2D, player: CharacterBody2D) -> void:
+	var origin := obstacle.global_position
+	var label := String(obstacle.name)
+	for x in [origin.x - 16.0, origin.x, origin.x + obstacle.width - 1.0, origin.x + obstacle.width + 9.0]:
+		_expect(level.layout.surface_at(x) == origin.y, label + " has a flat crossing and waiting space")
+	paused = true
+	var before: float = obstacle.elapsed
+	await _frames(4)
+	_expect(obstacle.elapsed == before, label + " freezes while paused")
+	paused = false
+	obstacle.elapsed = obstacle.durations.x + obstacle.durations.y / 2.0
+	_place(player, origin + Vector2(obstacle.width / 2.0, 0))
+	await _frames(3)
+	_expect(obstacle._warning() and not obstacle._danger_rect().has_area() and player.health == player.MAX_HEALTH,
+		label + " warns before its flames can hurt Theseus")
+	obstacle.elapsed = obstacle.durations.x + obstacle.durations.y
+	obstacle._hit_this_cycle = false
+	await _frames(3)
+	_expect(player.health == player.MAX_HEALTH - 1, label + " active flames cost one health")
+	await _frames(12)
+	_expect(player.health == player.MAX_HEALTH - 1, label + " cannot repeat damage in one flare")
+	_place(player, origin + Vector2(-16, 0))
+	obstacle.elapsed = 0.0
+	obstacle._hit_this_cycle = false
+	_move("move_right", true)
+	await _frames(70)
+	_move("move_right", false)
+	_expect(player.position.x > origin.x + obstacle.width and player.health == player.MAX_HEALTH,
+		label + " can be crossed safely while cool")
 
 
 func _check_quay_slabs(level: Node, player: CharacterBody2D, crossing: String) -> void:

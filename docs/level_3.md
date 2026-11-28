@@ -28,7 +28,11 @@ and collision layout. See the [ground-contact regression](performance.md#scenery
 
 ## Kiln vents
 
-At x=1784–1864 in the Potters’ Quarter, kiln vents glow for 0.8 seconds, flare for one second, and then cool for 2.7 seconds. Wait for the flames to die down before crossing.
+Three flame banks span x=128–208 at the City Gate, x=1784–1864 in the Potters’
+Quarter, and x=4480–4560 in the Processional Courts. Each uses the existing
+kiln cycle: vents glow for 0.8 seconds, flare for one second, and cool for
+2.7 seconds. Wait for the flames to die down before crossing. All three sit
+on flat terrain, with clear space before and after the vents.
 
 ## Route
 
@@ -65,12 +69,12 @@ defeated to open the exit.
 | Lamia | Coils on a broad platform, telegraphs a long melee strike, then withdraws into invulnerable coils. Bait the strike and retreat, jump it, or move behind her locked facing. Wait for the coils to open before counterattacking. |
 | Hoplite | Reuses the crouch, rise, march, and spear thrust behavior. Avoid body contact after he stands; time sword hits while he is exposed. |
 | Spartoi | Reuses Raider's committed sword lunge. Bait the windup and counter during recovery. |
-| Peltast | Reuses the held javelin's stationary melee jab. Step away or jump the telegraph, then counter. |
+| Peltast | Opens with a thrown spear while Theseus is still outside jab range. Jump the spear, or step in and counter the jab recovery. |
 
 Lamia's workshop, agora, and temple landings provide room to back out of her
 68-pixel engagement range. Her protective retreat and guard last 0.83 seconds, followed
 by an exposed recovery and idle cooldown. The final Lamia is on a 192-pixel
-landing. No ranged attacks, new controls, or additional enemy variants are added.
+landing. No new controls or additional enemy variants are added.
 
 ## Recovery and progression
 
