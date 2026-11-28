@@ -54,11 +54,39 @@ func _deals_contact() -> bool:
 
 
 func _weapon_name() -> String:
-	return "spear"
+	return "javelin"
+
+
+func _uses_throw() -> bool:
+	return true
+
+
+func _engage_range() -> float:
+	return THROW_RANGE
+
+
+func _engage_height() -> float:
+	return THROW_HEIGHT
+
+
+func _windup_seconds() -> float:
+	return WINDUP_SECONDS
+
+
+func _attack_cooldown() -> float:
+	return ATTACK_COOLDOWN
+
+
+func _notice_range() -> float:
+	return _engage_range()
+
+
+func _notice_height() -> float:
+	return _engage_height()
 
 
 func _tick(delta: float) -> void:
-	_update_focus(THROW_RANGE, THROW_HEIGHT)
+	_update_focus(_notice_range(), _notice_height())
 	_state_time += delta
 	_flash = maxf(_flash - delta, 0.0)
 	if not is_on_floor():
@@ -72,12 +100,12 @@ func _tick(delta: float) -> void:
 		_play_locomotion("walk")
 		_cooldown = maxf(0.0, _cooldown - delta)
 		if _cooldown <= 0.0 and _can_engage():
-			_face_player(THROW_HEIGHT)
-			_ranged = not _player_close(JAB_RANGE, 12.0)
+			_face_player(_engage_height())
+			_ranged = _uses_throw() and not _player_close(JAB_RANGE, 12.0)
 			_enter("windup")
 	elif _state == "windup":
 		velocity.x = 0.0
-		if _state_time >= _telegraph(WINDUP_SECONDS):
+		if _state_time >= _telegraph(_windup_seconds()):
 			_enter("jab")
 	elif _state == "jab":
 		velocity.x = 0.0
@@ -90,7 +118,7 @@ func _tick(delta: float) -> void:
 		if _has_focus:
 			_face_player(FOCUS_HEIGHT)
 		if _state_time >= _punish(RECOVERY_SECONDS):
-			_cooldown = _rest(ATTACK_COOLDOWN)
+			_cooldown = _rest(_attack_cooldown())
 			_enter("patrol")
 	_tint()
 
@@ -99,7 +127,7 @@ func _can_engage() -> bool:
 	var player := _player()
 	if player == null or player.get("health") == 0:
 		return false
-	var in_reach := _player_close(JAB_RANGE, 12.0) or _player_close(THROW_RANGE, THROW_HEIGHT)
+	var in_reach := _player_close(JAB_RANGE, 12.0) or _player_close(_engage_range(), _engage_height())
 	if not in_reach:
 		return false
 	var query := PhysicsRayQueryParameters2D.create(
@@ -115,15 +143,29 @@ func _enter(next: String) -> void:
 	_state_time = 0.0
 	velocity.x = 0.0
 	javelin_strike.position = Vector2(direction * 22.0, -26.0)
+	_reset_strike_shape()
 	if next == "jab":
 		_strike_hits.clear()
 		if _ranged:
-			_throw_weapon()
+			_present_ranged_attack()
 	if next != "patrol":
 		_play(next)
 
 
+func _reset_strike_shape() -> void:
+	var shape := javelin_strike.get_node("CollisionShape2D").shape as RectangleShape2D
+	if shape != null:
+		shape.size = Vector2(24, 8)
+
+
+func _present_ranged_attack() -> void:
+	if _uses_throw():
+		_throw_weapon()
+
+
 func _throw_weapon() -> void:
+	if not _uses_throw():
+		return
 	var weapon := CharacterBody2D.new()
 	weapon.set_script(WEAPON)
 	var parent := get_parent()
@@ -135,7 +177,7 @@ func _throw_weapon() -> void:
 
 
 func _hurt_javelin_overlaps() -> void:
-	if _ranged:
+	if _ranged and _uses_throw():
 		return
 	for body in javelin_strike.get_overlapping_bodies():
 		if not body.is_in_group("player") or not body.has_method("hurt"):

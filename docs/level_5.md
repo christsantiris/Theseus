@@ -86,7 +86,7 @@ horn reach, safe bounce, and wine drops are unchanged. Review them with
 | Cyclops Slinger | 4 | 3 / 200 | A slow, committed windup launches one boulder along a fixed arc. Jump the descending boulder or destroy it with a timed sword hit. Close during the long reload opening. |
 | Satyr | 4 | 2 / 125 | Varied hops use supported landing spots. Bait or jump the short horn charge, or land on its head to bounce safely and deal one damage. |
 | Raider | 4 | 2 / 100 | Bait the committed sword lunge, then counter during recovery. Keeps pursuing Theseus on safe ground. |
-| Telchine | 4 | 2 / 100 | Opens with a thrown trident, then uses the held jab if Theseus closes. Jump the throw or counter during recovery. |
+| Telchine | 4 | 2 / 100 | Closes in and jabs with a held trident, using a 0.35-second windup and 0.75-second cooldown before level scaling. Jump or retreat, then counter during recovery. Never throws. |
 
 The maximum combat score is 2,100. Satyrs have a 35% chance to drop stolen wine,
 which grants six seconds of 35% faster movement with a visible timer. Another

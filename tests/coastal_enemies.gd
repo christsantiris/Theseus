@@ -43,6 +43,21 @@ func _reset(kind: String, position: Vector2) -> void:
 	level.add_child(enemy)
 
 
+func _input_action(action: String, pressed: bool, finger := 0) -> void:
+	var controls := root.get_node("MobileControls")
+	if controls.enabled:
+		var touch := InputEventScreenTouch.new()
+		touch.index = finger
+		touch.position = controls.buttons[action].position
+		touch.pressed = pressed
+		root.push_input(touch, true)
+		Input.flush_buffered_events()
+	elif pressed:
+		Input.action_press(action)
+	else:
+		Input.action_release(action)
+
+
 func _until(state_name: String) -> bool:
 	for frame in 100:
 		await physics_frame
@@ -152,6 +167,16 @@ func _run() -> void:
 	_expect(enemy.alive and enemy.hp == 1, "First sword hit damages Telchine")
 	enemy.sword_hit()
 	_expect(not enemy.alive, "Second sword hit defeats Telchine")
+	for x in [164.0, 236.0]:
+		await _reset("telchine", Vector2(x, 280))
+		_expect(await _until("windup"), "Fast trident jab gives a readable cue")
+		await _frames(8)
+		_input_action("jump", true, 1)
+		_expect(await _until("jab"), "Telchine follows through with its held trident")
+		_expect(await _until("recover"), "Jumped trident jab still recovers")
+		_input_action("jump", false, 1)
+		_expect(player.health == 5, "A timed player jump clears the quicker trident jab in both directions")
+		_expect(get_nodes_in_group("thrown_weapons").is_empty(), "Telchine never throws at the real player")
 	await _reset("spartoi", Vector2(248, 280))
 	_expect(enemy.hp == 2 and enemy.sprite.sprite_frames.has_animation("lunge"), "Skeletal Spartoi uses Raider lunge animations and two HP")
 	_expect(await _until("windup"), "Spartoi telegraphs its lunge")

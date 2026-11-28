@@ -75,10 +75,15 @@ Peltasts occupy readable raised positions; Hoplites guard ground approaches.
 Raiders start their sword windup only against visible targets within 64 horizontal
 and 24 vertical pixels, and their lunges respect terrain and patrol bounds.
 Peltasts wait outside 192 horizontal pixels. Inside 156 horizontal and 24
-vertical pixels they open with a thrown spear after a brief pause, without
-waiting for Theseus to close in. The windup stays readable, and the throw can
-be jumped. Inside 38 horizontal and 12 vertical pixels they use the held javelin
-jab instead. Both attacks are stationary and leave a recovery window.
+vertical pixels they open with a thrown javelin after a brief pause. The windup
+stays readable, and the throw can be jumped. Inside 38 horizontal and 12
+vertical pixels they jab with the javelin still in hand. Both attacks are
+stationary and leave a recovery window.
+
+Flying javelins use a detailed transparent wood-and-metal sprite that matches
+the Peltast artwork. The new illustration retains the projectile’s 168-unit
+speed, 1.4-second lifetime, flight height, leading-tip collision and one-health
+damage; it mirrors with the throw direction.
 
 Duck remains available, but the route does not require crouch-walking. First-clear
 pacing is intended to be under the **3-minute limit** with combat and exploration;
