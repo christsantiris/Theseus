@@ -212,6 +212,26 @@ func _check_weight(obstacle: Node2D, player: CharacterBody2D) -> void:
 	_expect(player.global_position.x > origin.x + obstacle.width and player.health == player.MAX_HEALTH,
 		"Running under the weight as it swings high clears the colonnade")
 
+	# Stay ducked through complete swings at the center and both sides of
+	# the lane. A test of only the high part of the arc misses head contact.
+	_move("duck", true)
+	for x in [20.0, obstacle.width / 2.0, obstacle.width - 20.0]:
+		_place(player, origin + Vector2(x, 0))
+		obstacle.elapsed = 0.0
+		obstacle._hit_this_cycle = false
+		await _frames(3)
+		_expect(player._ducked, "Duck input engages the real crouching collision shape")
+		await _frames(ceili(obstacle.durations.z * 60.0) * 2)
+		_expect(player.health == player.MAX_HEALTH,
+			"Ducking at x=%.0f clears two complete Level 1 weight swings" % x)
+	_move("duck", false)
+	_place(player, origin + Vector2(obstacle.width / 2.0, 0))
+	obstacle.elapsed = obstacle.durations.z / 4.0
+	obstacle._hit_this_cycle = false
+	await _frames(3)
+	_expect(not player._ducked and player.health == player.MAX_HEALTH - 1,
+		"Standing under the low weight still costs one health")
+
 
 func _check_labyrinth_spike_ball(level: Node, obstacle: Node2D, player: CharacterBody2D) -> void:
 	var origin := obstacle.global_position

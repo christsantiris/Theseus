@@ -10,7 +10,10 @@ const ART := preload("res://assets/art/objects/timing_obstacles.png")
 const LABYRINTH_PENDULUM := preload("res://assets/art/objects/labyrinth_pendulum.png")
 const GOLD := Color("ffe1a0")
 const FOAM := Color("d4fcf7")
-const WEIGHT_PIVOT_Y := -94.0
+# The Level 1 weight clears the 36-pixel duck pose, including its painted
+# lower edge, while still reaching the 44-pixel standing body.
+const WEIGHT_PIVOT_Y := -101.0
+const LABYRINTH_PIVOT_Y := -94.0
 const GATE_HEIGHT := 72.0
 const GATE_TRAVEL := 0.45
 const GATE_APPROACH := 48.0
@@ -161,9 +164,13 @@ func _resolve_gate_contact() -> void:
 		_hurt_player()
 
 
+func _weight_anchor() -> Vector2:
+	return Vector2(width / 2, LABYRINTH_PIVOT_Y if variant == "labyrinth" else WEIGHT_PIVOT_Y)
+
+
 func _weight_center() -> Vector2:
 	var angle := cos(TAU * elapsed / durations.z) * 0.92
-	return Vector2(width / 2, WEIGHT_PIVOT_Y) + Vector2(sin(angle), cos(angle)) * 55.0
+	return _weight_anchor() + Vector2(sin(angle), cos(angle)) * 55.0
 
 
 func _rock_x(index: int) -> float:
@@ -235,7 +242,7 @@ func _labyrinth_region(cell: int) -> Rect2:
 
 
 func _draw_weight() -> void:
-	var anchor := Vector2(width / 2, WEIGHT_PIVOT_Y)
+	var anchor := _weight_anchor()
 	var weight := _weight_center()
 	var angle := (weight - anchor).angle() - PI / 2
 	if variant == "labyrinth":

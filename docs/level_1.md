@@ -40,7 +40,7 @@ and collision layout. See the [ground-contact regression](performance.md#scenery
 
 ## Bronze weight
 
-A bronze weight swings over the Broken Colonnade at x=1180–1284 on a four-second cycle. Watch the weight pass and run underneath as it swings away. Contact costs one health.
+A bronze weight swings over the Broken Colonnade at x=1180–1284 on a four-second cycle. Duck to let the weight swing safely overhead, or watch it pass and run underneath as it swings away. Its lowest painted edge clears the ducking pose by two world pixels; standing in its path still costs one health.
 
 ## Route and encounter progression
 
