@@ -101,7 +101,7 @@ Play-test with `tools/play_level.sh 4`, or `tools/play_mobile.sh 4`.
 
 ### The Mountain Sanctuary
 
-Cypress trees rise above Greek mountain slopes and terraced stone walls. Cyclops Slingers hurl breakable boulders, Satyrs hop between ledges and charge with their horns, and Raiders and Telchines return. Four spike pits interrupt the road: jump across, or climb out after losing a health bar. Satyrs can be bounced on and sometimes drop stolen wine for a brief speed boost.
+Cypress trees rise above Greek mountain slopes and terraced stone walls. Cyclops Slingers hurl breakable boulders and slam a held stone when Theseus gets close. Jump or back away from the slam, then counter during recovery. Satyrs hop between ledges and charge with their horns, and Raiders and Telchines return. Four spike pits interrupt the road: jump across, or climb out after losing a health bar. Satyrs can be bounced on and sometimes drop stolen wine for a brief speed boost.
 
 One continuous mountain landscape shows rocky ridges, cypress slopes, terraced walls, and a distant sanctuary. Complete groves, low retaining walls, rocky outcrops, and weathered column fragments stand on the original terraces, leaving all four spike pits open.
 

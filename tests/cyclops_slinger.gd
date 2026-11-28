@@ -153,6 +153,97 @@ func _controller() -> void:
 	await _frames()
 
 
+func _reset_slam(facing := 1) -> void:
+	player.position = Vector2(300 + facing * 32, 152)
+	player.health = 20
+	player.hits = 0
+	cyclops.position = Vector2(300, 152)
+	cyclops.direction = facing
+	cyclops._enter("idle")
+	cyclops._cooldown = 0.0
+
+
+func _melee_controller() -> void:
+	fixture = Node2D.new()
+	root.add_child(fixture)
+	_solid(fixture, Rect2(0, 152, 600, 32))
+	player = Target.new()
+	player.position = Vector2(500, 152)
+	player.collision_layer = 2
+	player.collision_mask = 1
+	var collision := CollisionShape2D.new()
+	var body := RectangleShape2D.new()
+	body.size = Vector2(14, 44)
+	collision.shape = body
+	collision.position.y = -22
+	player.add_child(collision)
+	fixture.add_child(player)
+	player.add_to_group("player")
+	cyclops = load("res://scenes/enemies/cyclops_slinger.tscn").instantiate()
+	cyclops.position = Vector2(300, 152)
+	fixture.add_child(cyclops)
+	throws = 0
+	cyclops.boulder_thrown.connect(func(_rock: CharacterBody2D) -> void: throws += 1)
+	await _frames()
+	for facing in [-1, 1]:
+		_reset_slam(facing)
+		_expect(await _until("slam_windup", 10), "Nearby Theseus triggers a close slam in either direction")
+		await _frames(20)
+		_expect(cyclops._state == "slam_windup" and player.hits == 0 and throws == 0, "Raised-stone warning is safe and does not release a boulder")
+		paused = true
+		var before: float = cyclops._state_time
+		await _frames(8)
+		_expect(cyclops._state_time == before and player.hits == 0, "Pause freezes the slam windup")
+		paused = false
+		_expect(await _until("slam", 45), "The warning leads to a held-boulder impact")
+		_expect(cyclops._slam_thud.playing, "The close impact uses the existing boulder thud")
+		_expect(await _until("slam_recover", 20), "The slam exposes a separate recovery window")
+		_expect(player.hits == 1 and player.health == 19 and throws == 0,
+			"Each close slam deals one hit, without a projectile or repeated overlap damage")
+		_expect(cyclops.position == Vector2(300, 152), "Close attacks keep Cyclops planted")
+		await _frames(20)
+		_expect(cyclops._state == "slam_recover" and player.hits == 1, "Slam recovery is safe for counters")
+		_expect(await _until("idle", 60), "The slam returns to the normal attack selection")
+		_expect(cyclops._cooldown > 0.0, "A completed slam keeps the normal attack cooldown")
+
+	_reset_slam()
+	player.position = Vector2(332, 120)
+	_expect(not cyclops._can_slam(), "A player on a substantially higher ledge cannot trigger a ground slam")
+	player.position = Vector2(332, 152)
+	var wall := _solid(fixture, Rect2(318, 70, 4, 82))
+	await _frames()
+	_expect(not cyclops._can_slam() and cyclops._state == "idle", "A wall blocks the melee attack")
+	wall.free()
+	await _frames()
+
+	_reset_slam()
+	_expect(await _until("slam_windup", 10), "Retreat counter starts with a warning")
+	player.position.x = 380
+	_expect(await _until("slam_recover", 90), "A baited slam follows through")
+	_expect(player.hits == 0 and throws == 0, "Retreat avoids the committed close attack")
+	_reset_slam()
+	_expect(await _until("slam_windup", 10), "Side-step counter starts with a warning")
+	player.position.x = 268
+	_expect(await _until("slam", 60), "The close attack commits to its original side")
+	_expect(cyclops.direction == 1, "Cyclops does not turn its slam after the windup")
+	_expect(await _until("slam_recover", 20), "Missed slam recovers normally")
+	_expect(player.hits == 0, "Moving behind Cyclops avoids the front-only impact")
+
+	_reset_slam()
+	_expect(await _until("slam_windup", 10), "Fatal-counter case begins with a close attack")
+	cyclops.sword_hit()
+	_expect(cyclops.hp == 2, "Cyclops remains vulnerable during the melee warning")
+	_expect(await _until("slam", 60), "Fatal-counter case reaches the impact pose")
+	var award := {"score": 0}
+	cyclops.defeated.connect(func(points: int) -> void: award.score += points)
+	cyclops.sword_hit()
+	cyclops.sword_hit()
+	await _frames(20)
+	_expect(player.hits == 0 and award.score == 200, "Defeating Cyclops cancels late slam damage and retains its score")
+	fixture.free()
+	await _frames()
+
+
 func _projectiles() -> void:
 	fixture = Node2D.new()
 	root.add_child(fixture)
@@ -270,15 +361,81 @@ func _player_defenses() -> void:
 	_expect(state.level_number == saved_level and state.level_start_score == saved_score, "Enemy review leaves campaign progress untouched")
 
 
+func _action(action: String, pressed: bool, finger := 0) -> void:
+	var controls := root.get_node("MobileControls")
+	if controls.enabled:
+		var touch := InputEventScreenTouch.new()
+		touch.index = finger
+		touch.position = controls.buttons[action].position
+		touch.pressed = pressed
+		root.push_input(touch, true)
+		Input.flush_buffered_events()
+	elif pressed:
+		Input.action_press(action)
+	else:
+		Input.action_release(action)
+
+
+func _fresh_slam_level(facing: int) -> Node:
+	paused = false
+	for action in ["jump", "attack", "duck", "move_left", "move_right"]:
+		Input.action_release(action)
+	root.get_node("LevelRun").begin_level(5)
+	change_scene_to_file("res://scenes/levels/level_5.tscn")
+	await scene_changed
+	var level := current_scene
+	cyclops = level.get_node("CyclopsFoothills")
+	for enemy in get_nodes_in_group("enemies"):
+		if enemy != cyclops:
+			enemy.process_mode = Node.PROCESS_MODE_DISABLED
+			enemy.remove_from_group("enemies")
+			enemy.collision_layer = 0
+	cyclops.set_physics_process(false)
+	level.player.position = cyclops.position + Vector2(facing * 32, 0)
+	level.player.velocity = Vector2.ZERO
+	await _frames()
+	cyclops.direction = facing
+	cyclops._enter("idle")
+	cyclops._cooldown = 0.0
+	cyclops.set_physics_process(true)
+	return level
+
+
+func _melee_player_defenses() -> void:
+	var level := await _fresh_slam_level(1)
+	_expect(await _until("slam_recover", 100), "The placed Cyclops performs a close slam against the real player")
+	_expect(level.player.health == 4 and get_nodes_in_group("cyclops_boulders").is_empty(), "Standing close costs one health without a ranged projectile")
+	for facing in [-1, 1]:
+		level = await _fresh_slam_level(facing)
+		_expect(await _until("slam_windup", 20), "A close player receives the ground-slam warning")
+		var warning_frames := ceili(cyclops._telegraph(cyclops.SLAM_WINDUP_SECONDS) * 60.0)
+		await _frames(maxi(0, warning_frames - 14))
+		_action("jump", true, 1)
+		_expect(await _until("slam_recover", 50), "The close slam follows through under a timed jump")
+		_action("jump", false, 1)
+		_expect(level.player.health == 5 and get_nodes_in_group("cyclops_boulders").is_empty(), "A normal keyboard or touch jump clears the close impact in both directions")
+		level = await _fresh_slam_level(facing)
+		_expect(await _until("slam_windup", 20), "The retreat defense begins during the close warning")
+		var action := "move_right" if facing > 0 else "move_left"
+		_action(action, true)
+		_expect(await _until("slam_recover", 100), "The slam does not chase a retreating player")
+		_action(action, false)
+		_expect(level.player.health == 5, "Walking away during the warning avoids the impact in either direction")
+
+
 func _run() -> void:
+	var restore_scores := preload("res://tests/high_score_data.gd").isolate(root.get_node("HighScores"))
 	await _controller()
+	await _melee_controller()
 	await _projectiles()
 	await _player_defenses()
+	await _melee_player_defenses()
 	paused = false
 	_stop_audio(root)
+	restore_scores.call()
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: Cyclops art, slow committed windup, fixed arc, repeated throws, reload opening, damage/score, projectile collisions/lifetime, actual-player sword and jump defenses, gallery pause and Reset.")
+		print("PASS: Cyclops art, slow committed windup, fixed arc, repeated throws, reload opening, close slam selection/commitment/pause/one-hit/recovery, actual-player melee jump/retreat, damage/score, projectile collisions/lifetime, actual-player sword and jump defenses, gallery pause and Reset.")
 	quit(0 if failures.is_empty() else 1)
 
 

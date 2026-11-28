@@ -32,7 +32,7 @@ func _ready() -> void:
 	hud.set_health(player.health, player.MAX_HEALTH)
 	player.health_changed.connect(hud.set_health)
 	cyclops.defeated.connect(_on_defeated)
-	hud.show_message("Jump or sword the boulder. Attack during reload.", 7.0)
+	hud.show_message("Jump boulders or the close slam. Counter during recovery.", 7.0)
 	_build_review_ui()
 	queue_redraw()
 

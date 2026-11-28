@@ -73,7 +73,9 @@ hits after exiting a pit. Pausing freezes the hazard timers.
 
 Cyclops Slingers use cinematic 3D-style artwork across all eight ready, lift,
 windup, throw, reload, and recovery poses. The larger source atlas keeps their
-original world size, planted feet, collision shapes, and attack timing. Review
+original world size, planted feet, and ranged attack timing. Close-range slams
+reuse the lift and crouched-stone poses, with a short front-facing impact
+dust burst and the existing boulder thud, followed by a recovery opening. Review
 the poses or fight one with `godot --path . res://scenes/reviews/cyclops_review.tscn`.
 
 Satyrs also use eight cinematic poses for breathing, hop preparation, rising
@@ -83,10 +85,15 @@ horn reach, safe bounce, and wine drops are unchanged. Review them with
 
 | Enemy | Count | Health / score | Counter |
 | --- | --- | --- | --- |
-| Cyclops Slinger | 4 | 3 / 200 | A slow, committed windup launches one boulder along a fixed arc. Jump the descending boulder or destroy it with a timed sword hit. Close during the long reload opening. |
+| Cyclops Slinger | 4 | 3 / 200 | A slow, committed windup launches one boulder along a fixed arc. Jump the descending boulder or destroy it with a timed sword hit. Close during the long reload opening. Within 40 pixels and 20 pixels of the same foot height, it chooses a held-boulder slam for its next attack: 0.65-second windup, 0.2-second impact and 0.9-second recovery before level scaling. Jump or back away, then counter. Each slam costs at most one health; it never launches a boulder. |
 | Satyr | 4 | 2 / 125 | Varied hops use supported landing spots. Bait or jump the short horn charge, or land on its head to bounce safely and deal one damage. |
 | Raider | 4 | 2 / 100 | Bait the committed sword lunge, then counter during recovery. Keeps pursuing Theseus on safe ground. |
 | Telchine | 4 | 2 / 100 | Closes in and jabs with a held trident, using a 0.35-second windup and 0.75-second cooldown before level scaling. Jump or retreat, then counter during recovery. Never throws. |
+
+A Cyclops locks its slam direction during the raised-stone warning. Moving
+behind it or retreating avoids the front-only impact. The windup and recovery
+are safe for sword counters; pause freezes the whole attack. A committed
+throw still finishes normally, and its long reload remains a safe opening.
 
 The maximum combat score is 2,100. Satyrs have a 35% chance to drop stolen wine,
 which grants six seconds of 35% faster movement with a visible timer. Another
