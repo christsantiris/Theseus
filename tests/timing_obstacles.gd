@@ -430,8 +430,10 @@ func _check_bridge(obstacle: Node2D, player: CharacterBody2D) -> void:
 	_expect(player.global_position.x < origin.x + obstacle.width - 7 and player.global_position.y > origin.y,
 		"%s is too wide even for a boosted running jump" % obstacle.name)
 	await _frames(25)
-	_expect(player.global_position.x < origin.x and player.health == player.MAX_HEALTH - 1,
-		"%s returns a player who hits the spikes to the approach bank" % obstacle.name)
+	_expect(player.global_position.x > origin.x and player.global_position.x < origin.x + obstacle.width
+		and player.is_on_floor() and absf(player.global_position.y - origin.y - 24.0) < 1
+		and player.health == player.MAX_HEALTH - 1,
+		"%s leaves a fallen player on the shallow spike bed to jump out" % obstacle.name)
 
 
 func _check_gate(obstacle: Node2D, player: CharacterBody2D) -> void:

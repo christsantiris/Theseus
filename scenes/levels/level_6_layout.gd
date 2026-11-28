@@ -1,6 +1,6 @@
 extends RefCounted
 
-const TIME_LIMIT := 150.0
+const TIME_LIMIT := 120.0
 
 const WIDTH := 5760
 const HEIGHT := 352
@@ -47,7 +47,7 @@ const PLATFORMS := [
 const BONUS_LEDGES := [Rect2(544, 224, 112, 8), Rect2(3328, 112, 112, 8)]
 const BRIDGE_TIMING := Vector3(3.0, 0.8, 2.0)
 const BRIDGE_WIDTH := 112.0
-const BRIDGE_PIT_DEPTH := 48.0
+const BRIDGE_PIT_DEPTH := 24.0
 const PITS := [
 	{"name": "GorgeMouthPit", "bridge": "GorgeMouthBridge", "position": Vector2(80, 280), "width": BRIDGE_WIDTH, "depth": BRIDGE_PIT_DEPTH},
 	{"name": "CausewayPit", "bridge": "CausewayBridge", "position": Vector2(2016, 280), "width": BRIDGE_WIDTH, "depth": BRIDGE_PIT_DEPTH},

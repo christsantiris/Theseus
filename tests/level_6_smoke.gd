@@ -355,25 +355,55 @@ func _traverse() -> void:
 	print("Gorge traversal: %d jumps (%d bridges); peak feet y=%.1f; %.1f simulated seconds." % [jumps, crossed_bridges.size(), highest, state.elapsed_seconds])
 
 
+func _pit_input(action: String, pressed: bool, finger := 0) -> void:
+	var controls := root.get_node("MobileControls")
+	if controls.enabled:
+		var touch := InputEventScreenTouch.new()
+		touch.index = finger
+		touch.position = controls.buttons[action].position
+		touch.pressed = pressed
+		root.push_input(touch, true)
+		Input.flush_buffered_events()
+	elif pressed:
+		Input.action_press(action)
+	else:
+		Input.action_release(action)
+
+
 func _pit_escape() -> void:
 	for pit: Dictionary in Gorge.PITS:
 		for direction in [-1, 1]:
 			var level = await _fresh()
-			# Nearby flasks normally heal an escaped player. Remove
-			# them here so the check can detect any extra spike damage directly.
+			# Nearby flasks would hide extra damage after escape.
 			for definition: Dictionary in Gorge.FLASKS:
 				level.get_node(NodePath(definition.name)).free()
 			var player = level.player
 			var bridge := level.get_node(pit.bridge)
+			# Keep the deck retracted to prove escape works without its help.
 			bridge.elapsed = Gorge.BRIDGE_TIMING.x + Gorge.BRIDGE_TIMING.y
-			var bank_x: float = -8 if direction < 0 else pit.width + 8
-			player.position = pit.position + Vector2(bank_x, 0)
-			player.velocity = Vector2.ZERO
-			await _frames(4)
+			bridge.set_physics_process(false)
+			bridge._update_solid()
 			player.position = pit.position + Vector2(pit.width * 0.5, 0)
-			await _frames(55)
-			_expect(player.position.distance_to(pit.position + Vector2(bank_x, 0)) < 1 and player.health == 4,
-				"%s costs one health and returns Theseus to his approach bank (%d)" % [pit.name, direction])
+			player.velocity = Vector2.ZERO
+			await _frames(50)
+			_expect(pit.width == 112.0 and player.is_on_floor()
+				and absf(player.position.y - pit.position.y - 24.0) < 1 and player.health == 4,
+				"%s retains its length and catches Theseus on a shallow spike bed without teleporting" % pit.name)
+			_expect(player.movement_speed() == 90.0, "Pit escape uses normal speed without a wine boost")
+			var action := "move_right" if direction > 0 else "move_left"
+			var launch_x: float = pit.position.x + (pit.width - 16.0 if direction > 0 else 16.0)
+			_pit_input(action, true)
+			for tick in 60:
+				await physics_frame
+				if (direction > 0 and player.position.x >= launch_x) or (direction < 0 and player.position.x <= launch_x):
+					break
+			_pit_input("jump", true, 1)
+			await _frames(40)
+			_pit_input("jump", false, 1)
+			_pit_input(action, false)
+			var escaped: bool = player.position.x > pit.position.x + pit.width if direction > 0 else player.position.x < pit.position.x
+			_expect(escaped and player.position.y <= pit.position.y + 1 and player.health == 4,
+				"%s allows a normal keyboard/touch jump out to side %d without extra spike damage" % [pit.name, direction])
 
 
 func _run() -> void:

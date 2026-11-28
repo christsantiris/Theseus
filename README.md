@@ -45,7 +45,7 @@ Enemy windups, recovery windows, cooldowns, and pursuit speed scale with each le
 Each level is 5,760 world units long, with six areas and three additional
 enemies along its extended approach. Soundtracks continue looping throughout.
 
-Every attempt starts at the level entrance with full health and a **2:30 countdown**.
+Every attempt starts at the level entrance with full health and a **2:00 countdown**.
 The timer turns red for the final 30 seconds. It freezes during pause, app
 interruptions, temple entry, and completion. Running out of time opens Hades,
 just like a fatal hit. **Retry Level** there restarts the entire level, including
@@ -109,7 +109,7 @@ One continuous mountain landscape shows rocky ridges, cypress slopes, terraced w
 
 ### The Gorge Sanctuary
 
-Pale limestone cliffs, dark clefts, ruined temples, and stone causeways frame the sixth level. Bronze Bulls charge along flat corridors, Cerberus Pups pursue in pairs, and a three-headed Hydra guards the exit. Two optional high flask ledges reward riding a staggered bull. Three wide spike pits interrupt the main route. Wait for each bronze bridge to extend before crossing.
+Pale limestone cliffs, dark clefts, ruined temples, and stone causeways frame the sixth level. Bronze Bulls charge along flat corridors, Cerberus Pups pursue in pairs, and a three-headed Hydra guards the exit. Two optional high flask ledges reward riding a staggered bull. Three wide, 24-pixel-deep spike pits interrupt the main route. Wait for each bronze bridge to extend before crossing; if you fall, move toward a wall and jump out.
 
 One continuous dry gorge landscape shows stratified limestone walls and distant cliffside temples. Complete ruined shrines, colonnades, and rocky outcrops frame the causeways.
 
@@ -178,7 +178,7 @@ final victory records one result, including all points earned during the attempt
 Reopening the same result screen does not add it again. New lives and replays
 can qualify separately, and earlier entries keep their place when scores tie.
 
-Theseus runs, jumps, ducks, and fights. Grounded sword attacks alternate between a stab and a diagonal slash, with the same timing, reach, and one-health damage. Regular airborne attacks always slash, including when Jump and Sword are pressed together. Taking off during a stab changes it to a slash without restarting the attack. Airborne attacks leave the grounded sequence unchanged; Duck + Sword in the air still performs a downward thrust. With a keyboard, releasing Jump early makes a short jump; touch jumps are always full height, so one thumb can jump and then reach Sword. Sword hits and a jump into an enemy each cost that enemy one health; landing on a Satyr bounces Theseus safely. Theseus has five health. Flasks restore two, and they never fill him past five. Stolen wine grants six seconds of extra speed. Spike pits cost one health bar per damaging contact. Jump out of shallow pits. Falling into a timed bridge pit sends Theseus back to the bank he approached from.
+Theseus runs, jumps, ducks, and fights. Grounded sword attacks alternate between a stab and a diagonal slash, with the same timing, reach, and one-health damage. Regular airborne attacks always slash, including when Jump and Sword are pressed together. Taking off during a stab changes it to a slash without restarting the attack. Airborne attacks leave the grounded sequence unchanged; Duck + Sword in the air still performs a downward thrust. With a keyboard, releasing Jump early makes a short jump; touch jumps are always full height, so one thumb can jump and then reach Sword. Sword hits and a jump into an enemy each cost that enemy one health; landing on a Satyr bounces Theseus safely. Theseus has five health. Flasks restore two, and they never fill him past five. Stolen wine grants six seconds of extra speed. Spike pits cost one health bar per damaging contact. Move toward a wall and jump out of a pit after falling in.
 
 | Action | Keys |
 | --- | --- |

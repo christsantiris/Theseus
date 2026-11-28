@@ -18,7 +18,7 @@ func _ready() -> void:
 		pit.position = definition.position
 		pit.pit_width = definition.width
 		pit.pit_depth = definition.depth
-		pit.damaged.connect(_on_spike_damage.bind(get_node(definition.bridge)))
+		pit.damaged.connect(_on_spike_damage)
 		add_child(pit)
 
 
@@ -54,7 +54,6 @@ func _build_enemies() -> void:
 		add_child(pack)
 
 
-func _on_spike_damage(body: CharacterBody2D, bridge: Node2D) -> void:
+func _on_spike_damage(body: CharacterBody2D) -> void:
 	if body.health > 0:
-		bridge.return_to_bridge_bank()
-		hud.show_message("Wait for the bridge to extend before crossing.", 2.5, 3)
+		hud.show_message("Spikes! Jump and move to climb out.", 2.5, 3)
