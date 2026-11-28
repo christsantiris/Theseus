@@ -118,6 +118,7 @@ func _add_timing_obstacle(definition: Dictionary) -> void:
 	obstacle.name = definition.name
 	obstacle.kind = definition.kind
 	obstacle.variant = String(definition.get("variant", ""))
+	obstacle.arrow_height = float(definition.get("arrow_height", 40.0))
 	obstacle.position = definition.position
 	obstacle.width = definition.width
 	obstacle.durations = definition.durations

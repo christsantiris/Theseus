@@ -25,6 +25,7 @@ const ROCK_RADIUS := 11.0
 
 var kind: Kind
 var variant := ""
+var arrow_height := 40.0
 var width: float
 # Seconds spent in rest, warning, and active phases. The gate uses the first
 # and last values for time fully closed and fully open.
@@ -91,9 +92,15 @@ func _physics_process(delta: float) -> void:
 		_resolve_gate_contact()
 	_update_solid()
 	if kind != Kind.STONE_GATE and player.health > 0 and not _hit_this_cycle:
-		var danger := _danger_rect()
-		if danger.has_area() and danger.intersects(_player_rect()):
-			_hurt_player()
+		var dangers: Array[Rect2] = []
+		if kind == Kind.ARROWS:
+			dangers = _arrow_rects()
+		else:
+			dangers.append(_danger_rect())
+		for danger: Rect2 in dangers:
+			if danger.has_area() and danger.intersects(_player_rect()):
+				_hurt_player()
+				break
 	# All art fits inside a small region. Refresh once on re-entry to the view.
 	var camera := get_viewport().get_camera_2d()
 	if camera == null or absf(camera.get_screen_center_position().x - global_position.x) < 320.0:
@@ -193,9 +200,8 @@ func _danger_rect() -> Rect2:
 		Kind.KILN, Kind.JETS:
 			return Rect2(0, -28, width, 28)
 		Kind.ARROWS:
-			var front := (width + 22.0) * (1.0 - progress)
-			var left := maxf(0, front - 22.0)
-			return Rect2(left, -42, maxf(0, minf(front, width) - left), 4)
+			var arrows := _arrow_rects()
+			return arrows[0] if not arrows.is_empty() else Rect2()
 		Kind.ROCKFALL:
 			var index := int(time >= ROCK_INTERVAL)
 			var fall_time := time - index * ROCK_INTERVAL
@@ -218,7 +224,7 @@ func _draw() -> void:
 		Kind.KILN, Kind.JETS:
 			_draw_vents(warning, danger.has_area())
 		Kind.ARROWS:
-			_draw_volley(warning, danger)
+			_draw_volley(warning)
 		Kind.ROCKFALL:
 			_draw_rockfall(warning, danger)
 		Kind.SUNBEAM:
@@ -291,7 +297,7 @@ func _add_arrow_housing() -> void:
 	housing.name = "ArrowHousing"
 	housing.texture = texture
 	housing.centered = false
-	housing.position = Vector2(width - 26, -53)
+	housing.position = Vector2(width / 2.0 - 16.5, -arrow_height - 13.0)
 	housing.scale = Vector2(33, 25) / texture.region.size
 	# The masonry sits behind Theseus while the arrow cues stay in front.
 	housing.z_as_relative = false
@@ -299,14 +305,34 @@ func _add_arrow_housing() -> void:
 	add_child(housing)
 
 
-func _draw_volley(warning: bool, danger: Rect2) -> void:
+func _arrow_rects() -> Array[Rect2]:
+	var time := _active_time()
+	if time < 0.0 or time >= durations.z:
+		return []
+	# Two arrows leave the central housing together. Keep their contact
+	# regions separate so the empty space behind them cannot deal damage.
+	var tail := width / 2.0 * (1.0 - time / durations.z)
+	var left := Rect2(maxf(0.0, tail - 22.0), -arrow_height - 2.0, minf(22.0, tail), 4.0)
+	return [left, Rect2(width - left.end.x, left.position.y, left.size.x, left.size.y)]
+
+
+func _draw_arrow(bounds: Rect2, direction: int, tint := Color.WHITE) -> void:
+	# The atlas arrow points left; mirror the rightward shot and its cue.
+	var offset := Vector2(bounds.size.x if direction > 0 else 0.0, 0)
+	draw_set_transform(bounds.position + offset, 0, Vector2(-1 if direction > 0 else 1, 1))
+	_art(Sprite.ARROW, Rect2(Vector2.ZERO, bounds.size), tint)
+	draw_set_transform(Vector2.ZERO)
+
+
+func _draw_volley(warning: bool) -> void:
 	if warning:
-		for offset in [0, -8, -16]:
-			var slit := Vector2(width + offset, -40)
-			draw_arc(slit, 3, -PI / 2, PI / 2, 12, GOLD, 0.8, true)
-			_art(Sprite.ARROW, Rect2(slit - Vector2(5, 1.5), Vector2(8, 3)), GOLD)
-	if danger.has_area():
-		_art(Sprite.ARROW, danger)
+		for direction in [-1, 1]:
+			var slit := Vector2(width / 2.0 + direction * 9.0, -arrow_height)
+			draw_arc(slit, 3, 0, TAU, 12, GOLD, 0.8, true)
+			_draw_arrow(Rect2(slit - Vector2(4, 1.5), Vector2(8, 3)), direction, GOLD)
+	var arrows := _arrow_rects()
+	for index in arrows.size():
+		_draw_arrow(arrows[index], -1 if index == 0 else 1)
 
 
 func _draw_rockfall(warning: bool, danger: Rect2) -> void:

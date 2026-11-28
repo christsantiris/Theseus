@@ -7,9 +7,23 @@ systems. Every climb works with normal jumps and base movement speed.
 
 ![Troy’s gate court](level_4_preview.png)
 
-## Arrow volley
+## Arrow traps
 
-On the High Battlements at x=3600–3688, bows appear in the slits for 0.9 seconds before arrows sweep left at standing head height. Duck on the landing to let the volley pass, then run across during the three-second reload.
+Three traps fire arrows simultaneously left and right from a central housing.
+The 0.9-second warning shows arrows at both slits before each volley; reload
+lasts three seconds. Shots sweep outward in 0.35 seconds, faster than Theseus’s
+normal running speed, so watch for arrows while approaching and moving away.
+
+| Trap | World X | Arrow height / defense |
+| --- | --- | --- |
+| Outer Rampart | 1048–1136 | 40 pixels above the landing; duck. |
+| Gate Court | 2120–2208 | 8 pixels above the landing; jump. Ducking does not clear these arrows. |
+| High Battlements | 3600–3688 | 40 pixels above the landing; duck. |
+
+All three lanes and their waiting areas are on flat landings. High arrows
+clear the ducking body while hitting Theseus standing. Low arrows can be
+cleared with a normal jump. Each trap can cost at most one health per volley,
+and its warning, reload and arrows freeze while gameplay is paused.
 
 ## Route
 

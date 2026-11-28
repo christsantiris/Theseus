@@ -70,6 +70,23 @@ func _run() -> void:
 			for definition: Dictionary in level.layout.KILNS:
 				await _check_kiln(level, level.get_node(definition.name), player)
 			continue
+		if number == 4:
+			# Nearby flasks would immediately heal a successful arrow hit.
+			# Keep this hazard check separate from pickup behavior.
+			for flask: Dictionary in level.layout.FLASKS:
+				level.get_node(flask.name).queue_free()
+			await process_frame
+			var traps := level.find_children("*Volley", "Node2D", false, false)
+			_expect(traps.size() == 3, "Troy spawns three arrow traps")
+			var high := 0
+			var low := 0
+			for definition: Dictionary in level.layout.ARROW_TRAPS:
+				var trap: Node2D = level.get_node(definition.name)
+				high += int(trap.arrow_height == 40.0)
+				low += int(trap.arrow_height == 8.0)
+				await _check_arrow_trap(level, trap, player)
+			_expect(high == 2 and low == 1, "Two arrow traps are high and one is low")
+			continue
 		if number == 8:
 			_expect(not level.hud._root.has_node("TideStatus"), "Atlantis has no tide countdown display")
 			for definition: Dictionary in level.layout.JET_BANKS:
@@ -115,16 +132,6 @@ func _run() -> void:
 					await _check_weight(obstacle, player)
 				if number == 7:
 					await _check_sunbeam(obstacle, player)
-				if number == 4:
-					obstacle.elapsed = 0.0
-					_place(player, origin + Vector2(obstacle.width / 2, 0))
-					await _frames(4)
-					_move("duck", true)
-					await _frames(3)
-					obstacle.elapsed = idle + warning
-					await _frames(42)
-					_expect(player.health == player.MAX_HEALTH, "Ducking clears the arrow volley")
-					_move("duck", false)
 	if _failures == 0:
 		print("PASS: nine timing obstacles, pause, damage, duck, bridge, gate, and high-tide crossing (%s)." % ("touch" if _controls.enabled else "desktop"))
 	quit(int(_failures > 0))
@@ -159,6 +166,88 @@ func _check_kiln(level: Node, obstacle: Node2D, player: CharacterBody2D) -> void
 	_move("move_right", false)
 	_expect(player.position.x > origin.x + obstacle.width and player.health == player.MAX_HEALTH,
 		label + " can be crossed safely while cool")
+
+
+func _prepare_arrow_player(obstacle: Node2D, player: CharacterBody2D, x: float) -> void:
+	_move("duck", false)
+	_move("jump", false, 1)
+	_place(player, obstacle.global_position + Vector2(x, 0))
+	obstacle.elapsed = 0.0
+	obstacle._hit_this_cycle = false
+	await _frames(3)
+
+
+func _check_arrow_trap(level: Node, obstacle: Node2D, player: CharacterBody2D) -> void:
+	var label := String(obstacle.name)
+	var origin := obstacle.global_position
+	var center: float = obstacle.width / 2.0
+	var fire: float = obstacle.durations.x + obstacle.durations.y
+	for x in [origin.x - 9, origin.x, origin.x + obstacle.width - 1, origin.x + obstacle.width + 9]:
+		_expect(level.layout.surface_at(x) == origin.y, label + " has flat approaches and exits")
+	var housing: Sprite2D = obstacle.get_node("ArrowHousing")
+	_expect(is_equal_approx(housing.position.x + 16.5, center), label + " fires from a central housing")
+	obstacle.elapsed = obstacle.durations.x + obstacle.durations.y / 2.0
+	_expect(obstacle._warning() and obstacle._arrow_rects().is_empty(), label + " warns before firing")
+	obstacle.elapsed = fire + obstacle.durations.z * 0.1
+	var early: Array[Rect2] = obstacle._arrow_rects()
+	obstacle.elapsed = fire + obstacle.durations.z * 0.5
+	var late: Array[Rect2] = obstacle._arrow_rects()
+	_expect(early.size() == 2 and late.size() == 2 and late[0].get_center().x < early[0].get_center().x
+		and late[1].get_center().x > early[1].get_center().x, label + " sends arrows outward in both directions")
+	paused = true
+	var before: float = obstacle.elapsed
+	await _frames(4)
+	_expect(obstacle.elapsed == before, label + " pauses both arrows")
+	paused = false
+
+	# Standing players must be threatened on approach and after walking past
+	# the emitter. In the latter case the arrow has to catch them from behind.
+	for direction in [-1, 1]:
+		for leaving in [false, true]:
+			await _prepare_arrow_player(obstacle, player, center + direction * 30.0)
+			obstacle.elapsed = fire
+			var movement: int = direction if leaving else -direction
+			var action := "move_right" if movement > 0 else "move_left"
+			_move(action, true)
+			await _frames(8)
+			_move(action, false)
+			_expect(player.health == player.MAX_HEALTH - 1,
+				"%s hits from side %d while %s (health=%d, duck=%s, position=%s, phase=%.3f)" % [label, direction, "walking away" if leaving else "approaching", player.health, player._ducked, player.position, obstacle.elapsed])
+
+		await _prepare_arrow_player(obstacle, player, center + direction * 20.0)
+		_move("duck", true)
+		await _frames(3)
+		_expect(player._ducked, label + " uses the real duck input")
+		obstacle.elapsed = fire
+		await _frames(24)
+		var expected: int = player.MAX_HEALTH if obstacle.arrow_height > 36.0 else player.MAX_HEALTH - 1
+		_expect(player.health == expected, label + (" clears ducking on both sides" if obstacle.arrow_height > 36.0 else " stays dangerous when ducking"))
+		_move("duck", false)
+
+		if obstacle.arrow_height < 36.0:
+			await _prepare_arrow_player(obstacle, player, center + direction * 20.0)
+			_move("jump", true, 1)
+			await _frames(10)
+			_expect(player.position.y < origin.y - 12.0, label + " uses an actual jump to clear the low lane")
+			obstacle.elapsed = fire
+			await _frames(22)
+			_move("jump", false, 1)
+			_expect(player.health == player.MAX_HEALTH, label + " allows jumps over both outward arrows")
+
+	# Once the arrows have passed, the center is empty, rather than one large
+	# damage rectangle spanning both projectiles.
+	await _prepare_arrow_player(obstacle, player, center)
+	obstacle.elapsed = fire + obstacle.durations.z * 0.75
+	await _frames(2)
+	_expect(player.health == player.MAX_HEALTH, label + " leaves the space behind its arrows safe")
+	for direction in [-1, 1]:
+		await _prepare_arrow_player(obstacle, player, -9.0 if direction > 0 else obstacle.width + 9.0)
+		var action := "move_right" if direction > 0 else "move_left"
+		_move(action, true)
+		await _frames(72)
+		_move(action, false)
+		var crossed: bool = player.position.x > origin.x + obstacle.width if direction > 0 else player.position.x < origin.x
+		_expect(crossed and player.health == player.MAX_HEALTH, label + " allows safe reload crossings in both directions")
 
 
 func _check_quay_slabs(level: Node, player: CharacterBody2D, crossing: String) -> void:

@@ -22,7 +22,7 @@ const WEIGHTS := {
 	"bird": 0.7,
 	# Pursues and lunges.
 	"raider": 1.0, "spartoi": 1.0,
-	# Holds ground and jabs at short range.
+	# Opens with a throw, then jabs up close.
 	"peltast": 0.9, "telchine": 0.9,
 	# Duckable high thrust; short low lunge. Both have exposed recoveries.
 	"merfolk": 0.9, "reefblade": 1.0,

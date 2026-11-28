@@ -3,6 +3,10 @@ extends "res://scenes/enemies/peltast.gd"
 const DAEMON_ART := preload("res://assets/art/characters/telchine.png")
 
 
+func _weapon_name() -> String:
+	return "trident"
+
+
 func _build_frames() -> void:
 	var frames := SpriteFrames.new()
 	_add_animation(frames, DAEMON_ART, "walk", [0, 1, 2, 3], 8.0, true, ART_SCALE)

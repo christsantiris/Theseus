@@ -16,3 +16,8 @@ func _ready() -> void:
 	details.add_theme_font_override("font", credit_font)
 	details.add_theme_font_size_override("font_size", 6)
 	details.add_theme_constant_override("line_spacing", 0)
+
+
+func _build_timing_obstacle() -> void:
+	for definition: Dictionary in layout.ARROW_TRAPS:
+		_add_timing_obstacle(definition)

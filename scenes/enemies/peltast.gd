@@ -2,18 +2,23 @@ extends "res://scenes/enemies/enemy.gd"
 
 const ART_SCALE := 8.0
 const TEXTURE := preload("res://assets/art/characters/peltast.png")
+const WEAPON := preload("res://scenes/projectiles/thrown_weapon.gd")
 const AWARENESS_RANGE := 192.0
+const THROW_RANGE := 156.0
+const THROW_HEIGHT := 24.0
 const JAB_RANGE := 38.0
 const WINDUP_SECONDS := 0.5
 const JAB_SECONDS := 0.18
 const RECOVERY_SECONDS := 0.8
 const ATTACK_COOLDOWN := 1.0
+const OPEN_COOLDOWN := 0.2
 
 @onready var javelin_strike: Area2D = $JavelinStrike
 
 var _state := "patrol"
 var _state_time := 0.0
-var _cooldown := 0.9
+var _cooldown := OPEN_COOLDOWN
+var _ranged := false
 var _flash := 0.0
 var _strike_hits: Dictionary = {}
 
@@ -48,8 +53,12 @@ func _deals_contact() -> bool:
 	return false
 
 
+func _weapon_name() -> String:
+	return "spear"
+
+
 func _tick(delta: float) -> void:
-	_update_focus()
+	_update_focus(THROW_RANGE, THROW_HEIGHT)
 	_state_time += delta
 	_flash = maxf(_flash - delta, 0.0)
 	if not is_on_floor():
@@ -63,7 +72,8 @@ func _tick(delta: float) -> void:
 		_play_locomotion("walk")
 		_cooldown = maxf(0.0, _cooldown - delta)
 		if _cooldown <= 0.0 and _can_engage():
-			_face_player(12.0)
+			_face_player(THROW_HEIGHT)
+			_ranged = not _player_close(JAB_RANGE, 12.0)
 			_enter("windup")
 	elif _state == "windup":
 		velocity.x = 0.0
@@ -87,7 +97,10 @@ func _tick(delta: float) -> void:
 
 func _can_engage() -> bool:
 	var player := _player()
-	if player == null or player.get("health") == 0 or not _player_close(JAB_RANGE, 12.0):
+	if player == null or player.get("health") == 0:
+		return false
+	var in_reach := _player_close(JAB_RANGE, 12.0) or _player_close(THROW_RANGE, THROW_HEIGHT)
+	if not in_reach:
 		return false
 	var query := PhysicsRayQueryParameters2D.create(
 		global_position + Vector2(0, -26),
@@ -104,11 +117,26 @@ func _enter(next: String) -> void:
 	javelin_strike.position = Vector2(direction * 22.0, -26.0)
 	if next == "jab":
 		_strike_hits.clear()
+		if _ranged:
+			_throw_weapon()
 	if next != "patrol":
 		_play(next)
 
 
+func _throw_weapon() -> void:
+	var weapon := CharacterBody2D.new()
+	weapon.set_script(WEAPON)
+	var parent := get_parent()
+	if parent == null:
+		return
+	parent.add_child(weapon)
+	weapon.global_position = global_position + Vector2(direction * 22.0, -26.0)
+	weapon.launch(direction, _weapon_name())
+
+
 func _hurt_javelin_overlaps() -> void:
+	if _ranged:
+		return
 	for body in javelin_strike.get_overlapping_bodies():
 		if not body.is_in_group("player") or not body.has_method("hurt"):
 			continue

@@ -69,7 +69,7 @@ Three collapsing crossings span spike pits between solid banks. Each has three l
 | Enemy | Count | Health / score | Behavior and defense |
 | --- | --- | --- | --- |
 | Stymphalian Bird | 8 | 1 / 75 | Flies horizontally at 48 pixels/second, roughly half Theseus's running speed. High lanes are 44 pixels above a landing: duck in place and let the bird pass, or jump and time a sword strike. Low lanes are 8 pixels above a landing: jump forward over the approaching bird, or time a standing sword strike. |
-| Telchine | 6 | 2 / 100 | Dog-headed sea daemon in Greek soldier armor, carrying a held bronze trident. Uses Peltast's stationary melee jab, tuned for this level: a 0.55-second windup, 0.18-second strike, and 0.87-second recovery. Retreat, jump, or pass the committed windup, then counter. |
+| Telchine | 6 | 2 / 100 | Dog-headed sea daemon in Greek soldier armor. Opens with a thrown trident while Theseus is still outside jab range, using the Peltast's readable windup. Jump the throw. Inside jab range the trident is a held thrust with a punishable recovery. |
 | Spartoi | 6 | 2 / 100 | Exposed skull, ribs, and bone limbs under Greek helmet and armor. Uses Raider's committed sword lunge, tuned for this level: a 0.5-second windup, 0.22-second lunge, and 0.92-second recovery. Bait the lunge and counter. |
 
 The eight birds comprise four high and four low lanes. The added low bird
@@ -80,11 +80,11 @@ Theseus's standing and ducking collision heights are 44 and 36 pixels,
 respectively, matching the visible poses so a standing player still takes a hit.
 They wake within 256 horizontal and 128 vertical pixels of the player.
 They deal one bar of contact damage per pass; remaining in one overlap cannot
-repeat the hit. There are no projectiles or added blocking controls. Sword
+repeat the hit. Birds do not throw projectiles, and there are no added blocking controls. Sword
 damage still requires the extended-blade attack frame. Landing onto a bird
 uses the existing mutual collision rule: each actor loses one health.
 
-The humanoids reuse the tested melee controllers and hitboxes. Art uses
+Spartoi reuses the tested lunge. Telchines add a thrown trident to that melee set. Art uses
 four walking frames and three attack poses, matching the existing soldiers.
 The birds use four wing frames. All three coastal enemies use cinematic
 3D-style artwork matching Theseus: exposed skeletal Spartoi, dog-headed

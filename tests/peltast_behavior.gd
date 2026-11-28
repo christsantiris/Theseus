@@ -83,9 +83,19 @@ func _run() -> void:
 	await _frames(200)
 	_expect(peltast._state_time == 0.0 and peltast.position.x == 200.0, "Distant Peltast remains dormant without timer attacks")
 	player.position = Vector2(340, 152)
-	await _frames(40)
-	_expect(peltast._state_time > 0.0 and peltast._state == "patrol", "Nearby Peltast patrols without attacking at range")
-	_expect(root.get_child_count() == original_children, "Patrolling spawns no projectiles")
+	_expect(await _until(peltast, "windup", 30), "Peltast opens with a ranged windup before Theseus closes")
+	var planted_open: float = peltast.position.x
+	_expect(await _until(peltast, "jab", 45), "Ranged windup releases the spear")
+	var spear: Node = null
+	for child in root.get_children():
+		if child.is_in_group("thrown_weapons"):
+			spear = child
+			break
+	_expect(spear != null and spear.kind == "spear", "The opening attack throws a spear")
+	_expect(absf(peltast.position.x - planted_open) < 1.0, "The throw stays planted")
+	for child in root.get_children():
+		if child.is_in_group("thrown_weapons"):
+			child.free()
 	peltast.set_physics_process(false)
 	peltast.position = Vector2(200, 152)
 	player.position = Vector2(232, 120)
@@ -138,13 +148,29 @@ func _run() -> void:
 	_expect(peltast.alive and peltast.hp == 1, "Legacy stomp callback leaves enemy health unchanged")
 	peltast.sword_hit()
 	_expect(not peltast.alive and awarded.points == 100, "Second sword hit defeats Peltast and awards its existing score")
+	peltast.set_physics_process(false)
+	var telchine = load("res://scenes/enemies/telchine.tscn").instantiate()
+	telchine.position = Vector2(200, 152)
+	telchine.direction = 1
+	telchine.patrol_left = 48.0
+	telchine.patrol_right = 400.0
+	root.add_child(telchine)
+	player.position = Vector2(330, 152)
+	player.hits = 0
+	_expect(await _until(telchine, "jab", 80), "Telchine releases a ranged attack")
+	var trident: Node = null
+	for child in root.get_children():
+		if child.is_in_group("thrown_weapons"):
+			trident = child
+			break
+	_expect(trident != null and trident.kind == "trident", "Telchine throws a trident")
 	for child in root.get_node("GameMusic").get_children():
 		if child is AudioStreamPlayer:
 			child.stop()
 			child.stream = null
 	OS.delay_msec(150)
 	if failures.is_empty():
-		print("PASS: Peltast dormancy, melee range, elevation, walls, windup, stationary held jab, retreat/jump/side-step counters, recovery, single-hit damage, no automatic stomp kills, and score.")
+		print("PASS: Peltast dormancy, opening spear throw, Telchine trident, close jab, elevation, walls, windup, retreat/jump/side-step counters, recovery, single-hit damage, no automatic stomp kills, and score.")
 	else:
 		print("FAILURES: ", failures)
 	quit(0 if failures.is_empty() else 1)
