@@ -87,6 +87,7 @@ const ENEMIES := [
 	{"name": "SpartoiSummit", "kind": "spartoi", "position": Vector2(3456, 104), "patrol": Vector2(3408, 3504)},
 	{"name": "TelchineSaltwind", "kind": "telchine", "position": Vector2(3896, 248), "patrol": Vector2(3864, 3920)},
 	{"name": "BirdHighSaltwind", "kind": "bird", "position": Vector2(4120, 236), "patrol": Vector2(4088, 4208)},
+	{"name": "BirdLowSaltwind", "kind": "bird", "position": Vector2(4400, 240), "patrol": Vector2(4368, 4448)},
 	{"name": "SpartoiSaltwind", "kind": "spartoi", "position": Vector2(4576, 232), "patrol": Vector2(4496, 4656)},
 	{"name": "SpartoiCoast", "kind": "spartoi", "position": Vector2(5104, 280), "patrol": Vector2(5040, 5168)},
 	{"name": "TelchineSanctuary", "kind": "telchine", "position": Vector2(5360, 248), "patrol": Vector2(5312, 5408)},

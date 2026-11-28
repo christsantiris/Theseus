@@ -61,17 +61,19 @@ Three collapsing crossings span spike pits between solid banks. Each has three l
 | Broken Quays | 960–1919 | Terraces climb to y=168. Telchine jabs and Spartoi lunges share broad landings. High and low birds occupy separate lanes, and collapsing slabs cross a spike pit near the descent. |
 | Sea Cliffs | 1920–2879 | A second climb with melee fights, a high bird, and another collapsing crossing. |
 | Cyclopean Ruins | 2880–3839 | Low bird, Telchine, and Spartoi summit guard. Highest landing is y=104, followed by descending ledges. |
-| Saltwind Causeway | 3840–4799 | Descend to a Telchine, pass a high bird, then climb to a Spartoi landing and the last collapsing crossing. |
+| Saltwind Causeway | 3840–4799 | Descend to a Telchine, pass a high bird and a low bird on separate landings, then climb to a Spartoi landing and the last collapsing crossing. |
 | Rocky Sanctuary | 4800–5759 | Final low terraces and melee fights, then the Spartoi temple guard. |
 
 ## Enemies
 
 | Enemy | Count | Health / score | Behavior and defense |
 | --- | --- | --- | --- |
-| Stymphalian Bird | 7 | 1 / 75 | Flies horizontally at 48 pixels/second, roughly half Theseus's running speed. High lanes are 44 pixels above a landing: duck in place and let the bird pass, or jump and time a sword strike. Low lanes are 8 pixels above a landing: jump forward over the approaching bird, or time a standing sword strike. |
+| Stymphalian Bird | 8 | 1 / 75 | Flies horizontally at 48 pixels/second, roughly half Theseus's running speed. High lanes are 44 pixels above a landing: duck in place and let the bird pass, or jump and time a sword strike. Low lanes are 8 pixels above a landing: jump forward over the approaching bird, or time a standing sword strike. |
 | Telchine | 6 | 2 / 100 | Dog-headed sea daemon in Greek soldier armor, carrying a held bronze trident. Uses Peltast's stationary melee jab, tuned for this level: a 0.55-second windup, 0.18-second strike, and 0.87-second recovery. Retreat, jump, or pass the committed windup, then counter. |
 | Spartoi | 6 | 2 / 100 | Exposed skull, ribs, and bone limbs under Greek helmet and armor. Uses Raider's committed sword lunge, tuned for this level: a 0.5-second windup, 0.22-second lunge, and 0.92-second recovery. Bait the lunge and counter. |
 
+The eight birds comprise four high and four low lanes. The added low bird
+patrols the Saltwind Causeway at x=4368–4448, eight pixels above its landing.
 Birds stay at their assigned height and reverse at their patrol endpoints.
 Every high-bird wing frame clears the visible ducking helmet by four pixels.
 Theseus's standing and ducking collision heights are 44 and 36 pixels,

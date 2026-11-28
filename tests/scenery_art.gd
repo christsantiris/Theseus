@@ -34,7 +34,7 @@ func _verify_level(number: int) -> void:
 	_expect(world.midground.get_child_count() == [15, 16, 14, 16, 15, 13, 12, 15, 6][number - 1], "Level %d has complete independent scenery objects" % number)
 	_expect(level.find_children("*Shrine", "Area2D", true, false).is_empty(), "Level %d has no checkpoint triggers" % number)
 	_expect(level.layout.WIDTH == 5760 and level.layout.TIME_LIMIT == 150.0, "Level %d has the extended route and the 2:30 countdown" % number)
-	_expect(level.layout.ENEMIES.size() == [19, 19, 19, 19, 19, 13, 20, 16, 16][number - 1], "Level %d has the expected campaign enemy count" % number)
+	_expect(level.layout.ENEMIES.size() == [19, 20, 19, 19, 19, 13, 20, 16, 16][number - 1], "Level %d has the expected campaign enemy count" % number)
 	var camera: Camera2D = level.player.get_node("Camera2D")
 	for x in range(160, level.layout.WIDTH - 159, 64):
 		# Check floor, jump headroom and the bottom camera clamp on the full route.
